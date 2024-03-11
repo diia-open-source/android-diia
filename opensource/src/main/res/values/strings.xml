@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">DiiaOS</string>
+    <string name="notification_channel_diia_default">Інші сповіщення</string>
+
+    <string name="download_certificate_pdf">Завантажити сертифікат (PDF)</string>
+    <string name="translate_to_ua">Перекласти українською</string>
+    <string name="translate_to_eng">Перекласти англійською</string>
+    <string name="rate_document">Оцінити документ</string>
+
+    <string name="check_docs_no_internet_message">Немає інтернету. Перевірте з’єднання та спробуйте ще раз</string>
+    <string name="check_docs_no_registry_message">Немає доступу до реєстру</string>
+    <string name="qr_code_not_registered">QR-код не зареєстровано в Дії</string>
+    <string name="unknown_qr_title">Невідомий QR-код</string>
+    <string name="check_doc_error_cert">"Помилка при валідації сертифіката"</string>
+    <string name="check_doc_expired_error_cert">Сертифікат недійсний. Його було відкликано.</string>
+    <string name="check_doc_error_timeout">Час сесії валідації QR-коду вичерпано або він недійсний</string>
+    <string name="check_doc_http_timeout">Не вдалось завантажити документ для перевірки</string>
+    <string name="qr_check_subtitle_processing">Обробка</string>
+    <string name="qr_check_subtitle_checking_docs">Перевірка документів</string>
+    <string name="try_again_doc">Спробувати завантажити документ ще раз</string>
+    <string name="documents_verification_title">Documents verification</string>
+    <string name="check_docs_t1">Перевірка документів</string>
+    <string name="check_docs_true">Документ знайдено</string>
+    <string name="check_docs_false">Документ не знайдено 😔</string>
+    <string name="check_docs_cert_false">Помилка валідації</string>
+    <string name="check_doc_error_not_found">Документа\nз таким\nQR-кодом\nне існує</string>
+
+    <string name="dl_no_photo_title">Відсутнє фото в реєстрі  😔</string>
+    <string name="dl_no_photo_title_eng">There is no photo in the registry  😔</string>
+    <string name="dl_to_e_queue">Запишіться в електронну чергу, щоб додати або оновити фото.</string>
+    <string name="dl_to_e_queue_eng">Register in the electronic queue to add or update your photo.</string>
+    <string name="dl_to_e_queue_button">До електронної черги</string>
+    <string name="dl_to_e_queue_button_eng">Electronic queue </string>
+    <string name="dl_outdated_title">Документ старого зразка 😔</string>
+    <string name="dl_outdated_title_eng">You have an old document 😔</string>
+    <string name="dl_outdated_description">Запишіться в електронну чергу, щоб його оновити та додати до застосунку.</string>
+    <string name="dl_outdated_description_eng">Register in the electronic queue to update document. It will appear in the application afterward.</string>
+    <string name="dl_to_e_office_title">Знайти адресу</string>
+    <string name="dl_to_e_office_title_eng">Open Driver\‘s Account</string>
+    <string name="dl_need_verify_title">Ваш документ потребує\nверифікації 😔</string>
+    <string name="dl_need_verify_title_eng">Verification required for your document 😔</string>
+    <string name="dl_need_verify_queue">Будь ласка, зверніться до найближчого сервісного центру МВС.</string>
+    <string name="dl_need_verify_queue_eng">Access your Driver‘s Account and complete the online form.</string>
+    <string name="dl_expiration_title">Термін дії посвідчення закінчився 😔</string>
+    <string name="dl_expiration_description">Ви можете отримати нове водійське посвідчення і видалити цей документ.</string>
+
+    <string name="settings_support_label">Служба підтримки</string>
+    <string name="settings_options_label">Налаштування</string>
+    <string name="settings_change_code_label">Змінити код для входу</string>
+    <string name="settings_doc_stack_label">Змінити порядок документів</string>
+    <string name="settings_allow_touch_label">Біометрична авторизація</string>
+    <string name="settings_allow_notifications">Налаштувати сповіщення</string>
+    <string name="settings_share_with_friends">Розповісти друзям</string>
+    <string name="settings_dialog_title_support">Дія хоче відкрити «%s»</string>
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_web"
+    app:startDestination="@id/webF">
+
+    <action
+        android:id="@+id/action_global_toWebF"
+        app:destination="@id/nav_web" >
+        <argument
+            android:name="url"
+            android:defaultValue="https://diia.gov.ua/"
+            app:argType="string" />
+        <argument
+            android:name="refresh"
+            app:argType="boolean" />
+    </action>
+
+    <fragment
+        android:id="@+id/webF"
+        android:name="ua.gov.diia.web.ui.WebF"
+        android:label="WebF">
+        <action
+            android:id="@+id/action_webF_to_errorF"
+            app:destination="@id/errorF"
+            app:enterAnim="@anim/anim_fade_in"
+            app:exitAnim="@anim/anim_fade_out"
+            app:popEnterAnim="@anim/anim_fade_in"
+            app:popExitAnim="@anim/anim_fade_out"
+            app:popUpTo="@+id/webF"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="url"
+            android:defaultValue="https://diia.gov.ua/"
+            app:argType="string" />
+        <argument
+            android:name="refresh"
+            app:argType="boolean" />
+    </fragment>
+</navigation>

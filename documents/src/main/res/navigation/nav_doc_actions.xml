@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_doc_actions"
+    app:startDestination="@id/destination_docActionsCompose">
+
+    <action
+        android:id="@+id/action_global_destination_docActionsCompose"
+        app:destination="@id/nav_doc_actions" >
+        <argument
+            android:name="doc"
+            app:argType="android.os.Parcelable" />
+        <argument
+            android:name="position"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <argument
+            android:name="enableStackActions"
+            android:defaultValue="true"
+            app:argType="boolean" />
+        <argument
+            android:name="currentlyDisplayedOdcTypes"
+            android:defaultValue="*"
+            app:argType="string" />
+        <argument
+            android:name="manualDocs"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.documents.models.ManualDocs"
+            app:nullable="true" />
+        <argument
+            android:name="resultDestinationId"
+            app:argType="integer" />
+    </action>\
+    <dialog
+        android:id="@+id/destination_docActionsCompose"
+        android:name="ua.gov.diia.documents.ui.actions.DocActionsDFCompose">
+        <argument
+            android:name="doc"
+            app:argType="android.os.Parcelable" />
+        <argument
+            android:name="position"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <argument
+            android:name="enableStackActions"
+            android:defaultValue="true"
+            app:argType="boolean" />
+        <argument
+            android:name="currentlyDisplayedOdcTypes"
+            android:defaultValue="*"
+            app:argType="string" />
+        <argument
+            android:name="manualDocs"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.documents.models.ManualDocs"
+            app:nullable="true" />
+        <argument
+            android:name="resultDestinationId"
+            app:argType="integer" />
+    </dialog>
+</navigation>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_menu_actions">
+
+    <action
+        android:id="@+id/action_homeF_to_supportF"
+        app:destination="@id/supportBF" />
+
+    <action
+        android:id="@+id/action_homeF_to_helpF"
+        app:destination="@id/helpBaseF"
+        app:enterAnim="@anim/slide_in_down"
+        app:exitAnim="@anim/slide_out_down"
+        app:popEnterAnim="@anim/slide_in_up"
+        app:popExitAnim="@anim/slide_out_up">
+
+        <argument
+            android:name="popUp"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </action>
+
+    <action
+        android:id="@+id/action_homeF_to_settingsF"
+        app:destination="@id/settingsF"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_global_to_nav_faq"
+        app:destination="@id/nav_faq"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right">
+        <argument
+            android:name="categoryId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </action>
+
+
+    <action
+        android:id="@+id/action_homeF_to_diiaId"
+        app:destination="@id/nav_diia_id"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right">
+        <argument
+            android:name="enableResultMode"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="resultDestination"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <argument
+            android:name="resultKey"
+            android:defaultValue="unknownKey"
+            app:argType="string" />
+        <argument
+            android:name="forceDeleteMode"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </action>
+
+    <action
+        android:id="@+id/action_homeF_to_sign_history"
+        app:destination="@+id/nav_signe_history"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right">
+    </action>
+
+
+    <action
+        android:id="@+id/action_homeF_to_nav_app_sessions"
+        app:destination="@id/nav_app_sessions"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right">
+        <argument
+            android:name="notification"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ConsumableItem"
+            app:nullable="true" />
+    </action>
+
+    <action
+        android:id="@+id/action_global_notificationFCompose"
+        app:destination="@id/nav_notifications" />
+
+</navigation>

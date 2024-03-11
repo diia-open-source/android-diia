@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_back_button">Кнопка: Назад</string>
+
+    <string name="accessibility_login_screen_bank_list_item1">Кнопка: Вхід через BankID</string>
+    <string name="accessibility_login_screen_bank_list_item2">Кнопка: Вхід через Приват24</string>
+    <string name="accessibility_login_screen_bank_list_item3">Кнопка: Вхід через monobank</string>
+    <string name="accessibility_login_screen_bank_list_item4">Кнопка: Авторизація за допомогою NFC</string>
+    <string name="accessibility_login_screen_checkbox_text">Активуйте, якщо ви ознайомилися з Повідомленням про обробку персональних даних. Ваша згода активує способи авторизації</string>
+
+    <string name="accessibility_bank_selection_search">edit text: Пошук банку для авторизації</string>
+    <string name="accessibility_bank_selection_item_name">Кнопка: Вхід через %s</string>
+
+    <string name="accessibility_num_tile_one">Кнопка: один</string>
+    <string name="accessibility_num_tile_two">Кнопка: два</string>
+    <string name="accessibility_num_tile_three">Кнопка: три</string>
+    <string name="accessibility_num_tile_four">Кнопка: чотири</string>
+    <string name="accessibility_num_tile_five">Кнопка: п\'ять</string>
+    <string name="accessibility_num_tile_six">Кнопка: шість</string>
+    <string name="accessibility_num_tile_seven">Кнопка: сім</string>
+    <string name="accessibility_num_tile_eight">Кнопка: вісім</string>
+    <string name="accessibility_num_tile_nine">Кнопка: дев\'ять</string>
+    <string name="accessibility_num_tile_zero">Кнопка: нуль</string>
+    <string name="accessibility_num_tile_back_button">Кнопка: скасувати ввід</string>
+    <string name="accessibility_num_tile_biometric_button">Кнопка: біометричний вхід</string>
+    <string name="accessibility_num_remove_button">Кнопка: скасувати ввід</string>
+
+    <string name="accessibility_biometric_methods_icon">Іконка: біометричні методи входу</string>
+    <string name="accessibility_biometric_methods_button">Кнопка: Дозволити</string>
+    <string name="accessibility_biometric_methods_alt_button">Кнопка: Дозволю пізніше</string>
+
+    <string name="accessibility_scan_nfc_button">Кнопка: Зчитати</string>
+
+    <string name="accessibility_doc_nfc_dialog_icon">Прикладіть носій з документом (чіп) до задньої сторони телефону</string>
+    <string name="accessibility_doc_nfc_scan_icon">Зчитування номеру документа</string>
+</resources>

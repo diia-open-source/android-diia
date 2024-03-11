@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_doc_full_info"
+    app:startDestination="@id/fullDocInfoF">
+    <dialog
+        android:id="@+id/fullDocInfoF"
+        android:name="ua.gov.diia.documents.ui.fullinfo.FullInfoFCompose"
+        android:label="fullDocInfoF">
+        <argument
+            android:name="doc"
+            app:argType="android.os.Parcelable" />
+    </dialog>
+
+</navigation>

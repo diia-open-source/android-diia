@@ -1,0 +1,6 @@
+ua/gov/diia/splash/ui/**/*F.*
+ua/gov/diia/splash/ui/**/*FArgs.*
+ua/gov/diia/splash/ui/AlreadyAuthorizedError.*
+ua/gov/diia/splash/ui/AlreadyAuthorizedErrorArgs.*
+ua/gov/diia/splash/**/*$*.*
+ua/gov/diia/splash/ui/**/compose/*.*

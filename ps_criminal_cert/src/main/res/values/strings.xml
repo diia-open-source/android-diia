@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="criminal_cert_title">Витяг про несудимість</string>
+    <string name="criminal_cert_order">Замовити витяг</string>
+    <string name="criminal_cert_start">Почати</string>
+    <string name="criminal_cert_tab_title_done">Готові</string>
+    <string name="criminal_cert_tab_title_processing">Замовлені</string>
+    <string name="criminal_cert_state_processing">В обробці</string>
+    <string name="criminal_cert_state_done">Витяг готовий</string>
+    <string name="criminal_cert_to_details">Детальніше</string>
+    <string name="criminal_cert_next">Далі</string>
+    <string name="criminal_cert_details_download_zip">Завантажити архів з витягом</string>
+    <string name="criminal_cert_requester_add_prev_first_name">Додати попереднє ім’я</string>
+    <string name="criminal_cert_requester_add_prev_middle_name">Додати попереднє по батькові</string>
+    <string name="criminal_cert_requester_add_prev_last_name">Додати попереднє прізвище</string>
+    <string name="criminal_cert_requester_prev_last_name">Попереднє прізвище</string>
+    <string name="criminal_cert_requester_prev_first_name">Попереднє ім\’я</string>
+    <string name="criminal_cert_requester_prev_middle_name">Попереднє по батькові</string>
+    <string name="criminal_cert_requester_middle_name">По батькові</string>
+    <string name="criminal_cert_requester_first_name">Ім\’я</string>
+    <string name="criminal_cert_requester_last_name">Прізвище</string>
+    <string name="criminal_cert_contacts_input_phone_title">Контактний номер телефону</string>
+    <string name="criminal_cert_address_title">Місце реєстрації проживання</string>
+    <string name="criminal_cert_address_description">Будь ласка, вкажіть актуальну адресу місця реєстрації проживання.</string>
+    <string name="criminal_cert_confirm_action">Надіслати</string>
+</resources>

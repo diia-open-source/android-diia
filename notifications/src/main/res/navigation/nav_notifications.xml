@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@+id/notificationFCompose"
+    android:id="@+id/nav_notifications">
+
+    <action
+        android:id="@+id/action_global_to_notificationSettingsF"
+        app:destination="@id/nav_notification_settings" />
+
+
+    <action
+        android:id="@+id/action_to_notification_full"
+        app:destination="@id/nav_notification_details">
+
+        <argument
+            android:name="messageId"
+            app:argType="ua.gov.diia.notifications.models.notification.pull.MessageIdentification" />
+    </action>
+    <fragment
+        android:id="@+id/notificationFCompose"
+        android:name="ua.gov.diia.notifications.ui.fragments.home.notifications.compose.NotificationFCompose"
+        android:label="NotificationFCompose" />
+</navigation>

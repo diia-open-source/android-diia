@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="constructorVm"
+            type="ua.gov.diia.address_search.ui.AddressSearchVM" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/middle">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_white_card"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/large">
+
+            <ua.gov.diia.ui_base.views.DiiaProgressCV
+                android:id="@+id/progress_addressCardLoader"
+                isGone="@{!constructorVm.loadingFieldData}"
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- togo add isGone if we don't the title -->
+            <TextView
+                android:id="@+id/title_card"
+                style="@style/LineText"
+                isGone="@{!constructorVm.showFlowTitle}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large"
+                android:layout_marginTop="@dimen/large"
+                android:layout_marginEnd="@dimen/large"
+                android:text="@{constructorVm.addressDescription}"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_realEstate"
+            fieldTextTwoWay="@={constructorVm.realEstateInput}"
+            isGone="@{!constructorVm.showRealEstateField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/xlarge"
+            android:layout_marginEnd="@dimen/large"
+            app:fieldHint="@{constructorVm.realEstateTypeFieldParams.hint}"
+            app:fieldMode="@{constructorVm.realEstateFieldMode}"
+            app:fieldText="@{constructorVm.selectedRealEstate.name}"
+            app:fieldTitle="@{constructorVm.realEstateTypeFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/title_card"
+            app:layout_goneMarginTop="@dimen/large"
+            app:selectableClickListener="@{constructorVm::selectRealEstate}"
+            tools:fieldHint="Оберіть тип майна"
+            tools:fieldTitle="Майно" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_precision"
+            fieldTextTwoWay="@={constructorVm.precisionInput}"
+            isGone="@{!constructorVm.showPrecisionField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:fieldHint="@{constructorVm.precisionTypeFieldParams.hint}"
+            app:fieldMode="@{constructorVm.precisionFieldMode}"
+            app:fieldText="@{constructorVm.selectedPrecision.name}"
+            app:fieldTitle="@{constructorVm.precisionTypeFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/field_realEstate"
+            app:layout_goneMarginTop="@dimen/large"
+            app:selectableClickListener="@{constructorVm::selectPrecision}"
+            tools:fieldHint="Оберіть precision"
+            tools:fieldTitle="precision" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_country"
+            fieldTextTwoWay="@={constructorVm.countryInput}"
+            isGone="@{!constructorVm.showCountryField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:fieldHint="@{constructorVm.countryFieldParams.hint}"
+            app:fieldMode="@{constructorVm.countryFieldMode}"
+            app:fieldText="@{constructorVm.selectedCountry.name}"
+            app:fieldTitle="@{constructorVm.countryFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/field_precision"
+            app:layout_goneMarginTop="@dimen/large"
+            app:selectableClickListener="@{constructorVm::selectCountry}"
+            tools:fieldHint="Оберіть країну"
+            tools:fieldTitle="Країна" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_region"
+            fieldTextTwoWay="@={constructorVm.regionInput}"
+            isGone="@{!constructorVm.showRegionsField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:fieldError="@{constructorVm.showRegionFieldError}"
+            app:fieldErrorText="@{constructorVm.selectedRegion.errorMessage}"
+            app:fieldHint="@{constructorVm.regionFieldParams.hint}"
+            app:fieldMode="@{constructorVm.regionFieldMode}"
+            app:fieldText="@{constructorVm.selectedRegion.name}"
+            app:fieldTitle="@{constructorVm.regionFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/field_country"
+            app:selectableClickListener="@{constructorVm::selectRegion}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_region"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_region" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_district"
+            fieldTextTwoWay="@={constructorVm.districtInput}"
+            isGone="@{!constructorVm.showDistrictField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:IsSelectionEnabled="@{!constructorVm.loadingFieldData}"
+            app:fieldHint="@{constructorVm.districtFieldParams.hint}"
+            app:fieldMode="@{constructorVm.districtFieldMode}"
+            app:fieldText="@{constructorVm.selectedDistrict.name}"
+            app:fieldTitle="@{constructorVm.districtFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/field_region"
+            app:selectableClickListener="@{constructorVm::selectDistrict}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_countryside"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_countriside" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_typeOfCity"
+            fieldTextTwoWay="@={constructorVm.cityTypeInput}"
+            isGone="@{!constructorVm.showCityTypeField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:fieldHint="@{constructorVm.cityTypeFieldParams.hint}"
+            app:fieldMode="@{constructorVm.cityTypeFieldMode}"
+            app:fieldText="@{constructorVm.selectedCityType.name}"
+            app:fieldTitle="@{constructorVm.cityTypeFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/field_district"
+            app:selectableClickListener="@{constructorVm::selectCityType}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_type_district"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_type_district" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_city"
+            fieldTextTwoWay="@{constructorVm.cityInput}"
+            isGone="@{!constructorVm.showCityField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:IsSelectionEnabled="@{!constructorVm.loadingFieldData}"
+            app:fieldHint="@{constructorVm.cityFieldParams.hint}"
+            app:fieldMode="@{constructorVm.cityFieldMode}"
+            app:fieldText="@{constructorVm.selectedCity.name}"
+            app:fieldTitle="@{constructorVm.cityFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/field_typeOfCity"
+            app:selectableClickListener="@{constructorVm::selectCity}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_district"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_district" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_post_office"
+            fieldTextTwoWay="@{constructorVm.postOfficeInput}"
+            isGone="@{!constructorVm.showPostOfficeField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:IsSelectionEnabled="@{!constructorVm.loadingFieldData}"
+            app:fieldHint="@{constructorVm.postOfficeFieldParams.hint}"
+            app:fieldMode="@{constructorVm.postOfficeFieldMode}"
+            app:fieldText="@{constructorVm.selectedPostOffice.name}"
+            app:fieldTitle="@{constructorVm.postOfficeFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/field_city"
+            app:selectableClickListener="@{constructorVm::selectPostOffice}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_post_office"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_post_office" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_typeOfStreet"
+            fieldTextTwoWay="@={constructorVm.streetTypeInput}"
+            isGone="@{!constructorVm.showStreetTypeField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:fieldHint="@{constructorVm.streetTypeFieldParams.hint}"
+            app:fieldMode="@{constructorVm.streetTypeFieldMode}"
+            app:fieldText="@{constructorVm.selectedStreetType.name}"
+            app:fieldTitle="@{constructorVm.streetTypeFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/field_post_office"
+            app:selectableClickListener="@{constructorVm::selectStreetType}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_street_type"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_street_type" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_street"
+            fieldTextTwoWay="@={constructorVm.streetInput}"
+            isGone="@{!constructorVm.showStreetField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:IsSelectionEnabled="@{!constructorVm.loadingFieldData}"
+            app:fieldHint="@{constructorVm.streetFieldParams.hint}"
+            app:fieldMode="@{constructorVm.streetFieldMode}"
+            app:fieldText="@{constructorVm.selectedStreet.name}"
+            app:fieldTitle="@{constructorVm.streetFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/field_typeOfStreet"
+            app:selectableClickListener="@{constructorVm::selectStreet}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_street"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_street" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_house"
+            isGone="@{!constructorVm.showHouseField}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="6dp"
+            app:fieldError="@{constructorVm.showHouseFieldError}"
+            app:fieldErrorText="@{constructorVm.houseFieldParams.validation.errorMessage}"
+            app:fieldHint="@{constructorVm.houseFieldParams.hint}"
+            app:fieldMode="@{constructorVm.houseFieldMode}"
+            app:fieldText="@{constructorVm.selectedHouse.name}"
+            app:fieldTextTwoWay="@={constructorVm.house}"
+            app:fieldTitle="@{constructorVm.houseFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/field_street"
+            app:layout_goneMarginEnd="@dimen/middle"
+            app:selectableClickListener="@{constructorVm::selectHouse}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_building"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_buildin" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_section"
+            isGone="@{!constructorVm.showCorpsField}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/middle"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:fieldError="@{constructorVm.showCorpsFieldError}"
+            app:fieldErrorText="@{constructorVm.corpsFieldParams.validation.errorMessage}"
+            app:fieldHint="@{constructorVm.corpsFieldParams.hint}"
+            app:fieldMode="@{constructorVm.corpFieldMode}"
+            app:fieldText="@{constructorVm.selectedCorp.name}"
+            app:fieldTextTwoWay="@={constructorVm.corps}"
+            app:fieldTitle="@{constructorVm.corpsFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/field_street"
+            app:selectableClickListener="@{constructorVm::selectCorp}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_section"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_section" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_flat"
+            isGone="@{!constructorVm.showApartmentField}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/middle"
+            app:fieldError="@{constructorVm.showApartmentFieldError}"
+            app:fieldErrorText="@{constructorVm.apartmentFieldParams.validation.errorMessage}"
+            app:fieldHint="@{constructorVm.apartmentFieldParams.hint}"
+            app:fieldMode="@{constructorVm.apartmentFieldMode}"
+            app:fieldText="@{constructorVm.selectedApartment.name}"
+            app:fieldTextTwoWay="@={constructorVm.apartment}"
+            app:fieldTitle="@{constructorVm.apartmentFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/field_house"
+            app:selectableClickListener="@{constructorVm::selectApartment}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_flat"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_flat" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_postalIndex"
+            isGone="@{!constructorVm.showZipField}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:fieldError="@{constructorVm.showZipFieldError}"
+            app:fieldErrorText="@{constructorVm.zipFieldParams.validation.errorMessage}"
+            app:fieldHint="@{constructorVm.zipFieldParams.hint}"
+            app:fieldMode="@{constructorVm.zipFieldMode}"
+            app:fieldText="@{constructorVm.selectedZip.name}"
+            app:fieldTextTwoWay="@={constructorVm.zip}"
+            app:fieldTitle="@{constructorVm.zipFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/field_section"
+            app:selectableClickListener="@{constructorVm::selectZip}"
+            tools:fieldHint="@string/dr_replace_registration_verification_hint_postal_code"
+            tools:fieldTitle="@string/dr_replace_registration_verification_title_postal_code" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrierHouseDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="field_house,field_postalIndex,field_flat, field_section" />
+
+        <ua.gov.diia.ui_base.views.common.card_item.DiiaCardInputField
+            android:id="@+id/field_description"
+            fieldTextTwoWay="@={constructorVm.descriptionInput}"
+            isGone="@{!constructorVm.showDescriptionField}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/large"
+            app:fieldHint="@{constructorVm.descriptionFieldParams.hint}"
+            app:fieldMaxLength="300"
+            app:fieldMode="@{constructorVm.descriptionFieldMode}"
+            app:fieldText="@{constructorVm.selectedDescription.name}"
+            app:fieldTitle="@{constructorVm.descriptionFieldParams.label}"
+            app:fieldTitleColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/barrierHouseDetails"
+            app:selectableClickListener="@{constructorVm::selectDescription}"
+            tools:fieldHint="description"
+            tools:fieldTitle="some description" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_criminal_cert"
+    app:startDestination="@id/criminalCertHomeF">
+
+    <fragment
+        android:id="@+id/criminalCertHomeF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.home.CriminalCertHomeF"
+        android:label="CriminalCertHomeF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+        <argument
+            android:name="certId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="publicService"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="resourceId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="isNew"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="directionFlag"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/actionCriminalCertHomeFToCriminalCertDetailsF"
+            app:destination="@id/criminalCertDetailsF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertHomeF_to_criminalCertWelcomeF"
+            app:destination="@id/criminalCertWelcomeF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertHomeF_to_criminalCertWelcomeFSkip"
+            app:destination="@id/criminalCertWelcomeF"
+            app:popUpTo="@id/criminalCertHomeF"
+            app:popUpToInclusive="true"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/criminalCertDetailsF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.details.CriminalCertDetailsF"
+        android:label="CriminalCertDetailsF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+        <argument
+            android:name="certId"
+            app:argType="string" />
+        <argument
+            android:name="isNew"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_criminalCertDetailsF_to_criminalCertHomeF"
+            app:destination="@id/criminalCertHomeF"
+            app:popUpTo="@id/nav_criminal_cert"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/criminalCertStepAddressF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.steps.address.CriminalCertStepAddressF"
+        android:label="CriminalCertStepAddressF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+
+        <argument
+            android:name="data_user"
+            app:argType="ua.gov.diia.ps_criminal_cert.models.CriminalCertUserData" />
+        <action
+            android:id="@+id/action_criminalCertStepAddressF_to_criminalCertStepContactsF"
+            app:destination="@id/criminalCertStepContactsF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_criminalCertStepAddressF_to_searchF"
+            app:destination="@id/nav_search"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="key"
+                app:argType="string" />
+            <argument
+                android:name="searchableList"
+                android:defaultValue="@null"
+                app:argType="ua.gov.diia.search.models.SearchableItem[]"
+                app:nullable="true" />
+        </action>
+
+        <action
+            android:id="@+id/action_criminalCertStepAddressF_to_searchBulletF"
+            app:destination="@id/nav_search_bullet">
+            <argument
+                android:name="screenHeader"
+                app:argType="string" />
+            <argument
+                android:name="contentTitle"
+                app:argType="string" />
+            <argument
+                android:name="resultKey"
+                app:argType="string" />
+            <argument
+                android:name="data"
+                app:argType="ua.gov.diia.search.models.SearchableBullet[]" />
+        </action>
+
+    </fragment>
+    <fragment
+        android:id="@+id/criminalCertStepBirthF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.steps.birth.CriminalCertStepBirthF"
+        android:label="CriminalCertStepBirthF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+
+        <argument
+            android:name="data_user"
+            app:argType="ua.gov.diia.ps_criminal_cert.models.CriminalCertUserData" />
+        <action
+            android:id="@+id/action_criminalCertStepBirthF_to_criminalCertStepContactsF"
+            app:destination="@id/criminalCertStepContactsF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertStepBirthF_to_criminalCertStepNationalityF"
+            app:destination="@id/criminalCertStepNationalityF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertStepBirthF_to_criminalCertStepAddressF"
+            app:destination="@id/criminalCertStepAddressF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertStepBirthF_to_searchF"
+            app:destination="@id/nav_search"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="key"
+                app:argType="string" />
+            <argument
+                android:name="searchableList"
+                android:defaultValue="@null"
+                app:argType="ua.gov.diia.search.models.SearchableItem[]"
+                app:nullable="true" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/criminalCertStepConfirmF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.steps.confirm.CriminalCertStepConfirmF"
+        android:label="CriminalCertStepConfirmF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+
+        <argument
+            android:name="data_user"
+            app:argType="ua.gov.diia.ps_criminal_cert.models.CriminalCertUserData" />
+        <action
+            android:id="@+id/action_criminalCertStepConfirmF_to_criminalCertDetailsF"
+            app:destination="@id/criminalCertDetailsF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/criminalCertStepContactsF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.steps.contacts.CriminalCertStepContactsF"
+        android:label="CriminalCertStepContactsF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+
+        <argument
+            android:name="data_user"
+            app:argType="ua.gov.diia.ps_criminal_cert.models.CriminalCertUserData" />
+        <action
+            android:id="@+id/action_criminalCertStepContactsF_to_criminalCertStepConfirmF"
+            app:destination="@id/criminalCertStepConfirmF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/criminalCertStepReasonsF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.steps.reason.CriminalCertStepReasonsF"
+        android:label="CriminalCertStepReasonsF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_criminalCertStepReasonsF_to_criminalCertStepTypeF"
+            app:destination="@id/criminalCertStepTypeF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/criminalCertStepRequesterF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.steps.requester.CriminalCertStepRequesterF"
+        android:label="CriminalCertStepRequesterF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+
+        <argument
+            android:name="data_user"
+            app:argType="ua.gov.diia.ps_criminal_cert.models.CriminalCertUserData" />
+        <action
+            android:id="@+id/action_criminalCertStepRequesterF_to_criminalCertStepContactsF"
+            app:destination="@id/criminalCertStepContactsF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertStepRequesterF_to_criminalCertStepBirthF"
+            app:destination="@id/criminalCertStepBirthF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertStepRequesterF_to_criminalCertStepAddressF"
+            app:destination="@id/criminalCertStepAddressF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertStepRequesterF_to_criminalCertStepNationalityF"
+            app:destination="@id/criminalCertStepNationalityF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/criminalCertStepNationalityF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.steps.nationality.CriminalCertStepNationalityF"
+        android:label="CriminalCertStepNationalityF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+
+        <argument
+            android:name="data_user"
+            app:argType="ua.gov.diia.ps_criminal_cert.models.CriminalCertUserData" />
+        <action
+            android:id="@+id/action_criminalCertStepNationalityF_to_criminalCertStepContactsF"
+            app:destination="@id/criminalCertStepContactsF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertStepNationalityF_to_criminalCertStepAddressF"
+            app:destination="@id/criminalCertStepAddressF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertStepNationalityF_to_searchF"
+            app:destination="@id/nav_search"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="key"
+                app:argType="string" />
+            <argument
+                android:name="searchableList"
+                android:defaultValue="@null"
+                app:argType="ua.gov.diia.search.models.SearchableItem[]"
+                app:nullable="true" />
+
+        </action>
+        <action
+            android:id="@+id/action_criminalCertStepNationalityF_to_criminalCertStepBirthF"
+            app:destination="@id/criminalCertStepBirthF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/criminalCertStepTypeF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.steps.type.CriminalCertStepTypeF"
+        android:label="CriminalCertStepTypeF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+        <argument
+            android:name="data_user"
+            app:argType="ua.gov.diia.ps_criminal_cert.models.CriminalCertUserData" />
+        <action
+            android:id="@+id/action_criminalCertStepTypeF_to_criminalCertStepRequesterF"
+            app:destination="@id/criminalCertStepRequesterF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/criminalCertListFragment"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.home.CriminalCertListF"
+        android:label="CriminalCertListFragment">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+
+        <argument
+            android:name="certStatus"
+            app:argType="ua.gov.diia.ps_criminal_cert.models.enums.CriminalCertStatus" />
+    </fragment>
+
+    <include app:graph="@navigation/nav_search" />
+    <include app:graph="@navigation/nav_search_bullet" />
+
+    <fragment
+        android:id="@+id/criminalCertWelcomeF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.welcome.CriminalCertWelcomeF"
+        android:label="CriminalCertWelcomeF">
+
+        <argument
+            android:name="contextMenu"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]"
+            app:nullable="true" />
+        <argument
+            android:name="certId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="publicService"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="resourceId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="directionFlag"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <action
+            android:id="@+id/action_criminalCertWelcomeF_to_criminalCertStepReasonsF"
+            app:destination="@id/criminalCertStepReasonsF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertWelcomeF_to_criminalCertDetailsF"
+            app:destination="@id/criminalCertDetailsF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_criminalCertWelcomeF_to_criminalCertStepRequesterF"
+            app:destination="@id/criminalCertStepRequesterF"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+</navigation>

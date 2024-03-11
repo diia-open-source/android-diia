@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <bitmap
+            android:width="@dimen/large"
+            android:height="@dimen/large"
+            android:gravity="center"
+            android:src="@drawable/ic_radiobutton_green_checked19" />
+    </item>
+
+    <item android:state_checked="false">
+        <bitmap
+            android:width="@dimen/large"
+            android:height="@dimen/large"
+            android:gravity="center"
+            android:src="@drawable/ic_checkbox_green_cempty19" />
+    </item>
+</selector>

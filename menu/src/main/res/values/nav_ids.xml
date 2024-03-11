@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="nav_host" type="id"/>
+    <item name="supportBF" type="id"/>
+    <item name="helpBaseF" type="id"/>
+    <item name="settingsF" type="id"/>
+    <item name="nav_faq" type="id"/>
+    <item name="nav_diia_id" type="id"/>
+    <item name="nav_app_sessions" type="id"/>
+    <item name="nav_notifications" type="id"/>
+</resources>

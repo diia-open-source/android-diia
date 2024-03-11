@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@drawable/shape_status_message"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/emoji"
+        style="@style/LineExtraXText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/emoji_reminder" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/LineExtraText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/middle"
+        android:lineSpacingExtra="0sp"
+        android:paddingBottom="@dimen/middle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/emoji"
+        app:layout_constraintTop_toTopOf="@id/emoji"
+        android:layout_marginTop="3dp"
+        app:layout_goneMarginTop="0dp"
+        tools:text="Заява очікує обробки" />
+
+    <TextView
+        android:id="@+id/subTitle"
+        style="@style/TitleTextXLarge"
+        android:layout_width="0dp"
+        android:includeFontPadding="false"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/middle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/emoji"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_goneMarginTop="@dimen/middle"
+        tools:text="3 537.00 грн" />
+
+    <TextView
+        android:id="@+id/text"
+        style="@style/LineTextBlack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/middle"
+        android:layout_marginTop="@dimen/middle"
+        android:lineSpacingExtra="@dimen/line_spacing_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/emoji"
+        app:layout_constraintTop_toBottomOf="@id/subTitle"
+        app:layout_goneMarginTop="0dp"
+        tools:text="Підписану заяву успішно отримано виконавцем та вона очікує обробки." />
+
+</merge>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bank_id_title">BankID</string>
+    <string name="bank_selection_title_text">Оберіть свій банк</string>
+    <string name="bank_selection_description_text">Для авторизації за допомогою BankID, оберіть свій банк та увійдіть до системи інтернет-банкінгу. Авторизація не передбачає жодного доступу до фінансової інформації.</string>
+    <string name="bank_selection_search_text">Пошук</string>
+    <string name="bank_selection_empty_icon">🖐</string>
+    <string name="bank_selection_empty_title">На жаль, сталася помилка.</string>
+    <string name="bank_selection_empty_description">Перелік банків недоступний. Спробуйте трошки пізніше.</string>
+</resources>

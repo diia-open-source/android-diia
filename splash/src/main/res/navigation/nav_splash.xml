@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_splash"
+    app:startDestination="@id/splashF">
+
+    <!-- START SPLASH -->
+    <fragment
+        android:id="@+id/splashF"
+        android:name="ua.gov.diia.splash.ui.SplashF"
+        android:label="SplashF">
+
+        <deepLink
+            android:id="@+id/deepLinkDocumentCheck"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/documents/{docName}/{docId}/verify/{otp}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaDocumentCheck"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/documents/{docName}/{docId}/verify/{otp}" />
+
+        <deepLink
+            android:id="@+id/deepLinkIdentityCheck"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/acquirers/identification/{docRequestId}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaIdentityCheck"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/acquirers/identification/{docRequestId}" />
+
+        <deepLink
+            android:id="@+id/deepLinkOffer"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/acquirers/offer-request/{offerId}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaOffer"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/acquirers/offer-request/{offerId}" />
+
+        <deepLink
+            android:id="@+id/deepLinkDocumentShare"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/acquirers/document-request/{offerId}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaDocumentShare"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/acquirers/document-request/{offerId}" />
+
+        <deepLink
+            android:id="@+id/acquirerRequest"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/acquirers/branch/offer/offer-request/{otp}" />
+        <deepLink
+            android:id="@+id/diiaAcquirerRequest"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/acquirers/branch/offer/offer-request/{otp}" />
+
+        <deepLink
+            android:id="@+id/deepLinkDebt"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/debt/{debtId}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaDebt"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/debt/{debtId}" />
+
+        <deepLink
+            android:id="@+id/deepLinkPenalty"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/penalty/{penaltyId}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaPenalty"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/penalty/{penaltyId}" />
+
+        <deepLink
+            android:id="@+id/deepLinkMessage"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/message/{messageId}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaMessage"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/message/{messageId}" />
+
+        <deepLink
+            android:id="@+id/deepLinkMessagePublic"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/message/public/{messageId}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaMessagePublic"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/message/public/{messageId}" />
+
+        <deepLink
+            android:id="@+id/deepLinkChangeRegistrationApplication"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/residence-registration/application/{id}/verify/{otp}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaChangeRegistrationApplication"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/residence-registration/application/{id}/verify/{otp}" />
+
+        <deepLink
+            android:id="@+id/deepLinkAcquirerAuth"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/auth/acquirers/branch/offer/{uuid4}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaAcquirerAuth"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/auth/acquirers/branch/offer/{uuid4}" />
+
+        <deepLink
+            android:id="@+id/deepLinkStartFlow"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/{flowId}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaStartFlow"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/{flowId}" />
+
+        <deepLink
+            android:id="@+id/deepLinkStartFlowMortgage"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/mortgage/verify/{otp}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaStartFlowMortgage"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/mortgage/verify/{otp}" />
+
+        <deepLink
+            android:id="@+id/deepLinkStartFlowDamagePropertyRecovery"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/damaged-property-recovery/verify/{otp}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaStartFlowDamagePropertyRecovery"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/damaged-property-recovery/verify/{otp}" />
+
+        <deepLink
+            android:id="@+id/deepLinkStartFlowChildResidenceRegistration"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/child-residence-registration/verify/{otp}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaStartFlowChildResidenceRegistration"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/child-residence-registration/verify/{otp}" />
+
+        <deepLink
+            android:id="@+id/deepLinkStartFlowResidenceRegistration"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/residence-registration/verify/{otp}" />
+
+
+        <action
+            android:id="@+id/action_splashF_to_rootDF"
+            app:destination="@id/errorF"
+            app:enterAnim="@anim/slide_in_down"
+            app:exitAnim="@anim/slide_out_down"
+            app:popUpTo="@id/splashF"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="diia_error"
+                app:argType="ua.gov.diia.core.models.DiiaError" />
+        </action>
+        <action
+            android:id="@+id/action_splashF_to_destination_login"
+            app:destination="@id/nav_login"
+            app:popUpTo="@id/splashF"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="skipInitialization"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="uuid4"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_splashF_to_qrScanF"
+            app:destination="@id/qrScanF"
+            app:popUpTo="@id/splashF"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashF_to_destination_pinInput"
+            app:destination="@id/nav_pin_input"
+            app:popUpTo="@id/splashF"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <!-- END SPLASH -->
+</navigation>

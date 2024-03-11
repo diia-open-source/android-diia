@@ -1,0 +1,10 @@
+ua/gov/diia/ui_base/**/*F.*
+ua/gov/diia/ui_base/**/*$*.*
+ua/gov/diia/ui_base/**/*BindingAdaptersKt.*
+ua/gov/diia/ui_base/mappers/*
+ua/gov/diia/ui_base/components/*
+ua/gov/diia/ui_base/views/*
+ua/gov/diia/ui_base/util/*
+ua/gov/diia/ui_base/adapters/**
+ua/gov/diia/ui_base/**/*Dialog.*
+ua/gov/diia/ui_base/fragments/errordialog/DialogError*.*

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_compound_address_search"
+    app:startDestination="@id/destination_compoundAddress">
+    <fragment
+        android:id="@+id/destination_compoundAddress"
+        android:name="ua.gov.diia.address_search.ui.CompoundAddressSearchF">
+        <argument
+            android:name="initialDataSet"
+            app:argType="ua.gov.diia.address_search.models.AddressFieldResponse" />
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <argument
+            android:name="featureCode"
+            app:argType="string" />
+        <argument
+            android:name="schemaCode"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_destination_compoundAddress_to_destination_searchBulletF"
+            app:destination="@id/nav_search_bullet"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="screenHeader"
+                app:argType="string" />
+            <argument
+                android:name="contentTitle"
+                app:argType="string" />
+            <argument
+                android:name="resultKey"
+                app:argType="string" />
+            <argument
+                android:name="data"
+                app:argType="ua.gov.diia.search.models.SearchableBullet[]" />
+        </action>
+        <action
+            android:id="@+id/action_destination_compoundAddress_to_destination_searchF"
+            app:destination="@id/nav_search"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="key"
+                app:argType="string" />
+            <argument
+                android:name="searchableList"
+                android:defaultValue="@null"
+                app:argType="ua.gov.diia.search.models.SearchableItem[]"
+                app:nullable="true" />
+        </action>
+    </fragment>
+    <include app:graph="@navigation/nav_search_bullet" />
+    <include app:graph="@navigation/nav_search" />
+</navigation>

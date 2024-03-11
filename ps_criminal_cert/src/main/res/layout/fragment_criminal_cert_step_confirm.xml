@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="ua.gov.diia.ps_criminal_cert.ui.steps.confirm.CriminalCertStepConfirmVM" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_scrollContent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/backBtn"
+            android:layout_width="@dimen/xxxlarge"
+            android:layout_height="@dimen/xxxlarge"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/middle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_b_back_bold"
+                tools:ignore="ContentDescription" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/featureTitleTv"
+            style="@style/LineExtraXText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small"
+            android:layout_marginTop="@dimen/lm"
+            android:layout_marginEnd="@dimen/xlarge"
+            android:text="@string/criminal_cert_title"
+            app:layout_constraintEnd_toStartOf="@+id/contextMenuBtn"
+            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            app:layout_constraintTop_toTopOf="@+id/backBtn" />
+
+        <FrameLayout
+            android:id="@+id/contextMenuBtn"
+            isGone="@{!vm.showContextMenu}"
+            android:layout_width="@dimen/xxxlarge"
+            android:layout_height="@dimen/xxxlarge"
+            android:layout_marginTop="@dimen/middle"
+            android:layout_marginEnd="@dimen/large"
+            android:onClick="@{()-> vm.openContextMenu()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_dl_menu"
+                tools:ignore="ContentDescription" />
+
+        </FrameLayout>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/toolbarBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:barrierMargin="@dimen/small"
+            app:constraint_referenced_ids="backBtn,featureTitleTv,contextMenuBtn" />
+
+        <include
+            android:id="@+id/loadIndicator"
+            layout="@layout/layout_home_content_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/xlarge"
+            app:isGone="@{!(vm.isLoading &amp;&amp; vm.state == null)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarBarrier"
+            tools:visibility="gone" />
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:paddingBottom="@dimen/xlarge"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarBarrier">
+
+            <LinearLayout
+                isGone="@{vm.state == null}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleTv"
+                    style="@style/TitleTextXLarge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/xlarge"
+                    android:layout_marginTop="@dimen/middle"
+                    android:text="@{vm.state.application.title}"
+                    tools:text="Title" />
+
+                <ua.gov.diia.ui_base.views.common.messages.DiiaAttentionMessage
+                    android:id="@+id/attentionMessage"
+                    htmlMetadata="@{vm.state.application.attentionMessage.parameters}"
+                    isGone="@{vm.state.application.attentionMessage == null}"
+                    linkActionListener="@{vm.openLinkListenerAM}"
+                    text="@{vm.state.application.attentionMessage.text}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/xlarge"
+                    android:layout_marginTop="@dimen/xlarge"
+                    app:msgEmoji="@{vm.state.application.attentionMessage.icon}"
+                    app:msgText="@{vm.state.application.attentionMessage.text}"
+                    tools:visibility="visible" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/xlarge"
+                    android:layout_marginTop="@dimen/xlarge">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/verticalGuideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent=".4" />
+
+                    <TextView
+                        android:id="@+id/applicantTitle"
+                        style="@style/LineExtraXText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@{vm.state.application.applicant.title}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Дані про заявника" />
+
+                    <TextView
+                        android:id="@+id/fullNameLabel"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/large"
+                        android:text="@{vm.state.application.applicant.fullName.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/applicantTitle"
+                        tools:text="ПІБ:" />
+
+                    <TextView
+                        android:id="@+id/fullNameValue"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:text="@{vm.state.application.applicant.fullName.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toTopOf="@+id/fullNameLabel"
+                        tools:text="Дія Надія Володимирівна" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/fullNameBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="fullNameLabel,fullNameValue" />
+
+                    <TextView
+                        android:id="@+id/lastNameLabel"
+                        style="@style/LineText"
+                        isGone="@{vm.state.application.applicant.previousLastName == null}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.previousLastName.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/fullNameBarrier"
+                        tools:text="Попередні прізвища:" />
+
+                    <TextView
+                        android:id="@+id/lastNameValue"
+                        style="@style/LineText"
+                        isGone="@{vm.state.application.applicant.previousLastName == null}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.previousLastName.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toBottomOf="@+id/fullNameBarrier"
+                        tools:text="Шелест Дієва" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/lastNameBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="lastNameLabel,lastNameValue" />
+
+                    <TextView
+                        android:id="@+id/firstNameLabel"
+                        style="@style/LineText"
+                        isGone="@{vm.state.application.applicant.previousFirstName == null}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.previousFirstName.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/lastNameBarrier"
+                        tools:text="Попередні імена:" />
+
+                    <TextView
+                        android:id="@+id/firstNameValue"
+                        style="@style/LineText"
+                        isGone="@{vm.state.application.applicant.previousFirstName == null}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.previousFirstName.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toBottomOf="@+id/lastNameBarrier"
+                        tools:text="Віра Любов" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/firstNameBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="firstNameLabel,firstNameValue" />
+
+                    <TextView
+                        android:id="@+id/middleNameLabel"
+                        style="@style/LineText"
+                        isGone="@{vm.state.application.applicant.previousMiddleName == null}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.previousMiddleName.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/firstNameBarrier"
+                        tools:text="Попередні по батькові:" />
+
+                    <TextView
+                        android:id="@+id/middleNameValue"
+                        style="@style/LineText"
+                        isGone="@{vm.state.application.applicant.previousMiddleName == null}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.previousMiddleName.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toBottomOf="@+id/firstNameBarrier"
+                        tools:text="Василівна" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/middleNameBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="middleNameLabel,middleNameValue" />
+
+                    <TextView
+                        android:id="@+id/genderLabel"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.gender.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/middleNameBarrier"
+                        tools:text="Стать:" />
+
+                    <TextView
+                        android:id="@+id/genderValue"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:text="@{vm.state.application.applicant.gender.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toTopOf="@id/genderLabel"
+                        tools:text="Жінка" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/genderBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="genderLabel,genderValue" />
+
+                    <TextView
+                        android:id="@+id/nationLabel"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.nationality.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/genderBarrier"
+                        tools:text="Громадянство:" />
+
+                    <TextView
+                        android:id="@+id/nationValue"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:text="@{vm.state.application.applicant.nationality.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toTopOf="@id/nationLabel"
+                        tools:text="Латвія Австрія" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/nationBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="nationLabel,nationValue" />
+
+                    <TextView
+                        android:id="@+id/birthLabel"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.birthDate.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nationBarrier"
+                        tools:text="Дата народження:" />
+
+                    <TextView
+                        android:id="@+id/birthValue"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:text="@{vm.state.application.applicant.birthDate.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toTopOf="@id/birthLabel"
+                        tools:text="12.02.1934" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/birthBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="birthLabel,birthValue" />
+
+                    <TextView
+                        android:id="@+id/birthPlaceLabel"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.birthPlace.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/birthBarrier"
+                        tools:text="Місце народження:" />
+
+                    <TextView
+                        android:id="@+id/birthPlaceValue"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:text="@{vm.state.application.applicant.birthPlace.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toTopOf="@id/birthPlaceLabel"
+                        tools:text="Україна, Стрій" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/birthPlaceBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="birthPlaceLabel,birthPlaceValue" />
+
+                    <TextView
+                        android:id="@+id/addressLabel"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/middle"
+                        android:text="@{vm.state.application.applicant.registrationAddress.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/birthPlaceBarrier"
+                        tools:text="Місце реєстрації проживання:" />
+
+                    <TextView
+                        android:id="@+id/addressValue"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:text="@{vm.state.application.applicant.registrationAddress.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toTopOf="@id/addressLabel"
+                        tools:text="Україна, Вишгород" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/addressBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="addressLabel,addressValue" />
+
+                    <TextView
+                        android:id="@+id/contactTitle"
+                        style="@style/LineExtraXText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/twolarge"
+                        android:text="@{vm.state.application.contacts.title}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/addressBarrier"
+                        tools:text="Контактні дані" />
+
+                    <TextView
+                        android:id="@+id/phoneLabel"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/large"
+                        android:text="@{vm.state.application.contacts.phoneNumber.label}"
+                        app:layout_constraintEnd_toStartOf="@+id/verticalGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/contactTitle"
+                        tools:text="Номер телефону:" />
+
+                    <TextView
+                        android:id="@+id/phoneValue"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large"
+                        android:text="@{vm.state.application.contacts.phoneNumber.value}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/verticalGuideline"
+                        app:layout_constraintTop_toTopOf="@+id/phoneLabel"
+                        tools:text="+38 088 007 98 09" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/phoneBarrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="phoneLabel,phoneValue" />
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/twolarge"
+                        android:background="@color/colorPrimary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/phoneBarrier" />
+
+                    <TextView
+                        android:id="@+id/typeTitle"
+                        style="@style/LineExtraXText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/twolarge"
+                        android:text="@{vm.state.application.certificateType.title}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/divider"
+                        tools:text="Тип витягу" />
+
+                    <TextView
+                        android:id="@+id/typeValue"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/large"
+                        android:text="@{vm.state.application.certificateType.type}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/typeTitle"
+                        tools:text="Відомості про притягнення до кримінальної відповідальності, відсутність / наявність судимості або обмежень, передбачених кримінально-процесуальним законодавством України." />
+
+                    <TextView
+                        android:id="@+id/reasonTitle"
+                        style="@style/LineExtraXText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/twolarge"
+                        android:text="@{vm.state.application.reason.title}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/typeValue"
+                        tools:text="Мета запиту" />
+
+                    <TextView
+                        android:id="@+id/reasonValue"
+                        style="@style/LineText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/large"
+                        android:text="@{vm.state.application.reason.reason}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/reasonTitle"
+                        tools:text="Оформлення візи для виїзду за кордон" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/twolarge"
+                        android:background="@drawable/outlined_card"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/reasonValue"
+                        app:layout_constraintVertical_bias="0">
+
+                        <CheckBox
+                            android:id="@+id/cinfirmCheckbox"
+                            style="@style/LineText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/middle"
+                            android:layout_marginStart="@dimen/ls"
+                            android:layout_marginEnd="@dimen/large"
+                            android:checked="@={vm.isConfirmed}"
+                            android:gravity="top"
+                            android:paddingVertical="@dimen/middle"
+                            android:paddingStart="@dimen/middle"
+                            android:text="@{vm.state.application.checkboxName}"
+                            app:layout_constraintBottom_toTopOf="@id/orderBtn"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="Підтверджую достовірність наведених у заяві даних" />
+
+                        <ua.gov.diia.ui_base.views.common.progress.DiiaProgressButton
+                            android:id="@+id/orderBtn"
+                            isGone="@{vm.state == null}"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/large"
+                            android:layout_marginBottom="@dimen/large"
+                            app:isEnabled="@{vm.isConfirmed}"
+                            app:isLoading="@{vm.isOrdering}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cinfirmCheckbox"
+                            app:title="@string/criminal_cert_confirm_action" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

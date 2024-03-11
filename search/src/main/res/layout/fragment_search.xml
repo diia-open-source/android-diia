@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_scrollContent"
+        tools:context="ua.gov.diia.search.ui.SearchF">
+
+        <ImageView
+            android:id="@+id/img_search_close"
+            style="@style/BackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            app:layout_constraintBottom_toBottomOf="@+id/et_searchF_value"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_searchF_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/middle"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/xlarge"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionDone"
+            app:drawableStartCompat="@drawable/ic_baseline_search_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img_search_close"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSearch"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:scrollbarFadeDuration="0"
+            android:scrollbarSize="@dimen/small"
+            android:scrollbarThumbVertical="@android:color/darker_gray"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@+id/et_searchF_value"
+            tools:listitem="@layout/item_rv_search"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

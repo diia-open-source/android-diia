@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/player_view_notification"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:elevation="0dp"
+        app:resize_mode="fixed_width"
+        app:shutter_background_color="@color/black"
+        app:use_controller="false" />
+
+    <View
+        android:id="@+id/video_dimer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_alpha_40" />
+
+    <FrameLayout
+        android:id="@+id/exo_custom_action"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:alpha="0.5"
+            app:cardBackgroundColor="@color/black"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp" />
+
+        <ProgressBar
+            android:id="@+id/exo_custom_buffering"
+            android:layout_width="@dimen/xlarge"
+            android:layout_height="@dimen/xlarge"
+            android:layout_gravity="center"
+            android:indeterminateDrawable="@drawable/diia_circular_progress" />
+
+        <ImageView
+            android:id="@+id/exo_custom_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_player_play" />
+
+        <ImageView
+            android:id="@+id/exo_custom_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_player_pause" />
+
+    </FrameLayout>
+
+</merge>
+

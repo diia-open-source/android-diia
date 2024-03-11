@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="adapter"
+            type="ua.gov.diia.notifications.ui.fragments.notifications.NotificationFullAdapter.NotificationTextVH" />
+        <variable
+            name="message"
+            type="ua.gov.diia.core.models.notification.pull.message.NotificationMessagesBody" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl__item"
+        android:background="?attr/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/middle">
+
+        <TextView
+            android:id="@+id/tv_message_text"
+            style="@style/LineText"
+            isGone="@{!message.data.textVisibility}"
+            text="@{message.data.text}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="gone"
+            tools:text="Дією можна користуватись на декількох пристроях. Але пам'ятайте, що створити Дія.Підпис та використовувати його можна лише на одному." />
+
+        <TextView
+            android:id="@+id/tv_message_text_param"
+            style="@style/LineText"
+            htmlMetadata="@{message.data.parameters}"
+            isGone="@{!message.data.parametersVisibility}"
+            linkActionListener="@{adapter.onLinkClicked}"
+            text="@{message.data.text}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="Для подробиць зателефонуйте  за номер \n+38 (000) 00 00 000 або напишіть на почту \nposhta@gmail.com. Детальна інструкція \nsupport.diia.gov.ua" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

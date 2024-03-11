@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="subscription"
+            type="ua.gov.diia.notifications.models.notification.Subscription" />
+    </data>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/xlarge"
+            isGone="@{subscription.hideItem}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/name"
+                style="@style/LineExtraXText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{subscription.name}"
+                app:layout_constraintBottom_toBottomOf="@+id/switchState"
+                app:layout_constraintEnd_toEndOf="@+id/description"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/switchState"
+                tools:text="Кредитна історія" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="@{subscription.switchState}"
+                android:thumb="@drawable/thumb_selector"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:track="@drawable/track_selector" />
+
+            <TextView
+                android:id="@+id/description"
+                style="@style/LineText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/mini"
+                android:layout_marginEnd="67dp"
+                android:text="@{subscription.description}"
+                android:textColor="@color/black_alpha_30"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name"
+                tools:text="Потрібне підтвердження за допомогою Дія.Підписупідтвердження за допомогою Дія.Підпису" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

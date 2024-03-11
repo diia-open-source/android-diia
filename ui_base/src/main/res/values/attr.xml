@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- //////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////  Common attributes  /////////////////////////////////
+       ////////////////////////////////////////////////////////////////////////////////////// -->
+
+    <attr name="msgText" format="string" />
+    <attr name="msgEmoji" format="string" />
+    <attr name="msgTitle" format="string" />
+    <attr name="msgSubtitle" format="string" />
+    <attr name="msgDescription" format="string" />
+
+    <attr name="listHeader" format="string" />
+    <attr name="listContentTitleLeft" format="string" />
+    <attr name="listContentTitleRight" format="string" />
+    <attr name="listShowHeader" format="string" />
+    <attr name="listShowContentTitles" format="boolean" />
+    <attr name="listShowDelimiter" format="boolean" />
+
+    <attr name="textCaps" format="boolean" />
+    <attr name="text" format="string" />
+    <attr name="title" format="string" />
+    <attr name="hint" format="string" />
+    <attr name="icon" format="reference" />
+    <attr name="customTitleTextColor" format="reference" />
+    <attr name="customTextSize" format="reference" />
+    <attr name="textColor" format="reference" />
+
+    <attr name="isEnabled" format="boolean" />
+    <attr name="isLoading" format="boolean" />
+    <attr name="isActive" format="boolean" />
+
+    <attr name="checked" format="boolean" />
+
+    <attr name="titleTextSize" format="reference" />
+
+    <attr name="showTopDelimiter" format="boolean" />
+    <attr name="showBottomDelimiter" format="boolean" />
+
+    <attr name="fieldText" format="string" />
+    <attr name="fieldHint" format="string" />
+    <attr name="fieldTextSize" format="reference" />
+    <attr name="fieldTextColor" format="reference" />
+    <attr name="fieldTitle" format="string" />
+    <attr name="fieldTitleSize" format="reference" />
+    <attr name="fieldTitleColor" format="reference" />
+    <attr name="fieldErrorText" format="string" />
+    <attr name="fieldShowError" format="boolean" />
+    <attr name="fieldActionImg" format="reference" />
+    <attr name="fieldShowActionImg" format="boolean" />
+
+    <attr name="totalSteps" format="integer" />
+    <attr name="step" format="integer" />
+    <attr name="roundBackground" format="reference" />
+    <attr name="cutBackground" format="reference" />
+
+    <!-- //////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////  Custom styles  /////////////////////////////////////
+       ////////////////////////////////////////////////////////////////////////////////////// -->
+
+    <declare-styleable name="DiiaTvPlayerView">
+        <attr name="playerResizeMode" format="enum">
+            <enum name="fit" value="0" />
+            <enum name="fixed_width" value="1" />
+            <enum name="fixed_height" value="2" />
+            <enum name="fill" value="3" />
+            <enum name="zoom" value="4" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="MaskedEditText">
+        <attr name="maskHint" format="string" />
+        <attr name="mask" format="string" />
+        <attr name="allowed_chars" format="string" />
+        <attr name="denied_chars" format="string" />
+        <attr name="char_representation" format="string" />
+        <attr name="keep_hint" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="VotingActionMessageView">
+        <attr name="customTitleTextColor" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaFilterItemView">
+        <attr name="title" />
+        <attr name="checked" />
+        <attr name="filterImgChecked" format="reference" />
+        <attr name="filterImgUnchecked" format="reference" />
+        <attr name="showTopDelimiter" />
+        <attr name="showBottomDelimiter" />
+        <attr name="showSortDirection" format="boolean" />
+        <attr name="enableSortDirection" format="boolean" />
+        <attr name="enableUnselectionMode" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaAppBarCV">
+        <attr name="header" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaMenuIconCV">
+        <attr name="menuTitle" format="string" />
+        <attr name="icon" />
+        <attr name="icon_selected" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ScalableLayoutView">
+        <attr name="scaleWidth" format="dimension" />
+        <attr name="scaleHeight" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaProgressCV">
+        <attr name="cornersRadius" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="DocumentActionButtonCV">
+        <attr name="actionMode" format="enum">
+            <enum name="none" value="0" />
+            <enum name="ellipse" value="1" />
+            <enum name="stack" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="DiiaBulletsCV">
+        <attr name="num_of_bullets" format="integer" />
+        <attr name="bullets_color" format="color" />
+        <attr name="bullet_size" format="dimension" />
+        <attr name="bullet_margin" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SyncSizeTextView">
+        <attr name="useSizeOf" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="BarcodeScannerView">
+        <attr name="shouldScaleToFill" format="boolean" />
+        <attr name="borderColor" format="color" />
+        <attr name="maskColor" format="color" />
+        <attr name="borderWidth" format="dimension" />
+        <attr name="borderLength" format="dimension" />
+        <attr name="roundedCorner" format="boolean" />
+        <attr name="cornerRadius" format="dimension" />
+        <attr name="squaredFinder" format="boolean" />
+        <attr name="borderAlpha" format="float" />
+        <attr name="finderOffset" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaCircleProgressCV">
+        <attr name="progress_current" format="integer" />
+        <attr name="progress_max" format="integer" />
+
+        <attr name="progress_start_color" format="color" />
+        <attr name="progress_end_color" format="color" />
+        <attr name="progress_unreached_color" format="color" />
+
+        <attr name="progress_height" format="dimension" />
+        <attr name="progress_radius" format="dimension" />
+
+        <attr name="progress_type" format="enum">
+            <enum name="circle" value="0" />
+            <enum name="line" value="1" />
+            <enum name="rainbow" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <attr name="scrollingPagerIndicatorStyle" />
+
+    <declare-styleable name="ScrollingPagerIndicator">
+        <attr name="spi_dotColor" format="color" />
+        <attr name="spi_dotSelectedColor" format="color" />
+        <attr name="spi_dotSize" format="dimension" />
+        <attr name="spi_dotSpacing" format="dimension" />
+        <attr name="spi_visibleDotCount" format="integer" />
+        <attr name="spi_visibleDotThreshold" format="integer" />
+        <attr name="spi_looped" format="boolean" />
+        <attr name="spi_orientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SwipeRevealLayout">
+        <attr name="dragEdge">
+            <flag name="left" value="1" />
+            <flag name="right" value="2" />
+            <flag name="top" value="4" />
+            <flag name="bottom" value="8" />
+        </attr>
+        <attr name="mode">
+            <enum name="normal" value="0" />
+            <enum name="same_level" value="1" />
+        </attr>
+        <attr name="flingVelocity" format="integer" />
+        <attr name="minDistRequestDisallowParent" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="PinCodeInputCV">
+        <attr name="pinLength" format="integer" />
+        <attr name="shakeWithClear" format="boolean" />
+        <attr name="hasBiometric" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="FragmentNavigator">
+        <attr name="android:name" />
+        <attr name="pushTop" format="boolean" />
+    </declare-styleable>
+
+
+    <declare-styleable name="DiiaFaqItem">
+        <attr name="faqTitle" format="string" />
+        <attr name="faqExpandImg" format="reference" />
+        <attr name="faqCollapseImg" format="reference" />
+        <attr name="showTopDelimiter" />
+        <attr name="titleTextSize" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaFaqItemProgressed">
+        <attr name="faqTitle" />
+        <attr name="faqExpandImg" />
+        <attr name="faqCollapseImg" />
+        <attr name="faqLoading" format="boolean" />
+        <attr name="showTopDelimiter" />
+        <attr name="titleTextSize" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaListModeFilter">
+        <attr name="titleGrid" format="reference" />
+        <attr name="titleList" format="reference" />
+        <attr name="iconGrid" format="reference" />
+        <attr name="iconList" format="reference" />
+        <attr name="defaultMode" format="enum">
+            <enum name="grid" value="0" />
+            <enum name="list" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="DiiaPlaceholderActionAdd">
+        <attr name="titleText" format="string" />
+        <attr name="isEnabled" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaTabWithIndicator">
+        <attr name="tabNameText" format="string" />
+        <attr name="tabCounterText" format="string" />
+        <attr name="tabBackgroundColor" format="reference" />
+        <attr name="tabCounterVisibility" format="boolean"/>
+    </declare-styleable>
+
+    <!-- ///////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////  Action bars   ///////////////////////////////////
+       //////////////////////////////////////////////////////////////////////////////////// -->
+
+    <declare-styleable name="DiiaCountDownActionBarView">
+        <attr name="titleAction" format="string" />
+        <attr name="titleCount" format="string" />
+        <attr name="countInterval" format="integer" />
+        <attr name="countTimeout" format="integer" />
+    </declare-styleable>
+
+    <!-- ///////////////////////////////////////////////////////////////////////////////////
+     ////////////////////////////////  Labels   ///////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////// -->
+
+    <declare-styleable name="DiiaStatusLabel">
+        <attr name="labelText" format="string" />
+        <attr name="labelBackgroundColor" format="reference" />
+        <attr name="labelTextColor" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaSearch">
+        <attr name="searchTint" format="color" />
+        <attr name="searchIcon" format="reference" />
+        <attr name="searchFilterIcon" format="reference" />
+        <attr name="searchHint" format="string" />
+        <attr name="enableFiler" format="boolean" />
+        <attr name="enableClear" format="boolean" />
+        <attr name="displayMode" format="enum">
+            <enum name="editable" value="0" />
+            <enum name="button" value="1" />
+        </attr>
+        <attr name="android:inputType" />
+        <attr name="android:imeOptions" />
+    </declare-styleable>
+
+
+    <declare-styleable name="DiiaStatusDot">
+        <attr name="colorEnabled" format="color" />
+        <attr name="colorDisabled" format="color" />
+        <attr name="isEnabled" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaSwitch">
+        <attr name="checked" />
+        <attr name="isActive" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaChoiceChips">
+        <attr name="chipsText" format="string" />
+        <attr name="chipsBackground" format="reference" />
+        <attr name="chipsTextColor" format="reference" />
+    </declare-styleable>
+
+    <!-- /////////////////////////////////////////////////////////////////////////////////////
+       ////////////////////////////////  Card field items   /////////////////////////////////
+      ///////////////////////////////////////////////////////////////////////////////////// -->
+
+    <declare-styleable name="VotingItemView">
+        <attr name="showSelector" format="boolean" />
+        <attr name="selectorIcon" format="reference" />
+        <attr name="title" />
+        <attr name="percentage" format="string" />
+        <attr name="votesCount" format="string" />
+        <attr name="percentageProgressTotal" format="integer" />
+        <attr name="percentageProgressCurrent" format="integer" />
+        <attr name="showPercentage" format="boolean" />
+        <attr name="showVotesCount" format="boolean" />
+        <attr name="customTextColor" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="FopEditPaymentFieldView">
+        <attr name="fieldText" />
+        <attr name="fieldTitle" />
+        <attr name="titleTextSize" />
+        <attr name="titleTextColor" />
+        <attr name="textTextSize" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaCardNotifiableField">
+        <attr name="icon" />
+        <attr name="title" />
+        <attr name="notificationCount" format="string" />
+        <attr name="showTopDelimiter" />
+        <attr name="showBottomDelimiter" />
+        <attr name="showArrow" format="boolean" />
+        <attr name="isEnabled" />
+        <attr name="titleTextSize" />
+        <attr name="delimiterColor" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaInputField">
+        <attr name="amountOffset" format="integer" />
+        <attr name="isEnabled" />
+        <attr name="fieldMaxLength" format="integer" />
+        <attr name="fieldAllowedSymbols" format="string" />
+        <attr name="fieldTextSize" />
+        <attr name="fieldTitleSize" />
+        <attr name="fieldText" />
+        <attr name="fieldHint" />
+        <attr name="fieldErrorText" />
+        <attr name="fieldError" format="boolean" />
+        <attr name="fieldErrorWhenFocusChanged" format="boolean" />
+        <attr name="fieldAttention" format="boolean" />
+        <attr name="fieldAttentionText" format="string" />
+        <attr name="fieldTitle" />
+        <attr name="fieldTitleColor" />
+        <attr name="fieldTitleVisible" format="boolean" />
+        <attr name="fieldForceHideArrow" format="boolean" />
+        <attr name="fieldMode">
+            <enum name="button" value="0" />
+            <enum name="editable" value="1" />
+            <enum name="editablePhoneNumber" value="2" />
+        </attr>
+
+        <!--
+        multiline and singleLine are switched,
+        so in case singleLine is needed multiline should be used, and visa versa
+         -->
+        <attr name="fieldInputMode">
+            <enum name="multiline" value="0" />
+            <enum name="singleLine" value="1" />
+            <enum name="phoneNumber" value="2" />
+            <enum name="sumAmount" value="3" />
+            <enum name="decimal" value="4" />
+            <enum name="email" value="5" />
+        </attr>
+        <attr name="fieldTextGravity">
+            <enum name="start" value="0" />
+            <enum name="center" value="1" />
+            <enum name="end" value="2" />
+        </attr>
+        <attr name="fieldDelimiterGone" format="boolean" />
+        <attr name="fieldCounterEnabled" format="boolean" />
+        <attr name="fieldCounterMaxLength" format="integer" />
+        <attr name="saveStateEnabled" format="boolean" />
+        <attr name="description" format="string" />
+        <attr name="fieldCapitalize" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="TimeInputFieldView">
+        <attr name="isEnabled" />
+        <attr name="fieldHint" />
+        <attr name="fieldTextSize" />
+        <attr name="fieldTextColor" />
+        <attr name="fieldTitle" />
+        <attr name="fieldTitleSize" />
+        <attr name="fieldTitleColor" />
+        <attr name="fieldErrorText" />
+        <attr name="fieldActionImg" />
+        <attr name="fieldShowActionImg" />
+    </declare-styleable>
+
+    <declare-styleable name="DateInputFieldView">
+        <attr name="isEnabled" />
+        <attr name="fieldHint" />
+        <attr name="fieldTextSize" />
+        <attr name="fieldTextColor" />
+        <attr name="fieldTitle" />
+        <attr name="fieldTitleSize" />
+        <attr name="fieldTitleColor" />
+        <attr name="fieldErrorText" />
+        <attr name="fieldActionImg" />
+        <attr name="fieldShowActionImg" />
+    </declare-styleable>
+
+    <!-- /////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////  Line items   //////////////////////////////////////
+       ///////////////////////////////////////////////////////////////////////////////////// -->
+
+    <declare-styleable name="DiiaLineItemVertical">
+        <attr name="textCaps" />
+        <attr name="text" />
+        <attr name="title" />
+        <attr name="customTitleTextColor" />
+        <attr name="customTextSize" />
+        <attr name="textColor" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaLineItemHorizontal">
+        <attr name="textCaps" />
+        <attr name="text" />
+        <attr name="title" />
+        <attr name="customTitleTextColor" />
+        <attr name="customTextSize" />
+        <attr name="textTopMargin" format="reference" />
+    </declare-styleable>
+
+    <!-- /////////////////////////////////////////////////////////////////////////////////////
+   ///////////////////////////////////  Progress   //////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////// -->
+
+    <declare-styleable name="DiiaProgressWindow">
+
+    </declare-styleable>
+
+    <declare-styleable name="DiiaProgressTitled">
+        <attr name="title" />
+        <attr name="isTitleVisible" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaProgressButton">
+        <attr name="titleTextSize" />
+        <attr name="title" />
+        <attr name="isEnabled" />
+        <attr name="isLoading" />
+        <attr name="buttonMode">
+            <enum name="solid" value="0" />
+            <enum name="outlined" value="1" />
+            <enum name="text" value="2" />
+        </attr>
+        <attr name="successModeDrawableStart" format="reference" />
+        <attr name="successModeDrawableEnd" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaProgressTextWithImage">
+        <attr name="titleTextSize" />
+        <attr name="title" />
+        <attr name="isLoading" />
+        <attr name="iconStartBase64" format="string"/>
+        <attr name="iconStart" format="reference" />
+        <attr name="iconStartSize" format="dimension" />
+        <attr name="innerPaddingVertical" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaProgressStepped">
+        <attr name="totalSteps" />
+        <attr name="step" />
+        <attr name="roundBackground" />
+        <attr name="cutBackground" />
+        <attr name="showProgressTitle" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaProgressStep">
+        <attr name="totalSteps" />
+        <attr name="step" />
+        <attr name="roundBackground" />
+        <attr name="cutBackground" />
+    </declare-styleable>
+
+    <!-- //////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////  Content list  //////////////////////////////////////
+     ////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+    <declare-styleable name="DiiaContentList">
+        <attr name="listHeader" />
+        <attr name="listActionButtonTitle" format="string" />
+        <attr name="listContentTitleLeft" />
+        <attr name="listContentTitleRight" />
+        <attr name="listShowHeader" />
+        <attr name="listShowContentTitles" />
+        <attr name="listShowDelimiter" />
+        <attr name="listShowActionButton" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaContentListIndefinite">
+        <attr name="listHeader" />
+        <attr name="listContentTitleLeft" />
+        <attr name="listContentTitleRight" />
+        <attr name="listShowHeader" />
+        <attr name="listShowContentTitles" />
+        <attr name="listShowDelimiter" />
+        <attr name="listShowContentTitleArrows" format="boolean" />
+        <attr name="listFirstContentFilterApplied" format="boolean" />
+        <attr name="listSecondContentFilterApplied" format="boolean" />
+    </declare-styleable>
+
+    <!-- //////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////  Info messages  /////////////////////////////////////
+       ////////////////////////////////////////////////////////////////////////////////////// -->
+
+    <declare-styleable name="DiiaAttentionMessage">
+        <attr name="msgEmoji" />
+        <attr name="msgText" />
+        <attr name="msgTitle" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaPlaceholderMessage">
+        <attr name="msgEmoji" />
+        <attr name="msgText" />
+        <attr name="msgTitle" />
+        <attr name="msgDescription" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaStatusMessage">
+        <attr name="msgEmoji" />
+        <attr name="msgText" />
+        <attr name="msgTitle" />
+        <attr name="msgSubtitle" />
+
+    </declare-styleable>
+
+    <declare-styleable name="DiiaItemInfoAction">
+        <attr name="infoActionText" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="DiiaMarkedTextItem">
+        <attr name="mark" format="string" />
+        <attr name="textMarked" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="NameView">
+        <attr name="actionName" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="EmailEllipsizeTextView">
+        <attr name="android:text" />
+        <attr name="android:textAppearance" />
+        <attr name="android:drawableStart" />
+        <attr name="android:drawableEnd" />
+        <attr name="android:drawablePadding" />
+    </declare-styleable>
+
+</resources>

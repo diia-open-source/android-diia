@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"
+        android:background="@color/black" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:alpha="0.5"
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp" />
+
+    <ProgressBar
+        android:layout_width="@dimen/xlarge"
+        android:layout_height="@dimen/xlarge"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/diia_circular_progress" />
+
+</merge>

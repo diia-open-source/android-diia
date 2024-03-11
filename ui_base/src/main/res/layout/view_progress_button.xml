@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <Button
+        android:id="@+id/text_button"
+        style="@style/LineExtraButtonBlack"
+        android:layout_width="match_parent"
+        app:layout_constraintWidth_default="wrap"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:paddingStart="@dimen/xtwolarge"
+        android:paddingEnd="@dimen/xtwolarge"
+        app:layout_constraintWidth_min="160dp"
+        android:paddingVertical="@dimen/large"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        android:drawablePadding="@dimen/middle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="This is a good day" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_done_button"
+        android:layout_width="match_parent"
+        app:layout_constraintWidth_default="wrap"
+        android:layout_height="wrap_content"
+        android:background="@drawable/line_button_green_select"
+        android:paddingHorizontal="63dp"
+        android:paddingVertical="@dimen/large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/iv_done_indicator"
+            android:layout_width="@dimen/large"
+            android:layout_height="@dimen/large"
+            android:layout_marginEnd="@dimen/ls"
+            app:srcCompat="@drawable/ic_check_for_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/title_done_btn"
+            app:layout_constraintEnd_toStartOf="@+id/title_done_btn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/title_done_btn" />
+
+        <TextView
+            android:id="@+id/title_done_btn"
+            style="@style/LineExtraTextWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/iv_done_indicator"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Todo" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_progressButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/large"
+        android:paddingStart="@dimen/twolarge"
+        android:paddingEnd="@dimen/xtwolarge"
+        android:background="@drawable/black_enable_button"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintWidth_min="160dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:indeterminateDrawable="@drawable/diia_circular_progress"
+            app:layout_constraintBottom_toBottomOf="@+id/title_progress_btn"
+            app:layout_constraintEnd_toStartOf="@+id/title_progress_btn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/title_progress_btn" />
+
+        <TextView
+            android:id="@+id/title_progress_btn"
+            style="@style/LineExtraTextWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/middle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/progress"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Todo" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</merge>

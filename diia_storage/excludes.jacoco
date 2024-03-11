@@ -1,0 +1,8 @@
+ua/gov/diia/diia_storage/**/*$*.*
+ua/gov/diia/diia_storage/DiiaStorage.*
+ua/gov/diia/diia_storage/EncryptedAndroidKeyValueStore.*
+ua/gov/diia/diia_storage/AndroidBase64Wrapper.*
+ua/gov/diia/diia_storage/SecureDiiaStorage.*
+ua/gov/diia/diia_storage/PreferenceConfiguration.*
+ua/gov/diia/diia_storage/store/datasource/DataSourceDataResult.*
+ua/gov/diia/diia_storage/store/datasource/preferences/KotlinStoreImpl.*

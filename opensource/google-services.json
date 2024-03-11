@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "700821823914",
+    "project_id": "diiaoss",
+    "storage_bucket": "diiaoss.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700821823914:android:4d0bc2b397e0c6a4cf8bd3",
+        "android_client_info": {
+          "package_name": "ua.gov.diia.opensource"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvbzGeq1VmBgPP9GSLAd6HN-OQInblY5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

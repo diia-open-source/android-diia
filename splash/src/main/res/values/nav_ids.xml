@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="errorF" type="id"/>
+    <item name="destination_login" type="id"/>
+    <item name="qrScanF" type="id"/>
+    <item name="destination_pinInput" type="id"/>
+    <item name="nav_pin_create" type="id"/>
+    <item name="nav_pin_input" type="id"/>
+    <item name="nav_login" type="id"/>
+</resources>

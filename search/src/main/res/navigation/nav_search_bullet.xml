@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_search_bullet"
+    app:startDestination="@id/searchBulletF">
+
+    <fragment
+        android:id="@+id/searchBulletF"
+        android:name="ua.gov.diia.search.ui.bullet_selection.SearchBulletF">
+
+        <argument
+            android:name="screenHeader"
+            app:argType="string" />
+        <argument
+            android:name="contentTitle"
+            app:argType="string" />
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <argument
+            android:name="data"
+            app:argType="ua.gov.diia.search.models.SearchableBullet[]" />
+    </fragment>
+
+</navigation>

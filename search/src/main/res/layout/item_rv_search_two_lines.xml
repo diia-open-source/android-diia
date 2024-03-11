@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="ua.gov.diia.search.models.SearchableItemDoubleLine" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/large"
+        android:paddingHorizontal="@dimen/xlarge"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_marginBottom="@dimen/large"
+            style="@style/LineExtraText"
+            android:layout_width="match_parent"
+            android:text="@{item.displayTitle}"
+            isGone="@{!item.showTitle}"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="ТСЦ 8045 РСЦ ГСЦ МВС в м. Київ" />
+
+        <TextView
+            android:id="@+id/text"
+            style="@style/LineText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/xlarge"
+            app:layout_goneMarginTop="0dp"
+            android:text="@{item.displayText}"
+            isGone="@{!item.showText}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="Україна, 01011, м. Київ, вул. Арсенальна, 9/11" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="@dimen/large"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

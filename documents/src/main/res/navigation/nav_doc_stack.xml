@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_doc_stack"
+    app:startDestination="@id/stackFCompose">
+
+    <fragment
+        android:id="@+id/stackFCompose"
+        android:name="ua.gov.diia.documents.ui.stack.DocStackFCompose"
+        android:label="stackFCompose">
+        <argument
+            android:name="docType"
+            app:argType="string"
+            app:nullable="false" />
+        <argument
+            android:name="docColor"
+            app:argType="integer"
+            app:nullable="false" />
+    </fragment>
+</navigation>

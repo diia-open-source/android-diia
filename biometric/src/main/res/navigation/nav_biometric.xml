@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/destination_setupBiometric"
+    android:id="@+id/nav_biometric">
+
+    <fragment
+        android:id="@+id/destination_setupBiometric"
+        android:name="ua.gov.diia.biometric.ui.BiometricSetupF">
+        <argument
+            android:name="resultDestinationId"
+            app:argType="integer" />
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <argument
+            android:name="pin"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

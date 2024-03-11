@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/diia_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/xlarge"
+        android:layout_marginTop="@dimen/middle"
+        android:layout_marginBottom="@dimen/middle"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:srcCompat="@drawable/ic_logo_diia" />
+
+    <TextView
+        android:id="@+id/app_bar_header"
+        style="@style/LineText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/large"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/diia_logo"
+        app:layout_constraintStart_toEndOf="@+id/diia_logo"
+        app:layout_constraintTop_toTopOf="@+id/diia_logo"
+        tools:text="Документи" />
+
+    <ImageView
+        android:id="@+id/iv_scan_qr"
+        style="@style/SelectableBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/xlarge"
+        android:contentDescription="@string/scan_qr"
+        android:padding="@dimen/middle"
+        app:layout_constraintBottom_toBottomOf="@+id/diia_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/diia_logo"
+        app:layout_constraintVertical_bias="0.5"
+        app:srcCompat="@drawable/ic_qr" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="status"
+            type="ua.gov.diia.ps_criminal_cert.models.enums.CriminalCertStatus" />
+
+        <variable
+            name="vm"
+            type="ua.gov.diia.ps_criminal_cert.ui.home.CriminalCertHomeVM" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:id="@+id/stubMessageContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:isVisible="@{vm.stubMessage(status) != null}">
+
+            <include
+                android:id="@+id/stubMessage"
+                layout="@layout/stub_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/xlarge"
+                android:layout_marginTop="64dp"
+                app:message="@{vm.stubMessage(status)}" />
+
+        </ScrollView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingVertical="@dimen/large"
+            android:scrollbars="vertical"
+            app:isVisible="@{vm.stubMessage(status) == null}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_criminal_cert" />
+
+        <View
+            android:id="@+id/delimiter_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/diia_delimiter_gradient_height"
+            android:layout_gravity="bottom"
+            android:background="@drawable/delimiter_gradient"
+            app:isVisible="@{vm.delimiterState(status)}" />
+
+        <View
+            android:id="@+id/delimiter"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/diia_delimiter_height"
+            android:layout_gravity="bottom"
+            android:background="@color/colorPrimary"
+            app:isVisible="@{vm.delimiterState(status)}" />
+
+    </FrameLayout>
+</layout>
+

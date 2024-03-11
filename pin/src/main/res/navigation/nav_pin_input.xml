@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/destination_pinInput"
+    android:id="@+id/nav_pin_input">
+
+    <fragment
+        android:id="@+id/destination_pinInput"
+        android:name="ua.gov.diia.pin.ui.input.PinInputF">
+        <action
+            android:id="@+id/action_destination_pinInput_to_homeF"
+            app:destination="@id/nav_home"
+            app:popUpTo="@id/destination_pinInput"
+            app:enterAnim="@anim/slide_in_down"
+            app:exitAnim="@anim/slide_out_down"
+            app:popEnterAnim="@anim/slide_in_up"
+            app:popExitAnim="@anim/slide_out_up"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="verification"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_destination_pinInput_to_qrScanF"
+            app:destination="@id/qrScanF"
+            app:popUpTo="@id/destination_pinInput"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+</navigation>

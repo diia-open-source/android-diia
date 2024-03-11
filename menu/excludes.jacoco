@@ -1,0 +1,4 @@
+ua/gov/diia/menu/ui/**/*F.*
+ua/gov/diia/menu/ui/**/*FCompose.*
+ua/gov/diia/menu/**/*$*.*
+ua/gov/diia/menu/MenuContentController.*

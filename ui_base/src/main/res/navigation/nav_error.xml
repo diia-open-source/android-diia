@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_error"
+    app:startDestination="@id/errorD">
+
+    <action
+        android:id="@+id/action_global_to_errorD"
+        app:destination="@id/errorD" />
+
+    <dialog
+        android:id="@+id/errorD"
+        android:name="ua.gov.diia.ui_base.fragments.errordialog.ErrorDF"
+        android:label="ErrorDialog">
+        <argument
+            android:name="error"
+            app:argType="ua.gov.diia.ui_base.fragments.errordialog.DialogError" />
+    </dialog>
+
+</navigation>

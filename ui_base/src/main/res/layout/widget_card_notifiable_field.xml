@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="67dp"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_tips_and_tricks" />
+
+    <View
+        android:id="@+id/clickable_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/delimiter_top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/diia_small_delimiter"
+        android:background="@color/color_divider_blue"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/LineExtraText"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_default="wrap"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/large"
+        android:layout_marginTop="@dimen/large"
+        android:layout_marginBottom="@dimen/large"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/barrierRightSide"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginStart="0dp"
+        tools:text="Запити на копії цифрових документів" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierRightSide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="arrow" />
+
+    <TextView
+        android:id="@+id/notificationCount"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:layout_marginStart="@dimen/middle"
+        android:background="@drawable/shape_card_notification_dot"
+        android:fontFamily="@font/e_ukraine_regular"
+        android:gravity="center"
+        android:minWidth="22dp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="@+id/title"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        tools:text="23" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/large"
+        app:layout_constraintTop_toTopOf="@+id/title"
+        app:srcCompat="@drawable/ic_arrow_forward_white"
+        app:tint="@drawable/selector_text_black" />
+
+    <View
+        android:id="@+id/delimiter_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/diia_small_delimiter"
+        android:background="@color/color_divider_blue"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</merge>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@drawable/back_penalties_paid"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/emoji"
+        style="@style/TextSizeEmoji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/large"
+        android:textColor="@color/black"
+        android:layout_marginTop="@dimen/large"
+        android:layout_marginBottom="@dimen/large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="@string/emoji_ok" />
+
+    <TextView
+        android:id="@+id/info_title"
+        style="@style/LineExtraText"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/large"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="@dimen/large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/emoji"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="У вас Все добре" />
+
+    <TextView
+        android:id="@+id/info_text"
+        style="@style/LineText"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:lineSpacingExtra="4sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
+        app:layout_goneMarginTop="@dimen/large"
+        android:layout_marginBottom="@dimen/large"
+        android:layout_marginEnd="@dimen/large"
+        android:textColorLink="@color/colorAccent"
+        android:textColorHighlight="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/emoji"
+        app:layout_constraintTop_toBottomOf="@+id/info_title"
+        tools:visibility="visible"
+        tools:text="Оберіть громаду до якої ви алежите, щоб знайти або підтримати петицію.Оберіть громаду до якої ви алежите, щоб знайти або підтримати петицію.Оберіть громаду до якої ви алежите, щоб знайти або підтримати петицію." />
+
+</merge>

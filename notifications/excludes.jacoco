@@ -1,0 +1,8 @@
+ua/gov/diia/notifications/ui/**/*F.*
+ua/gov/diia/notifications/ui/**/*FCompose.*
+ua/gov/diia/notifications/**/*$*.*
+ua/gov/diia/notifications/ui/fragments/notifications/NotificationVideoPlayerView.*
+ua/gov/diia/notifications/ui/fragments/notifications/NotificationFullAdapter.*
+ua/gov/diia/notifications/service/FCMS.*
+ua/gov/diia/notifications/ui/**/*Args.*
+ua/gov/diia/notifications/work/SendPushTokenWork.*

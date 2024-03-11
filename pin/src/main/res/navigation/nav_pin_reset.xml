@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_pin_reset"
+    app:startDestination="@id/destination_resetPin">
+
+    <fragment
+        android:id="@+id/destination_resetPin"
+        android:name="ua.gov.diia.pin.ui.reset.ResetPinF">
+        <argument
+            android:name="resultDestination"
+            app:argType="integer" />
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_pin_reset_to_createPin"
+            app:destination="@id/nav_pin_create">
+            <argument
+                android:name="resultDestinationId"
+                app:argType="integer" />
+            <argument
+                android:name="resultKey"
+                app:argType="string" />
+            <argument
+                android:name="flowType"
+                app:argType="ua.gov.diia.pin.model.CreatePinFlowType" />
+        </action>
+    </fragment>
+
+</navigation>

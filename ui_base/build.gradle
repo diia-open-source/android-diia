@@ -1,0 +1,196 @@
+plugins {
+    id 'org.jetbrains.kotlin.android'
+    id 'com.android.library'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-kapt'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
+}
+
+apply from: '../dependencies.gradle'
+
+android {
+    namespace 'ua.gov.diia.ui_base'
+    compileSdk 34
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/ASL-2.0.txt', 'META-INF/LGPL-3.0.txt']
+            pickFirsts += ['draftv4/schema', 'draftv3/schema']
+        }
+    }
+
+    buildFeatures {
+        dataBinding = true
+        compose = true
+    }
+
+    flavorDimensions = ["vendor"]
+    productFlavors {
+        gplay {
+            dimension "vendor"
+        }
+
+        huawei {
+            dimension "vendor"
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs/native']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        prod {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        stage {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        vendors {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+    }
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 34
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
+
+    // work-runtime-ktx 2.1.0 and above now requires Java 8
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    kapt {
+        correctErrorTypes true
+    }
+
+    lint {
+        disable 'MissingTranslation'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation project(':core')
+    implementation deps.activity_compose
+    implementation deps.core_ktx
+    implementation deps.appcompat
+    implementation deps.material
+    testImplementation deps.junit
+    androidTestImplementation deps.android_junit
+    androidTestImplementation deps.android_espresso_core
+
+    implementation platform(deps.compose_bom)
+
+    implementation deps.accompanist_pager
+
+    //lifecycle
+    implementation deps.lifecycle_extensions
+    implementation deps.lifecycle_livedata_ktx
+    implementation deps.lifecycle_viewmodel_ktx
+
+    //navigation
+    implementation deps.navigation_fragment_ktx
+    implementation deps.navigation_ui_ktx
+
+    //hilt
+    implementation deps.hilt_android
+    kapt deps.hilt_android_compiler
+    implementation deps.hilt_navigation_fragment
+    implementation deps.hilt_work
+    kapt deps.hilt_compiler
+
+    //retrofit
+    implementation deps.retrofit
+
+    //compose
+    implementation deps.compose_ui
+    implementation deps.ui_graphics
+    implementation deps.compose_material
+    implementation deps.compose_ui_tooling_preview
+    implementation deps.compose_ui_util
+    implementation deps.compose_constraintlayout
+    debugImplementation deps.compose_ui_tooling
+    implementation deps.paging_compose
+    implementation deps.lottie_compose
+
+    implementation deps.exoplayer_core
+    implementation deps.exoplayer_ui
+    implementation deps.exoplayer_hls
+
+    //Paging
+    implementation deps.paging_runtime_ktx
+
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
+    }
+
+    //Glide
+    implementation deps.glide
+    implementation deps.glide_compose
+
+    // Moshi
+    implementation deps.moshi
+    implementation deps.moshi_adapters
+    implementation deps.moshi_kotlin
+    implementation deps.retrofit_moshi_converter
+    kapt deps.moshi_codegen
+
+    implementation deps.better_link_movement_method
+
+    //diia
+    implementation deps.compose_reorderable
+
+    //test
+    testImplementation deps.junit
+    testImplementation deps.mockk_android
+    testImplementation deps.mockk_agent
+    testImplementation deps.turbine
+    testImplementation deps.kotlinx_coroutines_test
+    testImplementation deps.androidx_core_testing
+    testImplementation deps.hamcrest_library
+    testImplementation deps.json
+    androidTestImplementation deps.android_junit
+    androidTestImplementation deps.android_espresso_core
+
+}
+
+apply from: '../jacoco.gradle'

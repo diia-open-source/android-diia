@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_stack_order"
+    app:startDestination="@id/stackOrderF">
+    <fragment
+        android:id="@+id/stackOrderF"
+        android:name="ua.gov.diia.documents.ui.stack.order.StackOrderFCompose"
+        android:label="StackOrderF">
+        <argument
+            android:name="doc"
+            android:defaultValue="*"
+            app:argType="string" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_to_stack_order"
+        app:destination="@id/stackOrderF"
+        app:enterAnim="@anim/anim_fade_in"
+        app:exitAnim="@anim/anim_fade_out"
+        app:popEnterAnim="@anim/anim_fade_in"
+        app:popExitAnim="@anim/anim_fade_out" />
+</navigation>

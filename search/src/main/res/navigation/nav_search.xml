@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_search"
+    app:startDestination="@id/destination_searchF">
+
+    <fragment
+        android:id="@+id/destination_searchF"
+        android:name="ua.gov.diia.search.ui.SearchF">
+        <argument
+            android:name="key"
+            app:argType="string" />
+        <argument
+            android:name="searchableList"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.search.models.SearchableItem[]"
+            app:nullable="true" />
+
+    </fragment>
+</navigation>

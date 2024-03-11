@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#C5D9E9</color>
+    <color name="colorPrimaryDark">#69747d</color>
+    <color name="colorAccent">#000000</color>
+
+    <color name="color_divider_blue">#CADDEB</color>
+    <color name="color_scrollContent">#E2ECF4</color>
+    <color name="color_scrollContent_semi">#80E2ECF4</color>
+
+    <!-- Status -->
+    <color name="state_approved">#19BE6F</color>
+    <color name="state_collecting">#FFD600</color>
+    <color name="state_rejected">#CA2F28</color>
+    <color name="state_holding">#D1D1D1</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_alpha_40">#66FFFFFF</color>
+    <color name="white_alpha_50">#80FFFFFF</color>
+    <color name="white_alpha_70">#B3FFFFFF</color>
+    <color name="white_semi">#50FFFFFF</color>
+    <color name="white_semi_60">#99FFFFFF</color>
+    <color name="white_chip">#ECF2F7</color>
+    <color name="black">#000000</color>
+    <color name="black_alpha_10">#1A000000</color>
+    <color name="black_alpha_15">#25000000</color>
+    <color name="black_alpha_20">#33000000</color>
+    <color name="black_alpha_30">#4D000000</color>
+    <color name="black_alpha_40">#66000000</color>
+    <color name="black_alpha_50">#80000000</color>
+    <color name="black_alpha_80">#CC000000</color>
+    <color name="black_alpha_70">#B3000000</color>
+    <color name="back_check">#282828</color>
+    <color name="back_card_bond">#3B3E4F</color>
+    <color name="green_snack">#65C680</color>
+    <color name="green_light">#BAD6B8</color>
+    <color name="trial">#A4C5C3</color>
+    <color name="trial_alpha_50">#D1E1E1</color>
+    <color name="violet">#B9BBD2</color>
+    <color name="violet_alpha_50">#EEEEF4</color>
+    <color name="red">#DEC7D8</color>
+    <color name="red_dot">#E83C3C</color>
+    <color name="green_alert">#BAF8C4</color>
+    <color name="grey_light">#D5E4EF</color>
+    <color name="white_alfa_30">#4DFFFFFF</color>
+    <color name="qr_scanner_overlay">#99000000</color>
+    <color name="white_blue">#E1E8EE</color>
+    <color name="grey_blue">#CBD4DC</color>
+
+    //docs
+    <color name="student_card_font">#E9DBCE</color>
+    <color name="covid_cert_font">#BFECB4</color>
+    <color name="driver_license_card_color">#DDDBE7</color>
+    <color name="foreign_passport_card_color">#BADAEC</color>
+    <color name="foreign_passport_font">#74B4D8</color>
+    <color name="vehicle_license_card_color">#DBEBEB</color>
+    <color name="vehicle_license_font">#B6D7D7</color>
+    <color name="birth_certificate_color">#DBECF1</color>
+    <color name="birth_certificate_font">#B7D8E2</color>
+    <color name="pension_card_color">#FFF7F0</color>
+    <color name="pension_card_font">#FFE4CB</color>
+    <color name="residence_certificate_color">#D7E3F3</color>
+    <color name="tab_round_unselected">#ECF2F7</color>
+    <!--    DESIGN COLORS-->
+    <color name="yellow_military_id">#FFF495</color>
+    <color name="doc_military_wartime_background">#8BBFF0</color>
+    <color name="yellow_military_text">#947C12</color>
+
+    <color name="blue_light">#B0C6E6</color>
+    <color name="blue_high_light">#F0F6F9</color>
+    <color name="blue_highlight">#D7E3F3</color>
+    <color name="blue_dark">#74B4D8</color>
+    <color name="blue_middle">#BADAEC</color>
+    <color name="blue_pale_middle">#B0C6E7</color>
+    <color name="yellow">#FAEB64</color>
+    <color name="yellow_cert_processing">#FAEB64</color>
+    <color name="yellow_dark">#E9DBCE</color>
+    <color name="yellow_middle">#F4EDE7</color>
+    <color name="yellow_light">#E9DBCE</color>
+    <color name="purple_light">#BCB9D0</color>
+    <color name="yellow_doc_light">#F2DECB</color>
+    <color name="green_high_light">#B6D7D7</color>
+    <color name="error_alert">#DB7C76</color>
+    <color name="document_covid_certificate">#BFECB4</color>
+    <color name="document_covid_certificate_yellow">#FFF7CF</color>
+    <color name="document_pension_color">#FFE4CB</color>
+    <color name="military_donation_color">#C6D4CA</color>
+    <color name="blue_lighter">#DBE1F1</color>
+    <color name="divider_light_blue">#B5C2E6</color>
+    <color name="white_light">#F9FCFF</color>
+<!--    GRADIENT COLORS-->
+    <!-- QR SCANNER COLORS -->
+    <color name="qr_mask">#60000000</color>
+    <color name="qr_border">#ffafed44</color>
+    <color name="qr_insurance_load">#B6D7D7</color>
+    <!-- debts colors   -->
+    <color name="debt_green">#65C680</color>
+    <color name="debt_orange">#FF9975</color>
+    <!-- App session label colors -->
+    <color name="color_session_status_done">#65C680</color>
+    <!-- assist colors   -->
+    <color name="nfc_progress_not_complete_color">#4DD4D4D4</color>
+    <color name="nfc_progress_complete_color">#2F7BF5</color>
+    <!--covid certificate-->
+    <color name="covid_certificate_full_info_background">#E5F6E1</color>
+    <!--    MILITARY BONDS-->
+    <color name="document_military_card_color">#80C5D9E9</color>
+    <color name="document_military_bond_divider_color">#33E2ECF4</color>
+    <!-- Housing certificate doc -->
+    <color name="document_housing_certificate_color">#CED9E9</color>
+
+    <!-- Official cert -->
+
+    <!-- Gradient line colors -->
+    <color name="gradient_position_1">#93BEFA</color>
+    <color name="gradient_position_2">#91ADF7</color>
+    <color name="gradient_position_3">#D7A5E1</color>
+    <color name="gradient_position_4">#F3B8C0</color>
+    <color name="gradient_position_5">#F0DFBD</color>
+    <color name="bg_card">#FFFFFFFF</color>
+    <color name="bg_dialog_head_line">#B4C6D3</color>
+    <!-- Ticker type -->
+    <color name="ticker_type_available">#E2F2FE</color>
+    <color name="ticker_type_warning">#FAEB64</color>
+    <color name="ticker_type_not_available">#ECECEC</color>
+</resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="ua.gov.diia.home.ui.HomeVM" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_blue_yellow_gradient_with_bottom"
+        tools:context=".ui.activities.MainActivity">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/gradientBg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="48dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/home_content"
+            android:name="ua.gov.diia.core.di.fragment.HiltNavHostFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/compose_tab_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ua.gov.diia.ui_base.views.common.progress.DiiaProgressWindow
+            android:id="@+id/progress_window_home_full"
+            isGone="@{!vm.isLoadIndicatorHomeScreen()}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:visibility="gone" />
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose_tab_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_home_children"
+    app:startDestination="@id/nav_doc_gallery">
+
+    <include app:graph="@navigation/nav_doc_gallery" />
+
+    <include app:graph="@navigation/nav_public_service_categories" />
+
+    <keep_state_fragment
+        android:id="@+id/menuFCompose"
+        android:name="ua.gov.diia.menu.ui.MenuFCompose" />
+
+    <keep_state_fragment
+        android:id="@+id/feedF"
+        android:name="ua.gov.diia.opensource.ui.fragments.FeedF" />
+
+    <action
+        android:id="@+id/global_to_menuFCompose"
+        app:destination="@id/menuFCompose" />
+
+    <action
+        android:id="@+id/global_to_feedF"
+        app:destination="@id/feedF" />
+
+    <action
+        android:id="@+id/global_to_publicServicesFCompose"
+        app:destination="@id/nav_public_service_categories" />
+
+    <action
+        android:id="@+id/global_to_docGalleryFCompose"
+        app:destination="@id/nav_doc_gallery" />
+
+</navigation>

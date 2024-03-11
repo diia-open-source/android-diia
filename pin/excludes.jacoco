@@ -1,0 +1,4 @@
+ua/gov/diia/pin/ui/**/*F.*
+ua/gov/diia/pin/**/*$*.*
+ua/gov/diia/pin/repository/*
+ua/gov/diia/pin/ui/**/compose/*.*

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="ua.gov.diia.verification.ui.method_selection.VerificationMethodSelectionVM" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/flRoot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/large"
+            android:background="@drawable/back_white_round">
+
+            <TextView
+                android:id="@+id/header_verificationMethods"
+                style="@style/RegularText"
+                android:layout_width="0dp"
+                android:text="@{vm.header}"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/xlarge"
+                android:layout_marginTop="@dimen/twolarge"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Щоб створити Дія ID, будь ласка, підтвердьте особу користувача" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/list_verificationMethods"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xlarge"
+                app:alignItems="center"
+                app:flexDirection="row_reverse"
+                app:flexWrap="wrap_reverse"
+                app:justifyContent="center"
+                data="@{vm.methods}"
+                doOnItemSelected="@{vm.doOnMethodSelected}"
+                app:layout_constraintEnd_toEndOf="@+id/header_verificationMethods"
+                app:layout_constraintStart_toStartOf="@+id/header_verificationMethods"
+                app:layout_constraintTop_toBottomOf="@+id/header_verificationMethods" />
+
+            <View
+                android:id="@+id/view4"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="@dimen/xlarge"
+                tools:background="@color/green_light"
+                backgroundCompat="@{vm.themeColor}"
+                app:layout_constraintEnd_toEndOf="@+id/header_verificationMethods"
+                app:layout_constraintStart_toStartOf="@+id/header_verificationMethods"
+                app:layout_constraintTop_toBottomOf="@+id/list_verificationMethods" />
+
+            <ImageView
+                android:id="@+id/btn_closeMethodsSelection"
+                style="@style/SelectableBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="@dimen/xlarge"
+                app:layout_constraintEnd_toEndOf="@+id/view4"
+                app:layout_constraintStart_toStartOf="@+id/view4"
+                app:layout_constraintTop_toBottomOf="@+id/view4"
+                app:srcCompat="@drawable/ic_close_green_light"
+                vectorTintFromRes="@{vm.themeColor}" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+</layout>

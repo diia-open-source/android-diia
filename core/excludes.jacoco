@@ -1,0 +1,15 @@
+ua/gov/diia/core/**/*$*.*
+ua/gov/diia/core/push/**
+ua/gov/diia/core/util/system/**
+ua/gov/diia/core/util/delegation/**
+ua/gov/diia/core/util/extensions/**
+ua/gov/diia/core/util/filter/**
+ua/gov/diia/core/util/decorators/**
+ua/gov/diia/core/util/file/**
+ua/gov/diia/core/util/phone/**
+ua/gov/diia/core/util/navigation/**
+ua/gov/diia/core/util/event/EventObserverKt*.*
+ua/gov/diia/core/util/GradientBuilder*.*
+ua/gov/diia/core/util/CombinedLiveData*.*
+ua/gov/diia/core/util/CombinedLiveData*.*
+

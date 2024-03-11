@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_public_service_categories"
+    app:startDestination="@id/publicServicesCategoriesComposeF">
+    <argument
+        android:name="forceOpenCategory"
+        android:defaultValue="@null"
+        app:argType="string"
+        app:nullable="true" />
+    <keep_state_fragment
+        android:id="@+id/publicServicesCategoriesComposeF"
+        android:name="ua.gov.diia.publicservice.ui.categories.compose.PublicServicesCategoriesComposeF">
+        <argument
+            android:name="forceOpenCategory"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </keep_state_fragment>
+
+</navigation>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Home</string>
+    <string name="scan_qr">Відсканувати QR-код</string>
+    <string name="app_bar_title_empty"> </string>
+    <string name="hello_user_name_S">Вітаємо,\n%s</string>
+    <string name="hello_title">Вітаємо</string>
+</resources>

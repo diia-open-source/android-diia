@@ -1,0 +1,100 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+}
+
+apply from: '../dependencies.gradle'
+
+android {
+    namespace 'ua.gov.diia.analytics'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 34
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    flavorDimensions = ["vendor"]
+    productFlavors {
+        gplay {
+            dimension "vendor"
+        }
+
+        huawei {
+            dimension "vendor"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        prod {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        stage {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        vendors {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    // work-runtime-ktx 2.1.0 and above now requires Java 8
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    kapt {
+        correctErrorTypes true
+    }
+
+    lint {
+        disable 'MissingTranslation'
+    }
+
+}
+
+dependencies {
+    implementation project(':core')
+
+    implementation deps.hilt_android
+    kapt deps.hilt_android_compiler
+    kapt deps.hilt_compiler
+
+    gplayImplementation deps.gplay_firebase_analytics
+    gplayImplementation deps.gplay_firebase_crashlytics
+
+    huaweiImplementation deps.huawei_analytics
+    huaweiImplementation deps.huawei_agconnect_crash
+
+    testImplementation deps.junit
+    testImplementation deps.mockk
+}
+
+apply from: '../jacoco.gradle'

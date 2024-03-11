@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_screen_title_text">Авторизація</string>
+    <string name="login_screen_title_subtext">Версія Дії: %s</string>
+
+    <string name="login_screen_description_text">Увійдіть за допомогою BankID Національного банку України, використовуючи свій інтернет-банкінг, або за допомогою NFC-чипу у біометричних документах.\n\nДля авторизації ознайомтесь зі змістом.\n{details}</string>
+    <string name="login_screen_description_param_type">details</string>
+    <string name="login_screen_description_param_text">Повідомлення про обробку персональних даних</string>
+    <string name="login_screen_description_param_link">https://diia.gov.ua/app_policy</string>
+
+    <string name="login_screen_checkbox_text">Я ознайомився зі змістом Повідомлення про обробку персональних даних.</string>
+    <string name="login_screen_bank_list_title">Авторизуватись через:</string>
+    <string name="login_screen_bank_list_item2">NFC</string>
+    <string name="login_screen_bank_list_item3">Приват24</string>
+    <string name="login_screen_bank_list_item4">monobank</string>
+</resources>

@@ -1,0 +1,139 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.7"
+    // Custom reports directory can be specfied like this:
+    reportsDir = file("$buildDir/jacoco-report")
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
+    // see related issue https://github.com/gradle/gradle/issues/5184#issuecomment-457865951
+}
+
+project.afterEvaluate {
+
+    (android.hasProperty('applicationVariants')
+            ? android.'applicationVariants'
+            : android.'libraryVariants')
+            .all { variant ->
+                def variantName = variant.name
+                def unitTestTask = "test${variantName.capitalize()}UnitTest"
+
+
+                tasks.create(name: "${unitTestTask}Coverage", type: JacocoReport, dependsOn: [
+                        "$unitTestTask",
+                        // "$androidTestCoverageTask"
+                ]) {
+                    group = "Reporting"
+                    description = "Generate Jacoco coverage reports for the ${variantName.capitalize()} build"
+
+                    reports {
+                        html.enabled = true
+                        xml.enabled = true
+                        csv.enabled = true
+                    }
+
+                    def mainExcludes = [
+                            // data binding
+                            'android/databinding/**/*.class',
+                            '**/android/databinding/*Binding.class',
+                            '**/android/databinding/*',
+                            '**/androidx/databinding/*',
+                            'androidx/databinding/*',
+                            '**/databinding/*',
+                            '**/BR.*',
+                            '**/DataBindingTriggerClass.*',
+                            // android
+                            '**/R.class',
+                            '**/R$*.class',
+                            '**/BuildConfig.*',
+                            '**/Manifest*.*',
+                            '**/*Test*.*',
+                            'android/**/*.*',
+                            '**/androidx/navigation/*',
+                            // dagger
+                            'dagger/hilt/**/*.*',
+                            '**/hilt_aggregated_deps/*',
+                            '**/*_MembersInjector.class',
+                            '**/Dagger*Component.class',
+                            '**/Dagger*Component$Builder.class',
+                            '**/*Module_*Factory.class',
+                            '**/di/module/*',
+                            '**/*_Factory*.*',
+                            '**/*Module*.*',
+                            '**/*Dagger*.*',
+                            '**/*Hilt*.*',
+                            '**/*_Generated*.*',
+                            // kotlin
+                            '**/*MapperImpl*.*',
+                            '**/*$ViewInjector*.*',
+                            '**/*$ViewBinder*.*',
+                            '**/BuildConfig.*',
+                            '**/*Component*.*',
+                            '**/*BR*.*',
+                            '**/Manifest*.*',
+                            '**/*$Lambda$*.*',
+                            '**/*Companion*.*',
+                            '**/*Module*.*',
+                            '**/*Dagger*.*',
+                            '**/*Hilt*.*',
+                            '**/*MembersInjector*.*',
+                            '**/*_MembersInjector.class',
+                            '**/*_Factory*.*',
+                            '**/*_Provide*Factory*.*',
+                            '**/*Extensions*.*',
+                            '**/*_AssistedFactory*.*',
+                            // sealed and data classes
+                            '**/*$Result.*',
+                            '**/*$Result$*.*',
+                            // Models
+                            '**/models/**/*.*',
+                            '**/model/**/*.*',
+                            //UI
+                            //views
+                            '**/ui/views/**/*.*',
+                            '**/com/bumptech/glide/*',
+                            // moshi
+                            '**/*JsonAdapter.*',
+                            'ua/gov/diia/**/*FDirections.*',
+                            'ua/gov/diia/**/*Directions$*.*',
+                            'ua/gov/diia/**/*FArgs.*',
+                            'ua/gov/diia/**/*FCompose.*'
+                    ]
+
+                    def excludes = mainExcludes
+
+                    allprojects.forEach {
+                        try {
+                            def homeRules = file("../${it.name}/excludes.jacoco")
+                            println("../${it.name}/excludes.jacoco")
+                            def homeExcludes = homeRules.getText('UTF-8').split('\n')
+                            excludes.addAll(homeExcludes)
+                        } catch (Exception e) {
+                            println("No excludes.jacoco file in ${it.name}")
+                        }
+                    }
+
+                    def javaClasses = fileTree(dir: variant.javaCompileProvider.get().destinationDir,
+                            excludes: excludes)
+                    def kotlinClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${variantName}",
+                            excludes: excludes)
+
+                    def excludingFiles = files([
+                            javaClasses,
+                            kotlinClasses
+                    ])
+
+                    classDirectories.setFrom(excludingFiles)
+
+                    def variantSourceSets = variant.sourceSets.java.srcDirs.collect { it.path }.flatten()
+                    sourceDirectories.setFrom(project.files(variantSourceSets))
+                    executionData(files([
+                            "$project.buildDir/outputs/unit_test_code_coverage/${variantName}UnitTest/${unitTestTask}.exec",
+                    ]))
+                }
+
+            }
+}

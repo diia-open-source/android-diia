@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="emoji_big_finger" translatable="false">👍</string>
+    <string name="emoji_finger_top" translatable="false">☝</string>
+    <string name="emoji_sad" translatable="false">😞</string>
+    <string name="emoji_clap" translatable="false">🖐</string>
+    <string name="emoji_ok" translatable="false">👌</string>
+    <string name="emoji_reminder" translatable="false">👋</string>
+    <string name="emoji_negative" translatable="false">😕</string>
+    <string name="emoji_attention" translatable="false">❗</string>
+    <string name="emoji_confused_man">🤷‍♂️</string>
+    <string name="emoji_fire" translatable="false">🔥</string>
+    <string name="emoji_pencil" translatable="false">✏️</string>
+    <string name="emoji_photo">📸</string>
+    <string name="emoji_checked">✅</string>
+    <string name="emoji_vaccination">💉</string>
+    <string name="emoji_warning">⚠️</string>
+</resources>

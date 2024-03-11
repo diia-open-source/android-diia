@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:mask="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/InputViewTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Community"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/inputField"
+        style="@style/InputViewText.Edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:minHeight="17dp"
+        android:textColorHint="@color/black_alpha_30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_goneMarginTop="0dp"
+        tools:hint="Write some text"
+        tools:ignore="LabelFor,TextFields"
+        tools:visibility="visible" />
+
+    <ua.gov.diia.ui_base.views.common.MaskedEditText
+        android:id="@+id/inputFieldPhone"
+        style="@style/InputViewText.Edit"
+        android:layout_width="0dp"
+        android:layout_height="17dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:hint="@string/phone_number_mask_input_hint"
+        android:inputType="phone"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black_alpha_30"
+        android:visibility="gone"
+        app:keep_hint="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_goneMarginTop="0dp"
+        mask:allowed_chars="1234567890"
+        mask:mask="+38 (0##) ### ## ##"
+        mask:maskHint="001234567"
+        tools:ignore="LabelFor,TextFields"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/text"
+        style="@style/InputViewText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="@dimen/large"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black_alpha_30"
+        app:layout_constraintEnd_toStartOf="@id/arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_goneMarginTop="0dp"
+        tools:hint="Оберіть якість там дані ТЕСТ"
+        tools:ignore="LabelFor,TextFields"
+        tools:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/arrow"
+        android:layout_width="14dp"
+        android:layout_height="12dp"
+        android:rotation="270"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text"
+        app:layout_constraintVertical_bias="0"
+        app:layout_goneMarginTop="@dimen/mini"
+        app:srcCompat="@drawable/ic_arrow" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/contentBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="title,text,inputField,inputFieldPhone" />
+
+    <View
+        android:id="@+id/delimiter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/diia_delimiter_height"
+        android:layout_marginTop="@dimen/middle"
+        app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
+
+    <TextView
+        android:id="@+id/description"
+        style="@style/AttentionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/delimiter"
+        tools:text="Введіть лише назву, для області і району"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textError"
+        style="@style/AlertText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/description"
+        tools:text="Невірно введений номер"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textAttention"
+        style="@style/AttentionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/description"
+        tools:text="Невірно введений номер"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textCounter"
+        style="@style/HintText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/textAttention"
+        tools:text="Залишилось символів: 255"
+        tools:visibility="visible" />
+
+    <View
+        android:id="@+id/selectable"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?selectableItemBackground"
+        app:layout_constraintBottom_toTopOf="@id/delimiter"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/blocker"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:elevation="5dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/delimiter"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</merge>
+

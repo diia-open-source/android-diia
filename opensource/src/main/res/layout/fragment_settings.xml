@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="vmSettingsFVM"
+            type="ua.gov.diia.opensource.ui.fragments.settings.SettingsFVM" />
+
+        <variable
+            name="notificationsEnabled"
+            type="Boolean" />
+
+        <import type="ua.gov.diia.opensource.ui.fragments.settings.SettingsFVM" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/vg_settings_about"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_scrollContent"
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_settings_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_settings_title"
+                style="@style/SubTitleLargeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/mini"
+                android:text="@string/settings_options_label"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/iv_settingsF_close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_settingsF_close" />
+
+            <ImageView
+                android:id="@+id/iv_settingsF_close"
+                style="@style/BackButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:onClick="@{() -> vmSettingsFVM.closeSettings()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_stack_doc"
+            style="@style/SettingsButtonText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/large"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{() ->  vmSettingsFVM.docStack()}"
+            android:paddingStart="@dimen/xxxxlarge"
+            android:text="@string/settings_doc_stack_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_settings_header" />
+
+        <ImageView
+            android:id="@+id/img_stack_doc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/xlarge"
+            app:layout_constraintBottom_toBottomOf="@id/tv_stack_doc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_stack_doc"
+            app:srcCompat="@drawable/ic_order" />
+
+        <TextView
+            android:id="@+id/tv_change_app_pin"
+            style="@style/SettingsButtonText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{() ->  vmSettingsFVM.changePin()}"
+            android:paddingStart="@dimen/xxxxlarge"
+            android:text="@string/settings_change_code_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_stack_doc" />
+
+        <ImageView
+            android:id="@+id/img_change_pinn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/xlarge"
+            app:layout_constraintBottom_toBottomOf="@id/tv_change_app_pin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_change_app_pin"
+            app:srcCompat="@drawable/ic_passcode_settings" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/notifications_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_change_app_pin">
+
+            <ImageView
+                android:id="@+id/img_notifications_settings"
+                android:layout_width="@dimen/xlarge"
+                android:layout_height="@dimen/xlarge"
+                android:layout_marginStart="@dimen/xlarge"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_notifications" />
+
+            <TextView
+                android:id="@+id/notifications_id_label"
+                style="@style/SettingsButtonText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:onClick="@{() ->  vmSettingsFVM.openSystemNotifications()}"
+                android:paddingStart="@dimen/xxxxlarge"
+                android:text="@string/settings_allow_notifications"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/touch_id_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/small"
+            app:isGone="@{!vmSettingsFVM.touchIdAvailable}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notifications_container">
+
+            <ImageView
+                android:id="@+id/img_touch_id_settings"
+                android:layout_width="@dimen/xlarge"
+                android:layout_height="@dimen/xlarge"
+                android:layout_marginStart="@dimen/xlarge"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_touch_id" />
+
+            <TextView
+                android:id="@+id/tv_touch_id_label"
+                style="@style/SettingsButtonText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/small"
+                android:paddingStart="@dimen/xxxxlarge"
+                android:text="@string/settings_allow_touch_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/switch_touch_id"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_touch_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/large"
+                android:checked="@{vmSettingsFVM.touchIdEnabled}"
+                android:onCheckedChanged="@{(button, bool)-> vmSettingsFVM.setTouchIdAccess(bool)}"
+                android:thumb="@drawable/thumb_selector"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:track="@drawable/track_selector" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="ua.gov.diia.ps_criminal_cert.models.response.CriminalCertListData.CertItem" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/xlarge"
+        android:layout_marginVertical="@dimen/middle"
+        app:cardCornerRadius="@dimen/middle"
+        app:cardElevation="@dimen/middle">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/back_penalty_card">
+
+            <ua.gov.diia.ui_base.views.common.DiiaStatusLabel
+                android:id="@+id/statusTv"
+                style="@style/LineText"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/diia_status_label_height"
+                android:layout_marginHorizontal="@dimen/large"
+                android:layout_marginTop="@dimen/large"
+                app:labelBackgroundColor="@{item.labelBackgroundRes}"
+                app:labelText="@{item.labelTextRes}"
+                app:labelTextColor="@{item.labelTextColor}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/dateTv"
+                style="@style/LineText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/large"
+                android:text="@{item.creationDate}"
+                app:layout_constraintBottom_toBottomOf="@+id/statusTv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/statusTv"
+                tools:text="від 30.09.2022" />
+
+            <TextView
+                android:id="@+id/titleTv"
+                style="@style/LineExtraText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/large"
+                android:layout_marginTop="@dimen/large"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@{item.reason}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/statusTv"
+                tools:text="Оформлення візи для виїзду за кордон" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/large"
+                android:background="@color/color_divider_blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleTv" />
+
+            <TextView
+                android:id="@+id/typeTv"
+                style="@style/LineText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large"
+                android:layout_marginEnd="@dimen/middle"
+                android:maxLines="1"
+                android:text="@{item.type}"
+                app:layout_constraintBottom_toBottomOf="@+id/detailsBtn"
+                app:layout_constraintEnd_toStartOf="@+id/detailsBtn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/detailsBtn"
+                tools:text="Тип: короткий" />
+
+            <Button
+                android:id="@+id/detailsBtn"
+                style="@style/DiiaBlackButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/xxlarge"
+                android:layout_marginTop="@dimen/large"
+                android:layout_marginEnd="@dimen/large"
+                android:layout_marginBottom="@dimen/mlarge"
+                android:clickable="false"
+                android:text="@string/criminal_cert_to_details"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

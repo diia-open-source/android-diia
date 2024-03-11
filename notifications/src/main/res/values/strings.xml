@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- notifications -->
+    <string name="notification_channel_acquirer">Запит на копії цифрових документів</string>
+    <string name="notification_channel_messages">Повідомлення</string>
+    <string name="notification_channel_debts">Борги</string>
+    <string name="notification_channel_penalties">Штрафи</string>
+    <string name="notification_channel_diia_default">Інші сповіщення</string>
+
+</resources>

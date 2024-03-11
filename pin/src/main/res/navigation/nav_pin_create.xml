@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_pin_create"
+    app:startDestination="@id/destination_createPin">
+
+    <action
+        android:id="@+id/action_global_createPin"
+        app:destination="@id/destination_createPin">
+        <argument
+            android:name="resultDestinationId"
+            app:argType="integer" />
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <argument
+            android:name="flowType"
+            app:argType="ua.gov.diia.pin.model.CreatePinFlowType" />
+    </action>
+
+    <fragment
+        android:id="@+id/destination_createPin"
+        android:name="ua.gov.diia.pin.ui.create.create.CreatePinF">
+        <argument
+            android:name="resultDestinationId"
+            app:argType="integer" />
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <argument
+            android:name="flowType"
+            app:argType="ua.gov.diia.pin.model.CreatePinFlowType" />
+        <action
+            android:id="@+id/action_destination_createPin_to_destination_confirmPin"
+            app:destination="@id/destination_confirmPin" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/destination_confirmPin"
+        android:name="ua.gov.diia.pin.ui.create.confirm.ConfirmPinF">
+        <argument
+            android:name="resultDestinationId"
+            app:argType="integer" />
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <argument
+            android:name="flowType"
+            app:argType="ua.gov.diia.pin.model.CreatePinFlowType" />
+        <argument
+            android:name="pin"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

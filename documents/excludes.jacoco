@@ -1,0 +1,12 @@
+ua/gov/diia/documents/ui/**/*F.*
+ua/gov/diia/documents/**/*$*.*
+ua/gov/diia/documents/**/Nav*Args.*
+ua/gov/diia/documents/util/view/**
+ua/gov/diia/documents/ui/BottomDoc*
+ua/gov/diia/documents/ui/ToggleId*
+ua/gov/diia/documents/ui/**/*FComposeArgs.*
+ua/gov/diia/documents/barcode/**
+ua/gov/diia/documents/data/datasource/local/DocJsonAdapterDelegate.*
+ua/gov/diia/documents/**/compose/*.*
+ua/gov/diia/documents/util/DocumentActionMapper.*
+ua/gov/diia/documents/ui/actions/DocActionsProviderImpl.*

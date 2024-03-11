@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/destination_login"
+    android:id="@+id/nav_login">
+
+    <fragment
+        android:id="@+id/destination_login"
+        android:name="ua.gov.diia.login.ui.LoginF">
+        <deepLink
+            android:id="@+id/deepLinkAuth"
+            app:uri="https://diia.app/auth/callback/{bank_response}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaAuth"
+            app:uri="diia://diia.app/auth/callback/{bank_response}" />
+        <action
+            android:id="@+id/action_destination_login_to_homeF"
+            app:destination="@id/nav_home"
+            app:enterAnim="@anim/anim_fade_in"
+            app:exitAnim="@anim/anim_fade_out"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/anim_fade_in"
+            app:popExitAnim="@anim/anim_fade_out"
+            app:popUpTo="@+id/destination_login"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_login_to_createPin"
+            app:destination="@id/nav_pin_create">
+            <argument
+                android:name="resultDestinationId"
+                app:argType="integer" />
+            <argument
+                android:name="resultKey"
+                app:argType="string" />
+            <argument
+                android:name="flowType"
+                app:argType="ua.gov.diia.pin.model.CreatePinFlowType" />
+        </action>
+    </fragment>
+
+</navigation>

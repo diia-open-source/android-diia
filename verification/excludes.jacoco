@@ -1,0 +1,5 @@
+ua/gov/diia/verification/ui/**/*F.*
+ua/gov/diia/verification/**/*$*.*
+ua/gov/diia/verification/di/**
+ua/gov/diia/verification/ui/methods/*
+ua/gov/diia/verification/**/BindingAdaptersKt.*

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="message"
+            type="ua.gov.diia.core.models.notification.pull.message.NotificationMessagesBody" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_item"
+        android:background="?attr/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/middle">
+
+        <ImageView
+            android:id="@+id/iv_action_img"
+            isGone="@{!message.data.imageVisibility}"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_action_title"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_action_title"
+            app:imgBase64="@{message.data.image}"
+            tools:srcCompat="@drawable/ic_download" />
+
+        <TextView
+            android:id="@+id/tv_action_title"
+            style="@style/LineTextBlack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/middle"
+            android:text="@{message.data.text}"
+            app:layout_constraintEnd_toStartOf="@+id/iv_arrow_link"
+            app:layout_constraintStart_toEndOf="@+id/iv_action_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="Перевірити в застосунку" />
+
+        <ImageView
+            android:id="@+id/iv_arrow_link"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_action_title"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_action_title"
+            app:srcCompat="@drawable/ic_notification_next" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

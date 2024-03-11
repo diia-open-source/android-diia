@@ -1,0 +1,21 @@
+<resources>
+    <string name="version_s">Version %s</string>
+    <string name="version_diia">Версія Дії: %s</string>
+
+    <!--    settings     -->
+    <string name="settings_support_label">Служба підтримки</string>
+    <string name="settings_diia_id">Дія.Підпис</string>
+    <string name="settings_notifications">Повідомлення</string>
+    <string name="settings_signing_history">Історія підписань</string>
+    <string name="settings_faq_label">Питання та відповіді</string>
+    <string name="settings_copy_device_id_label">Копіювати номер пристрою</string>
+    <string name="settings_about_info">Про Дію</string>
+    <string name="settings_share_with_friends">Розповісти друзям</string>
+    <string name="settings_set_estimate_label">Оновити застосунок</string>
+    <string name="menu_settings">Налаштування</string>
+    <string name="app_session_header">Підключені пристрої</string>
+    <string name="share_text_title">Завантажуй застосунок Дія</string>
+    <string name="share_text_description">Електронне водійське посвідчення та свідоцтво про реєстрацію авто вже доступні у твоєму смартфоні.</string>
+    <string name="share_text_link">https://go.diia.app/</string>
+
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_home"
+    app:startDestination="@id/homeF">
+
+    <fragment
+        android:id="@+id/homeF"
+        android:name="ua.gov.diia.home.ui.HomeF"
+        android:label="home"/>
+    <action
+        android:id="@+id/action_global_to_QrScanF"
+        app:destination="@id/qrScanF" />
+
+</navigation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <files-path name="docs" path="docs/"  />
+    <files-path name="emails" path="emails/"/>
+    <external-files-path  name="Download" path="Download/"/>
+</paths>

@@ -1,0 +1,223 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.huawei.agconnect'
+
+apply from: '../dependencies.gradle'
+
+android {
+
+    namespace 'ua.gov.diia.opensource'
+
+    signingConfigs {
+        debug {
+            def props = new Properties()
+            def propsFile = file('keys/debug.properties')
+            if (propsFile.canRead()) {
+                def fileInputStream = new FileInputStream(propsFile)
+                props.load(fileInputStream)
+                fileInputStream.close()
+
+                storeFile = file(props['storePath'])
+                storePassword = props['storePassword']
+                keyAlias = props['keyAlias']
+                keyPassword = props['keyPassword']
+            }
+        }
+    }
+    compileSdk 34
+    packagingOptions {
+        excludes += ['META-INF/ASL-2.0.txt', 'META-INF/LGPL-3.0.txt']
+        pickFirsts += ['draftv4/schema', 'draftv3/schema']
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+    }
+
+
+    def versionProps = new Properties()
+    def fileInputStream = new FileInputStream(file('version.properties'))
+    versionProps.load(fileInputStream)
+    fileInputStream.close()
+
+    defaultConfig {
+        applicationId "ua.gov.diia.opensource"
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode versionProps['VERSION_CODE'].toInteger()
+        versionName versionProps['VERSION_NAME'].toString()
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary true
+        multiDexEnabled true
+
+        buildConfigField "long", "TOKEN_LEEWAY", '1'
+    }
+    flavorDimensions = ["vendor"]
+    productFlavors {
+        gplay {
+            dimension "vendor"
+        }
+
+        huawei {
+            dimension "vendor"
+        }
+    }
+
+    buildFeatures {
+        dataBinding = true
+        compose = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+            buildConfigField "String", "SERVER_URL", '"https://api2oss.diia.gov.ua"'
+            buildConfigField "String", "BANK_ID_CALLBACK_URL", '"https://api2oss.diia.gov.ua/api/v1/auth/bank-id/code/callback"'
+            multiDexKeepProguard file('multidex_keep_file.pro')
+        }
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+            buildConfigField "String", "SERVER_URL", '"https://api2oss.diia.gov.ua"'
+            buildConfigField "String", "BANK_ID_CALLBACK_URL", '"https://api2oss.diia.gov.ua/api/v1/auth/bank-id/code/callback"'
+            multiDexKeepProguard file('multidex_keep_file.pro')
+        }
+    }
+
+    applicationVariants.all { variant ->
+        if (variant.flavorName == "huawei") {
+            variant.buildConfigField "String", "PLATFORM_TYPE", '"Huawei"'
+        } else {
+            variant.buildConfigField "String", "PLATFORM_TYPE", '"Android"'
+        }
+    }
+    configurations.all {
+        resolutionStrategy {
+            force 'com.squareup.okhttp3:okhttp:3.12.2'
+            force 'com.squareup.okhttp3:logging-interceptor:3.12.2'
+        }
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
+
+    // work-runtime-ktx 2.1.0 and above now requires Java 8
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    kapt {
+        correctErrorTypes true
+    }
+
+    lint {
+        disable 'MissingTranslation'
+    }
+
+}
+
+dependencies {
+    implementation project(':core')
+    implementation project(':splash')
+    implementation project(':home')
+    implementation project(':menu')
+    implementation project(':web')
+    implementation project(':verification')
+    implementation project(':bankid')
+    implementation project(':login')
+    implementation project(':publicservice')
+    implementation project(':ps_criminal_cert')
+    implementation project(':pin')
+    implementation project(':biometric')
+    implementation project(':notifications')
+    implementation project(':analytics')
+    implementation project(':search')
+    implementation project(':address_search')
+    implementation project(':diia_storage')
+    implementation project(':documents')
+    implementation project(':doc_driver_license')
+    implementation deps.activity_ktx
+    implementation deps.fragment_ktx
+    implementation deps.legacy_support
+    implementation deps.appcompat
+
+    implementation deps.light_compressor
+    //kotlin
+    implementation deps.core_ktx
+    //constraint
+    implementation deps.constraint_layout
+    //lifecycle
+    implementation deps.lifecycle_extensions
+    implementation deps.lifecycle_livedata_ktx
+    implementation deps.lifecycle_viewmodel_ktx
+    //work
+    implementation deps.work_runtime_ktx
+    //navigation
+    implementation deps.navigation_fragment_ktx
+    implementation deps.navigation_ui_ktx
+    //hilt
+    implementation deps.hilt_android
+    kapt deps.hilt_android_compiler
+    implementation deps.hilt_navigation_fragment
+    implementation deps.hilt_work
+    kapt deps.hilt_compiler
+    //recycler
+    implementation deps.recyclerview
+    //viewpager
+    implementation deps.viewpager
+    //glide
+    implementation deps.glide
+    kapt deps.glide_compiler
+
+    implementation deps.glide_okhttp
+    //material
+    implementation deps.material
+    //coroutine
+    implementation deps.kotlinx_coroutines_android
+    implementation deps.kotlinx_coroutines_core
+    //retrofit
+    implementation deps.retrofit
+    //okhttp
+    implementation(deps.okhttp)
+    implementation (deps.okhttp_logging_interceptor)
+    implementation deps.retrofit_kotlin_coroutines_adapter
+    implementation deps.retrofit_gson_converter
+    // Moshi
+    implementation deps.moshi
+    implementation deps.moshi_adapters
+    implementation deps.moshi_kotlin
+    implementation deps.retrofit_moshi_converter
+    kapt deps.moshi_codegen
+    //Desugaring
+    coreLibraryDesugaring deps.desugar_jdk_libs
+
+    //Compose
+    implementation deps.activity_compose
+    implementation project(path: ':ui_base')
+
+    //Firebase SDK
+    gplayImplementation platform(deps.gplay_firebase_bom)
+    gplayImplementation deps.gplay_firebase_crashlytics
+    //Huawei SDK
+    huaweiImplementation deps.huawei_agconnect_crash
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_verification"
+    app:startDestination="@id/destination_verificationMethodSelection">
+
+    <dialog
+        android:id="@+id/destination_verificationMethodSelection"
+        android:name="ua.gov.diia.verification.ui.method_selection.VerificationMethodSelectionDF">
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <argument
+            android:name="data"
+            app:argType="ua.gov.diia.verification.model.VerificationMethodsView" />
+        <argument
+            android:name="resultDestinationId"
+            app:argType="integer" />
+    </dialog>
+
+</navigation>

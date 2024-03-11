@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="ua.gov.diia.notifications.ui.fragments.home.notificationsettings.NotificationSettingsVM" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:fitsSystemWindows="true">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/SelectableBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/xlarge"
+            android:layout_marginTop="@dimen/xlarge"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_b_back" />
+
+        <TextView
+            android:id="@+id/tv_notification_title"
+            style="@style/TitleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/xlarge"
+            android:layout_marginTop="21dp"
+            android:text="Налаштування\nсповіщень"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_back"
+            tools:text="Налаштування сповіщень" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_historyDetails"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/xlarge"
+            android:background="@color/color_scrollContent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_notification_title">
+
+            <ua.gov.diia.ui_base.views.DiiaProgressCV
+                android:id="@+id/load_progress"
+                isGone="@{!viewModel.isDataLoading}"
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                app:cornersRadius="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_notification_full_text"
+                style="@style/LineText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/xlarge"
+                android:layout_marginEnd="@dimen/xlarge"
+                android:paddingVertical="@dimen/xlarge"
+                android:text="@{viewModel.subscriptions.description}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Тут ви можете налаштувати, які саме сповіщення будуть надходити вам у Дію" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimary"
+                app:layout_constraintEnd_toEndOf="@+id/tv_notification_full_text"
+                app:layout_constraintStart_toStartOf="@+id/tv_notification_full_text"
+                app:layout_constraintTop_toBottomOf="@+id/tv_notification_full_text" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_subscriptions"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/xlarge"
+                android:layout_marginEnd="@dimen/xlarge"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_subscription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

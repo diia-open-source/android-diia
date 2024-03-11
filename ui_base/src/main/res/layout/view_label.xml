@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="9dp"
+    app:cardElevation="0dp"
+    tools:cardBackgroundColor="@color/red"
+    tools:parentTag="androidx.cardview.widget.CardView">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingStart="@dimen/middle"
+        android:paddingEnd="@dimen/middle"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textAllCaps="true"
+        android:textSize="11sp"
+        android:gravity="center"
+        tools:ignore="SmallSp"
+        android:fontFamily="@font/e_ukraine_regular"
+        tools:text="триває збір підписів"
+        tools:textColor="@color/white" />
+
+</merge>

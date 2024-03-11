@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //sp
+    <dimen name="text_title_small">9sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_body2">14sp</dimen>
+    <dimen name="text_subtitle1">16sp</dimen>
+    <dimen name="text_twoLarge">32sp</dimen>
+
+    //dp
+    <dimen name="mini">2dp</dimen>
+    <dimen name="small">4dp</dimen>
+    <dimen name="middle">8dp</dimen>
+    <dimen name="mx">10dp</dimen>
+    <dimen name="ls">12dp</dimen>
+    <dimen name="lm">14dp</dimen>
+    <dimen name="large">16dp</dimen>
+    <dimen name="mlarge">20dp</dimen>
+    <dimen name="xlarge">24dp</dimen>
+    <dimen name="slarge">28dp</dimen>
+    <dimen name="twolarge">32dp</dimen>
+    <dimen name="xxlarge">36dp</dimen>
+    <dimen name="xtwolarge">40dp</dimen>
+    <dimen name="xxxlarge">48dp</dimen>
+    <dimen name="xxxxlarge">60dp</dimen>
+    <dimen name="xxxxxlarge">120dp</dimen>
+    <dimen name="qr_error_subtitle_margin">19dp</dimen>
+    <dimen name="pages_current_item_shadow">3dp</dimen>
+    <dimen name="corner_radius">8dp</dimen>
+    <dimen name="doc_more_size">28dp</dimen>
+    <dimen name="bottom_bar_icon_size">24dp</dimen>
+    <dimen name="bottom_bar_inkwell_size">40dp</dimen>
+    <dimen name="support_btn_size">68dp</dimen>
+    <dimen name="tips_bubble_h">78dp</dimen>
+    <dimen name="tips_bubble_w">88dp</dimen>
+    <dimen name="vehicle_license_param_label_width">96dp</dimen>
+    <dimen name="mrz_scan_border_thin">3dp</dimen>
+    <dimen name="mrz_scan_border_margin_inner">8dp</dimen>
+    <dimen name="mrz_scan_border_margin_outer">16dp</dimen>
+    <dimen name="nfc_progress_radius">5dp</dimen>
+    <dimen name="code_scanner_border_thin">1dp</dimen>
+    <dimen name="code_scanner_border_radius">4dp</dimen>
+    <dimen name="view_touchable_area">48dp</dimen>
+
+    //sp
+    <dimen name="line_spacing_default">4sp</dimen>
+    <dimen name="doc_regular_text">12sp</dimen>
+
+    //int
+
+    //int
+
+    <!-- Custom widgets -->
+    <dimen name="diia_label_corners_radius">9dp</dimen>
+    <dimen name="diia_label_height">18dp</dimen>
+    <dimen name="diia_small_delimiter">1dp</dimen>
+    <dimen name="diia_delimiter_height">2dp</dimen>
+    <dimen name="diia_delimiter_gradient_height">@dimen/xtwolarge</dimen>
+    <dimen name="diia_progress_line_height">7dp</dimen>
+    <dimen name="diia_card_input_field_text_size">9sp</dimen>
+    <dimen name="diia_status_label_height">18dp</dimen>
+    <dimen name="touchable_area">48dp</dimen>
+
+    <!-- video view -->
+</resources>

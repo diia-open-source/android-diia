@@ -1,0 +1,55 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="message"
+            type="ua.gov.diia.core.models.common.message.StubMessage" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/emojiTv"
+            style="@style/TitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{message.icon}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/emoji_reminder" />
+
+        <TextView
+            android:id="@+id/body"
+            style="@style/LineExtraText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/large"
+            android:lineSpacingExtra="2sp"
+            android:text="@{message.text}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emojiTv"
+            tools:text="Наразі немає готових витягів. Ми повідомимо, коли замовлені витяги будуть готові." />
+
+        <Button
+            android:id="@+id/actionBtn"
+            style="@style/LineButton"
+            isVisible="@{message.canRepeat}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twolarge"
+            android:text="@string/try_again"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/body" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

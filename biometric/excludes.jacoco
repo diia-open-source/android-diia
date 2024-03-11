@@ -1,0 +1,4 @@
+ua/gov/diia/biometric/ui/**/*F.*
+ua/gov/diia/biometric/**/*$*.*
+ua/gov/diia/biometric/ui/BiometricAuthPromptKt.*
+ua/gov/diia/biometric/ui/**/compose/*.*

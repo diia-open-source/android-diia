@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_bankid"
+    app:startDestination="@id/destination_bankSelection">
+
+    <action
+        android:id="@+id/action_global_destination_bankSelection"
+        app:destination="@id/destination_bankSelection"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <fragment
+        android:id="@+id/destination_bankSelection"
+        android:name="ua.gov.diia.bankid.ui.selection.BankSelectionF">
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <argument
+            android:name="resultDestination"
+            app:argType="integer" />
+        <argument
+            android:name="request"
+            app:argType="ua.gov.diia.bankid.model.BankSelectionRequest" />
+        <action
+            android:id="@+id/action_destination_bankSelection_to_destination_bankAuth"
+            app:destination="@id/destination_bankAuth"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/destination_bankAuth"
+        android:name="ua.gov.diia.bankid.ui.auth.BankAuthF">
+        <argument
+            android:name="resultKey"
+            app:argType="string" />
+        <argument
+            android:name="resultDestination"
+            app:argType="integer" />
+        <argument
+            android:name="requestData"
+            app:argType="ua.gov.diia.bankid.model.BankAuthRequest" />
+    </fragment>
+
+</navigation>

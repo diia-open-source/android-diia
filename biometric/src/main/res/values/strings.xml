@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="touch_id_for_diia">Вхід за біометричними даними</string>
+    <string name="use_touch_id">Прикладіть палець, щоб увійти</string>
+    <string name="use_face_id">Відскануйте обличчя, щоб увійти</string>
+    <!-- Authorization. Biometric screen -->
+    <string name="biometric_screen_title_text">Дозвольте вхід за біометричними даними</string>
+    <string name="biometric_screen_description_text">Дозвольте Дії використовувати сканер відбитку пальця та/або розпізнавання обличчя для входу у застосунок.</string>
+    <string name="biometric_screen_button_text">Дозволити</string>
+    <string name="biometric_screen_alt_button_text">Дозволю пізніше</string>
+</resources>

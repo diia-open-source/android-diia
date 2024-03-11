@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="code_verification_plural">
+        <item quantity="one">Код для перевірки</item>
+        <item quantity="other">Коди для перевірки</item>
+    </plurals>
+
+</resources>

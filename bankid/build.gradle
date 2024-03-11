@@ -1,0 +1,138 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
+}
+
+apply from: '../dependencies.gradle'
+
+android {
+    namespace 'ua.gov.diia.bankid'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 34
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+        testOptions {
+            unitTests.returnDefaultValues = true
+            unitTests.includeAndroidResources = true
+        }
+    }
+
+    flavorDimensions = ["vendor"]
+    productFlavors {
+        gplay {
+            dimension "vendor"
+        }
+
+        huawei {
+            dimension "vendor"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        prod {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        stage {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+        vendors {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    kapt {
+        correctErrorTypes true
+    }
+
+    lint {
+        disable 'MissingTranslation'
+    }
+    buildFeatures {
+        dataBinding = true
+        compose = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation project(':core')
+    implementation project(':verification')
+    implementation project(':ui_base')
+    implementation deps.fragment_ktx
+    implementation deps.appcompat
+    implementation deps.constraint_layout
+    implementation deps.recyclerview
+    implementation deps.material
+    implementation deps.flexbox
+    //hilt
+    implementation deps.hilt_android
+    kapt deps.hilt_android_compiler
+    implementation deps.hilt_navigation_fragment
+    kapt deps.hilt_compiler
+    // Moshi
+    implementation deps.moshi
+    implementation deps.moshi_adapters
+    implementation deps.moshi_kotlin
+    implementation deps.retrofit_moshi_converter
+    kapt deps.moshi_codegen
+    //navigation
+    implementation deps.navigation_fragment_ktx
+    implementation deps.navigation_ui_ktx
+    //Compose
+    implementation deps.activity_compose
+    implementation deps.compose_ui
+    implementation deps.compose_material
+    implementation deps.compose_ui_tooling
+    implementation deps.compose_ui_tooling_preview
+
+    //test
+    testImplementation deps.junit
+    testImplementation deps.mockito_inline
+    testImplementation deps.mockito_kotlin
+    testImplementation deps.mockito_core
+    testImplementation deps.kotlinx_coroutines_test
+    testImplementation deps.androidx_core_testing
+    testImplementation deps.hamcrest_library
+    testImplementation deps.json
+    testImplementation deps.turbine
+    androidTestImplementation deps.android_junit
+    androidTestImplementation deps.android_espresso_core
+}
+
+apply from: '../jacoco.gradle'

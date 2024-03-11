@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="viewModel"
+            type="ua.gov.diia.search.ui.bullet_selection.SearchBulletVM" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_light"
+        android:paddingTop="@dimen/xlarge">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            style="@style/BackButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_debts_header"
+            style="@style/LineExtraXText"
+            android:layout_width="0dp"
+            android:text="@{viewModel.screenHeader}"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/large"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/xlarge"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_back"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Медична довідка" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrierHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="iv_back,tv_debts_header"
+            tools:layout_editor_absoluteY="74dp" />
+
+        <TextView
+            android:id="@+id/content_title"
+            style="@style/TitleTextXLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.contentTitle}"
+            android:layout_marginStart="@dimen/xlarge"
+            android:layout_marginTop="@dimen/twolarge"
+            android:layout_marginEnd="@dimen/xlarge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/barrierHeader"
+            tools:text="Причина заміни" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/xlarge"
+            android:layout_marginTop="@dimen/large"
+            android:layout_marginEnd="@dimen/xlarge"
+            android:layout_marginBottom="@dimen/xlarge"
+            data="@{viewModel.data}"
+            android:checkedButton="@={viewModel.selectedBulletId}"
+            app:layout_constraintBottom_toTopOf="@+id/diiaProgressButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/content_title" />
+
+        <ua.gov.diia.ui_base.views.common.progress.DiiaProgressButton
+            android:id="@+id/diiaProgressButton"
+            app:onButtonClickListener="@{viewModel::sendResult}"
+            app:isEnabled="@{viewModel.enableActionButton}"
+            style="@style/DRLActionButtonStyle"
+            app:title="@string/dl_reference_title_button_select" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

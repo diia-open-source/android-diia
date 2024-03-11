@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:layout_height="wrap_content"
+    tools:layout_width="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <ProgressBar
+        android:id="@+id/progress_indicator"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="@dimen/large"
+        android:indeterminateDrawable="@drawable/diia_circular_progress"
+        android:padding="3dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_progress_text_title"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_progress_text_title"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_icon_start"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="@dimen/large"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/tv_progress_text_title"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_progress_text_title"
+        tools:srcCompat="@drawable/ic_document" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="progress_indicator, iv_icon_start" />
+
+    <TextView
+        android:id="@+id/tv_progress_text_title"
+        style="@style/LineTextBlack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/middle"
+        android:layout_marginEnd="@dimen/large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/barrier_icons"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Виписка про стан рахунку в цінних паперах" />
+</merge>

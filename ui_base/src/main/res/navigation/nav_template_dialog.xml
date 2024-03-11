@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_template_dialog"
+    app:startDestination="@id/template_dialog">
+
+    <action
+        android:id="@+id/action_global_to_template_dialog"
+        app:destination="@id/template_dialog" />
+
+    <dialog
+        android:id="@+id/template_dialog"
+        android:name="ua.gov.diia.ui_base.fragments.dynamicdialog.TemplateDialogF"
+        android:label="DialogWithAlternativeFlow">
+        <argument
+            android:name="dialog"
+            app:argType="ua.gov.diia.core.models.dialogs.TemplateDialogModel" />
+        <argument
+            android:name="arbitaryDestinationId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_template_dialog_to_destination_prolong"
+            app:destination="@id/destination_prolong"
+            app:popUpTo="@id/template_dialog"
+            app:popUpToInclusive="true" />
+    </dialog>
+
+</navigation>
