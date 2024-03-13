@@ -50,11 +50,11 @@ class MenuContentController @Inject constructor() {
                 )
             ),
             ListItemMlcData(
-                id = MenuActionsKey.OPEN_SIGNE_HISTORY,
+                id = MenuActionsKey.OPEN_SIGN_HISTORY,
                 label = UiText.StringResource(R.string.settings_signing_history),
                 iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.SOME_DOCS.code),
                 action = DataActionWrapper(
-                    type = MenuActionsKey.OPEN_SIGNE_HISTORY
+                    type = MenuActionsKey.OPEN_SIGN_HISTORY
                 )
             )
         )

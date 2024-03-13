@@ -35,7 +35,7 @@ import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_NOTIFICATION
 import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_PLAY_MARKET
 import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_POLICY
 import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_SETTINGS
-import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_SIGNE_HISTORY
+import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_SIGN_HISTORY
 import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_SUPPORT
 import ua.gov.diia.menu.ui.MenuActionsKey.SHARE_APP
 import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
@@ -166,7 +166,7 @@ class MenuComposeVM @Inject constructor(
             OPEN_PLAY_MARKET -> MenuAction.OpenPlayMarketAction
             OPEN_HELP -> MenuAction.OpenHelpAction
             OPEN_DIIA_ID -> MenuAction.OpenDiiaId
-            OPEN_SIGNE_HISTORY -> MenuAction.OpenSignHistory
+            OPEN_SIGN_HISTORY -> MenuAction.OpenSignHistory
             OPEN_APP_SESSIONS -> MenuAction.OpenAppSessions
             OPEN_SUPPORT -> MenuAction.OpenSupportAction
             OPEN_FAQ -> MenuAction.OpenFAQAction
