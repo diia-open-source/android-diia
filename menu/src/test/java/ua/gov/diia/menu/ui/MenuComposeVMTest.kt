@@ -120,7 +120,7 @@ class MenuComposeVMTest {
                 menuComposeVM.onUIAction(UIAction(UIActionKeysCompose.LIST_ITEM_GROUP_ORG, action = DataActionWrapper(MenuActionsKey.OPEN_DIIA_ID)))
                 Assert.assertEquals(MenuAction.OpenDiiaId, awaitItem().peekContent())
 
-                menuComposeVM.onUIAction(UIAction(UIActionKeysCompose.LIST_ITEM_GROUP_ORG, action = DataActionWrapper(MenuActionsKey.OPEN_SIGNE_HISTORY)))
+                menuComposeVM.onUIAction(UIAction(UIActionKeysCompose.LIST_ITEM_GROUP_ORG, action = DataActionWrapper(MenuActionsKey.OPEN_SIGN_HISTORY)))
                 Assert.assertEquals(MenuAction.OpenSignHistory, awaitItem().peekContent())
 
                 menuComposeVM.onUIAction(UIAction(UIActionKeysCompose.LIST_ITEM_GROUP_ORG, action = DataActionWrapper(MenuActionsKey.OPEN_APP_SESSIONS)))
