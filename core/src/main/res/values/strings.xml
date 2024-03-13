@@ -9,9 +9,9 @@
     <string name="identity_error_no_internet">Немає інтернету. Перевірте з’єднання та спробуйте ще раз</string>
     <string name="identity_error_timeout">Закінчився термін очікування відповіді</string>
     <string name="idenity_error_understood">Зрозуміло</string>
-    <string name="identity_error_not_registered">Запит не зареєстровано у Дії</string>
-    <string name="share_error_acquirer_not_found">Запитувач не зареєстрований в Дії. Щоб захистити ваші персональні дані, ми надсилаємо цифрові копії документів лище тим, хто зареєструвався у Дії.</string>
-    <string name="error_dialog_back">Повернутись назад</string>
+    <string name="identity_error_not_registered">Запит не зареєстровано в Дії</string>
+    <string name="share_error_acquirer_not_found">Запитувач не зареєстрований у Дії. Щоб захистити ваші персональні дані, ми надсилаємо цифрові копії документів лише тим, хто зареєструвався в Дії.</string>
+    <string name="error_dialog_back">Повернутися назад</string>
 
     <string name="error_document_not_found">За вашим запитом не знайдено жодного документа</string>
     <string name="error_service_not_available">Сервіс недоступний</string>
@@ -23,7 +23,7 @@
     <string name="identity_error_payment">Платіж не виконано</string>
     <string name="payment_value_changed">Сума до сплати змінилася</string>
     <string name="dl_replace_not_sent">Заяву не надіслано</string>
-    <string name="dl_replace_return_to_docs">Повернутись до документів</string>
+    <string name="dl_replace_return_to_docs">Повернутися до документів</string>
     <string name="error_add_doc_request_limit">Кількість спроб вичерпано. Спробуйте, будь ласка, пізніше</string>
     <!--    actions     -->
     <string name="allow">Дозволити</string>
@@ -47,12 +47,12 @@
 
     <!--- Notifications permission -->
     <string name="notifications_permission_request_title">Хочете отримувати push-сповіщення від Дії?</string>
-    <string name="notifications_permission_request">Щоб зручніше отримувати державні послуги в Дії, надайте дозвіл на відправку push-сповіщень. Застосунок сповіщатиме про призначені штрафи, судові засідання і рішення, запити кредитної історії, нові оптування та статуси замовлених послуг.</string>
+    <string name="notifications_permission_request">Щоб зручніше отримувати державні послуги в Дії, надайте дозвіл на відправку push-сповіщень. Застосунок сповіщатиме про призначені штрафи, судові засідання й рішення, запити кредитної історії, нові оптування та статуси замовлених послуг.</string>
 
     <!-- Already in app -->
-    <string name="already_auth_error_title">Вас уже авторизовано у застосунку.</string>
+    <string name="already_auth_error_title">Вас уже авторизовано в застосунку.</string>
     <string name="already_auth_error_message">Для авторизації іншим методом, необхідно спочатку вийти із застосунку.</string>
-    <string name="already_auth_error_stay_in_app"><u>Ні, залишитися у застосунку</u></string>
+    <string name="already_auth_error_stay_in_app"><u>Ні, залишитись у застосунку</u></string>
 
     <!-- Storage permission -->
     <string name="file_permission_request_title">Надайте Дії доступ до файлового сховища</string>
@@ -63,10 +63,10 @@
     <!-- Pin code flows -->
     <string name="pin_create_title">Придумайте код з %s цифр</string>
     <string name="pin_confirm_title">Повторіть код з %s цифр</string>
-    <string name="pin_description_create_authorization">Цей код ви будете вводити для входу у застосунок Дія.</string>
+    <string name="pin_description_create_authorization">Цей код ви будете вводити для входу в застосунок Дія.</string>
     <string name="pin_description_create_signature">Цей код ви будете вводити для підписання документів за допомогою Дія.Підпис.</string>
-    <string name="pin_description_confirm_authorization">Переконайтеся, що не помилилися і пам\'ятаєте код для входу.</string>
-    <string name="pin_description_confirm_signature">Впевніться, що не помилилися і пам\'ятаєте код для Дія.Підпис.</string>
+    <string name="pin_description_confirm_authorization">Переконайтеся, що не помилилися й пам\'ятаєте код для входу.</string>
+    <string name="pin_description_confirm_signature">Впевніться, що не помилилися й пам\'ятаєте код для Дія.Підпис.</string>
     <string name="pin_description_confirm_reset">Щоб впевнитися, що це ви змінюєте код для входу</string>
     <string name="pin_input_header_auth">Код для входу</string>
     <string name="pin_input_header_update">Новий код з 4 цифр</string>
@@ -83,9 +83,9 @@
     <string name="reference_why_underline"><u>Чому так</u></string>
     <string name="popup_why_header">Чому так?</string>
     <string name="popup_why_driverlicence">Новий реєстр водійських посвідчень був створений у 2013 році. З 9,5 млн власників водійських посвідчень фото відображалися тільки у 2,5 млн.\n\nНашій IT-команді вдалося отримати якісні дані із демографічного реєстру та надати можливість 6 млн українцям отримати електронні документи.\n\nМи будемо й надалі робити все, щоб якість даних та їх безпека в реєстрах зростали кожного дня. Якщо ваші посвідчення не відобразилася, ви отримаєте поради, як це виправити.</string>
-    <string name="popup_why_vehiclelicence">Якісний реєстр свідоцтв було створено тільки у 2013 році.\n\nТому водії, які придбали транспортний засіб до 2013 року, але не здійснили інші реєстраційні дії після (наприклад, реєстрація газової установки, зміна кольору авто та інше), можуть не побачити власних документів.\n\nЯкщо ваше свідоцтво про реєстрацію транспортного засобу не відображається у застосунку, ви отримаєте поради, як це виправити.</string>
+    <string name="popup_why_vehiclelicence">Якісний реєстр свідоцтв було створено тільки у 2013 році.\n\nТому водії, які придбали транспортний засіб до 2013 року, але не здійснили інші реєстраційні дії після (наприклад, реєстрація газової установки, зміна кольору авто тощо), можуть не побачити власних документів.\n\nЯкщо ваше свідоцтво про реєстрацію транспортного засобу не відображається у застосунку, ви отримаєте поради, як це виправити.</string>
     <string name="mrz_instruction_text"><![CDATA[Натисніть кнопку «Зчитати» та наведіть рамку фото на код на зворотному боці документа.\n\nКод розташований внизу картки документа та містить набір букв, цифр, знаків ”<” та ваші прізвище та ім\'я англійською.]]></string>
-    <string name="mrz_instruction_title">Зчитування номеру документа</string>
+    <string name="mrz_instruction_title">Зчитування номера документа</string>
     <string name="mrz_do_read">Зчитати</string>
 
     <string name="pin_fail_t3">Авторизуватися</string>
@@ -98,7 +98,7 @@
 
     <string name="critical_error_title">⚡ Увага</string>
 
-    <string name="debt_on_hold">Всі зупинені (+%1$d)</string>
+    <string name="debt_on_hold">Усі зупинені (+%1$d)</string>
     <string name="error_add_doc_request_limit_desc">Спробуйте, будь ласка, пізніше</string>
     <string name="critical_error_icon">⚡</string>
     <string name="identity_error_no_internet_desc">Перевірте з’єднання та спробуйте ще раз</string>
@@ -118,6 +118,6 @@
 
     <string name="retry">Спробувати ще</string>
     <string name="phone_number_mask_input_hint">0123456789123456789</string>
-    <string name="text_length_counter">Залишилось символів: %d</string>
+    <string name="text_length_counter">Залишилося символів: %d</string>
     <string name="home_loading" />
 </resources>

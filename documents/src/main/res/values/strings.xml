@@ -11,7 +11,7 @@
     <!--    Stack     -->
     <string name="stack_order_title">Змінити порядок</string>
     <string name="stack_order_text">Перетягніть документи, щоб\nзмінити порядок їх відображення </string>
-    <string name="stack_all_same_doc_type">Всі документи цього типу</string>
+    <string name="stack_all_same_doc_type">Усі документи цього типу</string>
     <string name="stack_change_doc_type_ordering">Змінити порядок документів</string>
 
     <string name="change_doc_ordering">Змінити порядок документів</string>
@@ -31,7 +31,7 @@
     <string name="residence_cert">Витяг про місце проживання</string>
     <string name="idp_edit_person_address">Змінити адресу фактичного проживання</string>
     <string name="idp_action_button_cancel">Скасувати статус ВПО</string>
-    <string name="idp_share_car">Поділитись транспортним засобом</string>
+    <string name="idp_share_car">Поділитися транспортним засобом</string>
     <string name="idp_share_car_owner_cancel">Скасувати шеринг</string>
     <string name="idp_share_car_proper_cancel">Відмовитися від користування авто</string>
     <string name="rate_document">Оцінити документ</string>
