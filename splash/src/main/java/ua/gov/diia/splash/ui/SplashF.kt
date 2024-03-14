@@ -1,110 +1,93 @@
 package ua.gov.diia.splash.ui
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
+import ua.gov.diia.core.models.dialogs.TemplateDialogModel
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.extensions.fragment.currentDestinationId
 import ua.gov.diia.core.util.extensions.fragment.navigate
-import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.core.util.extensions.fragment.registerForNavigationResultOnce
-import ua.gov.diia.core.util.extensions.fragment.registerForTemplateDialogNavResult
+import ua.gov.diia.core.util.extensions.fragment.registerForTemplateDialogNavResultOnce
 import ua.gov.diia.splash.helper.SplashHelper
 import ua.gov.diia.splash.ui.compose.SplashScreen
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
+import ua.gov.diia.ui_base.fragments.BaseComposeFragment
+import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SplashF : Fragment() {
+class SplashF : BaseComposeFragment<SplashFVM>() {
 
-    private val viewModel: SplashFVM by viewModels()
-    private val args: SplashFArgs by navArgs()
-    private var composeView: ComposeView? = null
+    override val viewModel: SplashFVM by viewModels()
 
     @Inject
     lateinit var splashHelper: SplashHelper
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun buildViewModel(viewModel: SplashFVM) {
+        val args: SplashFArgs by navArgs()
         viewModel.doInit(
             args.skipInitialization,
             args.uuid4
         )
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        composeView = ComposeView(requireContext())
-        return composeView
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        composeView?.setContent {
-            viewModel.apply {
-                navigation.collectAsEffect { navigation ->
-                    when (navigation) {
-                        is SplashFVM.Navigation.ToErrorDialog -> {
-                            navigate(SplashFDirections.actionSplashFToRootDF(navigation.diiaError))
-                        }
-                        is SplashFVM.Navigation.ToPinCreation -> {
-                            navigateToPinCreation()
-                        }
-                        is SplashFVM.Navigation.ToLogin -> {
-                            navigate(SplashFDirections.actionSplashFToDestinationLogin())
-                        }
-                        is SplashFVM.Navigation.ToQrScanner -> {
-                            navigate(SplashFDirections.actionSplashFToQrScanF())
-                        }
-                        is SplashFVM.Navigation.ToProtection -> {
-                            navigate(SplashFDirections.actionSplashFToDestinationPinInput())
-                        }
-                    }
+    @Composable
+    override fun Content(viewModel: SplashFVM) {
+        viewModel.navigation.collectAsEffect { navigation ->
+            when (navigation) {
+                is SplashFVM.Navigation.ToErrorDialog -> {
+                    navigate(SplashFDirections.actionSplashFToRootDF(navigation.diiaError))
                 }
 
-                showTemplateDialog.collectAsEffect {
-                    openTemplateDialog(it.peekContent())
+                is SplashFVM.Navigation.ToPinCreation -> {
+                    navigateToPinCreation()
+                }
+
+                is SplashFVM.Navigation.ToLogin -> {
+                    navigate(SplashFDirections.actionSplashFToDestinationLogin())
+                }
+
+                is SplashFVM.Navigation.ToQrScanner -> {
+                    navigate(SplashFDirections.actionSplashFToQrScanF())
+                }
+
+                is SplashFVM.Navigation.ToProtection -> {
+                    navigate(SplashFDirections.actionSplashFToDestinationPinInput())
                 }
             }
-
-            SplashScreen(
-                dataState = viewModel.uiData,
-                onEvent = { viewModel.onUIAction(it) }
-            )
+        }
+        viewModel.showTemplateDialog.collectAsEffect {
+            navigateToTemplateDialog(it.peekContent())
         }
 
-        registerForNavigationResultOnce(RESULT_KEY_PIN, viewModel::setServiceUserPin)
-
-        registerForTemplateDialogNavResult { action ->
-            findNavController().popBackStack()
-            when (action) {
-                ActionsConst.DIALOG_ACTION_RESUME -> viewModel.resumeSplashJobs()
-            }
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        composeView = null
+        SplashScreen(
+            dataState = viewModel.uiData,
+            onEvent = { viewModel.onUIAction(it) }
+        )
     }
 
     private fun navigateToPinCreation() {
+        registerForNavigationResultOnce(RESULT_KEY_PIN, viewModel::setServiceUserPin)
+
         splashHelper.navigateToProtectionCreation(
             host = this,
             resultDestinationId = currentDestinationId ?: return,
             resultKey = RESULT_KEY_PIN,
         )
+    }
+
+    private fun navigateToTemplateDialog(model: TemplateDialogModel) {
+        registerForTemplateDialogNavResultOnce { action ->
+            findNavController().popBackStack()
+            when (action) {
+                ActionsConst.DIALOG_ACTION_RESUME -> viewModel.resumeSplashJobs()
+            }
+        }
+
+        openTemplateDialog(model)
     }
 
     private companion object {
