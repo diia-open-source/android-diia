@@ -13,13 +13,13 @@ import ua.gov.diia.ui_base.components.organism.bottom.TabBarOrganismData
 @Composable
 fun TabBarRootContainer(
     modifier: Modifier = Modifier,
-    tabBarVies: SnapshotStateList<UIElementData>,
+    tabBarViews: SnapshotStateList<UIElementData>,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(
         modifier = modifier.navigationBarsPadding()
     ) {
-        tabBarVies.forEach {
+        tabBarViews.forEach {
             when (it) {
                 is TabBarOrganismData -> {
                     TabBarOrganism(
