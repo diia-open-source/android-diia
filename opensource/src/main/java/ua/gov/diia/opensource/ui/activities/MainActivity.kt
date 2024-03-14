@@ -9,6 +9,7 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,7 +17,9 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import ua.gov.diia.core.di.actions.GlobalActionLogout
 import ua.gov.diia.core.models.deeplink.DeepLinkActionViewMessage
@@ -34,7 +37,6 @@ import ua.gov.diia.opensource.NavMainXmlDirections
 import ua.gov.diia.opensource.R
 import ua.gov.diia.opensource.di.GlobalActionProlongUser
 import ua.gov.diia.opensource.util.ext.navigate
-import ua.gov.diia.opensource.util.setUpEdgeToEdge
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -61,8 +63,8 @@ abstract class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_Diia_NoActionBar)
-        setUpEdgeToEdge()
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         adjustFontScale(resources.configuration)
         setUpAnalytics()
         setContentView(R.layout.activity_main)
@@ -74,9 +76,9 @@ abstract class MainActivity : AppCompatActivity() {
             }
 
             deeplinkFlow.flowWithLifecycle(lifecycle)
-                .onEach {
-                    val data = it?.peekContent() ?: return@onEach
-
+                .filterNotNull()
+                .map { it.peekContent() }
+                .onEach { data ->
                     if (data is DeepLinkActionViewMessage) {
                         if (!data.needAuth) {
                             navigate(
