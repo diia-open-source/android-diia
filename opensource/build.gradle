@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.application") apply(true)
-    id("kotlin-android") apply(true)
-    id("kotlin-parcelize") apply(true)
-    id("kotlin-kapt") apply(true)
+    alias(libs.plugins.android.application) apply(true)
+    alias(libs.plugins.kotlin) apply(true)
+    alias(libs.plugins.kotlin.parcelize) apply(true)
+    alias(libs.plugins.kotlin.kapt) apply(true)
     id("androidx.navigation.safeargs.kotlin") apply(true)
     id("com.google.firebase.crashlytics") apply(true)
     id("com.huawei.agconnect") apply(true)

@@ -1,9 +1,8 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 apply from: '../dependencies.gradle'
