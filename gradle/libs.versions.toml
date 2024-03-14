@@ -16,10 +16,8 @@ kotlin-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
 huawei-agcp = { module = "com.huawei.agconnect:agcp", version.ref = "huawei-agcp" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebase-crashlytics" }
-
-hilt-android-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt-android-plugin" }
-
 navigation-safe-args-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation-safe-args-plugin" }
 jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
 
 [plugins]
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-android-plugin" }
