@@ -1,14 +1,15 @@
-plugins{
-    alias(libs.plugins.hilt)
+plugins {
+    id("com.android.application") apply(true)
+    id("kotlin-android") apply(true)
+    id("kotlin-parcelize") apply(true)
+    id("kotlin-kapt") apply(true)
+    id("androidx.navigation.safeargs.kotlin") apply(true)
+    id("com.google.firebase.crashlytics") apply(true)
+    id("com.huawei.agconnect") apply(true)
+
+    alias(libs.plugins.hilt) apply(true)
+    alias(libs.plugins.google.services) apply(true)
 }
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'androidx.navigation.safeargs.kotlin'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.huawei.agconnect'
 
 apply from: '../dependencies.gradle'
 

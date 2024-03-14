@@ -4,7 +4,6 @@ buildscript {
         classpath libs.build.tools
         classpath libs.kotlin.plugin
         classpath libs.navigation.safe.args.plugin
-        classpath libs.google.services
         classpath libs.firebase.crashlytics
         classpath libs.huawei.agcp
         classpath libs.jacoco.core
