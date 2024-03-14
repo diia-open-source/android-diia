@@ -81,8 +81,8 @@ android {
             proguardFiles getDefaultProguardFile(
                     'proguard-android-optimize.txt'),
                     'proguard-rules.pro'
-            buildConfigField "String", "SERVER_URL", '"https://api2.diia.gov.ua"'
-            buildConfigField "String", "BANK_ID_CALLBACK_URL", '"https://api2.diia.gov.ua/api/v1/auth/bank-id/code/callback"'
+            buildConfigField "String", "SERVER_URL", '"https://api2oss.diia.gov.ua"'
+            buildConfigField "String", "BANK_ID_CALLBACK_URL", '"https://api2oss.diia.gov.ua/api/v1/auth/bank-id/code/callback"'
             multiDexKeepProguard file('multidex_keep_file.pro')
         }
         debug {
@@ -92,8 +92,8 @@ android {
             proguardFiles getDefaultProguardFile(
                     'proguard-android-optimize.txt'),
                     'proguard-rules.pro'
-            buildConfigField "String", "SERVER_URL", '"https://api2.diia.gov.ua"'
-            buildConfigField "String", "BANK_ID_CALLBACK_URL", '"https://api2.diia.gov.ua/api/v1/auth/bank-id/code/callback"'
+            buildConfigField "String", "SERVER_URL", '"https://api2oss.diia.gov.ua"'
+            buildConfigField "String", "BANK_ID_CALLBACK_URL", '"https://api2oss.diia.gov.ua/api/v1/auth/bank-id/code/callback"'
             multiDexKeepProguard file('multidex_keep_file.pro')
         }
     }
