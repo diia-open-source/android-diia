@@ -9,15 +9,15 @@ buildscript {
         maven { url 'https://developer.huawei.com/repo/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20'
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"
-        classpath 'com.google.gms:google-services:4.3.14'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
-        classpath 'com.huawei.agconnect:agcp:1.6.5.300'
-        classpath "org.jacoco:org.jacoco.core:0.8.8"
+        classpath libs.build.tools
+        classpath libs.kotlin.plugin
+        classpath libs.navigation.safe.args.plugin
+        classpath libs.google.services
+        classpath libs.firebase.crashlytics
+        classpath libs.huawei.agcp
+        classpath libs.jacoco.core
         //hilt
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.44'
+        classpath libs.hilt.android.plugin
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
