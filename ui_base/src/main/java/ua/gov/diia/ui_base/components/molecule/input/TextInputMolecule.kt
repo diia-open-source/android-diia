@@ -420,7 +420,7 @@ data class TextInputMoleculeData(
 fun TextInputMoleculePreview() {
 
     val PHONE_NUMBER_VALIDATION_PATTERN =
-        "^38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
+        "^38(039|050|063|066|067|068|073|075|077|091|092|093|094|095|096|097|098|099)\\d{7}\$"
 
     val data = TextInputMoleculeData(
         id = "",
@@ -475,7 +475,7 @@ fun TextInputMoleculePreview() {
 fun TextInputMoleculePreview_Prefilled() {
 
     val PHONE_NUMBER_VALIDATION_PATTERN =
-        "^38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
+        "^38(039|050|063|066|067|068|073|075|077|091|092|093|094|095|096|097|098|099)\\d{7}\$"
 
     val data = TextInputMoleculeData(
         id = "",
@@ -537,7 +537,7 @@ fun InputWithScroll_Preview() {
             "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
             ")+"
     val PHONE_NUMBER_VALIDATION_PATTERN =
-        "^\\+?38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
+        "^\\+?38(039|050|063|066|067|068|073|075|077|091|092|093|094|095|096|097|098|099)\\d{7}\$"
 
     val toolbarData: SnapshotStateList<UIElementData> =
         SnapshotStateList<UIElementData>().addAllIfNotNull(

@@ -76,7 +76,7 @@ data class InputGroupMoleculeData(val items: List<TextInputMoleculeData>) : Inpu
 @Composable
 @Preview
 fun InputGroupMoleculePreview() {
-    val PHONE_NUMBER_VALIDATION_PATTERN = "^38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
+    val PHONE_NUMBER_VALIDATION_PATTERN = "^38(039|050|063|066|067|068|073|075|077|091|092|093|094|095|096|097|098|099)\\d{7}\$"
     val data = InputGroupMoleculeData(
         items = mutableListOf<TextInputMoleculeData>().apply {
             add(
