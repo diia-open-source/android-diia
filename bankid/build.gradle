@@ -91,9 +91,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    implementation project(':core')
-    implementation project(':verification')
-    implementation project(':ui_base')
+    implementation projects.core
+    implementation projects.verification
+    implementation projects.uiBase
     implementation deps.fragment_ktx
     implementation deps.appcompat
     implementation deps.constraint_layout

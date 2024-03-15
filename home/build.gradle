@@ -90,8 +90,8 @@ android {
 
 dependencies {
 
-    implementation project(':core')
-    implementation project(':diia_storage')
+    implementation projects.core
+    implementation projects.diiaStorage
     implementation deps.activity_ktx
     implementation deps.fragment_ktx
     implementation deps.appcompat

@@ -89,8 +89,8 @@ android {
 
 dependencies {
 
-    implementation project(':core')
-    implementation project(':analytics')
+    implementation projects.core
+    implementation projects.analytics
 
     implementation project(':diia_storage')
     implementation deps.activity_ktx

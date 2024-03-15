@@ -89,10 +89,10 @@ android {
 
 dependencies {
 
-    implementation project(path: ':ui_base')
-    implementation project(':core')
-    implementation project(':diia_storage')
-    implementation project(path: ':web')
+    implementation projects.uiBase
+    implementation projects.core
+    implementation projects.diiaStorage
+    implementation projects.web
 
     implementation deps.fragment_ktx
     implementation deps.appcompat

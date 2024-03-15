@@ -94,9 +94,9 @@ dependencies {
     implementation deps.activity_ktx
     implementation deps.fragment_ktx
     implementation deps.appcompat
-    implementation project(path: ':ui_base')
-    implementation project(path: ':core')
-    implementation project(path: ':documents')
+    implementation projects.uiBase
+    implementation projects.core
+    implementation projects.documents
     // Moshi
     implementation deps.moshi
     implementation deps.moshi_adapters

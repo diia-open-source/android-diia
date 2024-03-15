@@ -93,14 +93,14 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    implementation projects.uiBase
+    implementation projects.core
+    implementation projects.publicservice
+    implementation projects.addressSearch
+    implementation projects.search
     implementation deps.activity_ktx
     implementation deps.fragment_ktx
     implementation deps.appcompat
-    implementation project(path: ':ui_base')
-    implementation project(path: ':core')
-    implementation project(path: ':publicservice')
-    implementation project(path: ':address_search')
-    implementation project(path: ':search')
     //lifecycle
     implementation deps.lifecycle_extensions
     implementation deps.lifecycle_livedata_ktx
