@@ -8,6 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import dagger.multibindings.StringKey
 import retrofit2.Retrofit
+import retrofit2.create
 import ua.gov.diia.bankid.BankIdConst
 import ua.gov.diia.bankid.network.ApiBankId
 import ua.gov.diia.bankid.ui.VerificationMethodBankId
@@ -28,20 +29,20 @@ interface BankIdModule {
         @UnauthorizedClient
         fun provideApiBankIdUnauthorized(
             @UnauthorizedClient retrofit: Retrofit
-        ): ApiBankId = retrofit.create(ApiBankId::class.java)
+        ): ApiBankId = retrofit.create()
 
 
         @Provides
         @ProlongClient
         fun provideApiBankIdProlong(
             @ProlongClient retrofit: Retrofit
-        ): ApiBankId = retrofit.create(ApiBankId::class.java)
+        ): ApiBankId = retrofit.create()
 
         @Provides
         @AuthorizedClient
         fun provideApiBankIdAuthorized(
             @AuthorizedClient retrofit: Retrofit
-        ): ApiBankId = retrofit.create(ApiBankId::class.java)
+        ): ApiBankId = retrofit.create()
 
         @Provides
         @ProviderVerifiedClient

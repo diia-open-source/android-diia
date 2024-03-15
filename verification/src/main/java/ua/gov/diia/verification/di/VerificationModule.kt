@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.runBlocking
 import retrofit2.Retrofit
+import retrofit2.create
 import ua.gov.diia.core.di.data_source.http.AuthorizedClient
 import ua.gov.diia.core.di.data_source.http.ProlongClient
 import ua.gov.diia.core.di.data_source.http.UnauthorizedClient
@@ -22,19 +23,19 @@ object VerificationModule {
     @AuthorizedClient
     fun provideApiVerificationAuthorized(
         @AuthorizedClient retrofit: Retrofit
-    ): ApiVerification = retrofit.create(ApiVerification::class.java)
+    ): ApiVerification = retrofit.create()
 
     @Provides
     @UnauthorizedClient
     fun provideApiVerificationUnauthorized(
         @UnauthorizedClient retrofit: Retrofit
-    ): ApiVerification = retrofit.create(ApiVerification::class.java)
+    ): ApiVerification = retrofit.create()
 
     @Provides
     @ProlongClient
     fun provideApiVerificationProlong(
         @ProlongClient retrofit: Retrofit
-    ): ApiVerification = retrofit.create(ApiVerification::class.java)
+    ): ApiVerification = retrofit.create()
 
     @Provides
     @ProviderVerifiedClient
