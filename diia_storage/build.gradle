@@ -86,7 +86,7 @@ android {
 dependencies {
     implementation deps.security_crypto
 
-    implementation project(':core')
+    implementation projects.core
     implementation deps.moshi
 
     implementation deps.hilt_android

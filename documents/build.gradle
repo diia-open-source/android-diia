@@ -88,10 +88,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    implementation project(':core')
-    implementation project(':diia_storage')
-    implementation project(':web')
-    implementation project(path: ':ui_base')
+    implementation projects.core
+    implementation projects.diiaStorage
+    implementation projects.web
+    implementation projects.uiBase
     implementation deps.activity_ktx
     implementation deps.fragment_ktx
     implementation deps.appcompat

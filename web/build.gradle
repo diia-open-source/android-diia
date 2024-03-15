@@ -86,8 +86,8 @@ android {
 
 dependencies {
 
-    implementation project(':core')
-    implementation project(path: ':ui_base')
+    implementation projects.core
+    implementation projects.uiBase
 
     implementation deps.fragment_ktx
     implementation deps.appcompat

@@ -21,3 +21,5 @@ include ':analytics'
 include ':diia_storage'
 include ':documents'
 include ':doc_driver_license'
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

@@ -81,7 +81,7 @@ android {
 }
 
 dependencies {
-    implementation project(':core')
+    implementation projects.core
 
     implementation deps.hilt_android
     kapt deps.hilt_android_compiler

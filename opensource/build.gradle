@@ -137,25 +137,25 @@ android {
 }
 
 dependencies {
-    implementation project(':core')
-    implementation project(':splash')
-    implementation project(':home')
-    implementation project(':menu')
-    implementation project(':web')
-    implementation project(':verification')
-    implementation project(':bankid')
-    implementation project(':login')
-    implementation project(':publicservice')
-    implementation project(':ps_criminal_cert')
-    implementation project(':pin')
-    implementation project(':biometric')
-    implementation project(':notifications')
-    implementation project(':analytics')
-    implementation project(':search')
-    implementation project(':address_search')
-    implementation project(':diia_storage')
-    implementation project(':documents')
-    implementation project(':doc_driver_license')
+    implementation projects.core
+    implementation projects.splash
+    implementation projects.home
+    implementation projects.menu
+    implementation projects.web
+    implementation projects.verification
+    implementation projects.bankid
+    implementation projects.login
+    implementation projects.publicservice
+    implementation projects.psCriminalCert
+    implementation projects.pin
+    implementation projects.biometric
+    implementation projects.notifications
+    implementation projects.analytics
+    implementation projects.search
+    implementation projects.addressSearch
+    implementation projects.diiaStorage
+    implementation projects.documents
+    implementation projects.docDriverLicense
     implementation deps.activity_ktx
     implementation deps.fragment_ktx
     implementation deps.legacy_support
