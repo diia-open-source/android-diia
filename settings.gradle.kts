@@ -9,8 +9,7 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-        maven(url = "https://jitpack.io")
+
         maven(url = "https://developer.huawei.com/repo/")
     }
 }
@@ -21,7 +20,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven(url = "https://jitpack.io")
-        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
         maven(url = "https://developer.huawei.com/repo/")
     }
 }
