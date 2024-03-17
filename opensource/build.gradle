@@ -6,7 +6,6 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.huawei.agconnect'
 
 apply from: '../dependencies.gradle'
 
@@ -66,6 +65,7 @@ android {
 
         huawei {
             dimension "vendor"
+            apply plugin: 'com.huawei.agconnect'
         }
     }
 
