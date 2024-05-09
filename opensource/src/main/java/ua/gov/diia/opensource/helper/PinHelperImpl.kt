@@ -14,16 +14,13 @@ import javax.inject.Singleton
 @Singleton
 class PinHelperImpl @Inject constructor(
     private val biometric: Biometric,
-    private val settingsRepository: AppSettingsRepository,
+    private val settingsRepository: AppSettingsRepository
 ) : PinHelper {
 
-    override fun isAlternativeAuthAvailable(): Boolean {
-        return biometric.isBiometricAuthAvailable()
-    }
+    override fun isAlternativeAuthAvailable() = biometric.isBiometricAuthAvailable()
 
-    override suspend fun isAlternativeAuthEnabled(): Boolean {
-        return biometric.isBiometricAuthAvailable() && settingsRepository.isBiometricAuthEnabled()
-    }
+    override suspend fun isAlternativeAuthEnabled() =
+        biometric.isBiometricAuthAvailable() && settingsRepository.isBiometricAuthEnabled()
 
     override fun openAlternativeAuth(host: Fragment, callback: AlternativeAuthCallback) {
         host.showBiometricAuthPrompt(biometric.getPromptDescriptionString()) { result ->
@@ -39,13 +36,13 @@ class PinHelperImpl @Inject constructor(
         host: Fragment,
         resultDestinationId: Int,
         resultKey: String,
-        pin: String,
+        pin: String
     ) {
         host.navigate(
             NavMainXmlDirections.actionGlobalToSetupBiometric(
                 resultDestinationId = resultDestinationId,
                 resultKey = resultKey,
-                pin = pin,
+                pin = pin
             )
         )
     }
