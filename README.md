@@ -13,11 +13,15 @@ We're pleased to share the **Diia** project with you.
 
 ## Useful Links
 
-|Topic|Link|Description|
-|--|--|--|
-|Ministry of Digital Transformation of Ukraine|https://thedigital.gov.ua/|The Official homepage of the Ministry of Digital Transformation of Ukraine|
-|Diia App|https://diia.gov.ua/|The Official website for the Diia application
+[//]: # (|Topic|Link|Description|)
 
+[//]: # (|--|--|--|)
+
+[//]: # (|Ministry of Digital Transformation of Ukraine|https://thedigital.gov.ua/|The Official homepage of the Ministry of Digital Transformation of Ukraine|)
+
+[//]: # (|Diia App|https://diia.gov.ua/|The Official website for the Diia application)
+
+[//]: # ()
 
 ## Getting Started
 

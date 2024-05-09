@@ -64,13 +64,13 @@ class AndroidClientAlertDialogsFactory @Inject constructor(
         data = TemplateDialogData(
             icon = "\uD83D\uDE1E",
             title = "Ця картка не\nпідтримується",
-            description = "Потрібне посвідчення з біометричним чипом.",
+            description = "Потрібне посвідчення з біометричним чипом.🪪",
             mainButton = TemplateDialogButton(
-                name = "Спробувати ще",
+                name = "Спробувати ще ",
                 action = ActionsConst.GENERAL_RETRY,
             ),
             alternativeButton = TemplateDialogButton(
-                name = "Вийти",
+                name = "Вийти🔙",
                 action = ActionsConst.DIALOG_ACTION_EXIT,
             )
         ),
@@ -84,10 +84,10 @@ class AndroidClientAlertDialogsFactory @Inject constructor(
             isClosable = false,
             data = TemplateDialogData(
                 icon = "\uD83D\uDE1E",
-                title = "На жаль, сталася помилка",
-                description = "Дані не зчитано. Втрачено зв’язок з картою або сталася помилка при зчитуванні",
+                title = "На жаль, сталася помилка😒",
+                description = "Дані не зчитано. Втрачено зв’язок з картою або сталася помилка при зчитуванні🪲",
                 mainButton = TemplateDialogButton(
-                    name = "Спробувати ще",
+                    name = "Спробувати ще🔄️",
                     action = ActionsConst.GENERAL_RETRY,
                 )
             ),
@@ -123,7 +123,7 @@ class AndroidClientAlertDialogsFactory @Inject constructor(
             isClosable = closable,
             data = TemplateDialogData(
                 icon = "\uD83D\uDE1E",
-                title = "На жаль, сталася помилка",
+                title = "На жаль, сталася помилка😒",
                 description = "Дані не зчитано. Втрачено зв’язок з картою або сталася помилка при зчитуванні",
                 mainButton = TemplateDialogButton(
                     name = "Спробувати ще",
