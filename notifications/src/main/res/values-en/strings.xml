@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- notifications -->
+    <string name="notification_channel_acquirer">Request for copies of digital documents</string>
+    <string name="notification_channel_messages">Messages</string>
+    <string name="notification_channel_debts">Debts</string>
+    <string name="notification_channel_penalties">Fines</string>
+    <string name="notification_channel_diia_default">Other notifications</string>
+
+</resources>
