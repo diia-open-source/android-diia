@@ -38,10 +38,11 @@ class DefaultRatingDialogBehaviour @Inject constructor() : WithRatingDialog {
         // Implement your logic if required
     }
 
-    override fun <T> T.getRating(
+    override fun <T : ViewModel> T.getRating(
         category: String,
-        serviceCode: String
-    ) where T : ViewModel, T : WithErrorHandling, T : WithRetryLastAction {
+        serviceCode: String,
+        screenCode: String?
+    ) where T : WithErrorHandling, T : WithRetryLastAction {
         // Implement your logic if required
     }
 }

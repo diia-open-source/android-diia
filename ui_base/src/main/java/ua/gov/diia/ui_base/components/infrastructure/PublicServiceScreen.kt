@@ -5,10 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.screen.BodyRootContainer
+import ua.gov.diia.ui_base.components.infrastructure.screen.BodyRootLazyContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.BottomBarRootContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.ComposeRootScreen
 import ua.gov.diia.ui_base.components.infrastructure.screen.ToolbarRootContainer
@@ -24,7 +24,7 @@ fun PublicServiceScreen(
     toolbar: SnapshotStateList<UIElementData>,
     body: SnapshotStateList<UIElementData>,
     bottom: SnapshotStateList<UIElementData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
+    useNestedScrollBody: Boolean = false,
     onEvent: (UIAction) -> Unit
 ) {
     BackHandler {
@@ -35,34 +35,42 @@ fun PublicServiceScreen(
         } ?: UIActionKeysCompose.TOOLBAR_NAVIGATION_BACK))
     }
     ComposeRootScreen(
-        modifier = modifier.background(BlackSqueeze).provideTestTagsAsResourceId(),
+        modifier = modifier
+            .background(BlackSqueeze)
+            .provideTestTagsAsResourceId(),
         contentLoaded = contentLoaded,
         toolbar = {
             ToolbarRootContainer(
                 toolbarViews = toolbar,
-                onUIAction = onEvent,
-                diiaResourceIconProvider = diiaResourceIconProvider,
+                onUIAction = onEvent
             )
         },
         body = {
-            BodyRootContainer(
-                bodyViews = body,
-                displayBlockDivider = bottom.isNotEmpty(),
-                progressIndicator = progressIndicator,
-                contentLoaded = contentLoaded,
-                onUIAction = onEvent,
-                diiaResourceIconProvider = diiaResourceIconProvider,
-            )
+            if (useNestedScrollBody){
+                BodyRootLazyContainer(
+                    bodyViews = body,
+                    displayBlockDivider = bottom.isNotEmpty(),
+                    progressIndicator = progressIndicator,
+                    contentLoaded = contentLoaded,
+                    onUIAction = onEvent
+                )
+            } else {
+                BodyRootContainer(
+                    bodyViews = body,
+                    displayBlockDivider = bottom.isNotEmpty(),
+                    progressIndicator = progressIndicator,
+                    contentLoaded = contentLoaded,
+                    onUIAction = onEvent
+                )
+            }
         },
         bottom = {
             BottomBarRootContainer(
                 bottomViews = bottom,
                 progressIndicator = progressIndicator,
-                diiaResourceIconProvider = diiaResourceIconProvider,
                 onUIAction = onEvent
             )
         },
-        onEvent = onEvent,
-        diiaResourceIconProvider = diiaResourceIconProvider,
+        onEvent = onEvent
     )
 }

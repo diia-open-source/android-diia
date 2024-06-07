@@ -10,4 +10,8 @@ internal class WithCrashlyticsImpl : WithCrashlytics {
             AGConnectCrash.getInstance().recordException(e)
         }
     }
+
+    override fun sendMarkedErr(msg: String) {
+        AGConnectCrash.getInstance().log(msg)
+    }
 }

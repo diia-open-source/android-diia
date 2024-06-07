@@ -37,7 +37,7 @@ fun WhiteMenuCardMlc(
         modifier = modifier
             .fillMaxWidth()
             .background(color = WhiteAlpha40, shape = RoundedCornerShape(16.dp))
-            .noRippleClickable {
+            .noRippleClickable(debounce = true) {
                 onUIAction(UIAction(actionKey = data.actionKey, data = data.id))
             },
         verticalArrangement = Arrangement.Center,

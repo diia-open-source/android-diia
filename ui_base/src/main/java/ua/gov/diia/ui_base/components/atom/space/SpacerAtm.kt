@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.atm.SpacerAtm
+import ua.gov.diia.core.models.common_compose.atm.SpacerAtmType
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 
 @Composable
@@ -24,6 +26,9 @@ fun SpacerAtm(data: SpacerAtmData) {
 
 data class SpacerAtmData(val type: SpacerAtmType): UIElementData
 
-enum class SpacerAtmType {
-    SPACER_8, SPACER_16, SPACER_24, SPACER_32, SPACER_64
+fun SpacerAtm?.toUiModel(type: SpacerAtmType?): SpacerAtmData? {
+    if (this == null) return null
+    return SpacerAtmData(
+        type = type ?: SpacerAtmType.SPACER_8
+    )
 }

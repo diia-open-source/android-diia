@@ -21,6 +21,8 @@ import ua.gov.diia.core.util.delegation.WithPushNotification
 import ua.gov.diia.core.util.delegation.WithRatingDialog
 import ua.gov.diia.core.util.delegation.WithRatingDialogOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
+import ua.gov.diia.documents.ui.WithPdfDocument
+import ua.gov.diia.opensource.helper.documents.WithPdfDocumentImpl
 import ua.gov.diia.opensource.ui.AndroidClientAlertDialogsFactory
 import ua.gov.diia.opensource.util.AndroidDeepLinkActionFactory
 import ua.gov.diia.opensource.util.DefaultDeeplinkHandleBehaviour
@@ -91,4 +93,6 @@ interface GlobalUtils {
     @Binds
     fun bindRatingDialogDelegateOnFlow(impl: DefaultRatingDialogBehaviourOnFlow): WithRatingDialogOnFlow
 
+    @Binds
+    fun bindWithPdfDocument(impl: WithPdfDocumentImpl): WithPdfDocument
 }

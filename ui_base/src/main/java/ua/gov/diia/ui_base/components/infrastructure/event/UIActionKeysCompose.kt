@@ -14,6 +14,7 @@ object UIActionKeysCompose {
     const val TOUCH_ID_BUTTON = "touchIdButton"
     const val CODE_INPUT_ATOM = "codeInputAtom"
     const val LOAD_ACTION_ATOM = "loadActionAtom"
+    const val BTN_LOAD_PLAIN_ICON_ATM = "btnLoadPlainIconAtm"
     const val LOAD_ACTION_ATOM_DOWNLOAD = "loadActionAtomResolutionDownload"
     const val LOAD_ACTION_ATOM_RECEIPT = "LoadActionAtomReceipt"
     const val TICKER_ATOM_CLICK = "onTickerClick"
@@ -24,9 +25,14 @@ object UIActionKeysCompose {
     const val ARTICLE_PIC_ATM = "articlePicAtm"
     const val BTN_PLAIN_ICON_ATM = "btnPlainIconAtm"
     const val SMALL_ICON_ATM_DATA = "smallIconAtm"
+    const val SMALL_PIC_ATM_DATA = "smallPicAtm"
     const val DOUBLE_ICON_ATM_DATA = "doubleIconAtm"
     const val ICON_ATM_DATA = "iconAtm"
+    const val USER_PICTURE_ATM = "userPictureAtm"
     const val CLOSE_ACTION = "close"
+    const val CALENDAR_ITEM_ATM = "calendarItemAtm"
+    const val CALENDAR_ITEM_MONTH_ATM = "calendarItemMonthAtm"
+
 
     //molecule
     const val RADIO_BTN_GROUP_ORG = "radioBtnGroupOrg"
@@ -44,6 +50,8 @@ object UIActionKeysCompose {
     const val VERTICAL_TABLE_ITEM = "verticalTableItem"
     const val PRIMARY_TABLE_ITEM = "primaryTableItem"
     const val TABLE_BLOCK_ORG = "tableBlockOrg"
+    const val TABLE_BLOCK_ACCORDION_ORG = "tableBlockAccordionOrg"
+
     const val ACCORDION_MOLECULE = "accordionMolecule"
     const val QUANTITY_INPUT_MOLECULE = "quantityInputMolecule"
     const val CHIP_TABS_MOLECULE = "chipTabsMolecule"
@@ -65,13 +73,20 @@ object UIActionKeysCompose {
     const val DOC_NUMBER_COPY_WHITE = "docNumberCopyWhite"
     const val DOC_PAGE_SELECTED = "page_selected"
     const val CARD_MLC = "cardMlc"
-
+    const val USER_CARD_MLC = "userCardMlc"
+    const val CHIP_TIME_MLC = "chipTimeMlc"
+    const val CURRENT_TIME_MLC = "currentTimeMlc"
+    const val QR_CODE_MLC = "qrCodeMlc"
+    const val BAR_CODE_MLC = "barCodeMlc"
 
     const val TOGGLE_BUTTON_MOLECULE = "toggleButtonMolecule"
     const val WHITE_MENU_CARD_MLC = "whiteMenuCardMlc"
     const val DOC_COVER_MLD = "docCoverMlc"
     const val TITLE_GROUP_MLC = "titleGroupMlc"
     const val LIST_ITEM_MLC = "listItemMlc"
+    const val LIST_ITEM_UPLOAD_MLC = "listItemMlc"
+    const val CONTROL_BUTTON_MIC_MOLECULE = "controlMlcMic"
+    const val CONTROL_BUTTON_OUTPUT_MOLECULE = "controlMlcOutput"
 
 
     const val CHECKBOX_GROUP_MOLECULE = "checkboxGroupMolecule"
@@ -79,6 +94,8 @@ object UIActionKeysCompose {
     const val DETAILS_TEXT_DESCRIPTION_MOLECULE = "detailsTextDescriptionMolecule"
     const val IMAGE_CARD_MLC = "imageCardMlc"
     const val VERTICAL_CARD_MLC = "verticalCardMlc"
+
+    const val INPUT_NUMBER_MLC = "inputNumberMlc"
 
     /*Default action keys*/
     const val CARD_PRIMARY_BTN_ACTION = "onCardPrimaryBtnActionClick"
@@ -96,7 +113,6 @@ object UIActionKeysCompose {
     const val PIN_CREATED_NUM_BUTTON_ORGANISM = "pinCreatedNumButtonOrganism"
     const val PIN_CLEARED_NUM_BUTTON_ORGANISM = "pinClearedNumButtonOrganism"
     const val TOP_GROUP_ORG = "topGroupOrg"
-    const val QR_SHARE_ORG = "qrShareOrg"
     const val CHECKBOX_BTN_ORG = "checkboxBtnOrg"
     const val DOC_ELLIPSE_MENU = "ellipseMenu"
     const val DOC_STACK = "docStack"
@@ -106,10 +122,14 @@ object UIActionKeysCompose {
     const val DOC_BUTTON_HEADING_DOC = "docButtonHeadingOrg"
     const val DOC_CARD_SWIPE_FINISHED = "swipeFinished"
     const val DOC_ORG_DATA = "docOrgData"
+    const val DOC_ORG_DATA_UPDATE_DOC = "docOrgDataUpdateDoc"
     const val ADD_DOC_ORG = "addDocOrg"
     const val CHANGE_DOC_ORDER = "changeDocOrder"
     const val LIST_ITEM_GROUP_ORG = "listItemGroupOrg"
     const val LIST_ITEM_BORDERED_GROUP_ORG = "listItemBorderedGroupOrg"
+    const val VERIFICATION_CODES_ORG = "verificationCodesOrg"
+    const val SHARING_CODES_ORG = "sharingCodesOrg"
+    const val TOGGLE_BUTTON_GROUP_ORG = "toggleButtonGroupOrg"
 
 
     const val SMALL_NOTIFICATION_CAROUSEL_ORG = "smallNotificationCarouselOrg"
@@ -118,8 +138,11 @@ object UIActionKeysCompose {
     const val VERTICAL_CARD_CAROUSEL_ORG = "verticalCardCarouselOrg"
     const val ARTICLE_PIC_CAROUSEL_ORG = "articlePicCarouselOrg"
     const val MEDIA_TITLE_ORG = "mediaTitleOrg"
+    const val MEDIA_UPLOAD_GROUP_ORG = "mediaUploadGroupOrg"
+    const val FILE_UPLOAD_GROUP_ORG = "groupFilesAddOrg"
 
     const val SELECTOR_ORG = "selectorOrg"
+    const val CALENDAR_ORG = "calendarOrg"
 
     //loading
     const val PAGE_LOADING_CIRCULAR = "pageLoadingCircular"
@@ -128,6 +151,7 @@ object UIActionKeysCompose {
     const val PAGE_LOADING_TRIDENT_WITH_UI_BLOCKING = "pageLoadingTridentWithUIBlocking"
     const val PAGE_LOADING_LINEAR_PAGINATION = "pageLoadingLinearPagination"
     const val PAGE_LOADING_LINEAR_WITH_LABEL = "pageLoadingLinearWithLabel"
+    const val PAGE_LOADING_LINEAR_WITHOUT_BACK_BTN_WITH_LABEL = "pageLoadingLinearWithoutBackBtnWithLabel"
 
     //item actions
     const val ITEM_ACTION_ORDER_EXTRACT = "orderExtract"
@@ -142,4 +166,5 @@ object UIActionKeysCompose {
     const val ITEM_MAP_STABLE_POS = "mapStablePosition"
     const val ITEM_POINTS_APPLIED = "mapPointsAddedToMap"
     const val ITEM_REGION_NAV_APPLIED = "navigationToRegionId"
+    const val ITEM_FACE_DET_CONFIGURED = "faceDetectorConfigured"
 }

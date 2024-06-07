@@ -23,4 +23,5 @@
     <string name="criminal_cert_address_title">Місце реєстрації проживання</string>
     <string name="criminal_cert_address_description">Будь ласка, вкажіть актуальну адресу місця реєстрації проживання.</string>
     <string name="criminal_cert_confirm_action">Надіслати</string>
+    <string name="ps_icon_description_certificates">Довідки та витяги</string>
 </resources>

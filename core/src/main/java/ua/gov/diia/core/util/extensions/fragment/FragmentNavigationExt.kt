@@ -47,6 +47,28 @@ fun Fragment.navigate(
         ?.let { navigate(destination) }
 }
 
+fun Fragment.navigateOnce(
+    destination: NavDirections,
+    navController: NavController = findNavController()
+) = with(navController) {
+    currentDestination
+        ?.getAction(destination.actionId)
+        ?.let { action -> if (action.destinationId != currentDestinationId) navigate(destination) }
+}
+
+
+fun Fragment.navigateOnce(
+    destination: NavDirections,
+    targetDestinationId: Int,
+    navController: NavController = findNavController()
+) = with(navController) {
+    if (currentDestinationId != targetDestinationId) {
+        currentDestination
+            ?.getAction(destination.actionId)
+            ?.let { navigate(destination) }
+    }
+}
+
 fun Activity.collapseApp(){
     moveTaskToBack(false);
 }

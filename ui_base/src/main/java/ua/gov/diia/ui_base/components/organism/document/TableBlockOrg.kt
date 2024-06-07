@@ -10,13 +10,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.table.Item
+import ua.gov.diia.core.models.common_compose.table.TableItemHorizontalMlc
+import ua.gov.diia.core.models.common_compose.table.TableItemPrimaryMlc
+import ua.gov.diia.core.models.common_compose.table.TableItemVerticalMlc
+import ua.gov.diia.core.models.common_compose.table.tableBlockOrg.TableBlockOrg
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -37,6 +42,7 @@ import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.Table
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toUIModel
 import ua.gov.diia.ui_base.components.molecule.tile.SmallEmojiPanelMlc
 import ua.gov.diia.ui_base.components.molecule.tile.SmallEmojiPanelMlcData
 
@@ -44,7 +50,6 @@ import ua.gov.diia.ui_base.components.molecule.tile.SmallEmojiPanelMlcData
 fun TableBlockOrg(
     modifier: Modifier = Modifier,
     data: TableBlockOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(
@@ -52,28 +57,18 @@ fun TableBlockOrg(
             .padding(top = 16.dp, start = 24.dp, end = 24.dp)
             .background(color = Color.White, shape = RoundedCornerShape(16.dp))
             .fillMaxWidth()
-            .semantics {
-                testTag = data.componentId
-            }
+            .testTag(data.componentId?.asString() ?: "")
     ) {
         data.headerMain?.let {
             TableHeadingMolecule(
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp
-                ),
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 data = data.headerMain,
                 onUIAction = onUIAction
             )
         }
         data.headerSecondary?.let {
             TableHeadingMolecule(
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp
-                ),
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 data = data.headerSecondary,
                 onUIAction = onUIAction
             )
@@ -121,7 +116,6 @@ fun TableBlockOrg(
                         TableItemPrimaryMlc(
                             modifier = Modifier,
                             data = item,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
                             onUIAction = onUIAction
                         )
                     }
@@ -138,7 +132,6 @@ fun TableBlockOrg(
                         SmallEmojiPanelMlc(
                             modifier = modifier,
                             data = item,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
                         )
                     }
 
@@ -157,11 +150,69 @@ fun TableBlockOrg(
 
 data class TableBlockOrgData(
     val actionKey: String = UIActionKeysCompose.TABLE_BLOCK_ORG,
-    val componentId: String = "",
+    val componentId: UiText? = null,
     val headerMain: TableHeadingMoleculeData? = null,
     val headerSecondary: TableHeadingMoleculeData? = null,
     val items: List<TableBlockItem>? = null
 ) : UIElementData
+
+fun TableBlockOrg?.toUIModel(): TableBlockOrgData? {
+    val entity = this
+    if (entity?.items == null) return null
+    val tbItems = mutableListOf<TableBlockItem>().apply {
+        (entity.items as List<Item>).forEach { listMlcl ->
+            if (listMlcl.tableItemHorizontalMlc is TableItemHorizontalMlc) {
+                add(
+                    TableItemHorizontalMlcData(
+                        componentId = listMlcl.tableItemHorizontalMlc?.componentId.orEmpty(),
+                        title = listMlcl.tableItemHorizontalMlc?.label?.let {
+                            UiText.DynamicString(
+                                it
+                            )
+                        },
+                        secondaryTitle = listMlcl.tableItemHorizontalMlc?.secondaryLabel,
+                        value = listMlcl.tableItemHorizontalMlc?.value,
+                        secondaryValue = listMlcl.tableItemHorizontalMlc?.secondaryValue,
+                        supportText = listMlcl.tableItemHorizontalMlc?.supportingValue,
+                        valueAsBase64String = listMlcl.tableItemHorizontalMlc?.valueImage
+                    )
+                )
+            }
+
+            if (listMlcl.tableItemVerticalMlc is TableItemVerticalMlc) {
+                add(
+                    TableItemVerticalMlcData(
+                        componentId = listMlcl.tableItemVerticalMlc?.componentId.orEmpty(),
+                        title = listMlcl.tableItemVerticalMlc?.label?.let { UiText.DynamicString(it) },
+                        secondaryTitle = listMlcl.tableItemVerticalMlc?.secondaryLabel,
+                        value = listMlcl.tableItemVerticalMlc?.value,
+                        secondaryValue = listMlcl.tableItemVerticalMlc?.secondaryValue,
+                        supportText = listMlcl.tableItemVerticalMlc?.supportingValue,
+                        valueAsBase64String = listMlcl.tableItemVerticalMlc?.valueImage
+                    )
+                )
+            }
+
+            if (listMlcl.tableItemPrimaryMlc is TableItemPrimaryMlc) {
+                val item = (listMlcl.tableItemPrimaryMlc as TableItemPrimaryMlc).toUIModel()
+                item?.let {
+                    add(it)
+                }
+            }
+        }
+    }
+    return TableBlockOrgData(
+        headerMain = this?.tableMainHeadingMlc?.let {
+            TableHeadingMoleculeData(
+                id = null,
+                title = UiText.DynamicString(it.label),
+                icon = it.icon?.code?.let { it1 -> UiText.DynamicString(it1) },
+                description = it.description?.let { description -> UiText.DynamicString(description) }
+            )
+        },
+        items = tbItems
+    )
+}
 
 @Preview
 @Composable
@@ -195,8 +246,7 @@ fun TableBlockOrgPreview() {
 
     TableBlockOrg(
         modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        data = data
     ) {
 
     }
@@ -225,8 +275,7 @@ fun TableBlockOrgPreview_gallery() {
 
     TableBlockOrg(
         modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        data = data
     ) {}
 }
 
@@ -237,7 +286,7 @@ fun TableBlockOrgPreview_small_emodji() {
     val emoji = SmallEmojiPanelMlcData(
         text = UiText.DynamicString("Booster vaccine dose"),
         icon = UiIcon.DrawableResource(
-            code = CommonDiiaResourceIcon.TRIDENT.code
+            code = DiiaResourceIcon.TRIDENT.code
         )
     )
 
@@ -247,8 +296,7 @@ fun TableBlockOrgPreview_small_emodji() {
 
     TableBlockOrg(
         modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        data = data
     ) {}
 }
 
@@ -290,8 +338,7 @@ fun TableBlockOrgPreview_WithHeader() {
 
     TableBlockOrg(
         modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
+        data = data
     ) {
 
     }

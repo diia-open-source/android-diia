@@ -8,13 +8,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import ua.gov.diia.core.util.delegation.WithBuildConfig
 import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.extensions.activity.setWindowBrightness
+import ua.gov.diia.core.util.extensions.fragment.collapseApp
 import ua.gov.diia.core.util.extensions.fragment.currentDestinationId
-import ua.gov.diia.core.util.extensions.fragment.navigate
+import ua.gov.diia.core.util.extensions.fragment.handlePhoneIntent
+import ua.gov.diia.core.util.extensions.fragment.navigateOnce
 import ua.gov.diia.core.util.extensions.fragment.sendImage
 import ua.gov.diia.core.util.extensions.fragment.sendPdf
 import ua.gov.diia.diia_storage.AndroidBase64Wrapper
@@ -23,12 +24,12 @@ import ua.gov.diia.documents.R
 import ua.gov.diia.documents.helper.DocumentsHelper
 import ua.gov.diia.documents.models.DiiaDocument
 import ua.gov.diia.documents.models.ManualDocs
-import ua.gov.diia.documents.ui.fullinfo.FullInfoFCompose
-import ua.gov.diia.documents.ui.fullinfo.FullInfoFComposeArgs
+import ua.gov.diia.documents.ui.DocsConst
 import ua.gov.diia.documents.util.view.showCopyDocIdClipedSnackBar
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.HomeScreenTab
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
+import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
+import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.web.util.extensions.fragment.navigateToWebView
 import javax.inject.Inject
@@ -47,13 +48,8 @@ class DocGalleryFCompose : Fragment() {
 
     @Inject
     lateinit var navigationSubscriptionHandler: DocGalleryNavigationHelper
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
-
     private var composeView: ComposeView? = null
     private val viewModel: DocGalleryVMCompose by viewModels()
-    private val args: DocGalleryFComposeArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,15 +61,8 @@ class DocGalleryFCompose : Fragment() {
         return composeView
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.doInit(args.settings ?: DocFSettings.default)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.invalidateDataSource()
-
         composeView?.setContent {
             val body = viewModel.bodyData
             val progressIndicator =
@@ -85,10 +74,18 @@ class DocGalleryFCompose : Fragment() {
                 )
             val connectivityState = viewModel.connectivity.collectAsState(true)
 
-
+            val contentLoaded = viewModel.contentLoaded.collectAsState(
+                initial = Pair(
+                    UIActionKeysCompose.PAGE_LOADING_TRIDENT,
+                    true
+                )
+            )
             viewModel.apply {
                 navigation.collectAsEffect { navigation ->
                     when (navigation) {
+                        is BaseNavigation.Back -> {
+                            activity?.collapseApp()
+                        }
 
                         is DocGalleryVMCompose.Navigation.ToDocActions -> {
                             navigateToDocActions(
@@ -99,7 +96,7 @@ class DocGalleryFCompose : Fragment() {
                         }
 
                         is DocGalleryVMCompose.Navigation.NavToVehicleInsurance -> {
-                            fullDocAction(navigation.doc)
+                            documentsHelper.onTickerClick(this@DocGalleryFCompose, navigation.doc)
                         }
 
                         is DocGalleryVMCompose.Navigation.ToDocStackOrder -> navigateToDocOrder()
@@ -117,6 +114,10 @@ class DocGalleryFCompose : Fragment() {
 
                         is DocGalleryVMCompose.DocActions.OpenElectronicQueue -> {
                             navigateToWebView(getString(R.string.url_driver_e_queue))
+                        }
+
+                        is DocGalleryVMCompose.DocActions.Call -> {
+                            handlePhoneIntent(getString(R.string.phone_number_veteran_registry))
                         }
 
                         is DocGalleryVMCompose.DocActions.DocNumberCopy -> {
@@ -147,8 +148,18 @@ class DocGalleryFCompose : Fragment() {
 
             viewModel.certificatePdf.observe(viewLifecycleOwner) { event ->
                 event.getContentIfNotHandled()?.let { e ->
-                    val bArray =
-                        AndroidBase64Wrapper().decode(e.docPDF.toByteArray())
+                    val bArray = AndroidBase64Wrapper().decode(e.docPDF.toByteArray())
+                    sendPdf(
+                        bArray,
+                        event.peekContent().name,
+                        withBuildConfig.getApplicationId()
+                    )
+                }
+            }
+
+            viewModel.documentPdf.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let { e ->
+                    val bArray = AndroidBase64Wrapper().decode(e.docPDF.toByteArray())
                     sendPdf(
                         bArray,
                         event.peekContent().name,
@@ -158,10 +169,12 @@ class DocGalleryFCompose : Fragment() {
             }
 
             viewModel.showTemplateDialog.collectAsEffect {
+                viewModel.stopLoading()
                 openTemplateDialog(it.peekContent())
             }
 
             viewModel.showRatingDialogByUserInitiative.collectAsEffect {
+                viewModel.stopLoading()
                 val ratingModel = it.peekContent()
                 documentsHelper.navigateToRatingService(
                     this,
@@ -173,13 +186,12 @@ class DocGalleryFCompose : Fragment() {
 
             HomeScreenTab(
                 progressIndicator = progressIndicator.value,
+                contentLoaded = contentLoaded.value,
                 connectivityState = connectivityState.value,
                 body = body,
                 onEvent = {
                     viewModel.onUIAction(it)
-                },
-                diiaResourceIconProvider = diiaResourceIconProvider,
-            )
+                })
         }
         navigationSubscriptionHandler.subscribeForNavigationEvents(
             this,
@@ -192,30 +204,21 @@ class DocGalleryFCompose : Fragment() {
         composeView = null
     }
 
-    private fun fullDocAction(document: DiiaDocument) {
-        val fullDocFragment = FullInfoFCompose().apply {
-            arguments = FullInfoFComposeArgs(document).toBundle()
-        }
-        fullDocFragment.show(
-            requireActivity().supportFragmentManager,
-            FULL_DOC_INFO_TRANSACTION_TAG
-        )
-    }
-
     private fun navigateToDocActions(
         doc: DiiaDocument,
         position: Int,
         manualDocs: ManualDocs?
     ) {
-        navigate(
-            NavDocActionsDirections.actionGlobalDestinationDocActionsCompose(
+        navigateOnce(
+            destination = NavDocActionsDirections.actionGlobalDestinationDocActionsCompose(
                 doc = doc,
                 position = position,
                 enableStackActions = false,
-                currentlyDisplayedOdcTypes = viewModel.settings.documentType,
+                currentlyDisplayedOdcTypes = DocsConst.DOCUMENT_TYPE_ALL,
                 manualDocs = manualDocs,
                 resultDestinationId = currentDestinationId ?: return
-            )
+            ),
+            targetDestinationId = R.id.destination_docActionsCompose
         )
     }
 
@@ -226,6 +229,7 @@ class DocGalleryFCompose : Fragment() {
     override fun onPause() {
         super.onPause()
         activity?.setWindowBrightness(true)
+        viewModel.clearFocusType()
     }
 
     private fun navigateToDocOrder() {
@@ -235,9 +239,5 @@ class DocGalleryFCompose : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.scrollToLastDocPos()
-    }
-
-    companion object {
-        private const val FULL_DOC_INFO_TRANSACTION_TAG = "FULL_DOC_INF"
     }
 }

@@ -12,13 +12,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
+import ua.gov.diia.ui_base.components.atom.icon.IconAtm
+import ua.gov.diia.ui_base.components.atom.icon.IconAtmData
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.AutoSizeLimitedText
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.noRippleClickable
-import ua.gov.diia.ui_base.components.subatomic.icon.IconWithBadge
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.White
 
@@ -28,13 +31,14 @@ fun DocNumberCopyWhiteMlc(
     data: DocNumberCopyWhiteMlcData,
     onUIAction: (UIAction) -> Unit
 ) {
+    val value = data.value?.asString()
     Column(modifier = modifier
         .fillMaxWidth()
         .noRippleClickable {
             onUIAction(
                 UIAction(
                     actionKey = data.actionKey,
-                    data = data.value
+                    data = value
                 )
             )
         }) {
@@ -46,7 +50,7 @@ fun DocNumberCopyWhiteMlc(
 
             data.value?.let {
                 AutoSizeLimitedText(
-                    text = data.value,
+                    text = data.value.asString(),
                     modifier = Modifier.weight(1f, false),
                     maxLines = 1,
                     color = White,
@@ -59,13 +63,18 @@ fun DocNumberCopyWhiteMlc(
                         .defaultMinSize(24.dp)
                         .align(alignment = Alignment.CenterVertically)
                 ) {
-                    IconWithBadge(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .align(alignment = Alignment.CenterHorizontally),
-                        image = icon,
-                        imageColor = White,
-                        contentDescription = null,
+                    IconAtm(
+                        modifier = Modifier.size(24.dp),
+                        data = data.icon,
+                        onUIAction = {
+                            onUIAction(
+                                UIAction(
+                                    actionKey = data.actionKey,
+                                    data = value,
+                                    action = data.icon.action
+                                )
+                            )
+                        }
                     )
                 }
             }
@@ -76,8 +85,8 @@ fun DocNumberCopyWhiteMlc(
 data class DocNumberCopyWhiteMlcData(
     val actionKey: String = UIActionKeysCompose.DOC_NUMBER_COPY_WHITE,
     val id: String? = null,
-    val value: String? = null,
-    val icon: UiText? = null
+    val value: UiText? = null,
+    val icon: IconAtmData? = null
 )
 
 @Composable
@@ -85,8 +94,14 @@ data class DocNumberCopyWhiteMlcData(
 fun DocNumberCopyWhiteMlcDataPreview() {
     val data = DocNumberCopyWhiteMlcData(
         id = "123",
-        value = "1234567890",
-        icon = UiText.StringResource(R.drawable.ic_copy_settings_white)
+        value = "1234567890".toDynamicString(),
+        icon = IconAtmData(
+            code = DiiaResourceIcon.COPY_WHITE.code,
+            action = DataActionWrapper(
+                type = "copy",
+                resource = "123456789"
+            )
+        )
     )
     DocNumberCopyWhiteMlc(
         modifier = Modifier.fillMaxWidth(),

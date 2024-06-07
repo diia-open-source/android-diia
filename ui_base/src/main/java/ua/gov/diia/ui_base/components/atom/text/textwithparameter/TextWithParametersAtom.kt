@@ -71,15 +71,19 @@ data class TextWithParametersData(
 @Preview
 @Composable
 fun TextWithParametersAtomPreview() {
+    val linkText =
+        "Міністерство цифрової трансформації та UNITED24 розпочинають проєкт «Армія дронів»! {details}"
     val linkParameter = TextParameter(
         type = TextWithParametersConstants.TYPE_LINK,
         data = TextParameter.Data(
             name = UiText.DynamicString("details"),
-            alt = UiText.DynamicString("Детальніше на сайті"),
-            resource = UiText.DynamicString("https://test.test/"),
+            alt = UiText.DynamicString("Детальніше на сайті UNITED24"),
+            resource = UiText.DynamicString("https://u24.gov.ua/"),
         )
     )
 
+    val phoneText =
+        "Щоб вирішити це питання, будь ласка, зверніться до ДМС України за номером {dmsPhoneNumber}. Дякую!"
     val phoneParameter = TextParameter(
         type = TextWithParametersConstants.TYPE_PHONE,
         data = TextParameter.Data(
@@ -89,6 +93,7 @@ fun TextWithParametersAtomPreview() {
         )
     )
 
+    val emailText = "Напишіть нам і ми обов'язково вам відповімо {myCustomEmail}!."
     val emailParameter = TextParameter(
         type = TextWithParametersConstants.TYPE_MAIL,
         data = TextParameter.Data(
@@ -116,13 +121,13 @@ fun TextWithParametersAtomPreview() {
 @Composable
 fun TextWithParametersAtomPreview_Link() {
     val linkText =
-        UiText.DynamicString("Міністерство цифрової трансформації  розпочинають проєкт! {details}")
+        UiText.DynamicString("Міністерство цифрової трансформації та UNITED24 розпочинають проєкт «Армія дронів»! {details}")
     val linkParameter = TextParameter(
         type = TextWithParametersConstants.TYPE_LINK,
         data = TextParameter.Data(
             name = UiText.DynamicString("details"),
-            alt = UiText.DynamicString("Детальніше на сайті"),
-            resource = UiText.DynamicString("https://test.test/"),
+            alt = UiText.DynamicString("Детальніше на сайті UNITED24"),
+            resource = UiText.DynamicString("https://u24.gov.ua/"),
         )
     )
 

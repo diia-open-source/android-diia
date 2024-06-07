@@ -20,7 +20,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.core.models.common_compose.org.checkbox.CheckboxRoundGroupOrg
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.addAllIfNotNull
@@ -31,7 +31,8 @@ import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckIconMlc
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckIconMlcData
-import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxRoundMlc
+import ua.gov.diia.core.models.common_compose.mlc.checkbox.CheckboxRoundMlc
+import ua.gov.diia.core.models.common_compose.mlc.checkbox.CheckIconMlc
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxRoundMlcData
 import ua.gov.diia.ui_base.components.molecule.header.NavigationPanelMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
@@ -43,7 +44,6 @@ import ua.gov.diia.ui_base.components.theme.White
 fun CheckboxRoundGroupOrg(
     modifier: Modifier = Modifier,
     data: CheckboxRoundGroupOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     val localData = remember { mutableStateOf(data) }
@@ -63,16 +63,13 @@ fun CheckboxRoundGroupOrg(
                 text = it,
                 style = DiiaTextStyle.t3TextBody
             )
-            DividerSlimAtom(
-                modifier = Modifier.fillMaxWidth(),
-                color = BlackSqueeze
-            )
+            DividerSlimAtom(modifier = Modifier.fillMaxWidth(), color = BlackSqueeze)
         }
         if (localData.value.items.isNotEmpty() && localData.value.items[0] is CheckboxRoundMlcData) {
             localData.value.items.forEachIndexed { index, item ->
                 when (item) {
                     is CheckboxRoundMlcData -> {
-                        CheckboxRoundMlc(
+                        ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxRoundMlc(
                             modifier = Modifier,
                             data = item,
                             onUIAction = {
@@ -94,36 +91,24 @@ fun CheckboxRoundGroupOrg(
                 }
             }
         } else {
-            PrepareCBIconList(
-                localData.value.items,
-                diiaResourceIconProvider,
-                onUIAction
-            )
+            PrepareCBIconList(localData.value.items, onUIAction)
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
 @Composable
-fun PrepareCBIconList(
-    list: SnapshotStateList<UIElementData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
-    onUIAction: (UIAction) -> Unit
-) {
+fun PrepareCBIconList(list: SnapshotStateList<UIElementData>, onUIAction: (UIAction) -> Unit) {
     val definedList = mutableListOf<CheckIconMlcData>()
     list.forEach {
         if (it is CheckIconMlcData) definedList.add(it)
     }
     val grid = definedList.chunked(3)
-    grid.forEach { CheckboxIconRow(it, diiaResourceIconProvider, onUIAction) }
+    grid.forEach { CheckboxIconRow(it, onUIAction) }
 }
 
 @Composable
-fun CheckboxIconRow(
-    data: List<CheckIconMlcData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
-    onUIAction: (UIAction) -> Unit
-) {
+fun CheckboxIconRow(data: List<CheckIconMlcData>, onUIAction: (UIAction) -> Unit) {
     val rowCount = 3
     val spacesToAdd = rowCount - data.size
     Row(
@@ -135,11 +120,7 @@ fun CheckboxIconRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         data.forEach {
-            CheckIconMlc(
-                data = it,
-                diiaResourceIconProvider = diiaResourceIconProvider,
-                onUIAction = onUIAction
-            )
+            CheckIconMlc(data = it, onUIAction = onUIAction)
         }
 
         for (i in 0 until spacesToAdd) {
@@ -168,6 +149,63 @@ data class CheckboxRoundGroupOrgData(
         }
         )
     }
+}
+
+fun CheckboxRoundGroupOrg.toUIModel(): CheckboxRoundGroupOrgData {
+    val entity: CheckboxRoundGroupOrg = this
+    return CheckboxRoundGroupOrgData(
+        id = this.id ?: "",
+        title = this.title,
+        items = SnapshotStateList<UIElementData>().apply {
+            entity.items.forEachIndexed { index, item ->
+                item.checkboxRoundMlc?.let { cbItem ->
+                    add(
+                        CheckboxRoundMlcData(
+                            id = cbItem.id ?: "",
+                            label = cbItem.label,
+                            description = cbItem.description,
+                            interactionState = when (cbItem.state) {
+                                CheckboxRoundMlc.CbState.REST -> UIState.Interaction.Enabled
+                                CheckboxRoundMlc.CbState.SELECTED -> UIState.Interaction.Enabled
+                                CheckboxRoundMlc.CbState.DISABLE -> UIState.Interaction.Disabled
+                                CheckboxRoundMlc.CbState.DISABLE_SELECTED -> UIState.Interaction.Disabled
+                                else -> UIState.Interaction.Enabled
+                            },
+                            selectionState = when (cbItem.state) {
+                                CheckboxRoundMlc.CbState.REST -> UIState.Selection.Unselected
+                                CheckboxRoundMlc.CbState.SELECTED -> UIState.Selection.Selected
+                                CheckboxRoundMlc.CbState.DISABLE -> UIState.Selection.Unselected
+                                CheckboxRoundMlc.CbState.DISABLE_SELECTED -> UIState.Selection.Selected
+                                else -> UIState.Selection.Unselected
+                            }
+                        )
+                    )
+                }
+                item.checkIconMlc?.let { cIcon ->
+                    add(
+                        CheckIconMlcData(
+                            title = UiText.DynamicString(cIcon.label),
+                            icon = UiIcon.DrawableResource(cIcon.icon),
+                            interactionState = when (cIcon.state) {
+                                CheckIconMlc.CbIconState.REST -> UIState.Interaction.Enabled
+                                CheckIconMlc.CbIconState.SELECTED -> UIState.Interaction.Enabled
+                                CheckIconMlc.CbIconState.DISABLE -> UIState.Interaction.Disabled
+                                CheckIconMlc.CbIconState.DISABLE_SELECTED -> UIState.Interaction.Disabled
+                                else -> UIState.Interaction.Enabled
+                            },
+                            selectionState = when (cIcon.state) {
+                                CheckIconMlc.CbIconState.REST -> UIState.Selection.Unselected
+                                CheckIconMlc.CbIconState.SELECTED -> UIState.Selection.Selected
+                                CheckIconMlc.CbIconState.DISABLE -> UIState.Selection.Unselected
+                                CheckIconMlc.CbIconState.DISABLE_SELECTED -> UIState.Selection.Selected
+                                else -> UIState.Selection.Unselected
+                            }
+                        )
+                    )
+                }
+            }
+        }
+    )
 }
 
 @Composable
@@ -217,10 +255,7 @@ fun CheckboxRoundGroupOrg_Preview() {
             )
         }
     )
-    CheckboxRoundGroupOrg(
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    CheckboxRoundGroupOrg(data = data){}
 }
 
 
@@ -270,8 +305,5 @@ fun CheckboxIconGroupOrg_Preview() {
         title = "Title",
         items = listData
     )
-    CheckboxRoundGroupOrg(
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    CheckboxRoundGroupOrg(data = data){}
 }

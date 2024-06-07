@@ -19,7 +19,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -38,7 +37,6 @@ import ua.gov.diia.ui_base.components.theme.White
 fun CheckboxRoundSeeAllOrg(
     modifier: Modifier = Modifier,
     data: CheckboxRoundSeeAllOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     val localData = remember { mutableStateOf(data) }
@@ -69,18 +67,14 @@ fun CheckboxRoundSeeAllOrg(
         DividerSlimAtom(color = BlackSqueeze)
 
         val grid = localData.value.options.chunked(3)
-        grid.forEach { IconRow(it, diiaResourceIconProvider, onUIAction) }
+        grid.forEach { IconRow(it, onUIAction) }
 
         Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
 @Composable
-fun IconRow(
-    data: List<CheckIconMlcData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
-    onUIAction: (UIAction) -> Unit
-) {
+fun IconRow(data: List<CheckIconMlcData>, onUIAction: (UIAction) -> Unit) {
     val rowCount = 3
     val spacesToAdd = rowCount - data.size
     Row(
@@ -92,11 +86,7 @@ fun IconRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         data.forEach {
-            CheckIconMlc(
-                data = it,
-                diiaResourceIconProvider = diiaResourceIconProvider,
-                onUIAction = onUIAction
-            )
+            CheckIconMlc(data = it, onUIAction = onUIAction)
         }
 
         for (i in 0 until spacesToAdd) {
@@ -154,8 +144,5 @@ fun CheckboxRoundSeeAllOrgPreview() {
         UiText.DynamicString("title"),
         options = listData
     )
-    CheckboxRoundSeeAllOrg(
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    CheckboxRoundSeeAllOrg(data = data) {}
 }

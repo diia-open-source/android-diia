@@ -1,24 +1,22 @@
 package ua.gov.diia.ui_base.components.organism.pager
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerType
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.button.BtnToggleMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesMlcData
@@ -39,7 +37,6 @@ fun DocCardFlip(
     data: DocCardFlipData,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
     cardFocus: CardFocus = CardFocus.UNDEFINED,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Flipper(modifier = modifier,
@@ -58,7 +55,7 @@ fun DocCardFlip(
                             )
                         )
                     },
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    progressIndicator = progressIndicator
                 )
             },
             back = {
@@ -101,7 +98,8 @@ data class DocCardFlipData(
     val currentSide: CardFace = CardFace.Front,
     val front: DocPhotoOrgData,
     val back: DocCodeOrgData?,
-    val enableFlip: Boolean
+    val enableFlip: Boolean,
+    val isFlipped: Boolean = false
 ) : UIElementData, DocsCarouselItem {
 
     fun onToggleClick(toggleId: String?): DocCardFlipData {
@@ -116,16 +114,23 @@ data class DocCardFlipData(
             currentSide = when (currentSide) {
                 CardFace.Front -> CardFace.Back
                 CardFace.Back -> CardFace.Front
-            }
+            },
+            isFlipped = !this.isFlipped
         )
     }
 
     fun setCardSide(cardSide: CardFace): DocCardFlipData {
-        return this.copy(currentSide = cardSide)
+        return this.copy(
+            currentSide = cardSide,
+            isFlipped = cardSide != CardFace.Front
+        )
     }
 
     fun flipAndToggle(cardSide: CardFace, toggleId: String?): DocCardFlipData {
-        val updatedData = this.copy(currentSide = cardSide)
+        val updatedData = this.copy(
+            currentSide = cardSide,
+            isFlipped = cardSide != CardFace.Front
+        )
         if (toggleId == null) return updatedData
 
         return updatedData.copy(back = back?.onToggleClick(toggleId))
@@ -165,10 +170,7 @@ fun DocCardFlipPreview() {
                 title = UiText.DynamicString("Номер:"),
                 value = "XX000000"
             ),
-            TableItemVerticalMlcData(
-                id = "03",
-                valueAsBase64String = PreviewBase64Images.sign
-            )
+            TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )
 
@@ -186,17 +188,23 @@ fun DocCardFlipPreview() {
     val toggle = ToggleButtonGroupData(
         qr = BtnToggleMlcData(
             id = "qr",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_qr_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_qr_unselected),
-            selectionState = UIState.Selection.Selected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.QR_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.QR.code),
+            selectionState = UIState.Selection.Selected,
+            action = DataActionWrapper(
+                type = "qr"
+            )
         ),
         ean13 = BtnToggleMlcData(
             id = "ean",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_ean13_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_ean13_unselected),
-            selectionState = UIState.Selection.Unselected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE.code),
+            selectionState = UIState.Selection.Unselected,
+            action = DataActionWrapper(
+                type = "ean"
+            )
         )
     )
     val state = remember {
@@ -228,11 +236,7 @@ fun DocCardFlipPreview() {
     val stateFlip = remember {
         mutableStateOf(docCardFlipData)
     }
-    DocCardFlip(
-        modifier = Modifier,
-        data = stateFlip.value,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    DocCardFlip(modifier = Modifier, data = stateFlip.value) {
         stateFlip.value = stateFlip.value.onToggleClick(it.data)
     }
 }

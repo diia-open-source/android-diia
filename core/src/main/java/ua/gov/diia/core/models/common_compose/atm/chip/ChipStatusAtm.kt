@@ -9,6 +9,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class ChipStatusAtm(
+    @Json(name = "componentId")
+    val componentId: String? = null,
     @Json(name = "code")
     val code: String?,
     @Json(name = "name")

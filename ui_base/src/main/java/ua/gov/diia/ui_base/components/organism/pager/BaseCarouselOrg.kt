@@ -11,20 +11,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.pager.DocDotNavigationAtm
 import ua.gov.diia.ui_base.components.atom.pager.DocDotNavigationAtmData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -42,9 +46,36 @@ fun BaseCarouselOrg(
     data: BaseCarouselOrgData,
     onUIAction: (UIAction) -> Unit,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     pageCount: Int
 ) {
+    val configuration = LocalConfiguration.current
+    val screenWidthDp = configuration.screenWidthDp
+    val screenHeightDp = configuration.screenHeightDp
+
+    val screenDensity = LocalDensity.current.density
+
+    val screenWidthPx = (screenWidthDp * screenDensity).toInt()
+    val screenHeightPx = (screenHeightDp * screenDensity).toInt()
+
+    val screenDiagonalInches = kotlin.math.sqrt(
+        (screenWidthPx * screenWidthPx + screenHeightPx * screenHeightPx).toDouble()
+    ) / (160 * screenDensity)
+
+    var fraction by remember {
+        mutableFloatStateOf(
+            when {
+                screenDiagonalInches < 5.10 -> 0.9f
+                screenDiagonalInches > 5.10 && screenDiagonalInches < 5.25 -> 0.75f
+                else -> 0.7f
+            }
+        )
+    }
+
+    val screenHeightInPixels = with(LocalDensity.current) { screenHeightDp.dp.toPx() }
+    val desiredHeightInPixels = screenHeightInPixels * fraction
+    val actualFraction = desiredHeightInPixels / screenHeightInPixels
+
+
     val state = rememberPagerState()
     var scrollInProgress = remember { mutableStateOf(false) }
 
@@ -78,7 +109,7 @@ fun BaseCarouselOrg(
             HorizontalPager(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.9f),
+                    .fillMaxHeight(actualFraction),
                 count = pageCount,
                 state = state,
                 itemSpacing = (16).dp,
@@ -114,8 +145,7 @@ fun BaseCarouselOrg(
                                     CardFocus.OUT_OF_FOCUS
                                 }
 
-                            },
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            }
                         ) {
                             if(state.currentPage == page){
                                 onUIAction(
@@ -142,8 +172,7 @@ fun BaseCarouselOrg(
                                     CardFocus.OUT_OF_FOCUS
                                 }
 
-                            },
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            }
                         ) {
                             onUIAction(
                                 UIAction(
@@ -178,8 +207,13 @@ fun BaseCarouselOrg(
 
     if (state.pageCount > 0) {
         LaunchedEffect(key1 = data.focusOnDoc, block = {
-            if (data.focusOnDoc != null && data.focusOnDoc != 0 && state.pageCount >= data.focusOnDoc) {
-                state.scrollToPage(data.focusOnDoc)
+            if (data.focusOnDoc != null && data.focusOnDoc != 0) {
+                if (data.focusOnDoc >= state.pageCount) {
+                    //scroll to last
+                    state.scrollToPage(state.pageCount - 1)
+                } else {
+                    state.scrollToPage(data.focusOnDoc)
+                }
             }
         })
     }

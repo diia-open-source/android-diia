@@ -11,13 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import ua.gov.diia.ui_base.navigation.BaseNavigation
+import ua.gov.diia.core.models.ConsumableString
+import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.delegation.WithBuildConfig
 import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.extensions.activity.setWindowBrightness
 import ua.gov.diia.core.util.extensions.fragment.currentDestinationId
-import ua.gov.diia.core.util.extensions.fragment.navigate
-import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
+import ua.gov.diia.core.util.extensions.fragment.handlePhoneIntent
+import ua.gov.diia.core.util.extensions.fragment.navigateOnce
+import ua.gov.diia.core.util.extensions.fragment.registerForNavigationResult
 import ua.gov.diia.core.util.extensions.fragment.sendImage
 import ua.gov.diia.core.util.extensions.fragment.sendPdf
 import ua.gov.diia.diia_storage.AndroidBase64Wrapper
@@ -25,15 +27,14 @@ import ua.gov.diia.documents.NavDocActionsDirections
 import ua.gov.diia.documents.R
 import ua.gov.diia.documents.helper.DocumentsHelper
 import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.ui.fullinfo.FullInfoFCompose
-import ua.gov.diia.documents.ui.fullinfo.FullInfoFComposeArgs
-import ua.gov.diia.documents.ui.gallery.DocFSettings
 import ua.gov.diia.documents.ui.gallery.DocGalleryNavigationHelper
+import ua.gov.diia.documents.ui.gallery.DocGalleryVMCompose
 import ua.gov.diia.documents.ui.stack.compose.StackScreen
 import ua.gov.diia.documents.util.view.showCopyDocIdClipedSnackBar
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
+import ua.gov.diia.ui_base.navigation.BaseNavigation
+import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.web.util.extensions.fragment.navigateToWebView
 import javax.inject.Inject
 
@@ -51,19 +52,14 @@ class DocStackFCompose : Fragment() {
 
     @Inject
     lateinit var documentsHelper: DocumentsHelper
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
-
     private var composeView: ComposeView? = null
     private val viewModel: DocStackVMCompose by viewModels()
     private val args: DocStackFComposeArgs by navArgs()
-    private lateinit var settings: DocFSettings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.configureTopBar(getHeader())
-        viewModel.subscribeForDocuments(settings())
+        viewModel.subscribeForDocuments(args.docType)
     }
 
     override fun onCreateView(
@@ -71,7 +67,6 @@ class DocStackFCompose : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        settings = settings()
         composeView = ComposeView(requireContext())
         return composeView
     }
@@ -111,7 +106,7 @@ class DocStackFCompose : Fragment() {
                         }
 
                         is DocStackVMCompose.Navigation.NavToVehicleInsurance -> {
-                            fullDocAction(navigation.doc)
+                            documentsHelper.onTickerClick(this@DocStackFCompose, navigation.doc)
                         }
                     }
                 }
@@ -123,6 +118,10 @@ class DocStackFCompose : Fragment() {
 
                         is DocStackVMCompose.DocActions.OpenElectronicQueue -> {
                             navigateToWebView(getString(R.string.url_driver_e_queue))
+                        }
+
+                        is DocStackVMCompose.DocActions.Call -> {
+                            handlePhoneIntent(getString(R.string.phone_number_veteran_registry))
                         }
 
                         is DocStackVMCompose.DocActions.ShareImage -> {
@@ -152,8 +151,14 @@ class DocStackFCompose : Fragment() {
 
             viewModel.certificatePdf.observe(viewLifecycleOwner) { event ->
                 event.getContentIfNotHandled()?.let { e ->
-                    val bArray =
-                        AndroidBase64Wrapper().decode(e.docPDF.toByteArray())
+                    val bArray = AndroidBase64Wrapper().decode(e.docPDF.toByteArray())
+                    sendPdf(bArray, event.peekContent().name, withBuildConfig.getApplicationId())
+                }
+            }
+
+            viewModel.documentPdf.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let { e ->
+                    val bArray = AndroidBase64Wrapper().decode(e.docPDF.toByteArray())
                     sendPdf(
                         bArray,
                         event.peekContent().name,
@@ -162,10 +167,16 @@ class DocStackFCompose : Fragment() {
                 }
             }
 
+            registerForNavigationResult<ConsumableString>(ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY) {
+                viewModel.checkStackCount()
+            }
+
             viewModel.showTemplateDialog.collectAsEffect {
+                viewModel.stopLoading()
                 openTemplateDialog(it.peekContent())
             }
             viewModel.showRatingDialogByUserInitiative.collectAsEffect {
+                viewModel.stopLoading()
                 val ratingModel = it.peekContent()
                 documentsHelper.navigateToRatingService(
                     this,
@@ -182,15 +193,10 @@ class DocStackFCompose : Fragment() {
                 body = body,
                 onEvent = {
                     viewModel.onUIAction(it)
-                },
-                diiaResourceIconProvider = diiaResourceIconProvider,
-            )
+                })
         }
         navigationHelper.subscribeForStackNavigationEvents(this, viewModel)
     }
-
-    private fun settings() = DocFSettings(false, args.docType)
-
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -199,15 +205,16 @@ class DocStackFCompose : Fragment() {
 
     private fun navigateToDocActions(doc: DiiaDocument, position: Int) {
 
-        navigate(
+        navigateOnce(
             NavDocActionsDirections.actionGlobalDestinationDocActionsCompose(
                 doc = doc,
                 position = position,
                 enableStackActions = true,
-                currentlyDisplayedOdcTypes = settings().documentType,
+                currentlyDisplayedOdcTypes = args.docType,
                 manualDocs = null,
                 resultDestinationId = currentDestinationId ?: return
-            )
+            ),
+            targetDestinationId = R.id.destination_docActionsCompose
         )
     }
 
@@ -220,23 +227,8 @@ class DocStackFCompose : Fragment() {
         activity?.setWindowBrightness(true)
     }
 
-    private fun fullDocAction(document: DiiaDocument) {
-        val fullDocFragment = FullInfoFCompose().apply {
-            arguments = FullInfoFComposeArgs(document).toBundle()
-        }
-        fullDocFragment.show(
-            requireActivity().supportFragmentManager,
-            FULL_DOC_INFO_TRANSACTION_TAG
-        )
-    }
-
     override fun onResume() {
         super.onResume()
         viewModel.scrollToLastDocPos()
     }
-
-    companion object {
-        private const val FULL_DOC_INFO_TRANSACTION_TAG = "FULL_DOC_INF"
-    }
-
 }

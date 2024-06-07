@@ -36,6 +36,34 @@
     <string name="nfc_instructions_start">Прикладіть носій з документом (чіп) до задньої сторони телефону</string>
     <string name="nfc_instructions_success">Зчитування даних успішно завершено</string>
 
+    <string name="mrz_instructions_icon_test_tag">icon_reading</string>
+    <string name="mrz_scanner_body_test_tag">body_scan</string>
+    <string name="mrz_scanner_tooltip_test_tag">tool_tip_scan</string>
+    <string name="mrz_scanner_faceid_nav_panel_test_tag">navigation_panel_faceid</string>
+
+    <string name="btn_num_1_test_tag">btn_num_1</string>
+    <string name="btn_num_2_test_tag">btn_num_2</string>
+    <string name="btn_num_3_test_tag">btn_num_3</string>
+    <string name="btn_num_4_test_tag">btn_num_4</string>
+    <string name="btn_num_5_test_tag">btn_num_5</string>
+    <string name="btn_num_6_test_tag">btn_num_6</string>
+    <string name="btn_num_7_test_tag">btn_num_7</string>
+    <string name="btn_num_8_test_tag">btn_num_8</string>
+    <string name="btn_num_9_test_tag">btn_num_9</string>
+    <string name="btn_num_0_test_tag">btn_num_0</string>
+
+    <string name="create_pin_screen_title_test_tag">title_pincreate</string>
+    <string name="create_pin_screen_ellips_test_tag">ellips_stepper_pincreate</string>
+    <string name="create_pin_screen_btn_num_test_tag">btn_num_pincreate</string>
+
+    <string name="confirm_pin_screen_title_test_tag">title_pinconfirm</string>
+    <string name="confirm_pin_screen_ellips_test_tag">ellips_stepper_pinconfirm</string>
+    <string name="confirm_pin_screen_btn_num_test_tag">btn_num_pinconfirm</string>
+
+    <string name="enter_pin_screen_title_test_tag">title_pinenter</string>
+    <string name="enter_pin_screen_ellips_test_tag">ellips_stepper_pinenter</string>
+    <string name="enter_pin_screen_btn_num_test_tag">btn_num_pinenter</string>
+
     <!--    Login  -->
     <string name="login_screen_bank_list_title">Авторизуватись через:</string>
 
@@ -47,7 +75,51 @@
 
     <string name="no_internet">Немає доступу до інтернету. Дані не оновлюються • Немає доступу до інтернету. Дані не оновлюються • Немає доступу до інтернету. Дані не оновлюються •</string>
 
-    <!--  Public service icon's content description  -->
-    <string name="ps_icon_description_donation">Допомога армії</string>
-    <string name="ps_icon_description_certificates">Довідки та витяги</string>
+    <!--  Menu  -->
+    <string name="menu_item_profile_test_tag">profile</string>
+    <string name="menu_item_message_test_tag">message</string>
+    <string name="menu_item_signature_test_tag">signature</string>
+    <string name="menu_item_signature_history_test_tag">signature_history</string>
+    <string name="menu_item_settings_test_tag">settings</string>
+    <string name="menu_item_update_app_test_tag">update_app</string>
+    <string name="menu_item_connected_devices_test_tag">connected_devices</string>
+    <string name="menu_item_support_service_test_tag">support_service</string>
+    <string name="menu_item_copy_device_number_test_tag">copy_device_number</string>
+    <string name="menu_item_faq_test_tag">faq</string>
+    <string name="menu_link_atm_personal_data_test_tag">link_atm_personal_data</string>
+    <string name="menu_group_personal_test_tag">group_personal</string>
+    <string name="menu_group_signature_test_tag">group_signature</string>
+    <string name="menu_group_settings_test_tag">group_settings</string>
+    <string name="menu_group_support_test_tag">group_support</string>
+    <string name="menu_btn_primary_exit_test_tag">btn_primary_exit</string>
+    <string name="menu_title_menu_test_tag">title_menu</string>
+    <string name="menu_btn_white_close_test_tag">btn_white_close</string>
+    <string name="menu_action_sheet_test_tag">action_sheet</string>
+
+    <!--  Home  -->
+    <string name="home_tab_bar_test_tag">tab_bar</string>
+    <string name="home_tab_feed_test_tag">feed</string>
+    <string name="home_tab_documents_test_tag">documents</string>
+    <string name="home_tab_services_test_tag">services</string>
+    <string name="home_tab_menu_test_tag">menu</string>
+    <string name="home_search_services_test_tag">search_services</string>
+    <string name="home_service_tile_test_tag">service_tile</string>
+    <string name="home_services_list_test_tag">services_list</string>
+    <string name="home_subcategories_list_test_tag">subcategories_list</string>
+    <string name="home_chip_tabs_services_test_tag">chip_tabs_services</string>
+    <string name="home_chip_tab_citizens_test_tag">citizens</string>
+    <string name="home_chip_tab_civil_servants_test_tag">civil_servants</string>
+    <string name="home_navigation_panel_services_test_tag">navigation_panel_services</string>
+    <string name="home_navigation_panel_subcategories_test_tag">navigation_panel_subcategories</string>
+    <string name="home_stub_message_services_test_tag">stub_message_services</string>
+    <string name="home_title_services_test_tag">title_services</string>
+
+
+
+
+
+    <!--  Docs  -->
+    <string name="stack_order_title_test_tag">title_documents</string>
+    <string name="stack_order_docs_list_test_tag">docs_list</string>
+
 </resources>

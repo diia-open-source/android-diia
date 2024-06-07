@@ -22,7 +22,15 @@
             app:popEnterAnim="@anim/anim_fade_in"
             app:popExitAnim="@anim/anim_fade_out"
             app:popUpTo="@+id/destination_login"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true" >
+
+            <argument
+                android:name="launchFlow"
+                app:nullable="true"
+                android:defaultValue="@null"
+                app:argType="ua.gov.diia.core.models.ConsumableString" />
+
+        </action>
         <action
             android:id="@+id/action_login_to_createPin"
             app:destination="@id/nav_pin_create">

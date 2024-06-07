@@ -1,16 +1,13 @@
 package ua.gov.diia.documents.helper
 
-import android.content.res.Resources
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
+import ua.gov.diia.core.models.dialogs.TemplateDialogModel
 import ua.gov.diia.core.models.rating_service.RatingFormModel
+import ua.gov.diia.core.models.share.ShareByteArr
 import ua.gov.diia.documents.models.DiiaDocument
 import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
 import ua.gov.diia.documents.ui.DocVM
-import ua.gov.diia.documents.ui.actions.DocActionsDFCompose
-import ua.gov.diia.documents.ui.actions.DocActionsDFComposeArgs
-import ua.gov.diia.ui_base.components.infrastructure.event.DocAction
-import ua.gov.diia.ui_base.components.molecule.list.ListItemMlcData
 
 interface DocumentsHelper {
 
@@ -27,6 +24,10 @@ interface DocumentsHelper {
 
     fun isDocEligibleForDeletion(docType: String): Boolean
 
+    suspend fun loadDocImageInByteArray(docId: String): ShareByteArr?
+
+    suspend fun addDocToGallery(): TemplateDialogModel?
+
     fun isDocumentValid(receivedDoc: DiiaDocumentWithMetadata): Boolean
 
     fun provideListOfDocumentsRequireUpdateOfExpirationDate(focusDocType: String): List<String>?
@@ -34,8 +35,6 @@ interface DocumentsHelper {
     fun showVerificationButtons(document: Parcelable): Boolean
 
     fun isDocRequireGeneralMenuActions(doc: Parcelable): Boolean
-
-    fun isDocRequireHousingMenuActions(doc: Parcelable): Boolean
 
     fun getStackHeader(fragment: Fragment, docType: String): String
 
@@ -56,6 +55,8 @@ interface DocumentsHelper {
      * performs navigation to DocOrder
      */
     fun navigateToDocOrder(fragment: Fragment)
-    fun handleAction(fragment: DocActionsDFCompose, action: DocAction, args: DocActionsDFComposeArgs)
-    fun provideActions(document: DiiaDocument, enableStackActions: Boolean, resources: Resources): List<ListItemMlcData>?
+
+    fun onTickerClick(fragment: Fragment, doc: Parcelable)
+
+    fun getBaseDocumentsList(): List<DiiaDocumentWithMetadata>
 }

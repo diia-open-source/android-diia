@@ -10,10 +10,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.table.Item
+import ua.gov.diia.core.models.common_compose.table.TableItemHorizontalMlc
+import ua.gov.diia.core.models.common_compose.table.TableItemPrimaryMlc
+import ua.gov.diia.core.models.common_compose.table.TableItemVerticalMlc
+import ua.gov.diia.core.models.common_compose.table.tableBlockPlaneOrg.TableBlockPlaneOrg
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -22,29 +27,29 @@ import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.DocTa
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.DocTableItemHorizontalLongerMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.DocTableItemHorizontalMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.DocTableItemHorizontalMlcData
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlc
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableBlockItem
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMolecule
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMoleculeData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlc
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toUIModel
 
 @Composable
 fun TableBlockPlaneOrg(
     modifier: Modifier = Modifier,
     data: TableBlockPlaneOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(
         modifier
-            .padding(horizontal = 16.dp)
-            .padding(top = 24.dp)
+            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
             .fillMaxWidth()
             .background(color = Color.Transparent, shape = RoundedCornerShape(16.dp))
+            .testTag(data.componentId?.asString() ?: "")
     ) {
         data.headerMain?.let {
             TableHeadingMolecule(
@@ -102,7 +107,6 @@ fun TableBlockPlaneOrg(
                     is TableItemPrimaryMlcData -> {
                         TableItemPrimaryMlc(
                             data = item,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
                             onUIAction = onUIAction
                         )
                     }
@@ -124,8 +128,68 @@ data class TableBlockPlaneOrgData(
     val actionKey: String = UIActionKeysCompose.TABLE_BLOCK_ORG,
     val headerMain: TableHeadingMoleculeData? = null,
     val headerSecondary: TableHeadingMoleculeData? = null,
-    val items: List<TableBlockItem>? = null
+    val items: List<TableBlockItem>? = null,
+    val componentId: UiText? = null,
 ) : UIElementData
+
+fun TableBlockPlaneOrg?.toUIModel(): TableBlockPlaneOrgData? {
+    val entity = this
+    if (entity?.items == null) return null
+    val tbItems = mutableListOf<TableBlockItem>().apply {
+        (entity.items as List<Item>).forEach { listMlcl ->
+            if (listMlcl.tableItemHorizontalMlc is TableItemHorizontalMlc) {
+                add(
+                    TableItemHorizontalMlcData(
+                        componentId = listMlcl.tableItemHorizontalMlc?.componentId.orEmpty(),
+                        title = listMlcl.tableItemHorizontalMlc?.label?.let {
+                            UiText.DynamicString(
+                                it
+                            )
+                        },
+                        secondaryTitle = listMlcl.tableItemHorizontalMlc?.secondaryLabel,
+                        value = listMlcl.tableItemHorizontalMlc?.value,
+                        secondaryValue = listMlcl.tableItemHorizontalMlc?.secondaryValue,
+                        supportText = listMlcl.tableItemHorizontalMlc?.supportingValue,
+                        valueAsBase64String = listMlcl.tableItemHorizontalMlc?.valueImage
+                    )
+                )
+            }
+
+            if (listMlcl.tableItemVerticalMlc is TableItemVerticalMlc) {
+                add(
+                    TableItemVerticalMlcData(
+                        componentId = listMlcl.tableItemVerticalMlc?.componentId.orEmpty(),
+                        title = listMlcl.tableItemVerticalMlc?.label?.let { UiText.DynamicString(it) },
+                        secondaryTitle = listMlcl.tableItemVerticalMlc?.secondaryLabel,
+                        value = listMlcl.tableItemVerticalMlc?.value,
+                        secondaryValue = listMlcl.tableItemVerticalMlc?.secondaryValue,
+                        supportText = listMlcl.tableItemVerticalMlc?.supportingValue,
+                        valueAsBase64String = listMlcl.tableItemVerticalMlc?.valueImage
+                    )
+                )
+            }
+
+            if (listMlcl.tableItemPrimaryMlc is TableItemPrimaryMlc) {
+                val item = (listMlcl.tableItemPrimaryMlc as TableItemPrimaryMlc).toUIModel()
+                item?.let {
+                    add(it)
+                }
+            }
+        }
+    }
+    return TableBlockPlaneOrgData(
+        headerMain = this?.tableMainHeadingMlc?.let {
+            TableHeadingMoleculeData(
+                id = null,
+                title = UiText.DynamicString(it.label),
+                icon = it.icon?.code?.let { it1 -> UiText.DynamicString(it1) },
+                description = it.description?.let { description -> UiText.DynamicString(description) }
+            )
+        },
+        items = tbItems
+    )
+}
+
 
 @Preview
 @Composable
@@ -159,8 +223,7 @@ fun TableBlockPlaneOrgPreview() {
 
     TableBlockPlaneOrg(
         modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
+        data = data
     ) {
 
     }
@@ -203,8 +266,7 @@ fun TableBlockPlaneOrgPreview_WithHeader() {
 
     TableBlockPlaneOrg(
         modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
+        data = data
     ) {
 
     }

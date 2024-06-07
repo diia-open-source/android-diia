@@ -7,6 +7,9 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -30,6 +33,14 @@ fun TableBlockTwoColumnsPlainOrg(
     data: TableBlockTwoColumnsPlainOrgData,
     onUIAction: (UIAction) -> Unit
 ) {
+    val currentPhoto = remember {
+        mutableStateOf(data.photo)
+    }
+
+    LaunchedEffect(data.photo) {
+        currentPhoto.value = data.photo ?: ""
+    }
+
     Column(
         modifier = modifier
             .padding(start = 16.dp, end = 16.dp, top = 8.dp)
@@ -44,12 +55,12 @@ fun TableBlockTwoColumnsPlainOrg(
                 .padding(top = 16.dp)
                 .fillMaxWidth()
         ) {
-            if (!data.photo.isNullOrEmpty()) {
+            if (!currentPhoto.value.isNullOrEmpty()) {
                 PhotoDocBase64Subatomic(
                     modifier = Modifier
                         .fillMaxWidth(0.48f)
                         .aspectRatio(0.75F),
-                    base64Image = data.photo,
+                    base64Image = currentPhoto.value ?: "",
                     photoAsBitmap = data.photoAsBitmap
                 )
             }

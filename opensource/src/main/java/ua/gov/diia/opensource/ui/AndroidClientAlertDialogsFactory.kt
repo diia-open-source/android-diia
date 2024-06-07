@@ -265,7 +265,7 @@ class AndroidClientAlertDialogsFactory @Inject constructor(
                 description = "Код до Дія.Підпису неможливо відновити. Якщо ви забули його, потрібно створити новий. Попередній Дія.Підпис ми видалимо.",
                 mainButton = TemplateDialogButton(
                     name = "Створити новий",
-                    action = ActionsConst.DIALOG_ACTION_REMOVE_SIGNATURE,
+                    action = "" // TODO: ActionsConst.DIALOG_ACTION_REMOVE_SIGNATURE,
                 ),
                 alternativeButton = TemplateDialogButton(
                     name = "Ні, створю пізніше",
@@ -319,6 +319,10 @@ class AndroidClientAlertDialogsFactory @Inject constructor(
         )
     )
 
+    override fun showAlertSignatureInvalidPin(key: String): TemplateDialogModel {
+        TODO("Not yet implemented")
+    }
+
     override fun showAlertAfterConfirmPin(key: String): TemplateDialogModel = TemplateDialogModel(
         key = key,
         type = "horizontalButton",
@@ -333,6 +337,10 @@ class AndroidClientAlertDialogsFactory @Inject constructor(
             )
         )
     )
+
+    override fun showDocRemoveDialog(key: String): TemplateDialogModel {
+        TODO("Not yet implemented")
+    }
 
     override fun getUnsupportedGLEDialog(key: String) = TemplateDialogModel(
         key,
@@ -490,6 +498,21 @@ class AndroidClientAlertDialogsFactory @Inject constructor(
             )
         ),
     )
+
+    override fun documentUpdated(key: String): TemplateDialogModel {
+        TODO("Not yet implemented")
+    }
+
+    override fun registerNotAvailable(
+        docType: String?,
+        key: String
+    ): TemplateDialogModel {
+        TODO("Not yet implemented")
+    }
+
+    override fun documentNotFound(key: String): TemplateDialogModel {
+        TODO("Not yet implemented")
+    }
 
     private fun Exception.printLog() {
         if (BuildConfig.BUILD_TYPE != CommonConst.BUILD_TYPE_RELEASE) {

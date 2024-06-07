@@ -20,9 +20,10 @@ import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.extensions.context.dpToPx
 import ua.gov.diia.diia_storage.DiiaStorage
-import ua.gov.diia.doc_driver_license.DriverLicenceJsonAdapterDelegate
-import ua.gov.diia.doc_driver_license.DriverLicenceLocalizationChecker
-import ua.gov.diia.doc_driver_license.DriverLicenseFullInfoComposeMapper
+import ua.gov.diia.doc_driver_license.utils.DriverLicenceActionProvider
+import ua.gov.diia.doc_driver_license.utils.DriverLicenceJsonAdapterDelegate
+import ua.gov.diia.doc_driver_license.utils.DriverLicenceLocalizationChecker
+import ua.gov.diia.doc_driver_license.utils.DriverLicenseFullInfoComposeMapper
 import ua.gov.diia.documents.barcode.DocumentBarcodeFactory
 import ua.gov.diia.documents.barcode.DocumentBarcodeRepository
 import ua.gov.diia.documents.data.api.ApiDocuments
@@ -57,10 +58,8 @@ import ua.gov.diia.documents.ui.fullinfo.BaseFullInfoComposeMapper
 import ua.gov.diia.documents.ui.fullinfo.DocFullInfoComposeMapper
 import ua.gov.diia.documents.ui.fullinfo.DocFullInfoComposeMapperImpl
 import ua.gov.diia.documents.ui.gallery.DocGalleryNavigationHelper
-import ua.gov.diia.documents.util.BaseDocActionItemProcessor
 import ua.gov.diia.documents.util.BaseDocumentActionProvider
 import ua.gov.diia.documents.util.DocNameProvider
-import ua.gov.diia.documents.util.DocumentActionMapper
 import ua.gov.diia.documents.util.WithUpdateExpiredDocs
 import ua.gov.diia.documents.util.WithUpdateExpiredDocsImpl
 import ua.gov.diia.documents.util.datasource.ExpirationStrategy
@@ -73,7 +72,6 @@ import ua.gov.diia.opensource.helper.documents.DocNameProviderImpl
 import ua.gov.diia.opensource.helper.documents.DocumentBarcodeRepositoryImpl
 import ua.gov.diia.opensource.helper.documents.DocumentComposeMapperImpl
 import ua.gov.diia.opensource.helper.documents.DocumentsHelperImpl
-import ua.gov.diia.opensource.helper.documents.DriverLicenceActionProvider
 import ua.gov.diia.opensource.helper.documents.WithPdfCertificateImpl
 import ua.gov.diia.opensource.helper.documents.WithRemoveDocumentImpl
 import java.util.concurrent.Executors
@@ -128,12 +126,6 @@ interface DocumentsModule {
     companion object {
 
         @Provides
-        @Singleton
-        fun provideActionItemProcessorList(): List<@JvmSuppressWildcards BaseDocActionItemProcessor> {
-            return listOf()
-        }
-
-        @Provides
         @AuthorizedClient
         fun provideApiDocs(
             @AuthorizedClient retrofit: Retrofit,
@@ -143,14 +135,6 @@ interface DocumentsModule {
         @GlobalActionUpdateDocument
         @Singleton
         fun provideActionUpdateDocument() = MutableStateFlow<UiDataEvent<DiiaDocument>?>(null)
-
-        @Provides
-        @Singleton
-        fun provideDocMenuActions(
-            documentActionMapper: DocumentActionMapper,
-        ): List<@JvmSuppressWildcards BaseDocumentActionProvider> = listOf(
-            DriverLicenceActionProvider(documentActionMapper),
-        )
 
         @Provides
         @Singleton
@@ -199,6 +183,7 @@ interface DocumentsModule {
             beforePublishActions: List<@JvmSuppressWildcards BeforePublishAction>,
             @DocTypesAvailableToUsers docTypesAvailableToUsers: Set<@JvmSuppressWildcards String>,
             withCrashlytics: WithCrashlytics,
+            helper: DocumentsHelper
         ): DocumentsDataRepository {
             val dispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
             val applicationScope = ProcessLifecycleOwner.get().lifecycleScope + dispatcher
@@ -208,7 +193,8 @@ interface DocumentsModule {
                 networkDocumentsDataSource,
                 beforePublishActions,
                 docTypesAvailableToUsers,
-                withCrashlytics
+                withCrashlytics,
+                helper
             )
         }
 
@@ -287,6 +273,14 @@ interface DocumentsModule {
         fun provideFullIntoComposeMapper(docComposeMapper: DocumentComposeMapper): List<@JvmSuppressWildcards BaseFullInfoComposeMapper> {
             return listOf(
                 DriverLicenseFullInfoComposeMapper(docComposeMapper),
+            )
+        }
+
+        @Provides
+        @Singleton
+        fun provideDocMenuActions(): List<@JvmSuppressWildcards BaseDocumentActionProvider> {
+            return listOf(
+                DriverLicenceActionProvider(),
             )
         }
     }

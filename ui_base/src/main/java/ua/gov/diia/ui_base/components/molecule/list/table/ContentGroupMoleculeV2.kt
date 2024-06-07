@@ -11,10 +11,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.ContentGroupItemV2
 import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.TableBlockOrg
 import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.TableBlockOrgData
@@ -28,7 +28,6 @@ import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.Table
 fun ContentGroupMoleculeV2(
     modifier: Modifier = Modifier,
     data: ContentGroupMoleculeV2Data,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(
@@ -42,8 +41,7 @@ fun ContentGroupMoleculeV2(
                 is TableBlockOrgData -> {
                     TableBlockOrg(
                         data = item,
-                        onUIAction = onUIAction,
-                        diiaResourceIconProvider = diiaResourceIconProvider,
+                        onUIAction = onUIAction
                     )
                 }
 
@@ -59,27 +57,16 @@ fun ContentGroupMoleculeV2(
     }
 }
 
-data class ContentGroupMoleculeV2Data(val items: List<ContentGroupItemV2>) :
-    UIElementData
+data class ContentGroupMoleculeV2Data(val items: List<ContentGroupItemV2>) : UIElementData
 
 @Composable
 @Preview
 fun ContentGroupMoleculeV2Preview() {
     val tableBlockStateH = TableBlockOrgData(
-        header = TableHeadingMoleculeData(
-            id = "123",
-            title = "Heading HorizontalTable".let { UiText.DynamicString(it) }),
+        header = TableHeadingMoleculeData(id = "123", title = "Heading HorizontalTable".let { UiText.DynamicString(it) }),
         items = listOf(
-            TableItemHorizontalMlcData(
-                id = "1",
-                title = UiText.DynamicString("Item title"),
-                value = "Value"
-            ),
-            TableItemHorizontalMlcData(
-                id = "3",
-                title = UiText.DynamicString("РНОКПП:"),
-                value = "1234567890"
-            ),
+            TableItemHorizontalMlcData(id = "1", title = UiText.DynamicString("Item title"), value = "Value"),
+            TableItemHorizontalMlcData(id = "3", title = UiText.DynamicString("РНОКПП:"), value = "1234567890"),
             TableItemHorizontalMlcData(
                 id = "4",
                 title = UiText.DynamicString("Дата народження:"),
@@ -94,15 +81,9 @@ fun ContentGroupMoleculeV2Preview() {
     )
 
     val tableBlockStateV = TableBlockOrgData(
-        header = TableHeadingMoleculeData(
-            id = "123",
-            title = "Heading VerticalTable".let { UiText.DynamicString(it) }),
+        header = TableHeadingMoleculeData(id = "123", title ="Heading VerticalTable".let { UiText.DynamicString(it) }),
         items = listOf(
-            TableItemVerticalMlcData(
-                id = "1",
-                title = UiText.DynamicString("Item title:"),
-                value = "Value"
-            ),
+            TableItemVerticalMlcData(id = "1", title = UiText.DynamicString("Item title:"), value = "Value"),
             TableItemVerticalMlcData(
                 id = "5",
                 title = UiText.DynamicString("Адреса:"),
@@ -116,7 +97,7 @@ fun ContentGroupMoleculeV2Preview() {
             TableItemPrimaryMlcData(
                 id = "1",
                 title = UiText.DynamicString("Номер сертифіката"),
-                value = "1234567890"
+                value = "1234567890".toDynamicString()
             ),
         )
     )
@@ -132,11 +113,8 @@ fun ContentGroupMoleculeV2Preview() {
     val state = remember { mutableStateOf(startState) }
 
 
-    ContentGroupMoleculeV2(
-        modifier = Modifier, data = state.value,
+    ContentGroupMoleculeV2(modifier = Modifier, data = state.value,
         onUIAction = {
 
-        },
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    )
+        })
 }

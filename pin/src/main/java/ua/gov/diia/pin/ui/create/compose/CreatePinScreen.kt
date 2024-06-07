@@ -13,8 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -27,13 +26,13 @@ import ua.gov.diia.ui_base.components.organism.header.TopGroupOrg
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 import ua.gov.diia.ui_base.components.organism.tile.NumButtonTileOrganism
 import ua.gov.diia.ui_base.components.organism.tile.NumButtonTileOrganismData
+import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 
 
 @Composable
 fun CreatePinScreen(
     modifier: Modifier = Modifier,
     data: SnapshotStateList<UIElementData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     ConstraintLayout(
@@ -44,6 +43,7 @@ fun CreatePinScreen(
                 contentScale = ContentScale.FillBounds
             )
             .safeDrawingPadding()
+            .provideTestTagsAsResourceId()
     ) {
         val title = createRef()
         val numButton = createRef()
@@ -57,8 +57,7 @@ fun CreatePinScreen(
                         top.linkTo(parent.top)
                     },
                     data = item,
-                    onUIAction = onUIAction,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onUIAction = onUIAction
                 )
             }
 
@@ -100,7 +99,7 @@ fun CreatePinScreenPreview() {
             titleGroupMlcData = TitleGroupMlcData(
                 heroText = UiText.DynamicString("Повторіть код з 4 цифр"),
                 leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                    code = CommonDiiaResourceIcon.BACK.code,
+                    code = DiiaResourceIcon.BACK.code,
                     accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
                     action = DataActionWrapper(
                         type = "back",
@@ -119,18 +118,11 @@ fun CreatePinScreenPreview() {
     _uiData.add(
         NumButtonTileOrganismData()
     )
-    CreatePinScreen(
-        data = uiData,
-        onUIAction = { },
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    )
+    CreatePinScreen(data = uiData, onUIAction = { })
 }
 
 @Composable
-@Preview(
-    name = "phone",
-    device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480"
-)
+@Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
 fun CreatePinScreenPreview_small_screen() {
     val _uiData = remember { mutableStateListOf<UIElementData>() }
     val uiData: SnapshotStateList<UIElementData> = _uiData
@@ -139,7 +131,7 @@ fun CreatePinScreenPreview_small_screen() {
             titleGroupMlcData = TitleGroupMlcData(
                 heroText = UiText.DynamicString("Повторіть код з 4 цифр"),
                 leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                    code = CommonDiiaResourceIcon.BACK.code,
+                    code = DiiaResourceIcon.BACK.code,
                     accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
                     action = DataActionWrapper(
                         type = "back",
@@ -158,9 +150,5 @@ fun CreatePinScreenPreview_small_screen() {
     _uiData.add(
         NumButtonTileOrganismData(pinLength = 5)
     )
-    CreatePinScreen(
-        data = uiData,
-        onUIAction = { },
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    )
+    CreatePinScreen(data = uiData, onUIAction = { })
 }

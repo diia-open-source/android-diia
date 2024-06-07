@@ -7,4 +7,7 @@ interface SearchableItem : Parcelable {
     fun getDisplayTitle(): String
 
     fun getQueryString() : String
+
+    fun isDisabled() : Boolean
+
 }

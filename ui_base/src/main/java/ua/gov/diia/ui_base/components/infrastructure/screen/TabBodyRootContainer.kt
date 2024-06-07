@@ -1,7 +1,16 @@
 package ua.gov.diia.ui_base.components.infrastructure.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -19,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtmData
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtm
@@ -89,7 +97,6 @@ fun ColumnScope.TabBodyRootContainer(
     connectivityState: Boolean = true,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
     contentLoaded: Pair<String, Boolean> = Pair("", false),
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     val lazyListScrollState = rememberLazyListState()
@@ -167,8 +174,7 @@ fun ColumnScope.TabBodyRootContainer(
                         SmallNotificationCarouselOrg(
                             modifier = Modifier,
                             data = element,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
@@ -177,8 +183,7 @@ fun ColumnScope.TabBodyRootContainer(
                             modifier = Modifier,
                             data = element,
                             isFirstAtBody = index == 0,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
@@ -187,8 +192,7 @@ fun ColumnScope.TabBodyRootContainer(
                             modifier = Modifier,
                             data = element,
                             isFirstAtBody = index == 0,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
@@ -196,8 +200,7 @@ fun ColumnScope.TabBodyRootContainer(
                         BtnIconRoundedGroupOrg(
                             modifier = Modifier,
                             data = element,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
@@ -205,8 +208,7 @@ fun ColumnScope.TabBodyRootContainer(
                         ImageCardMlc(
                             modifier = Modifier,
                             data = element,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
@@ -214,8 +216,7 @@ fun ColumnScope.TabBodyRootContainer(
                         HalvedCardCarouselOrg(
                             modifier = Modifier,
                             data = element,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
@@ -223,8 +224,7 @@ fun ColumnScope.TabBodyRootContainer(
                         ListItemGroupOrg(
                             modifier = Modifier,
                             data = element,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
@@ -275,7 +275,6 @@ fun ColumnScope.TabBodyRootContainer(
                     is SearchInputV2Data -> {
                         AnimatedVisibility(visible = displayView) {
                             SearchInputV2(
-                                modifier = Modifier.padding(bottom = 8.dp),
                                 data = element,
                                 onUIAction = onUIAction
                             )
@@ -346,8 +345,7 @@ fun ColumnScope.TabBodyRootContainer(
                             DocCarouselOrg(
                                 data = element,
                                 progressIndicator = progressIndicator,
-                                onUIAction = onUIAction,
-                                diiaResourceIconProvider = diiaResourceIconProvider,
+                                onUIAction = onUIAction
                             )
                         }
                     }
@@ -368,8 +366,7 @@ fun ColumnScope.TabBodyRootContainer(
                     lazyGridState = lazyGridState,
                     data = it as ServiceCardTileOrgData,
                     onUIAction = onUIAction,
-                    modifier = Modifier,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    modifier = Modifier
                 )
             }
         }
@@ -380,27 +377,7 @@ fun ColumnScope.TabBodyRootContainer(
 }
 
 @Composable
-@OptIn(ExperimentalLayoutApi::class)
-private fun BoxScope.NoInternetBlock(internetAvailable: Boolean) {
-    if (!internetAvailable) {
-        NoInternetTicker()
-    }
-}
-
-@Composable
-@OptIn(ExperimentalLayoutApi::class)
-private fun BoxScope.GradientDividerContentBlock(displayBottomGradient: Boolean) {
-    if (displayBottomGradient && !WindowInsets.isImeVisible) {
-        GradientDividerAtom(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(alignment = Alignment.BottomCenter)
-        )
-    }
-}
-
-@Composable
-private fun BoxScope.LinearLoaderContentBlock(contentLoaded: Pair<String, Boolean>) {
+fun BoxScope.LinearLoaderContentBlock(contentLoaded: Pair<String, Boolean>) {
     if (!contentLoaded.second) {
         if (contentLoaded.first == UIActionKeysCompose.PAGE_LOADING_LINEAR_WITH_LABEL) {
             LinearLoadingMolecule(
@@ -453,8 +430,7 @@ fun TabBodyRootContainer_HelloScreenPreview() {
 
     Column {
         TabBodyRootContainer(
-            bodyViews = stub,
-            diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
+            bodyViews = stub
         ) {
 
         }

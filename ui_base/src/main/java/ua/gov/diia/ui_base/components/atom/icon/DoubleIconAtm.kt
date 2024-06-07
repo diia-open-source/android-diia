@@ -7,8 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -18,8 +17,7 @@ import ua.gov.diia.ui_base.components.noRippleClickable
 fun DoubleIconAtm(
     modifier: Modifier = Modifier,
     data: DoubleIconAtmData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
-    onUIAction: (UIAction) -> Unit = {},
+    onUIAction: (UIAction) -> Unit = {}
 ) {
     Image(
         modifier = modifier
@@ -34,7 +32,7 @@ fun DoubleIconAtm(
                 )
             },
         painter = painterResource(
-            id = diiaResourceIconProvider.getResourceId(data.code)
+            id = DiiaResourceIcon.getResourceId(data.code)
         ),
         contentDescription = data.accessibilityDescription
     )
@@ -53,9 +51,9 @@ data class DoubleIconAtmData(
 fun DoubleIconAtmPreview() {
     val data = DoubleIconAtmData(
         id = "1",
-        code = CommonDiiaResourceIcon.SAFETY.code,
+        code = DiiaResourceIcon.SAFETY.code,
         accessibilityDescription = "Button"
     )
-    DoubleIconAtm(data = data, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview())
+    DoubleIconAtm(data = data)
 }
 

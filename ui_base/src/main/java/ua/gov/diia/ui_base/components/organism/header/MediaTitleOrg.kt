@@ -11,8 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainIconAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainIconAtmData
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
@@ -29,7 +28,6 @@ import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 fun MediaTitleOrg(
     modifier: Modifier = Modifier,
     data: MediaTitleOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(modifier = modifier) {
@@ -46,10 +44,7 @@ fun MediaTitleOrg(
                 style = DiiaTextStyle.t2TextDescription,
                 color = BlackAlpha50
             )
-            BtnPlainIconAtm(
-                data = data.button,
-                diiaResourceIconProvider = diiaResourceIconProvider,
-            ) {
+            BtnPlainIconAtm(data = data.button) {
                 onUIAction(
                     UIAction(
                         actionKey = data.actionKey,
@@ -79,7 +74,7 @@ data class MediaTitleOrgData(
     val secondaryLabel: UiText,
     val title: UiText,
     val button: BtnPlainIconAtmData
-) : UIElementData
+): UIElementData
 
 @Preview
 @Composable
@@ -90,14 +85,11 @@ fun MediaTitleOrgPreview() {
         button = BtnPlainIconAtmData(
             id = "123",
             label = UiText.DynamicString("label"),
-            icon = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code)
+            icon = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code)
         )
     )
 
-    MediaTitleOrg(
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    MediaTitleOrg(data = data) {
 
     }
 

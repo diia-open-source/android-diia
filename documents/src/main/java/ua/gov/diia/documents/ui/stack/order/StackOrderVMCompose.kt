@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import ua.gov.diia.core.network.Http
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst.ACTION_NAVIGATE_BACK
 import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
@@ -19,14 +20,15 @@ import ua.gov.diia.ui_base.util.navigation.generateComposeNavigationPanel
 import ua.gov.diia.documents.R
 import ua.gov.diia.documents.data.repository.DocumentsDataRepository
 import ua.gov.diia.documents.helper.DocumentsHelper
+import ua.gov.diia.documents.models.DiiaDocument
 import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.models.DocError
 import ua.gov.diia.documents.models.DocOrder
 import ua.gov.diia.documents.models.DocumentOrderModel
+import ua.gov.diia.documents.models.SourceType
 import ua.gov.diia.documents.models.TypeDefinedDocOrder
 import ua.gov.diia.documents.ui.DocsConst
 import ua.gov.diia.documents.ui.DocumentComposeMapper
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.addIfNotNull
@@ -35,6 +37,7 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.findAndChangeFirstByInstance
 import ua.gov.diia.ui_base.components.infrastructure.navigation.NavigationPath
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.header.TitleGroupMlcData
 import ua.gov.diia.ui_base.components.molecule.list.ListItemDragMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
@@ -78,7 +81,7 @@ class StackOrderVMCompose @Inject constructor(
                     val docs = if (docType == DocsConst.DOCUMENT_TYPE_ALL) {
                         dataResult
                             .asSequence()
-                            .filter { it.diiaDocument != null && it.diiaDocument !is DocError }
+                            .filter { it.diiaDocument != null && it.diiaDocument.getSourceType() != SourceType.STATIC }
                             .filter { d -> documentsHelper.isDocumentValid(d) }
                             .groupBy { it.diiaDocument!!.getItemType() }
                             .mapNotNull { diaDocument -> diaDocument.value.minByOrNull { it.diiaDocument!!.getDocOrder() }!! }
@@ -102,7 +105,12 @@ class StackOrderVMCompose @Inject constructor(
                     _topBarData.addIfNotNull(getNavigationData(docs.getOrNull(0)))
 
                     _bodyData.clear()
-                    _bodyData.add(ListItemDragOrgData(list))
+                    _bodyData.add(
+                        ListItemDragOrgData(
+                            list,
+                            componentId = UiText.StringResource(R.string.stack_order_docs_list_test_tag)
+                        )
+                    )
                 }
             }
         }
@@ -145,6 +153,7 @@ class StackOrderVMCompose @Inject constructor(
         val list = SnapshotStateList<ListItemDragMlcData>()
         if (this == null) return list
         forEach {
+            if (it.diiaDocument?.getStatus() == Http.HTTP_204) return@forEach
             it.toTypedDragMlcData()?.let { d -> list.add(d) }
         }
         return list
@@ -154,17 +163,18 @@ class StackOrderVMCompose @Inject constructor(
         val list = SnapshotStateList<ListItemDragMlcData>()
         if (this == null) return list
         forEach {
+            if (it.diiaDocument?.getStatus() == Http.HTTP_204) return@forEach
             it.toDragMlcData(countOfDocs)?.let { d -> list.add(d) }
         }
         return list
     }
 
     private fun DiiaDocumentWithMetadata.toDragMlcData(countOfDocs: (type: String) -> Int): ListItemDragMlcData? {
-        val name = diiaDocument?.getDocName()
-        return if (!name.isNullOrEmpty()) {
+        val label = getStackLabel(diiaDocument)
+        return if (label != null) {
             ListItemDragMlcData(
                 id = type,
-                label = UiText.DynamicString(name),
+                label = label,
                 countOfDocGroup = countOfDocs(type)
             )
         } else null
@@ -182,6 +192,20 @@ class StackOrderVMCompose @Inject constructor(
                 desc = UiText.DynamicString(date)
             )
         } else null
+    }
+
+    private fun getStackLabel(diiaDocument: DiiaDocument?): UiText? {
+        return if (diiaDocument?.getDocStackTitle() != null && diiaDocument.getDocStackTitle()
+                .isNotEmpty()
+        ) {
+            diiaDocument.getDocStackTitle().toDynamicString()
+        } else if (diiaDocument?.getDocName() != null) {
+            diiaDocument.getDocName()?.let {
+                UiText.DynamicString(it)
+            }
+        } else {
+            null
+        }
     }
 
     fun onMove(a: Int, b: Int) {
@@ -208,25 +232,37 @@ class StackOrderVMCompose @Inject constructor(
         }
     }
 
-    private fun getNavigationData(docData: DiiaDocumentWithMetadata?): UIElementData? {
-        return if (docType == DocsConst.DOCUMENT_TYPE_ALL) {
-            TopGroupOrgData(
-                titleGroupMlcData = TitleGroupMlcData(
-                    heroText = UiText.StringResource(R.string.stack_order_title),
-                    leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                        code = CommonDiiaResourceIcon.BACK.code,
-                        accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
-                        action = DataActionWrapper(
-                            type = ACTION_NAVIGATE_BACK,
-                            subtype = null,
-                            resource = null
-                        )
+    private fun getNavigationData(docData: DiiaDocumentWithMetadata?): UIElementData {
+        return when (docType) {
+            DocsConst.DOCUMENT_TYPE_ALL -> {
+                TopGroupOrgData(
+                    titleGroupMlcData = TitleGroupMlcData(
+                        heroText = UiText.StringResource(R.string.stack_order_title),
+                        leftNavIcon = TitleGroupMlcData.LeftNavIcon(
+                            code = DiiaResourceIcon.BACK.code,
+                            accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
+                            action = DataActionWrapper(
+                                type = ACTION_NAVIGATE_BACK,
+                                subtype = null,
+                                resource = null
+                            )
+                        ),
+                        componentId = UiText.StringResource(R.string.stack_order_title_test_tag)
                     )
                 )
-            )
-        } else {
-            val name = docData?.diiaDocument?.getDocName()
-            generateComposeNavigationPanel(title = name)
+            }
+
+            else -> {
+                val name =
+                    if (docData?.diiaDocument?.getDocStackTitle() != null
+                        && docData.diiaDocument.getDocStackTitle().isNotEmpty()
+                    ) {
+                        docData.diiaDocument.getDocStackTitle().toDynamicString()
+                    } else {
+                        docData?.diiaDocument?.getDocName().toDynamicString()
+                    }
+                generateComposeNavigationPanel(uiTextTitle = name)
+            }
         }
     }
 

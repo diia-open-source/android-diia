@@ -15,8 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.subatomic.preview.PreviewBase64Icons
@@ -43,8 +42,7 @@ fun UiIconWrapperSubatomic(
     icon: UiIcon,
     fontSize: TextUnit = TextUnit.Unspecified,
     useContentDescription: Boolean = true,
-    contentDescription: UiText? = null,
-    diiaResourceIconProvider: DiiaResourceIconProvider
+    contentDescription: UiText? = null
 ) {
     when (icon) {
         is UiIcon.DynamicIconBase64 -> {
@@ -59,11 +57,11 @@ fun UiIconWrapperSubatomic(
             Image(
                 modifier = modifier,
                 painter = painterResource(
-                    id = diiaResourceIconProvider.getResourceId(icon.code)
+                    id = DiiaResourceIcon.getResourceId(icon.code)
                 ),
                 contentDescription = if (useContentDescription) {
                     stringResource(
-                        id = diiaResourceIconProvider.getContentDescription(
+                        id = DiiaResourceIcon.getContentDescription(
                             icon.code
                         )
                     )
@@ -105,8 +103,7 @@ fun UiIconWrapperSubatomic_DynamicIconBase64() {
     UiIconWrapperSubatomic(
         modifier = Modifier.size(24.dp),
         icon =
-        UiIcon.DynamicIconBase64(PreviewBase64Icons.apple),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        UiIcon.DynamicIconBase64(PreviewBase64Icons.apple)
     )
 }
 
@@ -116,8 +113,7 @@ fun UiIconWrapperSubatomic_DrawableResource() {
     UiIconWrapperSubatomic(
         modifier = Modifier.size(24.dp),
         icon =
-        UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        UiIcon.DrawableResource(DiiaResourceIcon.MENU.code)
     )
 }
 
@@ -126,8 +122,7 @@ fun UiIconWrapperSubatomic_DrawableResource() {
 fun UiIconWrapperSubatomic_PlainString() {
     UiIconWrapperSubatomic(
         icon = UiIcon.PlainString("\uD83D\uDEAB"),
-        fontSize = 20.sp,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        fontSize = 20.sp
     )
 }
 
@@ -137,6 +132,5 @@ fun UiIconWrapperSubatomic_URLIcon() {
     UiIconWrapperSubatomic(
         modifier = Modifier.size(24.dp),
         icon = UiIcon.URLIcon("https://www.uz.gov.ua/files/socials/394614.png"),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
     )
 }

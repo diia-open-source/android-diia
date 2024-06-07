@@ -12,17 +12,12 @@ import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.extensions.fragment.navigate
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.screen.StackOrderScreen
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class StackOrderFCompose : Fragment() {
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
 
     private var composeView: ComposeView? = null
     private val viewModel: StackOrderVMCompose by viewModels()
@@ -72,8 +67,7 @@ class StackOrderFCompose : Fragment() {
                 toolbar = topBar,
                 body = body,
                 onUIAction = { viewModel.onUIAction(it) },
-                onMove = { a, b -> viewModel.onMove(a, b) },
-                diiaResourceIconProvider = diiaResourceIconProvider
+                onMove = { a, b -> viewModel.onMove(a, b) }
             )
         }
     }

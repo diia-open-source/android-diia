@@ -22,8 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
 import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -44,22 +43,15 @@ fun ListItemBorderedGroupOrg(
     modifier: Modifier = Modifier,
     data: ListItemBorderedGroupOrgData,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 
 ) {
     var isLoading by remember {
-        mutableStateOf(
-            checkIfAnyElementInLoadingState(
-                data.itemsList,
-                progressIndicator
-            )
-        )
+        mutableStateOf(checkIfAnyElementInLoadingState(data.itemsList, progressIndicator))
     }
 
     LaunchedEffect(key1 = progressIndicator) {
-        isLoading =
-            checkIfAnyElementInLoadingState(data.itemsList, progressIndicator)
+        isLoading = checkIfAnyElementInLoadingState(data.itemsList, progressIndicator)
     }
 
     Column(
@@ -110,7 +102,6 @@ fun ListItemBorderedGroupOrg(
                         )
                     )
                 },
-                diiaResourceIconProvider = diiaResourceIconProvider,
             )
         }
     }
@@ -144,17 +135,12 @@ fun ListItemBorderedGroupOrgPreview() {
                     ListItemMlcData(
                         id = it.toString(),
                         label = UiText.DynamicString("Label"),
-                        iconLeft = UiIcon.DrawableResource(
-                            CommonDiiaResourceIcon.MENU.code
-                        )
+                        iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code)
                     )
                 )
             }
         })
-    ListItemBorderedGroupOrg(
-        data = state,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    ListItemBorderedGroupOrg(data = state) {
     }
 }
 
@@ -169,18 +155,13 @@ fun ListItemBorderedGroupOrgPreview_Disabled() {
                     ListItemMlcData(
                         id = it.toString(),
                         label = UiText.DynamicString("Label"),
-                        iconLeft = UiIcon.DrawableResource(
-                            CommonDiiaResourceIcon.MENU.code
-                        ),
+                        iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
                         interactionState = UIState.Interaction.Disabled
                     )
                 )
             }
         })
-    ListItemBorderedGroupOrg(
-        data = state,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    ListItemBorderedGroupOrg(data = state) {
     }
 }
 
@@ -194,7 +175,7 @@ fun ListItemBorderedGroupOrgPreview_Disabled_and_Enabled() {
                 ListItemMlcData(
                     id = "999",
                     label = UiText.DynamicString("Label"),
-                    iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
+                    iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
                     interactionState = UIState.Interaction.Enabled
                 )
             )
@@ -203,18 +184,13 @@ fun ListItemBorderedGroupOrgPreview_Disabled_and_Enabled() {
                     ListItemMlcData(
                         id = it.toString(),
                         label = UiText.DynamicString("Label"),
-                        iconLeft = UiIcon.DrawableResource(
-                            CommonDiiaResourceIcon.MENU.code
-                        ),
+                        iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
                         interactionState = UIState.Interaction.Disabled
                     )
                 )
             }
         })
-    ListItemBorderedGroupOrg(
-        data = state,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    ListItemBorderedGroupOrg(data = state) {
     }
 }
 
@@ -237,7 +213,7 @@ fun ListItemBorderedGroupOrgPreview_Loading() {
                 ListItemMlcData(
                     id = "2",
                     label = UiText.DynamicString("Label"),
-                    iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
+                    iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
                     interactionState = UIState.Interaction.Disabled
                 )
             )
@@ -245,7 +221,7 @@ fun ListItemBorderedGroupOrgPreview_Loading() {
                 ListItemMlcData(
                     id = loadingItemId,
                     label = UiText.DynamicString("Label"),
-                    iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
+                    iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
                     interactionState = UIState.Interaction.Enabled
                 )
             )
@@ -253,7 +229,7 @@ fun ListItemBorderedGroupOrgPreview_Loading() {
                 ListItemMlcData(
                     id = "1",
                     label = UiText.DynamicString("Label"),
-                    iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
+                    iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
                     interactionState = UIState.Interaction.Enabled
                 )
             )
@@ -262,16 +238,11 @@ fun ListItemBorderedGroupOrgPreview_Loading() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ListItemBorderedGroupOrg(
-            data = state,
-            progressIndicator = progressIndicator,
-            diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        ) {
+        ListItemBorderedGroupOrg(data = state, progressIndicator = progressIndicator) {
         }
         Spacer(modifier = Modifier.height(40.dp))
         Button(onClick = {
-            progressIndicator =
-                progressIndicator.copy(second = !progressIndicator.second)
+            progressIndicator = progressIndicator.copy(second = !progressIndicator.second)
         }) {
             Text("Change loading state")
         }

@@ -8,11 +8,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
-import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.button.BtnToggleMlc
 import ua.gov.diia.ui_base.components.molecule.button.BtnToggleMlcData
 
@@ -64,18 +66,24 @@ data class ToggleButtonGroupData(
 fun ToggleButtonGroupPreview() {
     val qr = BtnToggleMlcData(
         id = "1",
-        label = "Label",
-        iconSelected = UiText.StringResource(R.drawable.ic_doc_qr_selected),
-        iconUnselected = UiText.StringResource(R.drawable.ic_doc_qr_unselected),
-        selectionState = UIState.Selection.Selected
+        label = "Label".toDynamicString(),
+        iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.QR_WHITE.code),
+        iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.QR.code),
+        selectionState = UIState.Selection.Selected,
+        action = DataActionWrapper(
+            type = "qr"
+        )
     )
 
     val ean13 = BtnToggleMlcData(
         id = "2",
-        label = "Label",
-        iconSelected = UiText.StringResource(R.drawable.ic_doc_ean13_selected),
-        iconUnselected = UiText.StringResource(R.drawable.ic_doc_ean13_unselected),
-        selectionState = UIState.Selection.Unselected
+        label = "Label".toDynamicString(),
+        iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE_WHITE.code),
+        iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE.code),
+        selectionState = UIState.Selection.Unselected,
+        action = DataActionWrapper(
+            type = "ean"
+        )
     )
     val data = ToggleButtonGroupData(qr, ean13)
     val state = remember {

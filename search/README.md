@@ -30,7 +30,7 @@ implementation project(':ui_base')
  ```xml
 
 <action 
-    android:id="@+id/action_itemHomeF_to_destination_searchF"
+    android:id="@+id/action_awardDeliveryHomeF_to_destination_searchF"
     app:destination="@id/nav_search">
     <argument 
         android:name="key" 
@@ -49,7 +49,7 @@ implementation project(':ui_base')
     app:exitAnim="@anim/slide_out_left"
     app:popEnterAnim="@anim/slide_in_left"
     app:popExitAnim="@anim/slide_out_right"
-    android:id="@+id/action_destination_itemSearch_to_destination_searchBulletF"
+    android:id="@+id/action_destination_petitionSearch_to_destination_searchBulletF"
     app:destination="@id/nav_search_bullet">
     <argument 
         android:name="screenHeader" 

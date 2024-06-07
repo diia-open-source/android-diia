@@ -7,4 +7,11 @@
     <string name="bank_selection_empty_icon">🖐</string>
     <string name="bank_selection_empty_title">На жаль, сталася помилка.</string>
     <string name="bank_selection_empty_description">Перелік банків недоступний. Спробуйте трошки пізніше.</string>
+
+    <string name="bank_selection_title_test_tag">title_bankid</string>
+    <string name="bank_selection_body_bank_test_tag">body_bankid</string>
+    <string name="bank_selection_bank_list_test_tag">bank_list_bankid</string>
+    <string name="bank_selection_search_bank_test_tag">search_bankid</string>
+    <string name="bank_selection_stub_message_bank_test_tag">stub_message_bankid</string>
+
 </resources>

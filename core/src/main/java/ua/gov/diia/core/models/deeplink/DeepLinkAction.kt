@@ -45,3 +45,4 @@ class DeepLinkActionViewDocument(
     val resourceId: String?,
     val documentType: String
 ) : DeepLinkAction()
+

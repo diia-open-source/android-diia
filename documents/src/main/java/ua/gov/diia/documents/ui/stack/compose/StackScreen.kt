@@ -15,7 +15,6 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -35,7 +34,6 @@ fun StackScreen(
     connectivityState: Boolean = true,
     body: SnapshotStateList<UIElementData>,
     bottom: SnapshotStateList<UIElementData>? = null,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onEvent: (UIAction) -> Unit
 ) {
 
@@ -71,8 +69,7 @@ fun StackScreen(
             toolbar = {
                 ToolbarRootContainer(
                     toolbarViews = toolbar,
-                    onUIAction = onEvent,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onUIAction = onEvent
                 )
             },
             body = {
@@ -81,8 +78,7 @@ fun StackScreen(
                     progressIndicator = progressIndicator,
                     contentLoaded = contentLoaded,
                     onUIAction = onEvent,
-                    connectivityState = connectivityState,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    connectivityState = connectivityState
                 )
             },
             bottom = {
@@ -90,13 +86,11 @@ fun StackScreen(
                     BottomBarRootContainer(
                         bottomViews = bottom,
                         progressIndicator = progressIndicator,
-                        onUIAction = onEvent,
-                        diiaResourceIconProvider = diiaResourceIconProvider,
+                        onUIAction = onEvent
                     )
                 }
             },
-            onEvent = onEvent,
-            diiaResourceIconProvider = diiaResourceIconProvider,
+            onEvent = onEvent
         )
     }
 }

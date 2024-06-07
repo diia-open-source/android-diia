@@ -10,8 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableBlockItem
@@ -24,16 +23,11 @@ import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 fun SmallEmojiPanelMlc(
     modifier: Modifier = Modifier,
     data: SmallEmojiPanelMlcData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
     ) {
-        UiIconWrapperSubatomic(
-            modifier = Modifier.size(16.dp),
-            icon = data.icon,
-            diiaResourceIconProvider = diiaResourceIconProvider,
-        )
+        UiIconWrapperSubatomic(modifier = Modifier.size(16.dp), icon = data.icon)
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = data.text.asString(),
@@ -57,9 +51,8 @@ fun SmallEmojiPanelMlcPreview() {
         data = SmallEmojiPanelMlcData(
             text = UiText.DynamicString("Booster vaccine dose"),
             icon = UiIcon.DrawableResource(
-                code = CommonDiiaResourceIcon.DEFAULT.code
+                code = DiiaResourceIcon.SYRINGE.code
             )
-        ),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        )
     )
 }

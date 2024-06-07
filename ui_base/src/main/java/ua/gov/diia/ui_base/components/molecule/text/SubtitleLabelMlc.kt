@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
@@ -24,15 +25,14 @@ import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 
 @Composable
 fun SubtitleLabelMlc(
-    modifier: Modifier = Modifier,
-    data: SubtitleLabelMlcData,
-    color: Color = Color.Black
+    modifier: Modifier = Modifier, data: SubtitleLabelMlcData, color: Color = Color.Black
 ) {
     Row(
         modifier = modifier
             .padding(horizontal = 8.dp)
             .padding(top = 16.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .testTag(data.componentId?.asString() ?: ""),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (data.icon != null) {
@@ -54,15 +54,18 @@ fun SubtitleLabelMlc(
     }
 }
 
-data class SubtitleLabelMlcData(val label: UiText, val icon: UiIcon.DrawableResInt? = null) :
-    UIElementData
+data class SubtitleLabelMlcData(
+    val label: UiText,
+    val icon: UiIcon.DrawableResInt? = null,
+    val componentId: UiText? = null,
+) : UIElementData
 
 @Preview
 @Composable
 fun SubtitleLabelMlcData() {
     val data = SubtitleLabelMlcData(
         UiText.DynamicString(LoremIpsum(5).values.joinToString()),
-        UiIcon.DrawableResInt(R.drawable.ic_bag)
+        UiIcon.DrawableResInt(R.drawable.ic_invincibility_point)
     )
     SubtitleLabelMlc(data = data)
 }
@@ -72,8 +75,7 @@ fun SubtitleLabelMlcData() {
 @Composable
 fun SubtitleLabelMlcData_no_icon() {
     val data = SubtitleLabelMlcData(
-        UiText.DynamicString(LoremIpsum(5).values.joinToString()),
-        null
+        UiText.DynamicString(LoremIpsum(5).values.joinToString()), null
     )
     SubtitleLabelMlc(data = data)
 }

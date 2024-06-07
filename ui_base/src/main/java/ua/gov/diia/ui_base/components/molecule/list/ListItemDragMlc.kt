@@ -21,8 +21,7 @@ import org.burnoutcrew.reorderable.ReorderableLazyListState
 import org.burnoutcrew.reorderable.detectReorder
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -46,7 +45,6 @@ fun ListItemDragMlc(
         onMove = { _, _ -> },
         canDragOver = { _, _ -> true }
     ),
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit,
 ) {
     Column(
@@ -85,8 +83,7 @@ fun ListItemDragMlc(
                 modifier = modifier
                     .size(24.dp)
                     .detectReorder(state),
-                icon = UiIcon.DrawableResource(CommonDiiaResourceIcon.DRAG.code),
-                diiaResourceIconProvider = diiaResourceIconProvider
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.DRAG.code),
             )
         }
 
@@ -104,8 +101,7 @@ fun ListItemDragMlc(
             ) {
                 UiIconWrapperSubatomic(
                     modifier = modifier.size(24.dp),
-                    icon = UiIcon.DrawableResource(CommonDiiaResourceIcon.STACK.code),
-                    diiaResourceIconProvider = diiaResourceIconProvider
+                    icon = UiIcon.DrawableResource(DiiaResourceIcon.STACK.code),
                 )
 
                 Text(
@@ -122,8 +118,7 @@ fun ListItemDragMlc(
 
                 UiIconWrapperSubatomic(
                     modifier = Modifier.size(24.dp),
-                    icon = UiIcon.DrawableResource(CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    icon = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
                 )
             }
         }
@@ -145,7 +140,7 @@ fun ListItemDragMlcPreview_doc() {
         id = "",
         label = UiText.DynamicString("Свідоцтво про реєстрацію транспортного засобу"),
     )
-    ListItemDragMlc(data = data, onUIAction = {}, dragging = true, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview())
+    ListItemDragMlc(data = data, onUIAction = {}, dragging = true)
 }
 
 @Composable
@@ -156,7 +151,7 @@ fun ListItemDragMlcPreview_doc_group() {
         label = UiText.DynamicString("Закордонний паспорт"),
         countOfDocGroup = 2
     )
-    ListItemDragMlc(data = data, onUIAction = {}, dragging = false, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview())
+    ListItemDragMlc(data = data, onUIAction = {}, dragging = false)
 }
 
 @Composable
@@ -167,5 +162,5 @@ fun ListItemDragMlcPreview_doc_group_details() {
         label = UiText.DynamicString("ХХ000000"),
         desc = UiText.DynamicString("Дата видачі: хх.хх.хххх"),
     )
-    ListItemDragMlc(data = data, onUIAction = {}, dragging = false, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview())
+    ListItemDragMlc(data = data, onUIAction = {}, dragging = false)
 }

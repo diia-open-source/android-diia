@@ -7,8 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.icon.SmallIconAtm
 import ua.gov.diia.ui_base.components.atom.icon.SmallIconAtmData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -21,7 +20,6 @@ import ua.gov.diia.ui_base.components.theme.White
 fun StackMlc(
     modifier: Modifier,
     data: StackMlcData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Row(modifier = modifier) {
@@ -30,8 +28,7 @@ fun StackMlc(
             SmallIconAtm(
                 modifier = Modifier,
                 data = it,
-                onUIAction = onUIAction,
-                diiaResourceIconProvider = diiaResourceIconProvider
+                onUIAction = onUIAction
             )
         }
 
@@ -58,10 +55,10 @@ fun StackMlcPreview() {
     val data = StackMlcData(
         amount = 3, smallIconAtmData = SmallIconAtmData(
             id = "1",
-            code = CommonDiiaResourceIcon.STACK.code,
+            code = DiiaResourceIcon.STACK.code,
             accessibilityDescription = "Button"
         )
     )
-    StackMlc(modifier = Modifier, data = data, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()) {}
+    StackMlc(modifier = Modifier, data = data) {}
 
 }

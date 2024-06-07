@@ -8,7 +8,7 @@ interface DocActionsNavigationHandler {
      */
     fun handleNavigation(
         fragment: DocActionsDFCompose,
-        navigation: NavigationPath,
+        navigation: DocActionsVMCompose.DocActions,
         args: DocActionsDFComposeArgs
     )
 }

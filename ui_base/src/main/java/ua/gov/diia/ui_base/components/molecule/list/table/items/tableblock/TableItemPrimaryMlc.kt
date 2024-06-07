@@ -1,7 +1,6 @@
 package ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,34 +16,42 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.core.models.common_compose.table.TableItemPrimaryMlc
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
+import ua.gov.diia.ui_base.components.atom.icon.IconAtm
+import ua.gov.diia.ui_base.components.atom.icon.IconAtmData
 import ua.gov.diia.ui_base.components.conditional
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
-import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStringOrNull
 import ua.gov.diia.ui_base.components.noRippleClickable
-import ua.gov.diia.ui_base.components.subatomic.icon.UiIconWrapperSubatomic
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.White
+import ua.gov.diia.ui_base.util.toUiModel
 
 @Composable
 fun TableItemPrimaryMlc(
     modifier: Modifier = Modifier,
     data: TableItemPrimaryMlcData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit = {}
 ) {
+    val value = data.value?.asString()
     Column(modifier = modifier
         .fillMaxWidth()
         .background(White)
         .conditional(data.interaction == UIState.Interaction.Enabled) {
-            clickable {
+            noRippleClickable {
                 onUIAction(
-                    UIAction(actionKey = data.actionKey, data = data.value)
+                    UIAction(
+                        actionKey = data.actionKey,
+                        data = value,
+                        action = data.icon?.action
+                    )
                 )
             }
         }
@@ -69,35 +76,31 @@ fun TableItemPrimaryMlc(
 
         )
         {
-            data.value?.let {
-                Text(
-                    modifier = Modifier
-                        .weight(1f, false),
-                    text = it,
-                    style = DiiaTextStyle.h2MediumHeading,
-                    color = Black
-                )
-            }
+            Text(
+                modifier = Modifier
+                    .weight(1f, false),
+                text = data.value.asString(),
+                style = DiiaTextStyle.h2MediumHeading,
+                color = Black
+            )
             data.icon?.let {
                 Column(
                     modifier = Modifier
                         .defaultMinSize(24.dp)
                         .align(alignment = Alignment.Top)
                 ) {
-                    UiIconWrapperSubatomic(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .noRippleClickable {
-                                onUIAction(
-                                    UIAction(
-                                        actionKey = data.actionKey,
-                                        data = data.value
-                                    )
-                                )
-                            },
-                        icon = data.icon,
-                        diiaResourceIconProvider = diiaResourceIconProvider,
-                    )
+                    IconAtm(
+                        modifier = Modifier.size(24.dp),
+                        data = data.icon,
+                    ) {
+                        onUIAction(
+                            UIAction(
+                                actionKey = data.actionKey,
+                                data = value,
+                                action = data.icon.action
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -109,10 +112,24 @@ data class TableItemPrimaryMlcData(
     val id: String? = null,
     val componentId: String = "",
     val title: UiText? = null,
-    val value: String? = null,
-    val icon: UiIcon? = null,
+    val value: UiText,
+    val icon: IconAtmData? = null,
     val interaction: UIState.Interaction = UIState.Interaction.Enabled,
 ) : TableBlockItem
+
+fun TableItemPrimaryMlc?.toUIModel(): TableItemPrimaryMlcData? {
+    return this?.let {
+        TableItemPrimaryMlcData(
+            componentId = componentId.orEmpty(),
+            title = label.toDynamicStringOrNull(),
+            value = value.toDynamicString(),
+            icon = icon?.let {
+                it.toUiModel()
+            }
+        )
+    }
+}
+
 
 @Composable
 @Preview
@@ -120,14 +137,13 @@ fun PrimaryTableItemMoleculePreview_ValueAsImage() {
     val data = TableItemPrimaryMlcData(
         id = "123",
         title = UiText.DynamicString("Номер сертифіката"),
-        value = "1234567890"
+        value = "1234567890".toDynamicString()
     )
     TableItemPrimaryMlc(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        data = data
     )
 }
 
@@ -137,14 +153,13 @@ fun PrimaryTableItemMoleculePreview_ValueAsImage_disabled() {
     val data = TableItemPrimaryMlcData(
         id = "123",
         title = UiText.DynamicString("Номер сертифіката"),
-        value = "1234567890",
+        value = "1234567890".toDynamicString(),
     )
     TableItemPrimaryMlc(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        data = data
     )
 }
 
@@ -154,14 +169,20 @@ fun PrimaryTableItemMoleculePreviewWithCopy() {
     val data = TableItemPrimaryMlcData(
         id = "123",
         title = UiText.DynamicString("Номер сертифіката"),
-        value = "12345601234560123456012345601234560",
-        icon = UiIcon.DrawableResource(CommonDiiaResourceIcon.COPY.code)
+        value = "12345601234560123456012345601234560".toDynamicString(),
+        icon = IconAtmData(
+            code = DiiaResourceIcon.COPY.code,
+            action = DataActionWrapper(
+                type = "copy",
+                resource = "12345601234560123456012345601234560"
+            )
+        )
+
     )
     TableItemPrimaryMlc(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        data = data
     )
 }

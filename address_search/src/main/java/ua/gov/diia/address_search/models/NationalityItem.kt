@@ -16,4 +16,7 @@ data class NationalityItem(
     override fun getDisplayTitle(): String = name ?: "Unknown"
 
     override fun getQueryString(): String = name ?: "Unknown"
+
+    override fun isDisabled(): Boolean = false
+
 }

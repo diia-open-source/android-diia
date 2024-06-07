@@ -1,8 +1,9 @@
 package ua.gov.diia.publicservice.ui.compose
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import ua.gov.diia.publicservice.R
 import ua.gov.diia.publicservice.models.PublicServiceView
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
@@ -30,7 +31,7 @@ class PublicServicesSearchComposeMapperImpl :
         return ListItemMlcData(
             label = UiText.DynamicString(this.name),
             id = this.code,
-            iconRight = UiIcon.DrawableResource(CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+            iconRight = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
             action = DataActionWrapper(
                 type = this.code
             )
@@ -42,7 +43,8 @@ class PublicServicesSearchComposeMapperImpl :
             return ListItemGroupOrgData(
                 itemsList = SnapshotStateList<ListItemMlcData>().apply {
                     addAll(it.map { it.toComposeListItemMlcData() })
-                })
+                },
+                componentId = UiText.StringResource(R.string.home_services_list_test_tag))
         }
     }
 
@@ -52,12 +54,14 @@ class PublicServicesSearchComposeMapperImpl :
     ): SearchInputV2Data {
         return SearchInputV2Data(
             placeholder = UiText.DynamicString(placeholder),
-            mode = mode
+            mode = mode,
+            componentId = UiText.StringResource(R.string.home_search_services_test_tag)
         )
     }
 
     override fun StubMessageMlcData.toComposeEmptyStateErrorMoleculeData(): StubMessageMlcData {
         return StubMessageMlcData(
+            componentId = this.componentId,
             icon = this.icon,
             title = this.title
         )

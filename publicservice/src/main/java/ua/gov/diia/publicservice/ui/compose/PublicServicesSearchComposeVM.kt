@@ -18,6 +18,7 @@ import ua.gov.diia.core.util.DispatcherProvider
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
+import ua.gov.diia.publicservice.R
 import ua.gov.diia.publicservice.helper.PublicServiceHelper
 import ua.gov.diia.publicservice.models.PublicService
 import ua.gov.diia.publicservice.models.PublicServiceCategory
@@ -136,7 +137,7 @@ class PublicServicesSearchComposeVM @Inject constructor(
         categories = data.toList()
         prepareDisplayList(data)
         _toolBarData.addIfNotNull(
-            generateComposeNavigationPanel(title = "Сервіси")
+            generateComposeNavigationPanel(title = "Сервіси", componentId = UiText.StringResource(R.string.home_navigation_panel_services_test_tag))
         )
         _bodyData.addIfNotNull(
             generateSearchInputMoleculeV2("Що шукаєте?", 0)
@@ -189,7 +190,8 @@ class PublicServicesSearchComposeVM @Inject constructor(
     private fun configureEmptyBody(isServicesExist: Boolean, query: String?) {
         val data = StubMessageMlcData(
             icon = UiText.DynamicString("\uD83E\uDD37\u200D♂️"),
-            title = UiText.DynamicString("Не знайдено жодної послуги")
+            title = UiText.DynamicString("Не знайдено жодної послуги"),
+            componentId = UiText.StringResource(R.string.home_stub_message_services_test_tag)
         )
         val index = _bodyData.indexOfFirst {
             it is StubMessageMlcData

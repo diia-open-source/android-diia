@@ -1,6 +1,5 @@
 package ua.gov.diia.home.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,24 +9,23 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import ua.gov.diia.core.CoreConstants.CHECK_SAFETY_NET
-import ua.gov.diia.home.helper.HomeHelper
-import ua.gov.diia.ui_base.models.homescreen.HomeMenuItemConstructor
 import ua.gov.diia.core.util.delegation.Permission
 import ua.gov.diia.core.util.delegation.WithPermission
 import ua.gov.diia.core.util.event.observeUiDataEvent
 import ua.gov.diia.core.util.event.observeUiEvent
 import ua.gov.diia.core.util.extensions.fragment.navigate
-import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.core.util.navigation.KeepStateNavigator
 import ua.gov.diia.home.NavHomeDirections
 import ua.gov.diia.home.R
 import ua.gov.diia.home.databinding.FragmentHomeBinding
+import ua.gov.diia.home.helper.HomeHelper
 import ua.gov.diia.ui_base.components.infrastructure.screen.TabBarRootContainer
+import ua.gov.diia.ui_base.models.homescreen.HomeMenuItemConstructor
+import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,6 +36,7 @@ class HomeF @Inject constructor(
     WithPermission by permission {
 
     private var _navController: NavController? = null
+    private val args: HomeFArgs by navArgs()
 
     private fun obtainNavController(): NavController {
         val controller = _navController
@@ -63,6 +62,7 @@ class HomeF @Inject constructor(
         lifecycleScope.launchWhenStarted {
             viewModel.handleDeepLinks()
         }
+        viewModel.handleNavigationFlowArgs(args.launchFlow)
     }
 
     override fun onCreateView(
@@ -99,8 +99,10 @@ class HomeF @Inject constructor(
             showTemplate.observeUiDataEvent(viewLifecycleOwner) {
                 openTemplateDialog(it)
             }
-            processNavigation.observeUiDataEvent(viewLifecycleOwner) {
-                navigate(it)
+            processNavigation.observeUiDataEvent(viewLifecycleOwner) {action ->
+                action.apply {
+                    navigate(action)
+                }
             }
             viewModel.selectedMenuItem.observe(viewLifecycleOwner) {
                 onNavigationTransactionComplete(it?.peekContent())
@@ -112,15 +114,14 @@ class HomeF @Inject constructor(
     private fun onNavigationTransactionComplete(currentNavItem: HomeMenuItemConstructor?) {
         binding?.apply {
             if (currentNavItem?.position == HomeActions.HOME_DOCUMENTS) {
+                viewModel.fetchDocs()
                 gradientBg.visibility = View.VISIBLE
                 gradientBg.setAnimation(R.raw.gradient_bg)
                 gradientBg.playAnimation()
                 gradientBg.scaleType = ImageView.ScaleType.FIT_XY
             } else {
                 gradientBg.visibility = View.GONE
-
             }
-
         }
     }
 
@@ -156,23 +157,13 @@ class HomeF @Inject constructor(
             context = requireContext(),
             manager = childFragmentManager,
             containerId = R.id.home_content
-        ) {
-            val menuItem = homeHelper.getNavMenuItem(it)
-        }
+        ) {}
 
         with(obtainNavController()) {
             navigatorProvider.addNavigator(navigator)
 
             setGraph(homeHelper.getGraphId())
         }
-    }
-
-
-    override fun onResume() {
-        super<Fragment>.onResume()
-        LocalBroadcastManager
-            .getInstance(requireContext())
-            .sendBroadcast(Intent(CHECK_SAFETY_NET))
     }
 
     private fun navigateToQrScannerDestination() {
@@ -183,10 +174,5 @@ class HomeF @Inject constructor(
         if (NotificationManagerCompat.from(requireContext()).areNotificationsEnabled().not()) {
             approvePermission(Permission.POST_NOTIFICATIONS)
         }
-    }
-
-    private companion object {
-        const val ACTION_PROMO_DO_NOT_SHOW = "doNotShow"
-        const val ACTION_PROMO_SUBSCRIBE = "serviceSubscribe"
     }
 }

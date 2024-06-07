@@ -5,6 +5,7 @@ import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextParameter
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 
 fun TextWithParameters?.toComposeTextWithParameters(actionKey: String = UIActionKeysCompose.TEXT_WITH_PARAMETERS): TextWithParametersData? {
     val entity = this
@@ -45,4 +46,12 @@ fun TextWithParameters?.toComposeTextWithParameters(actionKey: String = UIAction
             }
         )
     }
+}
+
+fun String?.toComposeTextWithParameters(): TextWithParametersData? {
+    if (this.isNullOrEmpty()) return null
+    return TextWithParametersData(
+        text = this.toDynamicString(),
+        parameters = emptyList()
+    )
 }

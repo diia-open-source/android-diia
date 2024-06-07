@@ -9,8 +9,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -20,8 +19,7 @@ import ua.gov.diia.ui_base.components.noRippleClickable
 fun IconAtm(
     modifier: Modifier = Modifier,
     data: IconAtmData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
-    onUIAction: (UIAction) -> Unit = {},
+    onUIAction: (UIAction) -> Unit = {}
 ) {
     Image(
         modifier = modifier
@@ -39,7 +37,7 @@ fun IconAtm(
                 testTag = data.componentId
             },
         painter = painterResource(
-            id = diiaResourceIconProvider.getResourceId(data.code)
+            id = DiiaResourceIcon.getResourceId(data.code)
         ),
         contentDescription = data.accessibilityDescription
     )
@@ -59,9 +57,9 @@ data class IconAtmData(
 fun IconAtmPreview() {
     val data = IconAtmData(
         id = "1",
-        code = CommonDiiaResourceIcon.MENU.code,
+        code = DiiaResourceIcon.MENU.code,
         accessibilityDescription = "Button"
     )
-    IconAtm(data = data, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview())
+    IconAtm(data = data)
 }
 

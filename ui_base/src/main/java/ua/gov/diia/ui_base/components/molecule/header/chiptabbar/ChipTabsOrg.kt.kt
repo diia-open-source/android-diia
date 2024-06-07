@@ -16,11 +16,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.theme.ColumbiaBlue
 
 @Composable
@@ -48,19 +50,20 @@ fun ChipTabsOrg(
 
     LaunchedEffect(key1 = selectedItemId.value) {
         if (selectedItemId.value != "") {
-            localData.value = localData.value.copy(tabs = SnapshotStateList<ChipTabMoleculeDataV2>().apply {
-                localData.value.tabs.forEachIndexed { index, item ->
-                    add(
-                        item.copy(
-                            selectionState = if (item.id == selectedItemId.value) {
-                                UIState.Selection.Selected
-                            } else {
-                                UIState.Selection.Unselected
-                            }
+            localData.value =
+                localData.value.copy(tabs = SnapshotStateList<ChipTabMoleculeDataV2>().apply {
+                    localData.value.tabs.forEachIndexed { index, item ->
+                        add(
+                            item.copy(
+                                selectionState = if (item.id == selectedItemId.value) {
+                                    UIState.Selection.Selected
+                                } else {
+                                    UIState.Selection.Unselected
+                                }
+                            )
                         )
-                    )
-                }
-            })
+                    }
+                })
             if (selectedItemId.value != localData.value.tabs[0].id && performAutoScroll.value) {
                 listState.scrollToItem(localData.value.tabs.indexOfFirst { item ->
                     item.id == selectedItemId.value
@@ -71,7 +74,10 @@ fun ChipTabsOrg(
     }
 
     LazyRow(
-        modifier = modifier.padding(vertical = 16.dp).fillMaxWidth(),
+        modifier = modifier
+            .padding(vertical = 16.dp)
+            .fillMaxWidth()
+            .testTag(data.componentId?.asString() ?: ""),
         state = listState
     ) {
         itemsIndexed(items = localData.value.tabs) { index, item ->
@@ -93,8 +99,11 @@ fun ChipTabsOrg(
         }
     }
 }
-data class ChipTabsOrgData(val tabs: SnapshotStateList<ChipTabMoleculeDataV2>) :
-    UIElementData
+
+data class ChipTabsOrgData(
+    val tabs: SnapshotStateList<ChipTabMoleculeDataV2>,
+    val componentId: UiText? = null
+) : UIElementData
 
 
 @Composable

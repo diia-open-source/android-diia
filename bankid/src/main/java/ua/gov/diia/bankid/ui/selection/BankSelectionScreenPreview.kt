@@ -5,12 +5,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.tooling.preview.Preview
+import ua.gov.diia.core.models.common_compose.atm.SpacerAtmType
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.space.SpacerAtmData
-import ua.gov.diia.ui_base.components.atom.space.SpacerAtmType
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.ServiceScreen
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -38,7 +37,7 @@ fun BankSelectionScreenPreview() {
             titleGroupMlcData = TitleGroupMlcData(
                 heroText = UiText.DynamicString("Оберіть свій банк"),
                 leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                    code = CommonDiiaResourceIcon.BACK.code,
+                    code = DiiaResourceIcon.BACK.code,
                     accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
                     action = DataActionWrapper(
                         type = ActionsConst.ACTION_NAVIGATE_BACK,
@@ -61,27 +60,27 @@ fun BankSelectionScreenPreview() {
             add(
                 ListItemMlcData(
                     label = UiText.DynamicString("Label"),
-                    iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MESSAGE.code),
+                    iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MESSAGE.code),
                 )
             )
             add(
                 ListItemMlcData(
                     label = UiText.DynamicString("Label"),
-                    iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MESSAGE.code),
-                )
-            )
-            add(
-                ListItemMlcData(
-                    label = UiText.DynamicString("Label"),
-                    description = UiText.DynamicString("Description"),
-                    iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MESSAGE.code),
+                    iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MESSAGE.code),
                 )
             )
             add(
                 ListItemMlcData(
                     label = UiText.DynamicString("Label"),
                     description = UiText.DynamicString("Description"),
-                    iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.OUT_LINK.code),
+                    iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MESSAGE.code),
+                )
+            )
+            add(
+                ListItemMlcData(
+                    label = UiText.DynamicString("Label"),
+                    description = UiText.DynamicString("Description"),
+                    iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.OUT_LINK.code),
                 )
             )
         })
@@ -98,14 +97,8 @@ fun BankSelectionScreenPreview() {
         )
     )
     _bodyData.add(SpacerAtmData(SpacerAtmType.SPACER_32))
-    ServiceScreen(
-        toolbar = toolbarData,
+    ServiceScreen(toolbar = toolbarData,
         body = bodyData,
-        contentLoaded = Pair(
-            UIActionKeysCompose.PAGE_LOADING_TRIDENT_WITH_BACK_NAVIGATION,
-            true
-        ),
-        onEvent = { },
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    )
+        contentLoaded = Pair(UIActionKeysCompose.PAGE_LOADING_TRIDENT_WITH_BACK_NAVIGATION, true),
+        onEvent = { })
 }

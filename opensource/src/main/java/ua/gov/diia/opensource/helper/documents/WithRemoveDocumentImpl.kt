@@ -12,15 +12,8 @@ class WithRemoveDocumentImpl @Inject constructor() : WithRemoveDocument {
         removeDocumentCallback: (DiiaDocument) -> Unit
     ) = Unit
 
-    override suspend fun removeMilitaryBondFromGallery(
-        documentType: String,
-        documentId: String,
-        showTemplateDialogCallback: (TemplateDialogModel) -> Unit
-    ) = Unit
-
     override suspend fun confirmRemoveDocument(
-        docName: String,
-        currentDoc: () -> DiiaDocument?,
+        currentDoc: DiiaDocument?,
         showTemplateDialogCallback: (TemplateDialogModel) -> Unit,
         removeDocumentCallback: (DiiaDocument) -> Unit
     ) = Unit

@@ -10,15 +10,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import ua.gov.diia.core.models.common_compose.atm.SpacerAtmType
+import ua.gov.diia.core.models.common_compose.general.ButtonStates
+import ua.gov.diia.core.models.common_compose.org.media.FullScreenVideoOrg
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtmData
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtmData
+import ua.gov.diia.ui_base.components.atom.button.toUIModel
 import ua.gov.diia.ui_base.components.atom.space.SpacerAtm
 import ua.gov.diia.ui_base.components.atom.space.SpacerAtmData
-import ua.gov.diia.ui_base.components.atom.space.SpacerAtmType
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
+import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.FullScreenVideoMlc
@@ -84,6 +88,15 @@ data class FullScreenVideoOrgData(
     val btnPrimaryDefaultAtm: BtnPrimaryDefaultAtmData? = null,
     val btnPlainAtm: BtnPlainAtmData? = null,
 ) : UIElementData
+
+fun FullScreenVideoOrg.toUIModel(): FullScreenVideoOrgData {
+    return FullScreenVideoOrgData(
+        source = this.source,
+        playerBtnAtm = null,
+        btnPrimaryDefaultAtm = this.btnPrimaryDefaultAtm?.toUIModel(),
+        btnPlainAtm = this.btnPlainAtm?.toUIModel(),
+    )
+}
 
 @Preview
 @Composable

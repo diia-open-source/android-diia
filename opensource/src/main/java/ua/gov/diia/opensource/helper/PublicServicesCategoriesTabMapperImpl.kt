@@ -1,6 +1,7 @@
 package ua.gov.diia.opensource.helper
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import ua.gov.diia.opensource.R
 import ua.gov.diia.publicservice.models.PublicServiceCategory
 import ua.gov.diia.publicservice.models.PublicServiceTab
 import ua.gov.diia.publicservice.ui.categories.compose.PublicServicesCategoriesTabMapper
@@ -21,7 +22,9 @@ class PublicServicesCategoriesTabMapperImpl @Inject constructor() :
         return ServiceCardTileOrgData(
             items = SnapshotStateList<ServiceCardMlcData>().apply {
                 addAll(this@toComposeServiceTileOrganism.map { it.toComposeServiceCardMolecule() })
-            })
+            },
+            componentId = UiText.StringResource(R.string.home_service_tile_test_tag)
+        )
     }
 
     override fun generateComposeChipTabBarV2(
@@ -37,11 +40,16 @@ class PublicServicesCategoriesTabMapperImpl @Inject constructor() :
                         ChipTabMoleculeDataV2(
                             id = it.code,
                             title = it.name,
-                            selectionState = if (it.code == selectedTab) UIState.Selection.Selected else UIState.Selection.Unselected
+                            selectionState = if (it.code == selectedTab) UIState.Selection.Selected else UIState.Selection.Unselected,
+                            componentId = if (it.code == "citizens")
+                                UiText.StringResource(R.string.home_chip_tab_citizens_test_tag)
+                            else UiText.StringResource(R.string.home_chip_tab_civil_servants_test_tag)
                         )
                     })
                 }
-            })
+            },
+            componentId = UiText.StringResource(R.string.home_chip_tabs_services_test_tag)
+        )
     }
 
     override fun generateSearchInputMoleculeV2(
@@ -50,7 +58,8 @@ class PublicServicesCategoriesTabMapperImpl @Inject constructor() :
     ): SearchInputV2Data {
         return SearchInputV2Data(
             placeholder = UiText.DynamicString(placeholder),
-            mode = mode
+            mode = mode,
+            componentId = UiText.StringResource(R.string.home_search_services_test_tag)
         )
     }
 

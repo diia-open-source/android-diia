@@ -8,4 +8,9 @@
     <string name="biometric_screen_description_text">Дозвольте Дії використовувати сканер відбитку пальця та/або розпізнавання обличчя для входу у застосунок.</string>
     <string name="biometric_screen_button_text">Дозволити</string>
     <string name="biometric_screen_alt_button_text">Дозволю пізніше</string>
+
+    <string name="biometric_screen_title_test_tag">title_touchid_permission</string>
+    <string name="biometric_screen_icon_test_tag">icon</string>
+    <string name="biometric_screen_btn_allow_test_tag">btn_allow_touchid_permission</string>
+    <string name="biometric_screen_btn_later__test_tag">btn_later_touchid_permission</string>
 </resources>

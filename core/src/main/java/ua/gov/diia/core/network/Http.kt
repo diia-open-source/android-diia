@@ -3,6 +3,7 @@ package ua.gov.diia.core.network
 object Http {
     const val HTTP_200 = 200
     const val HTTP_201 = 201
+    const val HTTP_204 = 204
     const val HTTP_400 = 400
     const val HTTP_401 = 401
     const val HTTP_404 = 404

@@ -14,8 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -27,6 +26,7 @@ import ua.gov.diia.ui_base.components.organism.header.TopGroupOrg
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 import ua.gov.diia.ui_base.components.organism.tile.NumButtonTileOrganism
 import ua.gov.diia.ui_base.components.organism.tile.NumButtonTileOrganismData
+import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 import ua.gov.diia.ui_base.components.subatomic.loader.TridentLoaderWithUIBlocking
 
 
@@ -35,7 +35,6 @@ fun ResetPinScreen(
     modifier: Modifier = Modifier,
     data: SnapshotStateList<UIElementData>,
     contentLoaded: Pair<String, Boolean>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -47,6 +46,7 @@ fun ResetPinScreen(
                     contentScale = ContentScale.FillBounds
                 )
                 .safeDrawingPadding()
+                .provideTestTagsAsResourceId()
         ) {
             val title = createRef()
             val numButton = createRef()
@@ -61,8 +61,7 @@ fun ResetPinScreen(
                                 top.linkTo(parent.top)
                             },
                         data = item,
-                        onUIAction = onUIAction,
-                        diiaResourceIconProvider = diiaResourceIconProvider,
+                        onUIAction = onUIAction
                     )
                 }
 
@@ -106,7 +105,7 @@ fun ResetPinScreenPreview() {
             titleGroupMlcData = TitleGroupMlcData(
                 heroText = UiText.DynamicString("Повторіть код з 4 цифр"),
                 leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                    code = CommonDiiaResourceIcon.BACK.code,
+                    code = DiiaResourceIcon.BACK.code,
                     accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
                     action = DataActionWrapper(
                         type = "back",
@@ -125,19 +124,11 @@ fun ResetPinScreenPreview() {
     _uiData.add(
         NumButtonTileOrganismData()
     )
-    ResetPinScreen(
-        data = uiData,
-        contentLoaded = "" to true,
-        onUIAction = { },
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    )
+    ResetPinScreen(data = uiData, contentLoaded = "" to true, onUIAction = { })
 }
 
 @Composable
-@Preview(
-    name = "phone",
-    device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480"
-)
+@Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
 fun ResetPinScreenPreview_small_screen() {
     val _uiData = remember { mutableStateListOf<UIElementData>() }
     val uiData: SnapshotStateList<UIElementData> = _uiData
@@ -146,7 +137,7 @@ fun ResetPinScreenPreview_small_screen() {
             titleGroupMlcData = TitleGroupMlcData(
                 heroText = UiText.DynamicString("Повторіть код з 4 цифр"),
                 leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                    code = CommonDiiaResourceIcon.BACK.code,
+                    code = DiiaResourceIcon.BACK.code,
                     accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
                     action = DataActionWrapper(
                         type = "back",
@@ -165,10 +156,5 @@ fun ResetPinScreenPreview_small_screen() {
     _uiData.add(
         NumButtonTileOrganismData()
     )
-    ResetPinScreen(
-        data = uiData,
-        contentLoaded = "" to true,
-        onUIAction = { },
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    )
+    ResetPinScreen(data = uiData, contentLoaded = "" to true, onUIAction = { })
 }

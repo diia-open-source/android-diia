@@ -32,7 +32,6 @@ import ua.gov.diia.menu.NavMenuActionsDirections.Companion.actionHomeFToSettings
 import ua.gov.diia.menu.NavMenuActionsDirections.Companion.actionHomeFToSignHistory
 import ua.gov.diia.menu.R
 import ua.gov.diia.menu.models.EventType
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.HomeScreenTab
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.fragments.dialog.system.DiiaSystemDFVM
@@ -44,10 +43,6 @@ class MenuFCompose : Fragment() {
 
     @Inject
     lateinit var withCrashlytics: WithCrashlytics
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
-
     private var composeView: ComposeView? = null
     private val viewModel: MenuComposeVM by viewModels()
     private lateinit var event: EventType
@@ -155,7 +150,7 @@ class MenuFCompose : Fragment() {
                         )
                     }
 
-                    MenuAction.OpenSignHistory -> {
+                    MenuAction.OpenSignHistory ->{
                         navigate(
                             actionHomeFToSignHistory(),
                             findNavControllerById(R.id.nav_host),
@@ -213,9 +208,7 @@ class MenuFCompose : Fragment() {
                 findNavController().popBackStack()
                 when (action) {
                     ActionsConst.GENERAL_RETRY -> viewModel.retryLastAction()
-                    ActionsConst.DIALOG_ACTION_CODE_CLOSE -> viewModel.showDataLoadingIndicator(
-                        false
-                    )
+                    ActionsConst.DIALOG_ACTION_CODE_CLOSE -> viewModel.showDataLoadingIndicator(false)
                 }
             }
 
@@ -224,9 +217,7 @@ class MenuFCompose : Fragment() {
                 body = body,
                 onEvent = {
                     viewModel.onUIAction(it)
-                },
-                diiaResourceIconProvider = diiaResourceIconProvider
-            )
+                })
         }
     }
 

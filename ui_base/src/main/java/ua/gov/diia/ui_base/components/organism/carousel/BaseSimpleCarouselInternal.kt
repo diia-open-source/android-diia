@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.media.ArticlePicAtm
 import ua.gov.diia.ui_base.components.atom.media.ArticlePicAtmData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -45,7 +44,6 @@ fun BaseSimpleCarouselInternal(
     modifier: Modifier = Modifier,
     data: BaseSimpleCarouselInternalData,
     connectivityState: Boolean = true,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     val pagerState = rememberPagerState(
@@ -134,7 +132,6 @@ fun BaseSimpleCarouselInternal(
                                 modifier = Modifier.height(cardHeight),
                                 data = card,
                                 clickable = pageIndex == position,
-                                diiaResourceIconProvider = diiaResourceIconProvider,
                                 onUIAction = onUIAction
                             )
                         }

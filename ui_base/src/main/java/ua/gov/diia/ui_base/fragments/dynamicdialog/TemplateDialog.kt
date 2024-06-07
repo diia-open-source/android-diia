@@ -20,6 +20,7 @@ import ua.gov.diia.core.models.ConsumableString
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.extensions.fragment.navigate
 import ua.gov.diia.core.util.extensions.fragment.setNavigationResult
+import ua.gov.diia.ui_base.UiBaseConst
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.screen.TemplateDialogScreen
 import kotlin.math.roundToInt
@@ -80,7 +81,7 @@ class TemplateDialogF : DialogFragment() {
         when (val resultKey = resultKey()) {
             ActionsConst.KEY_GLOBAL_PROCESSING -> {
                 when (action) {
-                    ActionsConst.DIALOG_ACTION_CODE_PROLONG -> navigateToProlong()
+                    UiBaseConst.DIALOG_ACTION_CODE_PROLONG -> navigateToProlong()
                     else -> setResult(action, resultKey)
                 }
             }

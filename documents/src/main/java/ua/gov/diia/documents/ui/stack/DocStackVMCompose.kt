@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +27,7 @@ import ua.gov.diia.core.models.rating_service.RatingRequest
 import ua.gov.diia.core.models.share.ShareByteArr
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.DispatcherProvider
+import ua.gov.diia.core.util.alert.ClientAlertDialogsFactory
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRatingDialogOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
@@ -41,6 +41,7 @@ import ua.gov.diia.documents.barcode.DocumentBarcodeResultLoading
 import ua.gov.diia.documents.data.api.ApiDocuments
 import ua.gov.diia.documents.data.repository.DocumentsDataRepository
 import ua.gov.diia.documents.di.GlobalActionUpdateDocument
+import ua.gov.diia.documents.helper.DocumentsHelper
 import ua.gov.diia.documents.models.DiiaDocument
 import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
 import ua.gov.diia.documents.models.DocumentCard
@@ -49,13 +50,12 @@ import ua.gov.diia.documents.ui.DocVM
 import ua.gov.diia.documents.ui.DocsConst
 import ua.gov.diia.documents.ui.DocumentComposeMapper
 import ua.gov.diia.documents.ui.ToggleId
-import ua.gov.diia.documents.ui.WithCheckLocalizationDocs
 import ua.gov.diia.documents.ui.WithPdfCertificate
+import ua.gov.diia.documents.ui.WithPdfDocument
 import ua.gov.diia.documents.ui.WithRemoveDocument
+import ua.gov.diia.documents.ui.gallery.DocActions.DOC_ACTION_CALL
 import ua.gov.diia.documents.ui.gallery.DocActions.DOC_ACTION_IN_LINE
 import ua.gov.diia.documents.ui.gallery.DocActions.DOC_ACTION_TO_DRIVER_ACCOUNT
-import ua.gov.diia.documents.ui.gallery.DocFSettings
-import ua.gov.diia.documents.ui.gallery.DocGalleryVMCompose
 import ua.gov.diia.documents.util.WithUpdateExpiredDocs
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.addIfNotNull
@@ -71,7 +71,6 @@ import ua.gov.diia.ui_base.models.homescreen.HomeMenuItemConstructor
 import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.ui_base.util.navigation.generateComposeNavigationPanel
 import javax.inject.Inject
-import kotlin.reflect.KSuspendFunction1
 
 @HiltViewModel
 class DocStackVMCompose @Inject constructor(
@@ -89,15 +88,18 @@ class DocStackVMCompose @Inject constructor(
     private val composeMapper: DocumentComposeMapper,
     private val withUpdateExpiredDocs: WithUpdateExpiredDocs,
     private val withPdfCertificate: WithPdfCertificate,
-    private val withCheckLocalizationDocs: WithCheckLocalizationDocs,
-    private val withRemoveDocument: WithRemoveDocument
+    private val withPdfDocument: WithPdfDocument,
+    private val withRemoveDocument: WithRemoveDocument,
+    private val documentsHelper: DocumentsHelper,
+    private val clientAlertDialogsFactory: ClientAlertDialogsFactory
 ) : ViewModel(),
     DocVM,
     WithErrorHandlingOnFlow by errorHandling,
     WithRetryLastAction by withRetryLastAction,
     DocumentComposeMapper by composeMapper,
     WithRatingDialogOnFlow by withRatingDialog,
-    WithPdfCertificate by withPdfCertificate {
+    WithPdfCertificate by withPdfCertificate,
+    WithPdfDocument by withPdfDocument {
 
     private val _bodyData = mutableStateListOf<UIElementData>()
     val bodyData: SnapshotStateList<UIElementData> = _bodyData
@@ -142,16 +144,15 @@ class DocStackVMCompose @Inject constructor(
     val documentCardData = _documentCardData.asLiveData()
 
     private val _scrollToFirstPosition = MutableLiveData<UiEvent>()
-    val scrollToFirstPosition = _scrollToFirstPosition.asLiveData()
+
     private val menuDocumentSelected = MutableLiveData<HomeMenuItemConstructor?>()
 
-    var currPos: Int = 0
+    private var currPos: Int = 0
 
-    var documentToFocus: Int? = null
+    private var documentToFocus: Int? = null
     private var focusDocType: String? = null
 
     private var currentDoc: DiiaDocument? = null
-    private var isLocalizationChecked: Boolean = false
 
     init {
         viewModelScope.launch {
@@ -175,8 +176,8 @@ class DocStackVMCompose @Inject constructor(
 
         viewModelScope.launch {
             globalActionConfirmDocumentRemoval.collectLatest {
-                it?.getContentIfNotHandled()?.let { docName ->
-                    confirmDelDocument(docName)
+                it?.getContentIfNotHandled()?.let {
+                    confirmDelDocument()
                 }
             }
         }
@@ -193,53 +194,33 @@ class DocStackVMCompose @Inject constructor(
 
     }
 
-    fun subscribeForDocuments(settings: DocFSettings) {
+    fun subscribeForDocuments(docType: String) {
         viewModelScope.launch {
-            val docType = settings.documentType
             documentsDataSource.data
                 .flowOn(dispatcherProvider.ioDispatcher())
                 .mapNotNull { it.data }
                 .map { it.filter { d -> d.diiaDocument != null } }
                 .map { docs ->
-                    if (docType == DocsConst.DOCUMENT_TYPE_ALL) {
-                        if (!isLocalizationChecked) {
-                            checkLocalizationDocs(docs)
-                            isLocalizationChecked = true
-                        }
-                        docs.sortedBy { it.getDocOrder() }.groupBy { it.type }.map { docGroup ->
-                            if (docGroup.value.size > 1) {
-                                val doc =
-                                    docGroup.value.minByOrNull { it.diiaDocument!!.getDocOrder() }!!
-                                DocumentCard(
-                                    doc.copy(diiaDocument = doc.diiaDocument?.makeCopy()),
-                                    docCount = docGroup.value.size
-                                )
-                            } else {
-                                val doc = docGroup.value.first()
-                                DocumentCard(doc.copy(diiaDocument = doc.diiaDocument?.makeCopy()))
+                    docs.filter { it.type == docType }
+                        .sortedBy { it.diiaDocument!!.getDocOrder() }
+                        .map { DocumentCard(it.copy(diiaDocument = it.diiaDocument?.makeCopy())) }
+                        .also { documents ->
+                            focusDocType?.let { type ->
+                                documents.find { it.doc.type == type }?.let {
+                                    documentToFocus = documents.indexOf(it)
+                                    focusDocType = null
+                                }
                             }
                         }
-                    } else {
-                        docs.filter { it.type == docType }
-                            .sortedBy { it.diiaDocument!!.getDocOrder() }
-                            .map { DocumentCard(it.copy(diiaDocument = it.diiaDocument?.makeCopy())) }
-                    }.also { documents ->
-                        focusDocType?.let { type ->
-                            documents.find { it.doc.type == type }?.let {
-                                documentToFocus = documents.indexOf(it)
-                                focusDocType = null
-                            }
-                        }
-                    }
                 }.collect {
 
                     if (it != documentCardData.value) {
+                        _documentCardData.value = it
                         _documentCardData.value?.let { docCard ->
                             if (docCard.size <= 1) _navigation.tryEmit(
                                 BaseNavigation.Back
                             )
                         }
-                        _documentCardData.postValue(it)
                         configureBody(it)
                     }
                 }
@@ -247,13 +228,15 @@ class DocStackVMCompose @Inject constructor(
     }
 
     private fun configureBody(data: List<DocumentCard>) {
-        _bodyData.clear()
-        _bodyData.addIfNotNull(
-            composeMapper.toDocCarousel(
-                data,
-                barcodeResult = DocumentBarcodeResultLoading(loading = false)
-            ).copy(focusOnDoc = currPos)
-        )
+        if (!isDocCardFlipped(currPos.toString())) {
+            _bodyData.clear()
+            _bodyData.addIfNotNull(
+                composeMapper.toDocCarousel(
+                    data,
+                    barcodeResult = DocumentBarcodeResultLoading(loading = false)
+                ).copy(focusOnDoc = currPos)
+            )
+        }
     }
 
     override fun scrollToLastDocPos() {
@@ -366,18 +349,15 @@ class DocStackVMCompose @Inject constructor(
                 }
                 if (data != null && optionalId != null) {
                     val doc = findDoc(data, optionalId.toIntOrNull() ?: 0)
-                    if (doc != null) {
+                    if (doc != null && isDocCardFlipped(optionalId)) {
                         loadQR(doc, optionalId.toIntOrNull() ?: 0, null)
                     }
                 }
-
             }
 
             UIActionKeysCompose.TICKER_ATOM_CLICK -> {
-                val data = event.data
-                val optionalId = event.optionalId
-                if (data != null && optionalId != null) {
-                    val doc = findDoc(data, optionalId.toIntOrNull() ?: 0)
+                if (event.data != null && event.optionalId != null) {
+                    val doc = findDoc(event.data.toString(), event.optionalId?.toIntOrNull() ?: 0)
                     if (doc != null) {
                         _navigation.tryEmit(Navigation.NavToVehicleInsurance(doc))
 
@@ -455,58 +435,53 @@ class DocStackVMCompose @Inject constructor(
                 _docAction.tryEmit(DocActions.OpenElectronicQueue)
             }
 
+            DOC_ACTION_CALL -> {
+                _docAction.tryEmit(DocActions.Call)
+            }
+
             DOC_ACTION_TO_DRIVER_ACCOUNT -> {
                 _docAction.tryEmit(DocActions.OpenDriverAccount)
             }
         }
     }
 
-    private fun checkLocalizationDocs(docs: List<DiiaDocumentWithMetadata>?) {
-        viewModelScope.launch {
-            withCheckLocalizationDocs.checkLocalizationDocs(
-                docs,
-                ::updateExpDate
-            )
-        }
-    }
-
-    override fun invalidateDataSource() {
+    fun invalidateDataSource() {
         documentsDataSource.invalidate()
     }
 
     override fun getCertificatePdf(cert: DiiaDocument) {
-        executeActionOnFlow(progressIndicator = _progressIndicator) {
+        executeActionOnFlow(contentLoadedIndicator = _contentLoaded.also {
+            _contentLoadedKey.value = UIActionKeysCompose.PAGE_LOADING_TRIDENT_WITH_UI_BLOCKING
+        }) {
             withPdfCertificate.loadCertificatePdf(cert)
         }
     }
 
-    override fun removeMilitaryBondFromGallery(
-        documentType: String,
-        documentId: String
-    ) {
-        executeActionOnFlow {
-            withRemoveDocument.removeMilitaryBondFromGallery(
-                documentType,
-                documentId,
-                ::showTemplateDialog)
-        }
-    }
-
-    override fun run(block: suspend ((TemplateDialogModel) -> Unit) -> Unit, dispatcher: CoroutineDispatcher) {
-        executeActionOnFlow(progressIndicator = _progressIndicator) {
-            block(::showTemplateDialog)
-        }
-    }
-
-    override fun run(block: suspend (String) -> ShareByteArr?, docId: String) {
-        executeActionOnFlow(
-            dispatcher = Dispatchers.IO,
-            progressIndicator = _progressIndicator
-        ) {
-            block(docId)?.let { data ->
-                _docAction.tryEmit(DocGalleryVMCompose.DocActions.ShareImage(data))
+    override fun getDocumentPdf(doc: DiiaDocument) {
+        executeActionOnFlow(contentLoadedIndicator = _contentLoaded.also {
+            _contentLoadedKey.value = UIActionKeysCompose.PAGE_LOADING_TRIDENT_WITH_UI_BLOCKING
+        }) {
+            withPdfDocument.loadDocumentPdf(doc) {
+                showTemplateDialog(it)
             }
         }
+    }
+
+    override fun addDocToGallery() {
+        executeActionOnFlow(progressIndicator = _progressIndicator) {
+            val template = documentsHelper.addDocToGallery()
+            if (template != null) {
+                showTemplateDialog(template)
+            }
+        }
+    }
+
+    override fun showRemoveDocDialog(key: String) {
+        showTemplateDialog(
+            clientAlertDialogsFactory.showDocRemoveDialog(
+                key
+            )
+        )
     }
 
     private fun findDoc(docName: String, position: Int): DiiaDocument? {
@@ -569,27 +544,70 @@ class DocStackVMCompose @Inject constructor(
     }
 
     override fun forceUpdateDocument(doc: DiiaDocument) {
-        executeActionOnFlow(progressIndicator = _progressIndicator) {
-            val resp = doc.id?.let {
-                apiDocs.getDocumentById(
-                    type = doc.getItemType(),
-                    id = it
-                )
+        executeActionOnFlow(
+            progressIndicator = _progressIndicator.also {
+                _progressIndicatorKey.value = UIActionKeysCompose.DOC_ORG_DATA_UPDATE_DOC
             }
-            resp?.template?.apply(::showTemplateDialog)
-            resp?.educationDocument?.let { updateDocument(it) }
+        ) {
+            val response = apiDocs.fetchDocuments(
+                listOf(doc.getItemType())
+                    .withIndex()
+                    .associateBy(
+                        { "filter[${it.index}]" }, { it.value }
+                    )
+            )
+
+            handleUpdatedDocResponse(
+                oldDoc = doc,
+                updatedDocResponse = response
+            )
         }
+    }
+
+    private fun handleUpdatedDocResponse(
+        oldDoc: DiiaDocument,
+        updatedDocResponse: List<DiiaDocumentWithMetadata>?
+    ) {
+        when (updatedDocResponse?.firstOrNull()?.status) {
+            DocsConst.DOCUMENT_UPDATED_STATUS -> handleDocumentUpdatedStatus(
+                updatedDocResponse = updatedDocResponse
+            )
+
+            DocsConst.DOCUMENT_NOT_FOUND_STATUS -> handleDocumentNotFoundStatus(oldDoc)
+
+            else -> showTemplateDialog(
+                clientAlertDialogsFactory
+                    .registerNotAvailable(docType = updatedDocResponse?.firstOrNull()?.type)
+            )
+        }
+    }
+
+    private fun handleDocumentUpdatedStatus(updatedDocResponse: List<DiiaDocumentWithMetadata>?) {
+
+        updatedDocResponse?.let { updatedDocsList ->
+            updatedDocsList.forEach { diiaDocumentWithMetadata ->
+                diiaDocumentWithMetadata.diiaDocument?.let {
+                    updateDocument(it)
+                }
+            }
+
+            if (getStackCurrentDocCount() < updatedDocsList.size) {
+                updatedDocsList.forEach {
+                    documentsDataSource.attachExternalDocument(it)
+                }
+            }
+        }
+    }
+
+    private fun handleDocumentNotFoundStatus(oldDoc: DiiaDocument) {
+        documentsDataSource.removeDocument(oldDoc)
+        currPos = setPrevPos(currPos)
+        showTemplateDialog(clientAlertDialogsFactory.documentNotFound())
     }
 
     private fun updateExpDate(type: String) {
         executeActionOnFlow(dispatcher = dispatcherProvider.work) {
             withUpdateExpiredDocs.updateExpirationDate(type)
-        }
-    }
-
-    private fun updateExpDate(types: List<String>) {
-        executeActionOnFlow(dispatcher = dispatcherProvider.work) {
-            withUpdateExpiredDocs.updateExpirationDate(types)
         }
     }
 
@@ -607,29 +625,74 @@ class DocStackVMCompose @Inject constructor(
             ?.let { sendRating(ratingRequest, ActionsConst.DOCUMENTS_CODE, it) }
     }
 
+    override fun loadImageAndShare(docId: String) {
+        executeActionOnFlow(
+            dispatcher = Dispatchers.IO,
+            progressIndicator = _progressIndicator
+        ) {
+            documentsHelper.loadDocImageInByteArray(docId)?.let { data ->
+                _docAction.tryEmit(DocActions.ShareImage(data))
+            }
+        }
+    }
 
     override fun currentDocId() = currentDoc?.docId()
 
     override fun showRating(doc: DiiaDocument) {
-        currentDoc = doc
-        getRating(ActionsConst.DOCUMENTS_CODE, doc.getItemType())
+        executeActionOnFlow(
+            progressIndicator = _contentLoaded.also {
+                _contentLoadedKey.value =
+                    UIActionKeysCompose.PAGE_LOADING_TRIDENT_WITH_UI_BLOCKING
+            }) {
+            currentDoc = doc
+            getRating(ActionsConst.DOCUMENTS_CODE, doc.getItemType())
+        }
     }
 
-    override fun confirmDelDocument(docName: String) {
+    override fun stopLoading() {
+        _contentLoadedKey.value = ""
+    }
+
+    override fun confirmDelDocument() {
         executeActionOnFlow(
             progressIndicator = _progressIndicator
         ) {
             withRemoveDocument.confirmRemoveDocument(
-                docName,
-                { currentDoc },
+                currentDoc,
                 ::showTemplateDialog,
                 ::removeDocument
             )
         }
     }
 
+    fun checkStackCount() {
+        _documentCardData.value?.let { docCard ->
+            if (docCard.size == 1) _navigation.tryEmit(
+                BaseNavigation.Back
+            )
+        }
+    }
+
+    private fun isDocCardFlipped(optionalId: String): Boolean {
+        return _bodyData.firstOrNull {
+            it is DocCarouselOrgData
+        }?.let { uiElementData ->
+            uiElementData as DocCarouselOrgData
+            uiElementData.isDocCardFlipper(optionalId.toIntOrNull())
+        } ?: false
+    }
+
+    private fun getStackCurrentDocCount(): Int {
+        return _bodyData.firstOrNull {
+            it is DocCarouselOrgData
+        }?.let { uiElementData ->
+            uiElementData as DocCarouselOrgData
+            uiElementData.data.size
+        } ?: 0
+    }
+
     companion object {
-       private const val ACTION_HOME_DOCUMENTS = 1
+        private const val ACTION_HOME_DOCUMENTS = 1
     }
 
     sealed class Navigation : NavigationPath {
@@ -641,6 +704,9 @@ class DocStackVMCompose @Inject constructor(
     sealed class DocActions : DocAction {
         object OpenDriverAccount : DocActions()
         object OpenElectronicQueue : DocActions()
+
+        object Call : DocActions()
+
         object HighBrightness : DocActions()
         object DefaultBrightness : DocActions()
 

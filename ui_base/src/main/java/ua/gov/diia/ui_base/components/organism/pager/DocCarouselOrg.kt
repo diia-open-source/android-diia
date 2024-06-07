@@ -8,14 +8,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerType
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.button.BtnToggleMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesMlcData
@@ -33,31 +35,24 @@ fun DocCarouselOrg(
     modifier: Modifier = Modifier,
     data: DocCarouselOrgData,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     BaseCarouselOrg(
         modifier = modifier,
-        data = BaseCarouselOrgData(card = data.data, data.focusOnDoc),
+        data = BaseCarouselOrgData(card = data.data,  data.focusOnDoc),
         progressIndicator = progressIndicator,
         onUIAction = onUIAction,
-        pageCount = data.data.size,
-        diiaResourceIconProvider = diiaResourceIconProvider,
+        pageCount = data.data.size
     )
 }
 
-data class DocCarouselOrgData(
-    val data: SnapshotStateList<DocsCarouselItem>,
-    val focusOnDoc: Int? = null
-) : UIElementData {
+data class DocCarouselOrgData(val data: SnapshotStateList<DocsCarouselItem>, val focusOnDoc: Int? = null) : UIElementData {
     fun onToggleClick(index: Int, toggleId: String?): DocCarouselOrgData {
         return if (index < data.size) {
             if (data[index] is DocCardFlipData) {
                 data[index] = when (toggleId) {
                     null -> data[index]
-                    else -> (this.data[index] as DocCardFlipData).onToggleClick(
-                        toggleId
-                    )
+                    else -> (this.data[index] as DocCardFlipData).onToggleClick(toggleId)
                 }
             }
             this
@@ -80,10 +75,7 @@ data class DocCarouselOrgData(
         }
     }
 
-    fun flipCardForceWithToggle(
-        index: Int,
-        toggleId: String?
-    ): DocCarouselOrgData {
+    fun flipCardForceWithToggle(index: Int, toggleId: String?): DocCarouselOrgData {
         return if (index < data.size) {
             this.data[index] = if (this.data[index] is DocCardFlipData) {
                 (this.data[index] as DocCardFlipData).flipAndToggle(
@@ -124,6 +116,12 @@ data class DocCarouselOrgData(
         }
     }
 
+    fun isDocCardFlipper(index: Int?): Boolean {
+        return index?.let {
+            val docCardFlipData = (this.data.getOrNull(index) as? DocCardFlipData)
+            docCardFlipData?.isFlipped ?: false
+        } ?: false
+    }
 }
 
 @Preview
@@ -158,10 +156,7 @@ fun DocCarouselOrgPreview() {
                 title = UiText.DynamicString("Номер:"),
                 value = "XX000000"
             ),
-            TableItemVerticalMlcData(
-                id = "03",
-                valueAsBase64String = PreviewBase64Images.sign
-            )
+            TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )
 
@@ -179,17 +174,23 @@ fun DocCarouselOrgPreview() {
     val toggle = ToggleButtonGroupData(
         qr = BtnToggleMlcData(
             id = "qr",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_qr_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_qr_unselected),
-            selectionState = UIState.Selection.Selected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.QR_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.QR.code),
+            selectionState = UIState.Selection.Selected,
+            action = DataActionWrapper(
+                type = "qr"
+            )
         ),
         ean13 = BtnToggleMlcData(
             id = "ean",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_ean13_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_ean13_unselected),
-            selectionState = UIState.Selection.Unselected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE.code),
+            selectionState = UIState.Selection.Unselected,
+            action = DataActionWrapper(
+                type = "ean"
+            )
         )
     )
     val state = remember {
@@ -220,26 +221,15 @@ fun DocCarouselOrgPreview() {
 
     val docCarouselOrgData = DocCarouselOrgData(
         data = remember {
-            mutableStateListOf(
-                docCardFlipData,
-                docCardFlipData,
-                docCardFlipData,
-                docCardFlipData
-            )
+            mutableStateListOf(docCardFlipData, docCardFlipData, docCardFlipData, docCardFlipData)
         }
     )
     val carouselState = remember {
         mutableStateOf(docCarouselOrgData)
     }
-    DocCarouselOrg(
-        data = carouselState.value,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    DocCarouselOrg(data = carouselState.value) {
         carouselState.value =
-            carouselState.value.onToggleClick(
-                it.optionalId?.toInt() ?: 0,
-                it.data
-            )
+            carouselState.value.onToggleClick(it.optionalId?.toInt() ?: 0, it.data)
 
     }
 }

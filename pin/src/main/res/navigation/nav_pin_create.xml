@@ -32,7 +32,11 @@
             app:argType="ua.gov.diia.pin.model.CreatePinFlowType" />
         <action
             android:id="@+id/action_destination_createPin_to_destination_confirmPin"
-            app:destination="@id/destination_confirmPin" />
+            app:destination="@id/destination_confirmPin"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment

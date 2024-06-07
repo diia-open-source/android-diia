@@ -15,6 +15,8 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.org.list.DownloadListItemGroupOrg
+import ua.gov.diia.core.models.common_compose.org.list.ProgressTypes
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
 import ua.gov.diia.ui_base.components.atom.list.DownloadListItemAtom
 import ua.gov.diia.ui_base.components.atom.list.DownloadListItemAtomData
@@ -118,6 +120,61 @@ data class DownloadListGroupOrganismData(
     val loadedListHeader: UiText,
     val itemList: SnapshotStateList<DownloadListItemAtomData>,
 ) : UIElementData
+
+fun DownloadListItemGroupOrg.toUiModel(
+    savedRegions: List<String>,
+    inProgressRegions: List<String>,
+    updateRequiredRegions: List<String>,
+): DownloadListGroupOrganismData {
+    val itemList: SnapshotStateList<DownloadListItemAtomData> = SnapshotStateList()
+
+    items.forEachIndexed { index, item ->
+        if (item.state != ua.gov.diia.core.models.common_compose.org.list.ActionTypes.invisible) {
+            val state = when {
+                inProgressRegions.contains(item.id) -> ProgressTypes.inProgress
+                updateRequiredRegions.contains(item.id) -> ProgressTypes.updateAvailable
+                savedRegions.contains(item.id) ->  ProgressTypes.downloaded
+                item.state == ua.gov.diia.core.models.common_compose.org.list.ActionTypes.disabled -> ProgressTypes.notAvailable
+                else -> ProgressTypes.notDownloaded
+            }
+            itemList.add(item.toDownloadListItemAtomData(index, state))
+        }
+    }
+
+    return DownloadListGroupOrganismData(
+        UiText.DynamicString(listHeader),
+        UiText.DynamicString(loadedListHeader),
+        itemList
+    )
+}
+
+private fun DownloadListItemGroupOrg.Item.toDownloadListItemAtomData(
+    index: Int,
+    progressState: ProgressTypes
+): DownloadListItemAtomData {
+    val descriptionsMap = mutableMapOf<UIState.Progress, String>()
+    description?.forEach { descriptionsMap[it.type.mapToProgressState()] = it.text }
+
+    return DownloadListItemAtomData(
+        id = this.id,
+        updateDate = this.updateDate ?: "1970",
+        mapLink = this.mapLink,
+        title = UiText.DynamicString(label),
+        progressState = progressState.mapToProgressState(),
+        descriptionsMap = descriptionsMap,
+        order = index
+    )
+}
+
+private fun ProgressTypes.mapToProgressState() = when (this) {
+    ProgressTypes.notDownloaded -> UIState.Progress.NotDownloaded
+    ProgressTypes.inProgress -> UIState.Progress.InProgress
+    ProgressTypes.failedDownloaded -> UIState.Progress.Failed
+    ProgressTypes.downloaded -> UIState.Progress.Downloaded
+    ProgressTypes.notAvailable -> UIState.Progress.NotAvailable
+    ProgressTypes.updateAvailable -> UIState.Progress.UpdateAvailable
+    ProgressTypes.failedUpdate -> UIState.Progress.Failed
+}
 
 @Preview
 @Composable

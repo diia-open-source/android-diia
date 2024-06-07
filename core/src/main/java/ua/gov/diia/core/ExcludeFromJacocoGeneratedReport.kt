@@ -1,6 +1,6 @@
 package ua.gov.diia.core
 
 
-@Retention
+@Retention//(RetentionPolicy.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class ExcludeFromJacocoGeneratedReport

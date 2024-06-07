@@ -19,6 +19,7 @@ object AddressSearchFieldType {
         const val TEXT_POST_OFFICE = "textPostOffice"
         const val STREET_TYPE = "streetType"
         const val STREET = "street"
+        const val TEXT_STREET = "textStreet"
         const val HOUSE = "house"
         const val CORPS = "corps"
         const val APARTMENT = "apartment"

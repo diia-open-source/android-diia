@@ -38,7 +38,7 @@ import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_SETTINGS
 import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_SIGNE_HISTORY
 import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_SUPPORT
 import ua.gov.diia.menu.ui.MenuActionsKey.SHARE_APP
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.addIfNotNull
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -150,13 +150,16 @@ class MenuComposeVM @Inject constructor(
     }
 
     fun configureTopBar() {
-        val toolbar = TopGroupOrgData(
-            titleGroupMlcData = TitleGroupMlcData(
-                heroText = UiText.DynamicString("Меню"),
-                label = UiText.StringResource(R.string.version_diia, withBuildConfig.getVersionName())
+        if (_topBarData.isEmpty()) {
+            val toolbar = TopGroupOrgData(
+                titleGroupMlcData = TitleGroupMlcData(
+                    heroText = UiText.DynamicString("Меню"),
+                    componentId = UiText.StringResource(R.string.menu_title_menu_test_tag),
+                    label = UiText.StringResource(R.string.version_diia, withBuildConfig.getVersionName())
+                )
             )
-        )
-        _topBarData.addIfNotNull(toolbar)
+            _topBarData.addIfNotNull(toolbar)
+        }
     }
 
     private fun getMenuActionForString(
@@ -212,9 +215,9 @@ class MenuComposeVM @Inject constructor(
             val list = it.itemsList.toMutableList()
             val item = list[indexItemList].copy(iconLeft = UiIcon.DrawableResource(
                 if (hasUnreadNotification) {
-                    CommonDiiaResourceIcon.NEW_MESSAGE.code
+                    DiiaResourceIcon.NEW_MESSAGE.code
                 } else {
-                    CommonDiiaResourceIcon.NOTIFICATION_MESSAGE.code
+                    DiiaResourceIcon.NOTIFICATION_MESSAGE.code
                 }
             ))
             list.removeAt(indexItemList)

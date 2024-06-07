@@ -20,10 +20,9 @@ class DiiaProgressCV @JvmOverloads constructor(
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DiiaProgressCV)
             typedArray.recycle()
         }
-        start()
     }
 
-    fun start(){
+    fun start() {
         findViewById<View>(R.id.qr_load_progress_inner).startAnimation(
             AnimationUtils.loadAnimation(
                 context,
@@ -35,5 +34,15 @@ class DiiaProgressCV @JvmOverloads constructor(
     fun finish() {
         clearAnimation()
         visibility = View.INVISIBLE
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        start()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        clearAnimation()
     }
 }

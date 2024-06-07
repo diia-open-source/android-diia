@@ -34,6 +34,14 @@ class AuthorizationRepositoryImpl @Inject constructor(
             preferenceDataSource.setBoolean(PREFERENCE_KEY_SERVICE_USER, isServiceUser)
         }
 
+    override suspend fun setServiceUserUUID(uuid: String) {
+        diiaStorage.saveServiceUserUUID(uuid)
+    }
+
+    override suspend fun getServiceUserUUID(): String?  = withContext(dispatcherProvider.work) {
+        diiaStorage.getServiceUserUUID()
+    }
+
     override suspend fun isServiceUser(): Boolean = withContext(dispatcherProvider.work) {
         preferenceDataSource.getBoolean(PREFERENCE_KEY_SERVICE_USER)
     }

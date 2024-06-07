@@ -11,6 +11,7 @@ import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.diia_storage.store.datasource.DataSourceDataResult
 import ua.gov.diia.documents.data.datasource.local.KeyValueDocumentsDataSource
 import ua.gov.diia.documents.data.datasource.remote.NetworkDocumentsDataSource
+import ua.gov.diia.documents.helper.DocumentsHelper
 import ua.gov.diia.documents.models.*
 
 class DocumentsDataRepositoryImpl(
@@ -19,8 +20,9 @@ class DocumentsDataRepositoryImpl(
     private val networkDocumentsDataSource: NetworkDocumentsDataSource,
     private val beforePublishActions: List<BeforePublishAction>,
     private val docTypesAvailableToUsers: Set<String>,
-    private val withCrashlytics: WithCrashlytics
-) : DocumentsDataRepository, WithCrashlytics by withCrashlytics{
+    private val withCrashlytics: WithCrashlytics,
+    private val documentsHelper: DocumentsHelper
+) : DocumentsDataRepository, WithCrashlytics by withCrashlytics {
 
     private val _isDataLoading = MutableStateFlow(false)
     override val isDataLoading: Flow<Boolean>
@@ -34,9 +36,8 @@ class DocumentsDataRepositoryImpl(
     override val data: Flow<DataSourceDataResult<List<DiiaDocumentWithMetadata>>>
         get() = _data
 
-    private val baseDocumentList = listOf(
-        DiiaDocumentWithMetadata.DOC_ERROR
-    )
+    private val baseDocumentList = documentsHelper.getBaseDocumentsList()
+
 
     private var invalidateDocJob: Job? = null
 
@@ -114,7 +115,7 @@ class DocumentsDataRepositoryImpl(
             if (docOrders.isEmpty()) return@launch
 
             val docsList = loadLocalDocData()
-                ?.filter { it.diiaDocument !is DocError }
+                ?.filter { it.diiaDocument?.getSourceType() != SourceType.STATIC }
                 ?: return@launch
 
             docOrders.forEach { docOrder ->
@@ -133,7 +134,7 @@ class DocumentsDataRepositoryImpl(
         scope.launch {
             if (docOrders.isEmpty()) return@launch
             val docsList = loadLocalDocData()
-                ?.filter { it.diiaDocument != null && it.diiaDocument !is DocError }
+                ?.filter { it.diiaDocument != null && it.diiaDocument.getSourceType() != SourceType.STATIC }
                 ?: return@launch
 
             val documentsFilteredByType = docsList.filter { it.type == docType }
@@ -199,7 +200,7 @@ class DocumentsDataRepositoryImpl(
         try {
             val data = loadLocalDocData() ?: return
             var dataUpdated = false
-            data.filter { it.diiaDocument !is DocError }
+            data.filter { it.diiaDocument?.getSourceType() != SourceType.STATIC }
                 .forEach { doc ->
                     val newOrder = docTypeList.indexOf(doc.type) + 1
                     if (doc.order != newOrder) {

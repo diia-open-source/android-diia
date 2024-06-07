@@ -3,8 +3,6 @@ package ua.gov.diia.ui_base.components.molecule.input
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +31,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -42,8 +41,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ua.gov.diia.core.models.common_compose.org.input.question_form.SelectorOrg
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtmData
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.PublicServiceScreen
@@ -56,6 +55,7 @@ import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.header.NavigationPanelMlcData
 import ua.gov.diia.ui_base.components.molecule.message.AttentionMessageMlcData
 import ua.gov.diia.ui_base.components.molecule.text.TitleLabelMlcData
+import ua.gov.diia.ui_base.components.noRippleClickable
 import ua.gov.diia.ui_base.components.organism.bottom.BottomGroupOrgData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 import ua.gov.diia.ui_base.components.organism.input.QuestionFormsOrgDataLocal
@@ -77,42 +77,38 @@ fun SelectorOrg(
     val bringIntoHintViewRequester = BringIntoViewRequester()
 
 
-    BasicTextField(value = data.inputValue ?: "",
-        enabled = false,
-        modifier = modifier
-            .onFocusChanged {
-                focusState = when (focusState) {
-                    UIState.Focus.NeverBeenFocused -> {
-                        if (data.inputValue.isNullOrEmpty()) {
-                            if (it.isFocused || it.hasFocus) {
-                                UIState.Focus.FirstTimeInFocus
-                            } else {
-                                UIState.Focus.NeverBeenFocused
-                            }
+    BasicTextField(value = data.inputValue ?: "", enabled = false, modifier = modifier
+        .onFocusChanged {
+            focusState = when (focusState) {
+                UIState.Focus.NeverBeenFocused -> {
+                    if (data.inputValue.isNullOrEmpty()) {
+                        if (it.isFocused || it.hasFocus) {
+                            UIState.Focus.FirstTimeInFocus
                         } else {
-                            UIState.Focus.OutOfFocus
+                            UIState.Focus.NeverBeenFocused
                         }
-                    }
-
-                    UIState.Focus.FirstTimeInFocus -> {
+                    } else {
                         UIState.Focus.OutOfFocus
                     }
-
-                    UIState.Focus.InFocus -> UIState.Focus.OutOfFocus
-                    UIState.Focus.OutOfFocus -> UIState.Focus.InFocus
                 }
+
+                UIState.Focus.FirstTimeInFocus -> {
+                    UIState.Focus.OutOfFocus
+                }
+
+                UIState.Focus.InFocus -> UIState.Focus.OutOfFocus
+                UIState.Focus.OutOfFocus -> UIState.Focus.InFocus
             }
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }) {
-                onUIAction(
-                    UIAction(
-                        actionKey = data.actionKey,
-                        states = listOf(focusState),
-                        optionalId = data.id
-                    )
+        }
+        .noRippleClickable {
+            onUIAction(
+                UIAction(
+                    actionKey = data.actionKey,
+                    states = listOf(focusState),
+                    optionalId = data.id
                 )
-            },
+            )
+        },
         onValueChange = {},
         textStyle = TextStyle(
             fontFamily = FontFamily(Font(R.font.e_ukraine_regular)),
@@ -121,10 +117,12 @@ fun SelectorOrg(
             lineHeight = 17.sp,
             color = Black
         ),
-        singleLine = true,
+        singleLine = false,
         decorationBox = @Composable { innerTextField ->
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(data.componentId?.asString() ?: ""),
             ) {
                 data.label?.let {
                     Text(
@@ -134,20 +132,22 @@ fun SelectorOrg(
                     Spacer(modifier = Modifier.height(4.dp))
                 }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    if (data.inputValue.isNullOrEmpty()) {
-                        Text(
-                            text = data.placeholder ?: "",
-                            style = DiiaTextStyle.t1BigText,
-                            color = BlackAlpha30
-                        )
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        if (data.inputValue.isNullOrEmpty()) {
+                            Text(
+                                text = data.placeholder ?: "",
+                                style = DiiaTextStyle.t1BigText,
+                                color = BlackAlpha30
+                            )
+                        }
+                        innerTextField()
                     }
-                    innerTextField()
                     Icon(
-                        modifier = Modifier,
+                        modifier = Modifier.align(Alignment.CenterEnd),
                         painter = painterResource(R.drawable.ic_arrow_next),
                         contentDescription = null
                     )
@@ -165,9 +165,7 @@ fun SelectorOrg(
                         Text(
                             modifier = Modifier
                                 .padding(top = 8.dp)
-                                .bringIntoViewRequester(
-                                    bringIntoHintViewRequester
-                                ),
+                                .bringIntoViewRequester(bringIntoHintViewRequester),
                             text = data.hintMessage,
                             style = DiiaTextStyle.t4TextSmallDescription,
                             color = BlackAlpha30
@@ -187,18 +185,29 @@ private fun getColorForBottomLine(
 
 data class SelectorOrgData(
     val actionKey: String = UIActionKeysCompose.SELECTOR_ORG,
+    val componentId: UiText? = null,
     val id: String? = null,
     val label: String? = null,
     val inputValue: String? = null,
     val placeholder: String? = null,
     val hintMessage: String? = null
-) : UIElementData {
+) : InputFormItem() {
     fun onInputChanged(newValue: String?): SelectorOrgData {
         if (newValue == null) return this
         return this.copy(inputValue = newValue)
     }
 }
 
+fun SelectorOrg.toUiModel(): SelectorOrgData {
+    return SelectorOrgData(
+        componentId = componentId?.let { UiText.DynamicString(it) },
+        id = this.id,
+        label = this.label,
+        inputValue = this.value,
+        placeholder = this.placeholder,
+        hintMessage = this.hint
+    )
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -223,18 +232,15 @@ fun SelectorOrgPreview() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(White),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(White), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         SelectorOrg(modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .focusRequester(focusRequester),
-            data = state.value,
-            onUIAction = {
-                state.value = state.value.onInputChanged(it.data)
-            })
+            .focusRequester(focusRequester), data = state.value, onUIAction = {
+            state.value = state.value.onInputChanged(it.data)
+        })
 
         Button(modifier = Modifier.padding(bottom = 16.dp), onClick = {
             focusManager.clearFocus()
@@ -268,18 +274,15 @@ fun SelectorOrgPreview_Prefilled() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(White),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(White), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         SelectorOrg(modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .focusRequester(focusRequester),
-            data = state.value,
-            onUIAction = {
-                state.value = state.value.onInputChanged(it.data)
-            })
+            .focusRequester(focusRequester), data = state.value, onUIAction = {
+            state.value = state.value.onInputChanged(it.data)
+        })
 
         Button(modifier = Modifier.padding(bottom = 16.dp), onClick = {
             focusManager.clearFocus()
@@ -356,8 +359,6 @@ fun SelectorOrg_Preview() {
         toolbar = toolbarData,
         body = bodyData,
         bottom = bottomData,
-        onEvent = {},
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
-    )
+        onEvent = {})
 
 }

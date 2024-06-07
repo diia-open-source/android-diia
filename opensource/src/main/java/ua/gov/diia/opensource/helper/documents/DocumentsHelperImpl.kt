@@ -1,23 +1,20 @@
 package ua.gov.diia.opensource.helper.documents
 
-import android.content.res.Resources
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
+import ua.gov.diia.core.models.dialogs.TemplateDialogModel
 import ua.gov.diia.core.models.rating_service.RatingFormModel
+import ua.gov.diia.core.models.share.ShareByteArr
 import ua.gov.diia.core.network.Http
 import ua.gov.diia.core.util.extensions.fragment.findNavControllerById
 import ua.gov.diia.core.util.extensions.fragment.navigate
-import ua.gov.diia.doc_driver_license.DriverLicenseV2
+import ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
 import ua.gov.diia.documents.helper.DocumentsHelper
 import ua.gov.diia.documents.models.DiiaDocument
 import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
 import ua.gov.diia.documents.ui.DocVM
-import ua.gov.diia.documents.ui.actions.DocActionsDFCompose
-import ua.gov.diia.documents.ui.actions.DocActionsDFComposeArgs
 import ua.gov.diia.opensource.NavMainXmlDirections
 import ua.gov.diia.opensource.R
-import ua.gov.diia.ui_base.components.infrastructure.event.DocAction
-import ua.gov.diia.ui_base.components.molecule.list.ListItemMlcData
 import javax.inject.Inject
 
 class DocumentsHelperImpl @Inject constructor(): DocumentsHelper {
@@ -33,9 +30,17 @@ class DocumentsHelperImpl @Inject constructor(): DocumentsHelper {
 
     override fun isDocEligibleForDeletion(docType: String): Boolean = false
 
+    override suspend fun loadDocImageInByteArray(docId: String): ShareByteArr? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun addDocToGallery(): TemplateDialogModel? {
+        TODO("Not yet implemented")
+    }
+
     override fun isDocumentValid(receivedDoc: DiiaDocumentWithMetadata): Boolean {
         val doc = receivedDoc.diiaDocument
-        return !(doc is DriverLicenseV2.Data && doc.getStatus() == DriverLicenseV2.STATUS_IS_INVALID)
+        return !(doc is DriverLicenseV2.Data && doc.getStatus() == Http.HTTP_1016)
     }
 
     override fun provideListOfDocumentsRequireUpdateOfExpirationDate(focusDocType: String): List<String>? = null
@@ -53,8 +58,6 @@ class DocumentsHelperImpl @Inject constructor(): DocumentsHelper {
             else -> false
         }
     }
-
-    override fun isDocRequireHousingMenuActions(doc: Parcelable): Boolean = false
 
     override fun getStackHeader(fragment: Fragment, docType: String): String {
         with(fragment) {
@@ -87,17 +90,13 @@ class DocumentsHelperImpl @Inject constructor(): DocumentsHelper {
         }
     }
 
-    override fun handleAction(
-        fragment: DocActionsDFCompose,
-        action: DocAction,
-        args: DocActionsDFComposeArgs
-    ) {
-
+    override fun onTickerClick(fragment: Fragment, doc: Parcelable) {
+        TODO("Not yet implemented")
     }
 
-    override fun provideActions(
-        document: DiiaDocument,
-        enableStackActions: Boolean,
-        resources: Resources
-    ): List<ListItemMlcData>?  = null
+    override fun getBaseDocumentsList(): List<DiiaDocumentWithMetadata> {
+        // TODO("Not yet implemented")
+        return listOf(
+        )
+    }
 }

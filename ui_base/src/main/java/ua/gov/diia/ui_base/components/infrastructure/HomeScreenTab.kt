@@ -7,13 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.screen.BottomBarRootContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.ComposeHomeTabRoot
 import ua.gov.diia.ui_base.components.infrastructure.screen.TabBodyRootContainer
+import ua.gov.diia.ui_base.components.infrastructure.screen.TabBodyRootLazyContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.TopBarRootContainer
 import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 
@@ -26,7 +26,7 @@ fun HomeScreenTab(
     topBar: SnapshotStateList<UIElementData>? = null,
     body: SnapshotStateList<UIElementData>,
     bottom: SnapshotStateList<UIElementData>? = null,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
+    useNestedScrollBody: Boolean = false,
     onEvent: (UIAction) -> Unit
 ) {
     BackHandler {
@@ -42,35 +42,44 @@ fun HomeScreenTab(
                 TopBarRootContainer(
                     modifier = Modifier.statusBarsPadding(),
                     topBarViews = topBar,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
                     onUIAction = onEvent
                 )
             }
         },
         body = {
-            TabBodyRootContainer(
-                modifier = Modifier.conditional(topBar == null){
-                    statusBarsPadding()
-                },
-                bodyViews = body,
-                contentLoaded = contentLoaded,
-                progressIndicator = progressIndicator,
-                onUIAction = onEvent,
-                connectivityState = connectivityState,
-                diiaResourceIconProvider = diiaResourceIconProvider,
-            )
+            if (useNestedScrollBody) {
+                TabBodyRootLazyContainer(
+                    modifier = Modifier.conditional(topBar.isNullOrEmpty()) {
+                        statusBarsPadding()
+                    },
+                    bodyViews = body,
+                    contentLoaded = contentLoaded,
+                    progressIndicator = progressIndicator,
+                    onUIAction = onEvent,
+                    connectivityState = connectivityState
+                )
+            } else {
+                TabBodyRootContainer(
+                    modifier = Modifier.conditional(topBar.isNullOrEmpty()) {
+                        statusBarsPadding()
+                    },
+                    bodyViews = body,
+                    contentLoaded = contentLoaded,
+                    progressIndicator = progressIndicator,
+                    onUIAction = onEvent,
+                    connectivityState = connectivityState
+                )
+            }
         },
         bottom = {
             if (bottom != null) {
                 BottomBarRootContainer(
                     bottomViews = bottom,
                     progressIndicator = progressIndicator,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
                     onUIAction = onEvent
                 )
             }
         },
-        onEvent = onEvent,
-        diiaResourceIconProvider = diiaResourceIconProvider,
+        onEvent = onEvent
     )
 }

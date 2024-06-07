@@ -1,14 +1,12 @@
 package ua.gov.diia.ui_base.components.organism.document
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -24,33 +22,40 @@ fun AddDocOrg(
     data: AddDocOrgData,
     onUIAction: (UIAction) -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .aspectRatio(0.7F)
-    ) {
-        WhiteMenuCardMlc(
-            modifier = Modifier.weight(1f),
-            data = data.addDoc,
-            onUIAction = {
-                onUIAction(
-                    UIAction(
-                        actionKey = UIActionKeysCompose.ADD_DOC_ORG,
-                        data = data.docType,
-                        optionalId = data.position.toString()
+        ConstraintLayout(
+            modifier = modifier
+                .aspectRatio(0.7F)
+        ) {
+            val (whiteMenuCardMlc1, whiteMenuCardMlc2) = createRefs()
+            val centerGuideline = createGuidelineFromTop(0.5f)
+            WhiteMenuCardMlc(
+                modifier = Modifier.constrainAs(whiteMenuCardMlc1) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(centerGuideline, margin = 4.dp)
+                    height = Dimension.fillToConstraints
+                }, data = data.addDoc,
+                onUIAction = {
+                    onUIAction(
+                        UIAction(
+                            actionKey = UIActionKeysCompose.ADD_DOC_ORG,
+                            data = data.docType,
+                            optionalId = data.position.toString()
+                        )
                     )
-                )
-            }
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        WhiteMenuCardMlc(
-            modifier = Modifier.weight(1f),
-            data = data.changePosition,
-            onUIAction = onUIAction //to add action for docs change position action
-        )
+                }
+            )
+            WhiteMenuCardMlc(
+                modifier = Modifier.constrainAs(whiteMenuCardMlc2) {
+                    top.linkTo(centerGuideline, margin = 4.dp)
+                    bottom.linkTo(parent.bottom)
+                    height = Dimension.fillToConstraints
+                },
+                data = data.changePosition,
+                onUIAction = onUIAction
+            )
+        }
 
     }
-}
 
 data class AddDocOrgData(
     val actionKey: String = UIActionKeysCompose.ADD_DOC_ORG,

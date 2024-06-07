@@ -10,5 +10,7 @@ data class ListItemGroupOrg(
     @Json(name = "items")
     val items: List<ListItemMlc>,
     @Json(name = "title?")
-    val title: String?
+    val title: String?,
+    @Json(name = "componentId")
+    val componentId: String? = null,
 )

@@ -24,8 +24,4 @@ interface ApiDocuments {
      * @return list of docs to add manually
      */
     suspend fun getDocsManual(): ManualDocs
-    /**
-     * @return document by id
-     */
-    suspend fun getDocumentById(type: String, id: String): UpdatedDoc
 }

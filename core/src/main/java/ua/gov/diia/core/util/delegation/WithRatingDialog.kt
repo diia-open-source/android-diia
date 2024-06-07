@@ -28,7 +28,8 @@ interface WithRatingDialog {
 
     fun <T> T.getRating(
         category: String,
-        serviceCode: String
+        serviceCode: String,
+        screenCode: String? = null
     ) where T : ViewModel, T : WithErrorHandling, T : WithRetryLastAction
 
 }

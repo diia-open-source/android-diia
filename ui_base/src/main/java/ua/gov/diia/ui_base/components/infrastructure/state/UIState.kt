@@ -60,6 +60,12 @@ sealed class UIState {
         object NotAvailable : Progress()
         object UpdateAvailable : Progress()
     }
+
+    sealed class MediaUploadState : UIState() {
+        object Loaded : MediaUploadState()
+        object InProgress : MediaUploadState()
+        object FailedLoading : MediaUploadState()
+    }
 }
 
 fun UIState.Selection.reverse() = when (this) {

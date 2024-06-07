@@ -33,7 +33,10 @@ class AddressParameterMapper @Inject constructor() {
 
             val validation = params?.validation?.regexp
 
-            return AddressFieldApproveRequest(mandatory, data, validation)
+            val flags = params?.validation?.flags
+
+
+            return AddressFieldApproveRequest(mandatory, data, validation, flags)
         }
     }
 

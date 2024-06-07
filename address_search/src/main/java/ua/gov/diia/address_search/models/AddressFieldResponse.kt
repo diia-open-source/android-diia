@@ -1,10 +1,10 @@
 package ua.gov.diia.address_search.models
 
-
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
+import ua.gov.diia.core.models.common.message.AttentionMessageMlc
 import ua.gov.diia.core.models.dialogs.TemplateDialogModel
 
 @Parcelize
@@ -14,6 +14,8 @@ data class AddressFieldResponse(
     val title: String?,
     @Json(name = "description")
     val description: String?,
+    @Json(name = "attentionMessage")
+    val attentionMessage: AttentionMessageMlc?,
     @Json(name = "parameters")
     val parameters: List<AddressParameter>?,
     @Json(name = "address")

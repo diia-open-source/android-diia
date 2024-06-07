@@ -18,5 +18,7 @@ data class StatusMessage(
     @Json(name = "subtitle")
     val subtitle: String?,
     @Json(name = "parameters")
-    val parameters: List<TextParameter>?
+    val parameters: List<TextParameter>?,
+    @Json(name = "componentId")
+    val componentId: String? = null
 ): Parcelable

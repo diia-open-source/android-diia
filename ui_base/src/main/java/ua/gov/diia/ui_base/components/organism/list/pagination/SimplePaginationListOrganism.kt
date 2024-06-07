@@ -2,8 +2,10 @@ package ua.gov.diia.ui_base.components.organism.list.pagination
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -11,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
@@ -19,8 +22,6 @@ import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.molecule.card.HalvedCardMlc
 import ua.gov.diia.ui_base.components.molecule.card.HalvedCardMlcData
-import ua.gov.diia.ui_base.components.molecule.card.ProcessCardMoleculeDeprecated
-import ua.gov.diia.ui_base.components.molecule.card.ProcessCardMoleculeDataDeprecated
 
 /**
  * Internal organism, not implemented at Design System
@@ -61,14 +62,6 @@ fun SimplePaginationListOrganism(
                             onUIAction = onUIAction
                         )
                     }
-
-                    is ProcessCardMoleculeDataDeprecated -> {
-                        ProcessCardMoleculeDeprecated(
-                            data = it,
-                            progressIndicator = progressIndicator,
-                            onUIAction = onUIAction
-                        )
-                    }
                 }
             }
         }
@@ -77,6 +70,32 @@ fun SimplePaginationListOrganism(
 
 data class SimplePaginationListOrganismData(val items: Flow<PagingData<SimplePaginationCard>>) :
     UIElementData
+
+fun LazyListScope.loadSimplePaginationListOrg(
+    modifier: Modifier = Modifier,
+    items: LazyPagingItems<SimplePaginationCard>,
+    onUIAction: (UIAction) -> Unit = {}
+) {
+    items(
+        count = items.itemCount,
+        key = items.itemKey(key = { it.id }),
+        contentType = items.itemContentType()
+    ) { index ->
+        val item = items[index]
+        item?.let {
+            Spacer(modifier = Modifier.size(16.dp))
+            when (it) {
+                is HalvedCardMlcData -> {
+                    HalvedCardMlc(
+                        modifier = modifier.padding(horizontal = 24.dp),
+                        data = it,
+                        onUIAction = onUIAction
+                    )
+                }
+            }
+        }
+    }
+}
 
 
 interface SimplePaginationCard : UIElementData {

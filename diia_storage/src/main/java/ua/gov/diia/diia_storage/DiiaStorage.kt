@@ -5,7 +5,7 @@ import ua.gov.diia.diia_storage.model.KeyValueStore
 import ua.gov.diia.diia_storage.model.PreferenceKey
 import java.util.UUID
 
-abstract class DiiaStorage: KeyValueStore, PinStore, MobileUidStore {
+abstract class DiiaStorage : KeyValueStore, PinStore, MobileUidStore, ServiceUserUidStore {
 
     abstract fun isFirstLaunch(): Boolean
 
@@ -23,6 +23,7 @@ abstract class DiiaStorage: KeyValueStore, PinStore, MobileUidStore {
 
     protected abstract val currentKeyValueStore: BaseSecuredKeyValueStore
     protected abstract var pinStorage: PinStore
+    protected abstract var serviceUserUUIDStorage: ServiceUserUidStore
 
     override fun getMobileUuid(): String {
         val key = CommonPreferenceKeys.UUID
@@ -37,6 +38,14 @@ abstract class DiiaStorage: KeyValueStore, PinStore, MobileUidStore {
         } else {
             uuid
         }
+    }
+
+    override suspend fun saveServiceUserUUID(uuid: String) {
+        serviceUserUUIDStorage.saveServiceUserUUID(uuid)
+    }
+
+    override suspend fun getServiceUserUUID(): String? {
+        return serviceUserUUIDStorage.getServiceUserUUID()
     }
 
     override suspend fun savePin(pin: String) {

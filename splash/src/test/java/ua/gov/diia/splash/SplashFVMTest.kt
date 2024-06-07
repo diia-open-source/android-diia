@@ -91,7 +91,7 @@ class SplashFVMTest {
         justRun { workToSchedule.enqueue(workManager) }
         viewModel.navigation.test {
             viewModel.doInit(
-                serviceUserUuid = serviceUserId,
+                serviceUserUUID = serviceUserId,
                 skipInitialization = false
             )
             viewModel.onUIAction(UIAction(actionKey = ANIMATION_END_KEY))
@@ -125,7 +125,7 @@ class SplashFVMTest {
         every { serviceUserToken.template } returns template
         justRun { workToSchedule.enqueue(workManager) }
         viewModel.doInit(
-            serviceUserUuid = serviceUserId,
+            serviceUserUUID = serviceUserId,
             skipInitialization = false
         )
         viewModel.onUIAction(UIAction(actionKey = ANIMATION_END_KEY))
@@ -138,7 +138,7 @@ class SplashFVMTest {
         coEvery { splashHelper.isProtectionExists() } returns true
         viewModel.navigation.test {
             viewModel.doInit(
-                serviceUserUuid = null,
+                serviceUserUUID = null,
                 skipInitialization = true
             )
             viewModel.onUIAction(UIAction(actionKey = ANIMATION_END_KEY))
@@ -152,7 +152,7 @@ class SplashFVMTest {
         coEvery { splashHelper.isProtectionExists() } returns true
         viewModel.navigation.test {
             viewModel.doInit(
-                serviceUserUuid = null,
+                serviceUserUUID = null,
                 skipInitialization = true
             )
             viewModel.onUIAction(UIAction(actionKey = ANIMATION_END_KEY))
@@ -166,7 +166,7 @@ class SplashFVMTest {
         coEvery { splashHelper.isProtectionExists() } returns false
         viewModel.navigation.test {
             viewModel.doInit(
-                serviceUserUuid = null,
+                serviceUserUUID = null,
                 skipInitialization = true
             )
             viewModel.onUIAction(UIAction(actionKey = ANIMATION_END_KEY))

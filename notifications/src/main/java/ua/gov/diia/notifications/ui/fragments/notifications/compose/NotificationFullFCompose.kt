@@ -12,17 +12,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
-import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.delegation.WithCrashlytics
-import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.extensions.fragment.openLink
-import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.core.util.extensions.fragment.registerForTemplateDialogNavResult
-import ua.gov.diia.core.util.extensions.fragment.setNavigationResult
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.ServiceScreen
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
+import ua.gov.diia.ui_base.navigation.BaseNavigation
+import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,10 +27,6 @@ class NotificationFullFCompose : Fragment() {
 
     @Inject
     lateinit var withCrashlytics: WithCrashlytics
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
-
     private var composeView: ComposeView? = null
     private val args: NotificationFullFComposeArgs by navArgs()
     val viewModel: NotificationFullComposeVM by viewModels()
@@ -60,23 +53,21 @@ class NotificationFullFCompose : Fragment() {
             val body = viewModel.bodyData
             val bottom = viewModel.bottomData
             val progressIndicator =
-                viewModel.progressIndicator.collectAsState(
-                    initial = Pair(
-                        "",
-                        true
-                    )
-                )
+                viewModel.progressIndicator.collectAsState(initial = Pair("", true))
             val contentLoaded = viewModel.contentLoaded.collectAsState(
                 initial = Pair(
                     UIActionKeysCompose.PAGE_LOADING_CIRCULAR, true
                 )
             )
-            val connectivityState =
-                viewModel.isNetworkEnabled.collectAsState(initial = false)
+            val connectivityState = viewModel.isNetworkEnabled.collectAsState(initial = false)
             viewModel.navigation.collectAsEffect { navigation ->
                 when (navigation) {
                     is BaseNavigation.Back -> {
                         findNavController().popBackStack()
+                    }
+
+                    is NotificationFullComposeVM.NotificationsFullNavigation.NavigateToHome -> {
+                        findNavController().popBackStack(navigation.destinationId, false)
                     }
 
                 }
@@ -90,11 +81,6 @@ class NotificationFullFCompose : Fragment() {
                     openLink(it, withCrashlytics)
                 }
             }
-            viewModel.openInternalLink.collectAsEffect { link ->
-                link?.let {
-                    navByDeepLink(it)
-                }
-            }
             ServiceScreen(
                 contentLoaded = contentLoaded.value,
                 progressIndicator = progressIndicator.value,
@@ -104,29 +90,27 @@ class NotificationFullFCompose : Fragment() {
                 bottom = bottom,
                 onEvent = {
                     viewModel.onUIAction(it)
-                },
-                diiaResourceIconProvider = diiaResourceIconProvider,
-            )
+                })
         }
         registerForTemplateDialogNavResult { action ->
             findNavController().popBackStack()
             when (action) {
                 ActionsConst.GENERAL_RETRY -> viewModel.retryLastAction()
-                ActionsConst.ERROR_DIALOG_DEAL_WITH_IT -> findNavController().popBackStack()
+                ActionsConst.ERROR_DIALOG_DEAL_WITH_IT,
+                DIALOG_ACTION_MESSAGES,
+                ActionsConst.DIALOG_ACTION_CODE_SKIP -> findNavController().popBackStack()
+                DIALOG_ACTION_REFUSE -> viewModel.confirmationRefuseNacpDeclarantRelatives()
             }
         }
-    }
-
-    private fun navByDeepLink(link: String) {
-        setNavigationResult(
-            key = ActionsConst.DEEP_LINK_ACTION,
-            data = UiDataEvent(link)
-        )
-        findNavController().popBackStack()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         composeView = null
+    }
+
+    companion object {
+        private const val DIALOG_ACTION_MESSAGES = "messages"
+        private const val DIALOG_ACTION_REFUSE = "refuse"
     }
 }

@@ -14,7 +14,9 @@ data class TitleGroupMlc(
     @Json(name = "leftNavIcon")
     val leftNavIcon: LeftNavIcon?,
     @Json(name = "mediumIconRight")
-    val mediumIconRight: MediumIconRight?
+    val mediumIconRight: MediumIconRight?,
+    @Json(name = "componentId")
+    val componentId: String? = null
 ) {
     @JsonClass(generateAdapter = true)
     data class MediumIconRight(

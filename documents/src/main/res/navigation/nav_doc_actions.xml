@@ -30,7 +30,7 @@
         <argument
             android:name="resultDestinationId"
             app:argType="integer" />
-    </action>\
+    </action>
     <dialog
         android:id="@+id/destination_docActionsCompose"
         android:name="ua.gov.diia.documents.ui.actions.DocActionsDFCompose">

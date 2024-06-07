@@ -8,7 +8,6 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.screen.BodyRootContainer
@@ -27,7 +26,6 @@ fun ServiceScreen(
     connectivityState: Boolean = true,
     body: SnapshotStateList<UIElementData>,
     bottom: SnapshotStateList<UIElementData>? = null,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onEvent: (UIAction) -> Unit
 ) {
     BackHandler {
@@ -48,8 +46,7 @@ fun ServiceScreen(
         toolbar = {
             ToolbarRootContainer(
                 toolbarViews = toolbar,
-                onUIAction = onEvent,
-                diiaResourceIconProvider = diiaResourceIconProvider,
+                onUIAction = onEvent
             )
         },
         body = {
@@ -58,8 +55,7 @@ fun ServiceScreen(
                 progressIndicator = progressIndicator,
                 contentLoaded = contentLoaded,
                 onUIAction = onEvent,
-                connectivityState = connectivityState,
-                diiaResourceIconProvider = diiaResourceIconProvider,
+                connectivityState = connectivityState
             )
         },
         bottom = {
@@ -67,12 +63,10 @@ fun ServiceScreen(
                 BottomBarRootContainer(
                     bottomViews = bottom,
                     progressIndicator = progressIndicator,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
                     onUIAction = onEvent
                 )
             }
         },
-        onEvent = onEvent,
-        diiaResourceIconProvider = diiaResourceIconProvider,
+        onEvent = onEvent
     )
 }

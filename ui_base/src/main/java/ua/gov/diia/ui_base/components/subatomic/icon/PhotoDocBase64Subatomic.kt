@@ -6,9 +6,7 @@ import android.graphics.Color
 import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,8 +33,7 @@ fun PhotoDocBase64Subatomic(
     alignment: Alignment = Alignment.TopCenter,
     photoAsBitmap: Bitmap? = null
 ) {
-
-    val image = remember {
+    val image = remember(base64Image) {
         mutableStateOf(
             photoAsBitmap?.asImageBitmap() ?: Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
                 .apply {
@@ -45,7 +42,7 @@ fun PhotoDocBase64Subatomic(
         )
     }
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(Unit) {
         coroutineScope {
             if (photoAsBitmap == null) {
                 launch(Dispatchers.IO) {

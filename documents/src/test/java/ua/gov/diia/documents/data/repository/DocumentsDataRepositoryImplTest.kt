@@ -53,7 +53,7 @@ class DocumentsDataRepositoryImplTest {
 
     private lateinit var repository: DocumentsDataRepositoryImpl
 
-    private val baseDocumentList = listOf(DiiaDocumentWithMetadata.DOC_ERROR)
+    private val baseDocumentList = listOf(DiiaDocumentWithMetadata.DOC_MANUAL_OPTIONS)
 
     @Before
     fun setUp() {

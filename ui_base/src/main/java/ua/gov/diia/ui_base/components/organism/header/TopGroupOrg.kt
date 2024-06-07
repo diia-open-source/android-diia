@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -27,15 +27,15 @@ import ua.gov.diia.ui_base.components.molecule.header.chiptabbar.ChipTabsOrgData
 fun TopGroupOrg(
     modifier: Modifier = Modifier,
     data: TopGroupOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier
+        .fillMaxWidth()
+        .testTag(data.componentId?.asString() ?: "")) {
         data.titleGroupMlcData?.let {
             TitleGroupMlc(
                 data = it,
-                onUIAction = onUIAction,
-                diiaResourceIconProvider = diiaResourceIconProvider,
+                onUIAction = onUIAction
             )
         }
         data.navigationPanelMlcData?.let {
@@ -56,6 +56,7 @@ fun TopGroupOrg(
 
 data class TopGroupOrgData(
     val actionKey: String = UIActionKeysCompose.TOP_GROUP_ORG,
+    val componentId: UiText? = null,
     val navigationPanelMlcData: NavigationPanelMlcData? = null,
     val chipTabsOrgData: ChipTabsOrgData? = null,
     val titleGroupMlcData: TitleGroupMlcData? = null
@@ -70,10 +71,7 @@ fun TopGroupOrgPreview_navigationPanel() {
             isContextMenuExist = true
         )
     )
-    TopGroupOrg(
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
-    ) {
+    TopGroupOrg(data = data) {
 
     }
 }
@@ -81,24 +79,23 @@ fun TopGroupOrgPreview_navigationPanel() {
 @Preview
 @Composable
 fun TopGroupOrgPreview_NavigationPanel_and_ChipTabBarMoleculeData() {
-    val tabs =
-        ChipTabsOrgData(tabs = SnapshotStateList<ChipTabMoleculeDataV2>().apply {
-            add(
-                ChipTabMoleculeDataV2(
-                    id = "1",
-                    title = "Label 1",
-                    selectionState = UIState.Selection.Selected
-                )
+    val tabs = ChipTabsOrgData(tabs = SnapshotStateList<ChipTabMoleculeDataV2>().apply {
+        add(
+            ChipTabMoleculeDataV2(
+                id = "1",
+                title = "Label 1",
+                selectionState = UIState.Selection.Selected
             )
-            add(
-                ChipTabMoleculeDataV2(
-                    id = "2",
-                    title = "Label 2",
-                    selectionState = UIState.Selection.Unselected
-                )
+        )
+        add(
+            ChipTabMoleculeDataV2(
+                id = "2",
+                title = "Label 2",
+                selectionState = UIState.Selection.Unselected
             )
+        )
 
-        })
+    })
     val data = TopGroupOrgData(
         navigationPanelMlcData = NavigationPanelMlcData(
             title = UiText.DynamicString("Title"),
@@ -106,10 +103,7 @@ fun TopGroupOrgPreview_NavigationPanel_and_ChipTabBarMoleculeData() {
         ),
         chipTabsOrgData = tabs
     )
-    TopGroupOrg(
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    TopGroupOrg(data = data) {
 
     }
 }
@@ -117,30 +111,29 @@ fun TopGroupOrgPreview_NavigationPanel_and_ChipTabBarMoleculeData() {
 @Preview
 @Composable
 fun TopGroupOrgPreview_TitleGroupMlc() {
-    val tabs =
-        ChipTabsOrgData(tabs = SnapshotStateList<ChipTabMoleculeDataV2>().apply {
-            add(
-                ChipTabMoleculeDataV2(
-                    id = "1",
-                    title = "Label 1",
-                    selectionState = UIState.Selection.Selected
-                )
+    val tabs = ChipTabsOrgData(tabs = SnapshotStateList<ChipTabMoleculeDataV2>().apply {
+        add(
+            ChipTabMoleculeDataV2(
+                id = "1",
+                title = "Label 1",
+                selectionState = UIState.Selection.Selected
             )
-            add(
-                ChipTabMoleculeDataV2(
-                    id = "2",
-                    title = "Label 2",
-                    selectionState = UIState.Selection.Unselected
-                )
+        )
+        add(
+            ChipTabMoleculeDataV2(
+                id = "2",
+                title = "Label 2",
+                selectionState = UIState.Selection.Unselected
             )
+        )
 
-        })
+    })
     val data = TopGroupOrgData(
         navigationPanelMlcData = null,
         chipTabsOrgData = null,
         titleGroupMlcData = TitleGroupMlcData(
             leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                code = CommonDiiaResourceIcon.MENU.code,
+                code = DiiaResourceIcon.MENU.code,
                 accessibilityDescription = "123".toDynamicString(),
                 action = DataActionWrapper(
                     type = "type",
@@ -149,7 +142,7 @@ fun TopGroupOrgPreview_TitleGroupMlc() {
                 )
             ),
             mediumIconRight = TitleGroupMlcData.MediumIconRight(
-                code = CommonDiiaResourceIcon.MENU.code,
+                code = DiiaResourceIcon.MENU.code,
                 action = DataActionWrapper(
                     type = "type",
                     subtype = "subtype",
@@ -160,10 +153,7 @@ fun TopGroupOrgPreview_TitleGroupMlc() {
             label = UiText.DynamicString("label"),
         )
     )
-    TopGroupOrg(
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    TopGroupOrg(data = data) {
 
     }
 }

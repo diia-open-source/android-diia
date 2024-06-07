@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -94,7 +95,8 @@ fun CheckboxSquareMlc(
                         }, width = 2.dp, shape = RoundedCornerShape(4.dp)
                     )
                 }
-                .size(20.dp),
+                .size(20.dp)
+                .testTag(data.componentId?.asString() ?: ""),
             contentAlignment = Alignment.Center
         ) {
             if (data.selectionState == UIState.Selection.Selected) {
@@ -127,6 +129,7 @@ data class CheckboxSquareMlcData(
     val interactionState: UIState.Interaction,
     val selectionState: UIState.Selection,
     val options: List<Option> = listOf(),
+    val componentId: UiText? = null,
 ) : UIElementData, Cloneable {
 
     public override fun clone(): CheckboxSquareMlcData {
@@ -146,6 +149,22 @@ data class CheckboxSquareMlcData(
     data class Option(
         val id: String,
         val isSelected: Boolean
+    )
+}
+
+fun String?.toUIModel(
+    actionKey: String = UIActionKeysCompose.CHECKBOX_REGULAR,
+    id: String = "",
+    interactionState: UIState.Interaction = UIState.Interaction.Enabled,
+    selectionState: UIState.Selection = UIState.Selection.Unselected
+): CheckboxSquareMlcData? {
+    if (this == null) return null
+    return CheckboxSquareMlcData(
+        actionKey = actionKey,
+        id = id,
+        title = UiText.DynamicString(this),
+        interactionState = interactionState,
+        selectionState = selectionState
     )
 }
 

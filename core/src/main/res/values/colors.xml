@@ -59,6 +59,8 @@
     <color name="pension_card_color">#FFF7F0</color>
     <color name="pension_card_font">#FFE4CB</color>
     <color name="residence_certificate_color">#D7E3F3</color>
+    <color name="award_doc_color_gold">#F8ECDD</color>
+    <color name="award_doc_color_silver">#E4E9FF</color>
     <color name="tab_round_unselected">#ECF2F7</color>
     <!--    DESIGN COLORS-->
     <color name="yellow_military_id">#FFF495</color>
@@ -83,6 +85,7 @@
     <color name="document_covid_certificate">#BFECB4</color>
     <color name="document_covid_certificate_yellow">#FFF7CF</color>
     <color name="document_pension_color">#FFE4CB</color>
+    <color name="document_veteran_color">#C6D4CA</color>
     <color name="military_donation_color">#C6D4CA</color>
     <color name="blue_lighter">#DBE1F1</color>
     <color name="divider_light_blue">#B5C2E6</color>
@@ -92,19 +95,31 @@
     <color name="qr_mask">#60000000</color>
     <color name="qr_border">#ffafed44</color>
     <color name="qr_insurance_load">#B6D7D7</color>
+    <!-- penalty colors -->
+    <color name="penalty_divider">@color/blue_pale_middle</color>
+    <color name="gallery_background">#282828</color>
     <!-- debts colors   -->
     <color name="debt_green">#65C680</color>
     <color name="debt_orange">#FF9975</color>
+    <!-- Petition colors -->
+    <color name="color_petition_phone_placeholder_background">#EFF7FE</color>
     <!-- App session label colors -->
     <color name="color_session_status_done">#65C680</color>
     <!-- assist colors   -->
     <color name="nfc_progress_not_complete_color">#4DD4D4D4</color>
     <color name="nfc_progress_complete_color">#2F7BF5</color>
+    <!-- Petitions -->
+    <color name="petition_state_moderation">#DADADA</color>
     <!--covid certificate-->
     <color name="covid_certificate_full_info_background">#E5F6E1</color>
+    <!--    IT FORCES   -->
+    <color name="it_forces_certificate_color">#FFFEF6</color>
+    <color name="it_forces_divider_color">#EDEAD6</color>
     <!--    MILITARY BONDS-->
     <color name="document_military_card_color">#80C5D9E9</color>
     <color name="document_military_bond_divider_color">#33E2ECF4</color>
+    <!-- Veteran doc -->
+    <color name="veteran_doc_divider_color">#C6D4CA</color>
     <!-- Housing certificate doc -->
     <color name="document_housing_certificate_color">#CED9E9</color>
 
@@ -122,4 +137,5 @@
     <color name="ticker_type_available">#E2F2FE</color>
     <color name="ticker_type_warning">#FAEB64</color>
     <color name="ticker_type_not_available">#ECECEC</color>
+
 </resources>

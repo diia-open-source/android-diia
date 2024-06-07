@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtom
+import ua.gov.diia.ui_base.components.atom.button.BtnStrokeAdditionalAtm
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersAtom
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
@@ -36,7 +36,7 @@ fun EmptyStateErrorMolecule(
         }
 
         data.button?.let {
-            ButtonStrokeAdditionalAtom(
+            BtnStrokeAdditionalAtm(
                 modifier = Modifier.padding(top = 32.dp),
                 data = data.button,
                 onUIAction = onUIAction

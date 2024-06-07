@@ -25,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.text.TickerAtm
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -37,6 +36,7 @@ import ua.gov.diia.ui_base.components.organism.document.DocCodeOrg
 import ua.gov.diia.ui_base.components.organism.document.DocCodeOrgData
 import ua.gov.diia.ui_base.components.organism.document.DocHeadingOrg
 import ua.gov.diia.ui_base.components.organism.document.DocHeadingOrgData
+import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 import ua.gov.diia.ui_base.components.theme.BlueHighlight
 import ua.gov.diia.ui_base.components.theme.Gray
 
@@ -46,7 +46,6 @@ fun FullInfoBottomSheet(
     modifier: Modifier = Modifier,
     progressIndicator: Pair<String, Boolean> = Pair("", true),
     data: SnapshotStateList<UIElementData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit,
 ) {
     var openBottomSheet by remember { mutableStateOf(true) }
@@ -82,6 +81,7 @@ fun FullInfoBottomSheet(
             sheetContent = {
                 Column(
                     modifier = Modifier
+                        .provideTestTagsAsResourceId()
                         .fillMaxWidth()
                         .verticalScroll(rememberScrollState())
                         .navigationBarsPadding()
@@ -93,8 +93,8 @@ fun FullInfoBottomSheet(
                                 DocHeadingOrg(
                                     modifier = Modifier.padding(
                                         bottom = 24.dp,
-                                        start = 24.dp,
-                                        end = 24.dp
+                                        start = 8.dp,
+                                        end = 8.dp
                                     ),
                                     data = item,
                                     onUIAction = onUIAction
@@ -114,8 +114,7 @@ fun FullInfoBottomSheet(
                                         bottom = 24.dp
                                     ),
                                     data = item,
-                                    onUIAction = onUIAction,
-                                    diiaResourceIconProvider = diiaResourceIconProvider,
+                                    onUIAction = onUIAction
                                 )
                             }
 
@@ -138,7 +137,7 @@ fun FullInfoBottomSheet(
             content = {
                 // Nothing
             },
-            modifier = modifier,
+            modifier = modifier.provideTestTagsAsResourceId(),
             sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
             containerColor = BlueHighlight,
             sheetContainerColor = BlueHighlight,

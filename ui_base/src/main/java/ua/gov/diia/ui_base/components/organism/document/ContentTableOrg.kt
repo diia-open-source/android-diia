@@ -7,8 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
@@ -23,7 +22,6 @@ import ua.gov.diia.ui_base.components.subatomic.preview.PreviewBase64Images
 fun ContentTableOrg(
     modifier: Modifier = Modifier,
     data: ContentTableOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(
@@ -41,12 +39,11 @@ fun ContentTableOrg(
         }
 
         data.tableBlockOrgData?.let {
-            it.forEachIndexed { index, data ->
+            it.forEachIndexed {  index,data ->
                 TableBlockOrg(
                     modifier = Modifier,
                     data = data,
-                    onUIAction = onUIAction,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onUIAction = onUIAction
                 )
             }
 
@@ -80,15 +77,8 @@ fun ContentTableOrgPreview() {
                 title = UiText.DynamicString("Дата\nнародження:"),
                 value = "24.08.1991"
             ),
-            TableItemVerticalMlcData(
-                id = "02",
-                title = UiText.DynamicString("Номер:"),
-                value = "XX000000"
-            ),
-            TableItemVerticalMlcData(
-                id = "03",
-                valueAsBase64String = PreviewBase64Images.sign
-            )
+            TableItemVerticalMlcData(id = "02", title = UiText.DynamicString("Номер:"), value = "XX000000"),
+            TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )
     val items = listOf(
@@ -97,11 +87,7 @@ fun ContentTableOrgPreview() {
             title = UiText.DynamicString("Тип нерухомого майна:"),
             value = "Будинок"
         ),
-        TableItemHorizontalMlcData(
-            id = "2",
-            title = UiText.DynamicString("Частка власності:"),
-            value = "1/5"
-        ),
+        TableItemHorizontalMlcData(id = "2", title = UiText.DynamicString("Частка власності:"), value = "1/5"),
         TableItemVerticalMlcData(
             id = "3",
             title = UiText.DynamicString("Адреса:"),
@@ -116,29 +102,18 @@ fun ContentTableOrgPreview() {
     )
     val tableBlockOrgData = TableBlockOrgData(items = items)
 
-    val itemsEmoji = listOf(
-        SmallEmojiPanelMlcData(
-            text = UiText.DynamicString("Booster vaccine dose"),
-            icon = UiIcon.DrawableResource(
-                code = CommonDiiaResourceIcon.TRIDENT.code
-            )
+    val itemsEmoji = listOf(SmallEmojiPanelMlcData(
+        text = UiText.DynamicString("Booster vaccine dose"),
+        icon = UiIcon.DrawableResource(
+            code = DiiaResourceIcon.TRIDENT.code
         )
-    )
+    ))
     val tableBlockOrgDataEmoji = TableBlockOrgData(items = itemsEmoji)
 
     val contentTableOrg = ContentTableOrgData(
         listOf(tableBlockTwoColumnsOrgData),
-        listOf(
-            tableBlockOrgDataEmoji,
-            tableBlockOrgData,
-            tableBlockOrgData,
-            tableBlockOrgData
-        ),
+        listOf(tableBlockOrgDataEmoji , tableBlockOrgData, tableBlockOrgData, tableBlockOrgData),
     )
 
-    ContentTableOrg(
-        modifier = Modifier,
-        data = contentTableOrg,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
-    ) {}
+    ContentTableOrg(modifier = Modifier, data = contentTableOrg) {}
 }

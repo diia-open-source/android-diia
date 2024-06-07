@@ -15,5 +15,7 @@ data class TableMainHeadingMlc(
     @Json(name = "label")
     val label: String,
     @Json(name = "description")
-    val description: String?
+    val description: String?,
+    @Json(name = "componentId")
+    val componentId: String?
 ): Parcelable

@@ -21,6 +21,10 @@ interface AuthorizationRepository {
 
     suspend fun setIsServiceUser(isServiceUser: Boolean)
 
+    suspend fun setServiceUserUUID(uuid: String)
+
+    suspend fun getServiceUserUUID(): String?
+
     suspend fun isServiceUser(): Boolean
 
     suspend fun getUserType(): UserType

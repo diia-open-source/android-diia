@@ -7,6 +7,8 @@ import ua.gov.diia.core.models.common_compose.general.Action
 
 @JsonClass(generateAdapter = true)
 data class ListItemMlc(
+    @Json(name = "componentId")
+    val componentId: String? = null,
     @Json(name = "action")
     val action: Action?,
     @Json(name = "description")

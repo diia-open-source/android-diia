@@ -94,7 +94,7 @@ class CriminalCertStepConfirmF : Fragment() {
                 CriminalCertConst.TEMPLATE_ACTION_OPEN_STATUS -> navigateToStatus()
 
 
-                ActionsConst.DIALOG_ACTION_CRIMINAL_RECORD_CERTIFICATE -> {
+                CriminalCertConst.FEATURE_CODE -> {
                     viewModel.navigateToDetails()
                 }
 
