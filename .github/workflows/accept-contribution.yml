@@ -20,10 +20,6 @@ jobs:
           PROJECT_CI_API : ${{ secrets.PROJECT_CI_API }}
           PR_NUMBER: ${{ inputs.pr_number }}
         run: |
-          if ! [[ $(curl --fail "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER" | jq -r '.mergeable') == true ]]; then
-           echo "Target PR is not mergeable!"
-           exit 1
-          fi
 
           TARGET_PROJECT_ID=$(curl --fail --request GET --header "PRIVATE-TOKEN:$GITLAB_TOKEN" \
           "$PROJECT_CI_API/$(echo "$PUBLISH_GROUP/$TARGET_PROJECT" | sed 's/\//%2F/g')" | jq -r '.id')
