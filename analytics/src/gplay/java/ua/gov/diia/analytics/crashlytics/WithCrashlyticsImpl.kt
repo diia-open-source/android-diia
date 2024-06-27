@@ -16,6 +16,6 @@ internal class WithCrashlyticsImpl @Inject constructor() : WithCrashlytics {
     }
 
     override fun sendMarkedErr(msg: String) {
-        FirebaseCrashlytics.getInstance().log(msg)
+        FirebaseCrashlytics.getInstance().recordException(Throwable(msg))
     }
 }

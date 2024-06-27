@@ -20,10 +20,17 @@ class SendPushTokenProcessor @Inject constructor(
         keyValueSource.setPushToken(pushToken)
         val authToken = authorizationRepository.getToken()
         val authTokenData = authorizationRepository.getTokenData()
-        if (authToken != null && !authTokenData.isExpired(withBuildConfig.getTokenLeeway()) && !authorizationRepository.isServiceUser()) {
+
+        //The service user does not use the push functional
+        if (authorizationRepository.isServiceUser()){
+            return ListenableWorker.Result.success()
+        }
+        return if (authToken != null && !authTokenData.isExpired(withBuildConfig.getTokenLeeway())) {
             apiNotificationsPublic.sendDeviceUserPushToken(PushToken(pushToken))
             keyValueSource.setIsPushTokenSynced(synced = true)
+            ListenableWorker.Result.success()
+        } else {
+            ListenableWorker.Result.retry()
         }
-        return ListenableWorker.Result.success()
     }
 }

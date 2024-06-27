@@ -37,6 +37,7 @@ import ua.gov.diia.ui_base.components.organism.document.AddDocOrg
 import ua.gov.diia.ui_base.components.organism.document.AddDocOrgData
 import ua.gov.diia.ui_base.components.organism.document.DocOrg
 import ua.gov.diia.ui_base.components.organism.document.DocOrgData
+import java.util.UUID
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalFoundationApi::class)
@@ -113,6 +114,7 @@ fun BaseCarouselOrg(
                 count = pageCount,
                 state = state,
                 itemSpacing = (16).dp,
+                key = { "${UUID.randomUUID()}" },
                 contentPadding = PaddingValues(
                     start = 32.dp, end = 32.dp
                 )
@@ -147,7 +149,7 @@ fun BaseCarouselOrg(
 
                             }
                         ) {
-                            if(state.currentPage == page){
+                            if (state.currentPage == page) {
                                 onUIAction(
                                     UIAction(
                                         data = it.data,

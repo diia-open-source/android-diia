@@ -103,7 +103,7 @@ fun DocPhotoOrg(
                     .aspectRatio(0.7F)
                     .background(color = WhiteAlpha40, shape = RoundedCornerShape(24.dp))
             ) {
-                val (v1, v2, v3, v4, v5, v6, v7, v8) = createRefs()
+                val (v1, v2, v3, v4, v5, v6, v7, v8, v9) = createRefs()
                 data.docHeading?.let {
                     DocHeadingOrg(
                         modifier = Modifier
@@ -203,22 +203,24 @@ fun DocPhotoOrg(
                         onUIAction = onUIAction
                     )
                 }
-            }
-        }
+                if (data.docButtonHeading?.isStack == true) {
+                    Column(
+                        modifier = Modifier
+                            .constrainAs(v9) {
+                                top.linkTo(parent.bottom)
+                            }
+                            .height(10.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 26.dp)
+                            .background(
+                                color = WhiteAlpha25,
+                                shape = RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp)
+                            ),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-        if (data.docButtonHeading?.isStack == true) {
-            Column(
-                modifier = modifier
-                    .height(10.dp)
-                    .fillMaxWidth()
-                    .padding(horizontal = 26.dp)
-                    .background(
-                        color = WhiteAlpha25,
-                        shape = RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp)
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
+                    }
+                }
             }
         }
     }
