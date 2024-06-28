@@ -1,0 +1,20 @@
+<resources>
+    <string name="version_s">Version %s</string>
+    <string name="version_diia">Diia Version: %s</string>
+
+    <!--    settings     -->
+    <string name="settings_support_label">Customer support</string>
+    <string name="settings_diia_id">Diia.Sign</string>
+    <string name="settings_notifications">Messages</string>
+    <string name="settings_signing_history">Signing history</string>
+    <string name="settings_faq_label">Frequent asked 1uetsions</string>
+    <string name="settings_copy_device_id_label">Copy device number</string>
+    <string name="settings_about_info">About Diia</string>
+    <string name="settings_share_with_friends">Share with friends</string>
+    <string name="settings_set_estimate_label">Update the app</string>
+    <string name="menu_settings">Settings</string>
+    <string name="app_session_header">Connected Devices</string>
+    <string name="share_text_title">Download the Diia application</string>
+    <string name="share_text_description">The electronic driver\'s license and car registration certificate are already available in your smartphone.</string>
+    <string name="share_text_link">https://go.diia.app/</string>
+</resources>

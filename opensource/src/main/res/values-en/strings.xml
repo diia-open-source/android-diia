@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">DiiaOS</string>
+    <string name="notification_channel_diia_default">Other notifications</string>
+
+    <string name="download_certificate_pdf">Download certificate (PDF)</string>
+    <string name="translate_to_ua">Translate to Ukrainian</string>
+    <string name="translate_to_eng">Translate to English</string>
+    <string name="rate_document">Rate document</string>
+
+    <string name="check_docs_no_internet_message">No internet. Please check your internet connection</string>
+    <string name="check_docs_no_registry_message">No access to registry</string>
+    <string name="qr_code_not_registered">QR-code not registered</string>
+    <string name="unknown_qr_title">Unknown QR-code</string>
+    <string name="check_doc_error_cert">"Certificate validation error"</string>
+    <string name="check_doc_expired_error_cert">The certificate is invalid. It has expired.</string>
+    <string name="check_doc_error_timeout">The QR-code validation session has expired or is invalid</string>
+    <string name="check_doc_http_timeout">Document could not be uploaded for verification</string>
+    <string name="qr_check_subtitle_processing">Processing</string>
+    <string name="qr_check_subtitle_checking_docs">Document verification</string>
+    <string name="try_again_doc">Try uploading the document again</string>
+    <string name="documents_verification_title">Documents verification</string>
+    <string name="check_docs_t1">Documents verification</string>
+    <string name="check_docs_true">Document found</string>
+    <string name="check_docs_false">Document couln\'t be found 😔</string>
+    <string name="check_docs_cert_false">Validation error</string>
+    <string name="check_doc_error_not_found">Document\n with this \nQR-Code\ndoesn\'t exist</string>
+
+    <string name="dl_no_photo_title">No photo in the registry 😔</string>
+    <string name="dl_no_photo_title_eng">There is no photo in the registry 😔</string>
+    <string name="dl_to_e_queue">Sign up for an electronic queue to add or update a photo.</string>
+    <string name="dl_to_e_queue_eng">Register in the electronic queue to add or update your photo.</string>
+    <string name="dl_to_e_queue_button">To the electronic queue</string>
+    <string name="dl_to_e_queue_button_eng">Electronic queue </string>
+    <string name="dl_outdated_title">Old-style document 😔</string>
+    <string name="dl_outdated_title_eng">You have an old document 😔</string>
+    <string name="dl_outdated_description">Sign up for an email queue to have it updated and added to the app.</string>
+    <string name="dl_outdated_description_eng">Register in the electronic queue to update document. It will appear in the application afterward.</string>
+    <string name="dl_to_e_office_title">Find an address</string>
+    <string name="dl_to_e_office_title_eng">Open Driver\'s Account</string>
+    <string name="dl_need_verify_title">Verification required for your document 😔</string>
+    <string name="dl_need_verify_title_eng">Verification required for your document 😔</string>
+    <string name="dl_need_verify_queue">Access your Driver‘s Account and complete the online form.</string>
+    <string name="dl_need_verify_queue_eng">Access your Driver‘s Account and complete the online form.</string>
+    <string name="dl_expiration_title">The certificate has expired 😔</string>
+    <string name="dl_expiration_description">You can get a new driver\'s license and delete this document.</string>
+
+    <string name="settings_support_label">Customer support</string>
+    <string name="settings_options_label">Settings</string>
+    <string name="settings_change_code_label">Change your login code</string>
+    <string name="settings_doc_stack_label">Reorder documents</string>
+    <string name="settings_allow_touch_label">Biometric login</string>
+    <string name="settings_allow_notifications">Customize notifications</string>
+    <string name="settings_share_with_friends">Tell your friends</string>
+    <string name="settings_dialog_title_support">Diia wants to open «%s»</string>
+</resources>

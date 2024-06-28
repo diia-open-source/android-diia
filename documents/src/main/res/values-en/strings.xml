@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tax payer card statuses -->
+    <string name="taxpayer_card_status_ok">Has been audited by the State Tax Service %1$s</string>
+    <string name="taxpayer_card_status_in_progress">Inspected by the State Tax Service</string>
+    <string name="taxpayer_card_status_failed">Has not been audited by the State Tax Service</string>
+
+    <string name="url_driver_e_queue">https://eq.hsc.gov.ua/</string>
+    <string name="url_driver_e_find_address">https://hsc.gov.ua/kontakti/kontakti-gsts-pidrozdiliv/</string>
+
+    <!--    Stack     -->
+    <string name="stack_order_title">Change the order</string>
+    <string name="stack_order_text">Drag and drop documents to\nchange the order in which they appear </string>
+    <string name="stack_all_same_doc_type">All documents of this type</string>
+    <string name="stack_change_doc_type_ordering">Reorder documents</string>
+
+    <string name="change_doc_ordering">Reorder documents</string>
+    <string name="remove_doc_action">Delete document</string>
+    <string name="full_info">Full information</string>
+    <string name="doc_id_copied"><b>Number copied</b></string>
+
+    <string name="pnp">Certificate to return</string>
+    <string name="download_certificate_pdf">Download certificate (PDF)</string>
+    <string name="vl_insurance">The insurance policy of MTPL</string>
+    <string name="faq">Frequent asked questions</string>
+    <string name="dl_replace_feature_title">Replacement of the certificate</string>
+    <string name="translate_to_ua">Translate to Ukrainian</string>
+    <string name="translate_to_eng">Translate to English</string>
+    <string name="military_bonds_menu_go_to_mb">Go to bonds</string>
+    <string name="military_bonds_remove_from_docs">Remove from gallery</string>
+    <string name="residence_cert">Certificate of residence</string>
+    <string name="idp_edit_person_address">Change the address of actual residence</string>
+    <string name="idp_action_button_cancel">Cancel IDP status</string>
+    <string name="idp_share_car">Share a vehicle</string>
+    <string name="idp_share_car_owner_cancel">Cancel sharing</string>
+    <string name="idp_share_car_proper_cancel">Refuse car share</string>
+    <string name="rate_document">Rate this document</string>
+    <string name="settings_share_with_friends">Share with friends</string>
+    <string name="vehicle_re_registration">Sell vehicle</string>
+    <string name="dp_recovery_menu_go_to_founding_request">Reserve funds</string>
+    <string name="update_document">Update document</string>
+
+</resources>

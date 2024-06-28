@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SSL Errors -->
+    <string name="error_ssl_title">SSL certificate error</string>
+    <string name="error_ssl_cant_check">The source certificate cannot be verified.</string>
+    <string name="error_ssl_expire">The source certificate has expired.</string>
+    <string name="error_ssl_valid_error">Source certificate validation error.</string>
+    <string name="error_ssl_not_yet_error">The source certificate is currently not valid.</string>
+    <string name="error_ssl_continue_anyway">%s\nDo you want to continue anyway?</string>
+
+    <string name="next">Продовжити</string>
+</resources>

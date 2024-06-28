@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="touch_id_for_diia">Login using biometric data</string>
+    <string name="use_touch_id">Put your finger to sign in</string>
+    <string name="use_face_id">Scan your face to sign in</string>
+    <!-- Authorization. Biometric screen -->
+    <string name="biometric_screen_title_text">Allow login with biometrics</string>
+    <string name="biometric_screen_description_text">Allow Diia to use your fingerprint scanner and/or face recognition to sign in to the app.</string>
+    <string name="biometric_screen_button_text">Allow</string>
+    <string name="biometric_screen_alt_button_text">Allow later</string>
+</resources>

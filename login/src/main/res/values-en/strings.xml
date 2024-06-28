@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_screen_title_text">Login</string>
+    <string name="login_screen_title_subtext">Diia version: %s</string>
+
+    <string name="login_screen_description_text">Log in with the BankID of the National Bank of Ukraine using your Internet banking or with the NFC chip in your biometric documents.\n{details}</string>
+    <string name="login_screen_description_param_type">details</string>
+    <string name="login_screen_description_param_text">Notice of personal data processing</string>
+    <string name="login_screen_description_param_link">https://diia.gov.ua/app_policy</string>
+
+    <string name="login_screen_checkbox_text">I have read the contents of the Notice of Personal Data Processing.</string>
+    <string name="login_screen_bank_list_title">Log in via:</string>
+    <string name="login_screen_bank_list_item2">NFC</string>
+    <string name="login_screen_bank_list_item3">Privat24</string>
+    <string name="login_screen_bank_list_item4">monobank</string>
+</resources>
