@@ -3,10 +3,11 @@
 buildscript {
     repositories {
         google()
-        jcenter()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
-        maven { url 'https://developer.huawei.com/repo/' }
+        maven {
+            url 'https://developer.huawei.com/repo/'
+            content { includeGroupByRegex "com.huawei.*" }
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1'
@@ -30,12 +31,15 @@ plugins {
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
         maven {
             url 'https://jitpack.io'
+            content { includeGroupByRegex "com.github.AbedElazizShe:*" }
         }
-        maven { url 'https://developer.huawei.com/repo/' }
+        maven {
+            url 'https://developer.huawei.com/repo/'
+            content { includeGroupByRegex "com.huawei.*" }
+        }
     }
 }
 
