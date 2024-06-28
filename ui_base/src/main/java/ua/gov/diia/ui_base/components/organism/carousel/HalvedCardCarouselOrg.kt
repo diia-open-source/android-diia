@@ -10,8 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
@@ -24,7 +23,6 @@ import ua.gov.diia.ui_base.components.molecule.card.IconCardMlcData
 fun HalvedCardCarouselOrg(
     modifier: Modifier = Modifier,
     data: HalvedCardCarouselOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     BaseSimpleCarouselInternal(
@@ -38,8 +36,7 @@ fun HalvedCardCarouselOrg(
                     action = it.action
                 )
             )
-        },
-        diiaResourceIconProvider = diiaResourceIconProvider
+        }
     )
 }
 
@@ -67,10 +64,7 @@ fun HalvedCardCarouselOrgPreview() {
         val data = HalvedCardCarouselOrgData(
             items = cards
         )
-        HalvedCardCarouselOrg(
-            data = data,
-            diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        ) {
+        HalvedCardCarouselOrg(data = data) {
         }
     }
 }
@@ -91,23 +85,14 @@ fun HalvedCardCarouselOrgPreview_WithGoToAllCards() {
         )
         val goToAllCard = IconCardMlcData(
             id = "123",
-            icon = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
+            icon = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
             label = UiText.DynamicString("Label")
         )
-        val cards = listOf(
-            contentCard,
-            contentCard,
-            contentCard,
-            contentCard,
-            goToAllCard
-        )
+        val cards = listOf(contentCard, contentCard, contentCard, contentCard, goToAllCard)
         val data = HalvedCardCarouselOrgData(
             items = cards
         )
-        HalvedCardCarouselOrg(
-            data = data,
-            diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        ) {
+        HalvedCardCarouselOrg(data = data) {
         }
     }
 }

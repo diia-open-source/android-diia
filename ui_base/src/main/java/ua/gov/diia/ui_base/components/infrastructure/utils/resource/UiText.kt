@@ -17,6 +17,13 @@ sealed class UiText {
             }
         }
     }
+
+    fun hasValue(): Boolean {
+        return when(this){
+            is DynamicString -> this.value.isEmpty()
+            is StringResource -> true
+        }
+    }
 }
 
 fun String?.toDynamicStringOrNull(): UiText.DynamicString? {

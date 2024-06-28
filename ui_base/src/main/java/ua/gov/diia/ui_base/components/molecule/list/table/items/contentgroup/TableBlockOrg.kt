@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -32,35 +31,21 @@ import ua.gov.diia.ui_base.components.theme.White
 fun TableBlockOrg(
     modifier: Modifier = Modifier,
     data: TableBlockOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit = {}
 ) {
-    Column(
-        modifier
-            .fillMaxWidth()
-            .background(color = White, shape = RoundedCornerShape(16.dp))
-    ) {
+    Column(modifier
+        .fillMaxWidth()
+        .background(color = White, shape = RoundedCornerShape(16.dp))) {
         data.header?.let {
             TableHeadingMolecule(
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp
-                ),
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 data = data.header,
                 onUIAction = onUIAction
             )
         }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 13.dp,
-                    bottom = 16.dp
-                )
-        ) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 13.dp, bottom = 16.dp)) {
             data.items?.forEachIndexed { index, item ->
                 when (item) {
                     is TableItemHorizontalMlcData -> {
@@ -81,7 +66,6 @@ fun TableBlockOrg(
                         TableItemPrimaryMlc(
                             modifier = Modifier.padding(vertical = 3.dp),
                             data = item,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
                             onUIAction = onUIAction
                         )
                     }
@@ -107,40 +91,14 @@ data class TableBlockOrgData(
 @Preview
 fun TableBlockMoleculeV2Preview_raw() {
     val state = TableBlockOrgData(
-        header = TableHeadingMoleculeData(
-            id = "123",
-            title = "Heading".let { UiText.DynamicString(it) }),
+        header = TableHeadingMoleculeData(id = "123", title = "Heading".let { UiText.DynamicString(it) }),
         items = listOf(
-            TableItemHorizontalMlcData(
-                id = "1",
-                title = UiText.DynamicString("Item title"),
-                value = "Value"
-            ),
-            TableItemHorizontalMlcData(
-                id = "2",
-                title = UiText.DynamicString("Item title 2"),
-                value = "Value"
-            ),
-            TableItemHorizontalMlcData(
-                id = "3",
-                title = UiText.DynamicString("Item title 3"),
-                value = "Value"
-            ),
-            TableItemHorizontalMlcData(
-                id = "4",
-                title = UiText.DynamicString("Item title 4"),
-                value = "Value"
-            ),
-            TableItemHorizontalMlcData(
-                id = "5",
-                title = UiText.DynamicString("Item title 5"),
-                value = "Value"
-            ),
+            TableItemHorizontalMlcData(id = "1", title = UiText.DynamicString("Item title"), value = "Value"),
+            TableItemHorizontalMlcData(id = "2", title = UiText.DynamicString("Item title 2"), value = "Value"),
+            TableItemHorizontalMlcData(id = "3", title = UiText.DynamicString("Item title 3"), value = "Value"),
+            TableItemHorizontalMlcData(id = "4", title = UiText.DynamicString("Item title 4"), value = "Value"),
+            TableItemHorizontalMlcData(id = "5", title = UiText.DynamicString("Item title 5"), value = "Value"),
         )
     )
-    TableBlockOrg(
-        modifier = Modifier,
-        data = state,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    )
+    TableBlockOrg(modifier = Modifier, data = state)
 }

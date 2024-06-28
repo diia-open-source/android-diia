@@ -27,6 +27,7 @@ object Preferences {
         PreferenceKey(name, Scopes.DOUBLE_CHECK, Boolean::class.java)
 
     object V1 : DoubleCheck("v1")
+    object E1 : DoubleCheck("e1")
 
 
     open class UserDataKey(name: String, dataType: Class<*>) :
@@ -56,6 +57,7 @@ object Preferences {
 
     open class UserPreferenceKey(name: String, dataType: Class<*>): PreferenceKey(name,
         Scopes.USER_PREFERENCES, dataType)
+    object PublicServicesListSortOrder : UserPreferenceKey("ps_list_sort_order", String::class.java)
 
     open class InvincibilityKey(name: String, dataType: Class<*>): PreferenceKey(name,
         Scopes.INVINCIBILITY_PREFERENCES, dataType)

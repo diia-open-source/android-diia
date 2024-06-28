@@ -17,7 +17,12 @@ interface NotificationHelper {
      * Provide navigation direction for further navigation
      * @return NavDirections of document or null if not require further navigation
      * */
-    suspend fun navigateToDocument(item: PullNotificationItemSelection): NavDirections?
+    suspend fun navigateToDocument(
+        item: PullNotificationItemSelection,
+        shouldPop: Boolean = true
+    ): NavDirections?
+
+    suspend fun getHomeDestinationId(): Int
 
     /**
      * @return String that represent last update date of document in ISO8601

@@ -20,6 +20,10 @@ annotation class GlobalActionDocLoadingIndicator
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class GlobalActionDocumentBackground
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class GlobalActionConfirmDocumentRemoval
 
 @Qualifier
@@ -38,6 +42,7 @@ annotation class GlobalActionLazy
 @Retention(AnnotationRetention.BINARY)
 annotation class GlobalActionNetworkState
 
+//TODO potential move to notficiation package
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class GlobalActionNotificationRead
@@ -45,3 +50,7 @@ annotation class GlobalActionNotificationRead
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class GlobalActionNotificationReceived
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class GlobalActionNotificationsPop

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="driver_license">Посвідчення\nводія</string>
+    <string name="dl_replace_feature_title">Заміна посвідчення</string>
 </resources>

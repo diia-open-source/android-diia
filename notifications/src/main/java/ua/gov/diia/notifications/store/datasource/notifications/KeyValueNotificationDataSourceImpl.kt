@@ -28,8 +28,8 @@ class KeyValueNotificationDataSourceImpl constructor(
         return store.getInt(NotificationsPreferences.NotificationsUnreadCount, 0)
     }
 
-    override fun updateUnreadCount(unreadCount: Int) {
-        store.set(NotificationsPreferences.NotificationsUnreadCount, unreadCount)
+    override fun updateUnreadCount(newUnreadCount: Int) {
+        store.set(NotificationsPreferences.NotificationsUnreadCount, newUnreadCount)
     }
 
 

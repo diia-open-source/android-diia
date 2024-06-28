@@ -30,6 +30,7 @@ import ua.gov.diia.core.di.actions.GlobalActionLogout
 import ua.gov.diia.core.di.actions.GlobalActionNetworkState
 import ua.gov.diia.core.di.actions.GlobalActionNotificationRead
 import ua.gov.diia.core.di.actions.GlobalActionNotificationReceived
+import ua.gov.diia.core.di.actions.GlobalActionNotificationsPop
 import ua.gov.diia.core.di.actions.GlobalActionSelectedMenuItem
 import ua.gov.diia.core.di.data_source.http.UnauthorizedClient
 import ua.gov.diia.core.models.ActionDataLazy
@@ -204,5 +205,10 @@ interface AppModule {
         ): Set<SettingsActionExecutor> {
             return setOf(pushTokenUpdateAction)
         }
+
+        @Provides
+        @GlobalActionNotificationsPop
+        @Singleton
+        fun provideActionNotificationsPop() = MutableLiveData<UiEvent>()
     }
 }

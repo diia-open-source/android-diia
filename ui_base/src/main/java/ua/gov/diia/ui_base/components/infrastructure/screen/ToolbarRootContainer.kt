@@ -8,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.addAllIfNotNull
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -28,7 +27,6 @@ import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 fun ToolbarRootContainer(
     modifier: Modifier = Modifier,
     toolbarViews: SnapshotStateList<UIElementData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -61,8 +59,7 @@ fun ToolbarRootContainer(
                 is TopGroupOrgData -> {
                     TopGroupOrg(
                         data = item,
-                        onUIAction = onUIAction,
-                        diiaResourceIconProvider = diiaResourceIconProvider,
+                        onUIAction = onUIAction
                     )
                 }
             }
@@ -81,10 +78,7 @@ fun ToolbarRootContainerPreview() {
             isContextMenuExist = true
         )
     )
-    ToolbarRootContainer(
-        toolbarViews = toolbarData,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    ToolbarRootContainer(toolbarViews = toolbarData) {
 
     }
 }
@@ -117,10 +111,7 @@ fun ToolbarRootContainerPreview_2() {
         )
 
     )
-    ToolbarRootContainer(
-        toolbarViews = toolbarData,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    ToolbarRootContainer(toolbarViews = toolbarData) {
 
     }
 }

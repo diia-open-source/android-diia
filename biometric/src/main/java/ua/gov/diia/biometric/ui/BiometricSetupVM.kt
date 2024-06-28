@@ -49,17 +49,22 @@ class BiometricSetupVM @Inject constructor(
             TopGroupOrgData(
                 titleGroupMlcData = TitleGroupMlcData(
                     heroText = UiText.StringResource(R.string.biometric_screen_title_text),
+                    componentId = UiText.StringResource(R.string.biometric_screen_title_test_tag)
                 )
             )
         )
         _uiData.add(TextLabelMlcData(text = UiText.StringResource(R.string.biometric_screen_description_text)))
-        _uiData.add(BtnPrimaryDefaultAtmData(title = UiText.StringResource(R.string.biometric_screen_button_text)))
+        _uiData.add(BtnPrimaryDefaultAtmData(
+            title = UiText.StringResource(R.string.biometric_screen_button_text),
+            componentId = UiText.StringResource(R.string.biometric_screen_btn_allow_test_tag)
+        ))
         _uiData.add(
             BtnPlainAtmData(
                 actionKey = BUTTON_ALTERNATIVE,
                 id = "",
                 title = UiText.StringResource(R.string.biometric_screen_alt_button_text),
-                interactionState = UIState.Interaction.Enabled
+                interactionState = UIState.Interaction.Enabled,
+                componentId = UiText.StringResource(R.string.biometric_screen_btn_later__test_tag)
             )
         )
     }

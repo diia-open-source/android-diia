@@ -52,6 +52,11 @@ class DocumentBarcodeFactory(
         return DocumentBarcode(eanBmp.toDocumentBarcodeImage())
     }
 
+    suspend fun awaitBitmapQrCode(data: String): DocumentBarcodeImageData {
+        buildBitmapQrCode(data)
+        return (getQrCodeResult()).also { clearResults() }.data
+    }
+
     fun parseBase64Barcode(data: String): DocumentBarcode {
         val imageBytes = Base64.decode(data, Base64.DEFAULT)
         val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
@@ -94,5 +99,11 @@ class DocumentBarcodeFactory(
             }.parallel().toArray(),
             size, size, Bitmap.Config.ARGB_8888
         )
+    }
+
+    suspend fun fetchBitmap(code: String, function: (Bitmap) -> Unit) {
+        buildBitmapQrCode(code)
+        function(getQrCodeResult().data.toAndroidBitmap())
+        clearResults()
     }
 }

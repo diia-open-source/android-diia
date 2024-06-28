@@ -16,13 +16,13 @@ import ua.gov.diia.bankid.model.AuthBank
 import ua.gov.diia.bankid.model.BankAuthRequest
 import ua.gov.diia.bankid.model.BankSelectionRequest
 import ua.gov.diia.bankid.network.ApiBankId
+import ua.gov.diia.core.models.common_compose.atm.SpacerAtmType
 import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.space.SpacerAtmData
-import ua.gov.diia.ui_base.components.atom.space.SpacerAtmType
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -96,14 +96,16 @@ class BankSelectionVM @Inject constructor(
             val data = PlainListWithSearchOrganismData(
                 searchData = SearchInputV2Data(
                     placeholder = UiText.StringResource(R.string.bank_selection_search_text),
-                    contentDescription = UiText.StringResource(R.string.accessibility_bank_selection_search)
+                    contentDescription = UiText.StringResource(R.string.accessibility_bank_selection_search),
+                    componentId = UiText.StringResource(R.string.bank_selection_search_bank_test_tag)
                 ),
                 fullList = list,
                 displayedList = list,
                 emptyListData = StubMessageMlcData(
                     icon = UiText.StringResource(R.string.bank_selection_empty_icon),
                     title = UiText.StringResource(R.string.bank_selection_empty_title),
-                    description = UiText.StringResource(R.string.bank_selection_empty_description)
+                    description = UiText.StringResource(R.string.bank_selection_empty_description),
+                    componentId = UiText.StringResource(R.string.bank_selection_stub_message_bank_test_tag)
                 )
             )
             displayStaticPagePart()
@@ -118,19 +120,23 @@ class BankSelectionVM @Inject constructor(
                 titleGroupMlcData = TitleGroupMlcData(
                     heroText = UiText.StringResource(R.string.bank_selection_title_text),
                     leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                        code = CommonDiiaResourceIcon.BACK.code,
+                        code = DiiaResourceIcon.BACK.code,
                         accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
                         action = DataActionWrapper(
                             type = UIActionKeysCompose.TOOLBAR_NAVIGATION_BACK,
                             subtype = null,
                             resource = null
                         )
-                    )
+                    ),
+                    componentId = UiText.StringResource(R.string.bank_selection_title_test_tag)
                 )
             )
         )
         _bodyData.add(
-            TextLabelMlcData(text = UiText.StringResource(R.string.bank_selection_description_text))
+            TextLabelMlcData(
+                text = UiText.StringResource(R.string.bank_selection_description_text),
+                componentId = UiText.StringResource(R.string.bank_selection_body_bank_test_tag)
+            )
         )
     }
 
@@ -189,7 +195,10 @@ class BankSelectionVM @Inject constructor(
     private fun List<AuthBank>.mapToPlainItemListMolecule(): ListItemGroupOrgData {
         val result = mutableStateListOf<ListItemMlcData>()
         forEach { result.add(it.toAtomData()) }
-        return ListItemGroupOrgData(itemsList = result)
+        return ListItemGroupOrgData(
+            itemsList = result,
+            componentId = UiText.StringResource(R.string.bank_selection_bank_list_test_tag)
+        )
     }
 
     private fun AuthBank.toAtomData(): ListItemMlcData {
@@ -197,12 +206,13 @@ class BankSelectionVM @Inject constructor(
         return ListItemMlcData(
             id = id,
             label = UiText.DynamicString(bankName),
-            iconRight = UiIcon.DrawableResource(CommonDiiaResourceIcon.OUT_LINK.code),
+            iconRight = UiIcon.DrawableResource(DiiaResourceIcon.OUT_LINK.code),
             iconRightContentDescription = UiText.StringResource(
                 R.string.accessibility_bank_selection_item_name,
                 bankName
             ),
             interactionState = UIState.Interaction.Enabled,
+            componentId = UiText.DynamicString(id ?: bankName)
         )
     }
 

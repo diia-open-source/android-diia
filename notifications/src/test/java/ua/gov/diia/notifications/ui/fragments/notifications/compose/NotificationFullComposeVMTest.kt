@@ -32,7 +32,7 @@ import ua.gov.diia.core.models.common_compose.mlc.header.TitleGroupMlc
 import ua.gov.diia.core.models.common_compose.mlc.list.ListItemMlc
 import ua.gov.diia.core.models.common_compose.mlc.text.TextLabelContainerMlc
 import ua.gov.diia.core.models.common_compose.org.header.ChipTabsOrg
-import ua.gov.diia.core.models.common_compose.org.header.NavigationPanelMlc
+import ua.gov.diia.core.models.common_compose.mlc.header.NavigationPanelMlc
 import ua.gov.diia.core.models.common_compose.org.header.TopGroupOrg
 import ua.gov.diia.core.models.common_compose.org.list.ListItemGroupOrg
 import ua.gov.diia.core.models.notification.pull.message.ArticlePicAtm

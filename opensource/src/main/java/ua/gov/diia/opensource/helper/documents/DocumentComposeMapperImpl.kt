@@ -3,11 +3,9 @@ package ua.gov.diia.opensource.helper.documents
 import androidx.compose.runtime.toMutableStateList
 import ua.gov.diia.core.models.common_compose.atm.chip.ChipStatusAtm
 import ua.gov.diia.core.network.Http
-import ua.gov.diia.doc_driver_license.DriverLicenseV2
 import ua.gov.diia.documents.barcode.DocumentBarcodeErrorLoadResult
 import ua.gov.diia.documents.barcode.DocumentBarcodeResult
 import ua.gov.diia.documents.barcode.DocumentBarcodeSuccessfulLoadResult
-import ua.gov.diia.documents.models.DocError
 import ua.gov.diia.documents.models.DocumentCard
 import ua.gov.diia.documents.models.LocalizationType
 import ua.gov.diia.documents.models.docgroups.v2.DocButtonHeadingOrg
@@ -59,6 +57,13 @@ import ua.gov.diia.ui_base.components.organism.pager.DocCarouselOrgData
 import ua.gov.diia.core.models.common_compose.atm.text.TickerAtm
 import ua.gov.diia.core.models.common_compose.table.tableBlockOrg.TableBlockOrg
 import ua.gov.diia.core.models.common_compose.table.tableBlockTwoColumnsOrg.TableBlockTwoColumnsOrg
+import ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
+import ua.gov.diia.ui_base.components.atom.icon.IconAtmData
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
+import ua.gov.diia.ui_base.components.molecule.doc.toUiModel
+import ua.gov.diia.ui_base.util.toDataActionWrapper
 import ua.gov.diia.ui_base.util.toUiModel
 import javax.inject.Inject
 
@@ -218,17 +223,23 @@ class DocumentComposeMapperImpl @Inject constructor() : DocumentComposeMapper {
         return ToggleButtonGroupData(
             qr = BtnToggleMlcData(
                 id = ToggleId.qr.value,
-                label = if (localizationType == LocalizationType.ua) "QR-код" else "QR-code",
-                iconSelected = UiText.StringResource(R.drawable.ic_doc_qr_selected),
-                iconUnselected = UiText.StringResource(R.drawable.ic_doc_qr_unselected),
-                selectionState = UIState.Selection.Selected
+                label = (if (localizationType == LocalizationType.ua) "QR-код" else "QR-code").toDynamicString(),
+                iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.QR_WHITE.code),
+                iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.QR.code),
+                selectionState = UIState.Selection.Selected,
+                action = DataActionWrapper(
+                    type = ToggleId.qr.value
+                )
             ),
             ean13 = BtnToggleMlcData(
                 id = ToggleId.ean.value,
-                label = if (localizationType == LocalizationType.ua) "Штрихкод" else "Barcode",
-                iconSelected = UiText.StringResource(R.drawable.ic_doc_ean13_selected),
-                iconUnselected = UiText.StringResource(R.drawable.ic_doc_ean13_unselected),
-                selectionState = UIState.Selection.Unselected
+                label = (if (localizationType == LocalizationType.ua) "Штрихкод" else "Barcode").toDynamicString(),
+                iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE_WHITE.code),
+                iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE.code),
+                selectionState = UIState.Selection.Unselected,
+                action = DataActionWrapper(
+                    type = ToggleId.ean.value
+                )
             )
         )
     }
@@ -323,8 +334,9 @@ class DocumentComposeMapperImpl @Inject constructor() : DocumentComposeMapper {
     ): DocButtonHeadingOrgData? {
         return this?.let {
             DocButtonHeadingOrgData(
-                componentId = this.headingWithSubtitlesMlc?.componentId.orEmpty(),
+                componentId = this.componentId.orEmpty(),
                 heading = if (this.headingWithSubtitlesMlc != null) HeadingWithSubtitlesMlcData(
+                    componentId = this.headingWithSubtitlesMlc?.componentId.orEmpty(),
                     value = this.headingWithSubtitlesMlc?.value,
                     subtitles = if (!this.headingWithSubtitlesMlc?.subtitles.isNullOrEmpty()) this.headingWithSubtitlesMlc?.subtitles else null
                 ) else null,
@@ -332,36 +344,20 @@ class DocumentComposeMapperImpl @Inject constructor() : DocumentComposeMapper {
                     value = this.headingWithSubtitleWhiteMlc?.value,
                     subtitles = if (!this.headingWithSubtitleWhiteMlc?.subtitles.isNullOrEmpty()) this.headingWithSubtitleWhiteMlc?.subtitles else null
                 ) else null,
-                docNumberCopy = if (this.docNumberCopyMlc != null) DocNumberCopyMlcData(
-                    value = this.docNumberCopyMlc?.value,
-                    icon = if (this.docNumberCopyMlc?.icon?.code != null) {
-                        this.docNumberCopyMlc?.icon?.code?.let {
-                            UiText.StringResource(
-                                getIconByCode(
-                                    it
-                                )
+                docNumberCopy = this.docNumberCopyMlc?.toUiModel(),
+                docNumberCopyWhite = this.docNumberCopyWhiteMlc?.let {
+                    DocNumberCopyWhiteMlcData(
+                        value = this.docNumberCopyWhiteMlc?.value.toDynamicString(),
+                        icon = this.docNumberCopyWhiteMlc?.icon?.let {
+                            IconAtmData(
+                                code = it.code,
+                                action = it.action?.toDataActionWrapper()
                             )
-                        }
-                    } else {
-                        null
-                    }
-                ) else null,
-                docNumberCopyWhite = if (this.docNumberCopyWhiteMlc != null) DocNumberCopyWhiteMlcData(
-                    value = this.docNumberCopyWhiteMlc?.value,
-                    icon = if (this.docNumberCopyWhiteMlc?.icon?.code != null) {
-                        this.docNumberCopyWhiteMlc?.icon?.code?.let {
-                            UiText.StringResource(
-                                getIconByCode(
-                                    it
-                                )
-                            )
-                        }
-                    } else {
-                        null
-                    }
-                ) else null,
+                        })
+                },
                 iconAtmData = if (this.iconAtm != null) iconAtm?.toUiModel() else null,
-                stackMlcData = if (this.docNumberCopyWhiteMlc != null || this.headingWithSubtitleWhiteMlc != null)
+                stackMlcData =
+                if (this.docNumberCopyWhiteMlc != null || this.headingWithSubtitleWhiteMlc != null)
                     StackMlcData(
                         amount = stackSize,
                         smallIconAtmData = SmallIconAtmData(code = "stackWhite"),
@@ -389,34 +385,17 @@ class DocumentComposeMapperImpl @Inject constructor() : DocumentComposeMapper {
                     value = this.headingWithSubtitleWhiteMlc?.value,
                     subtitles = if (!this.headingWithSubtitleWhiteMlc?.subtitles.isNullOrEmpty()) this.headingWithSubtitleWhiteMlc?.subtitles else null
                 ) else null,
-                docNumber = if (this.docNumberCopyMlc != null) DocNumberCopyMlcData(
-                    value = this.docNumberCopyMlc?.value,
-                    icon = if (this.docNumberCopyMlc?.icon?.code != null) {
-                        this.docNumberCopyMlc?.icon?.code?.let {
-                            UiText.StringResource(
-                                getIconByCode(
-                                    it
-                                )
+                docNumber = this.docNumberCopyMlc?.toUiModel(),
+                docNumberCopyWhite = this.docNumberCopyWhiteMlc?.let {
+                    DocNumberCopyWhiteMlcData(
+                        value = this.docNumberCopyWhiteMlc?.value.toDynamicString(),
+                        icon = this.docNumberCopyWhiteMlc?.icon?.let {
+                            IconAtmData(
+                                code = it.code,
+                                action = it.action?.toDataActionWrapper()
                             )
-                        }
-                    } else {
-                        null
-                    }
-                ) else null,
-                docNumberCopyWhite = if (this.docNumberCopyWhiteMlc != null) DocNumberCopyWhiteMlcData(
-                    value = this.docNumberCopyWhiteMlc?.value,
-                    icon = if (this.docNumberCopyWhiteMlc?.icon?.code != null) {
-                        this.docNumberCopyWhiteMlc?.icon?.code?.let {
-                            UiText.StringResource(
-                                getIconByCode(
-                                    it
-                                )
-                            )
-                        }
-                    } else {
-                        null
-                    }
-                ) else null
+                        })
+                }
             )
         }
     }
@@ -665,11 +644,6 @@ class DocumentComposeMapperImpl @Inject constructor() : DocumentComposeMapper {
                         ),
                         isTickerClickable = false
 
-                    )
-
-                    is DocError -> toComposeAddDocOrg(
-                        docType = doc.getItemType(),
-                        indexOf(documentCard)
                     )
 
                     else -> null

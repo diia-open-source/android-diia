@@ -134,7 +134,7 @@ fun TemplateDialogScreen(
                 ) {
                     Icon(
                         modifier = modifier.size(16.dp),
-                        painter = painterResource(id = R.drawable.ic_close),
+                        painter = painterResource(id = R.drawable.ic_close_modal),
                         contentDescription = "",
                         tint = Primary
                     )

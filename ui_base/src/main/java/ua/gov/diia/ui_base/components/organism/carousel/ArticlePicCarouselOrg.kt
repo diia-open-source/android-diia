@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.media.ArticlePicAtmData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -18,7 +17,6 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 fun ArticlePicCarouselOrg(
     modifier: Modifier = Modifier,
     data: ArticlePicCarouselOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     BaseSimpleCarouselInternal(
@@ -32,8 +30,7 @@ fun ArticlePicCarouselOrg(
                     action = it.action
                 )
             )
-        },
-        diiaResourceIconProvider = diiaResourceIconProvider,
+        }
     )
 }
 
@@ -53,16 +50,13 @@ fun ArticlePicCarouselOrgPreview() {
     ) {
         val card = ArticlePicAtmData(
             id = "123",
-            url = "your_url",
+            url = "https://deep-image.ai/blog/content/images/2022/09/underwater-magic-world-8tyxt9yz.jpeg",
         )
         val cards = listOf(card, card, card, card, card, card, card, card)
         val data = ArticlePicCarouselOrgData(
             items = cards
         )
-        ArticlePicCarouselOrg(
-            data = data,
-            diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        ) {
+        ArticlePicCarouselOrg(data = data) {
         }
     }
 }

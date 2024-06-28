@@ -6,37 +6,47 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtom
+import ua.gov.diia.core.models.common_compose.mlc.text.StubMessageMlc
+import ua.gov.diia.ui_base.components.atom.button.BtnStrokeAdditionalAtm
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
+import ua.gov.diia.ui_base.components.atom.button.toUIModel
+import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStringOrNull
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 
 @Composable
 fun StubMessageMlc(
     modifier: Modifier = Modifier,
     data: StubMessageMlcData,
+    useDesignTopPadding: Boolean = true,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(
         modifier = modifier
-            .padding(top = 64.dp)
-            .padding(horizontal = 24.dp),
+            .conditional(useDesignTopPadding){
+                padding(top = 64.dp)
+            }
+            .padding(horizontal = 24.dp)
+            .testTag(data.componentId?.asString() ?: ""),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = data.icon.asString(),
             style = TextStyle(
-                fontSize = 52.sp,
-                lineHeight = 62.sp
+                fontSize = 48.sp,
+                lineHeight = 48.sp
             )
         )
         Text(
@@ -54,7 +64,7 @@ fun StubMessageMlc(
             )
         }
         data.button?.let {
-            ButtonStrokeAdditionalAtom(
+            BtnStrokeAdditionalAtm(
                 modifier = Modifier.padding(top = 16.dp),
                 data = data.button,
                 onUIAction = onUIAction
@@ -67,8 +77,21 @@ data class StubMessageMlcData(
     val icon: UiText,
     val title: UiText,
     val description: UiText? = null,
-    val button: ButtonStrokeAdditionalAtomData? = null
-) : UIElementData
+    val button: ButtonStrokeAdditionalAtomData? = null,
+    val componentId: UiText? = null,
+    ) : UIElementData
+
+fun StubMessageMlc?.toUIModel(): StubMessageMlcData? {
+    val entity: StubMessageMlc = this ?: return null
+    return StubMessageMlcData(
+        icon = entity.icon.toDynamicString(),
+        title = entity.title.toDynamicString(),
+        description = entity.description.toDynamicStringOrNull(),
+        componentId = entity.componentId.toDynamicStringOrNull(),
+        button = entity.btnStrokeAdditionalAtm?.toUIModel()
+    )
+}
+
 
 @Composable
 @Preview

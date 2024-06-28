@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.WorkManager
 import ua.gov.diia.analytics.DiiaAnalytics
+import ua.gov.diia.core.CoreConstants
 import ua.gov.diia.core.ExcludeFromJacocoGeneratedReport
 import ua.gov.diia.core.di.actions.GlobalActionNotificationReceived
 import ua.gov.diia.core.models.notification.push.PushNotification
@@ -25,6 +26,7 @@ import ua.gov.diia.notifications.NotificationsConst.PUSH_NOTIFICATION_RECEIVED
 import ua.gov.diia.notifications.R
 import ua.gov.diia.notifications.action.ActionConstants.NOTIFICATION_TYPE_DOCUMENTS_SHARING
 import ua.gov.diia.notifications.action.ActionConstants.NOTIFICATION_TYPE_PUSH_ACCESSIBILITY
+import ua.gov.diia.notifications.action.ActionConstants.NOTIFICATION_TYPE_PUSH_BACKGROUND
 import ua.gov.diia.notifications.helper.NotificationHelper
 import ua.gov.diia.notifications.models.notification.push.getNotificationKey
 import ua.gov.diia.notifications.store.NotificationsPreferences
@@ -71,16 +73,31 @@ class PushService(
                     } else {
                         if (notificationsDisplayAllowed()) {
                             displayNotification(it)
-                        }
+                        } else {}
                     }
                 }
 
                 NOTIFICATION_TYPE_PUSH_ACCESSIBILITY -> {
                     SilentPushWork.enqueue(workManager)
                 }
+
+                NOTIFICATION_TYPE_PUSH_BACKGROUND -> {
+                    when (it.action.subtype){
+                        NOTIFICATION_SUB_TYPE_INTEGRITY -> {
+                            LocalBroadcastManager
+                                .getInstance(context)
+                                .sendBroadcast(Intent(CoreConstants.CHECK_SAFETY_NET))
+                        }
+                        else -> {}
+                    }
+
+                }
+
                 else -> {
                     if (notificationsDisplayAllowed()) {
                         displayNotification(it)
+                    } else {
+
                     }
                 }
             }
@@ -150,6 +167,10 @@ class PushService(
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
             data = Uri.parse(deepLinkActionFactory.buildPathFromPushNotification(pushNotification))
         }
+    }
+
+    companion object{
+        const val NOTIFICATION_SUB_TYPE_INTEGRITY = "integrityCheck"
     }
 
 }

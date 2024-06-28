@@ -3,6 +3,7 @@ package ua.gov.diia.opensource.helper.documents
 import android.os.Parcelable
 import ua.gov.diia.core.util.extensions.fragment.navigate
 import ua.gov.diia.documents.models.DiiaDocument
+import ua.gov.diia.documents.ui.DocumentsContextMenuActions
 import ua.gov.diia.documents.ui.actions.DocActionsDFCompose
 import ua.gov.diia.documents.ui.actions.DocActionsDFComposeArgs
 import ua.gov.diia.documents.ui.actions.DocActionsNavigationHandler
@@ -10,30 +11,41 @@ import ua.gov.diia.documents.ui.actions.DocActionsVMCompose
 import ua.gov.diia.documents.ui.fullinfo.FullInfoFCompose
 import ua.gov.diia.documents.ui.fullinfo.FullInfoFComposeArgs
 import ua.gov.diia.opensource.NavMainXmlDirections
-import ua.gov.diia.ui_base.components.infrastructure.navigation.NavigationPath
 import javax.inject.Inject
 
 class DocActionsNavigationHandlerImpl @Inject constructor() :
     DocActionsNavigationHandler {
+
+
     override fun handleNavigation(
         fragment: DocActionsDFCompose,
-        navigation: NavigationPath,
-        args: DocActionsDFComposeArgs,
+        navigation: DocActionsVMCompose.DocActions,
+        args: DocActionsDFComposeArgs
     ) {
         with(fragment) {
             when (navigation) {
-                is DocActionsVMCompose.Navigation.NavToFullInfo -> {
-                    fullDocAction(args.doc)
-                }
+                is DocActionsVMCompose.DocActions.NavigateByDocAction -> {
+                    when (navigation.action) {
+                        DocumentsContextMenuActions.FULL_DOC.action -> {
+                            fullDocAction(args.doc)
+                        }
 
-                is DocActionsVMCompose.Navigation.ToDocStackOrder -> {
-                    dismiss()
-                    navigate(NavMainXmlDirections.actionGlobalToStackOrder())
-                }
+                        DocumentsContextMenuActions.CHANGE_DOC_ORDERING.action -> {
+                            dismiss()
+                            navigate(NavMainXmlDirections.actionGlobalToStackOrder())
+                        }
 
-                is DocActionsVMCompose.Navigation.ToDocStackOrderWithType -> {
-                    dismiss()
-                    navigate(NavMainXmlDirections.actionGlobalToStackOrder((args.doc as DiiaDocument).getItemType()))
+                        DocumentsContextMenuActions.CHANGE_DISPLAY_ORDER.action -> {
+                            dismiss()
+                            navigate(
+                                NavMainXmlDirections.actionGlobalToStackOrder(
+                                    (args.doc as DiiaDocument).getItemType()
+                                )
+                            )
+                        }
+
+                        else -> Unit
+                    }
                 }
 
                 else -> Unit

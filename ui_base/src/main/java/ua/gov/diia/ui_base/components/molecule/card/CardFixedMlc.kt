@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryAdditionalAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryAdditionalAtmData
-import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtom
+import ua.gov.diia.ui_base.components.atom.button.BtnStrokeAdditionalAtm
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
 import ua.gov.diia.ui_base.components.atom.status.ChipStatusAtm
@@ -112,12 +112,11 @@ fun CardFixedMlc(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
-
-
-            data.description?.let {
+            val descriptionText = data.description?.asString()
+            if (!descriptionText.isNullOrEmpty()) {
                 Text(
                     modifier = Modifier,
-                    text = data.description.asString(),
+                    text = descriptionText,
                     style = DiiaTextStyle.t2TextDescription,
                     color = BlackAlpha30
                 )
@@ -144,8 +143,10 @@ fun CardFixedMlc(
                 }
 
                 data.alternativeButton?.let {
-                    ButtonStrokeAdditionalAtom(
-                        modifier = Modifier.weight(1f).padding(top = 16.dp),
+                    BtnStrokeAdditionalAtm(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(top = 16.dp),
                         data = data.alternativeButton,
                         onUIAction = onUIAction
                     )

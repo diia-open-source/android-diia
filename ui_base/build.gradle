@@ -176,6 +176,8 @@ dependencies {
 
     implementation deps.better_link_movement_method
 
+    implementation deps.zxing
+
     //diia
     implementation deps.compose_reorderable
 

@@ -14,4 +14,6 @@ data class SubtitleLabelMlc(
     val label: String?,
     @Json(name = "icon")
     val icon: IconAtm?,
+    @Json(name = "componentId")
+    val componentId: String? = null,
 ) : Parcelable

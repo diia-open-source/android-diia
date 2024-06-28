@@ -32,6 +32,7 @@ class NotificationsMapperComposeImpl @Inject constructor() :
 
     override fun StubMessageMlcData.toComposeEmptyStateErrorMoleculeData(): StubMessageMlcData {
         return StubMessageMlcData(
+            componentId = this.componentId,
             icon = this.icon,
             title = this.title
         )

@@ -14,11 +14,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import ua.gov.diia.core.data.repository.DataRepository
+import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.DispatcherProvider
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
 import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
+import ua.gov.diia.publicservice.R
 import ua.gov.diia.publicservice.di.DataRepositoryPublicServiceCategories
 import ua.gov.diia.publicservice.helper.PublicServiceHelper
 import ua.gov.diia.publicservice.models.PublicService
@@ -34,7 +36,6 @@ import ua.gov.diia.ui_base.components.infrastructure.navigation.NavigationPath
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.header.TitleGroupMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
-import ua.gov.diia.ui_base.navigation.BaseNavigation
 import javax.inject.Inject
 
 @HiltViewModel
@@ -87,7 +88,7 @@ class PublicServicesCategoriesComposeVM @Inject constructor(
 
     fun doInit(categoryToOpen: String?) {
         this.categoryToOpen = categoryToOpen
-        getCategoriestData()
+        getCategoriesData()
     }
 
     fun onUIAction(event: UIAction) {
@@ -116,14 +117,15 @@ class PublicServicesCategoriesComposeVM @Inject constructor(
         if (_topBarData.isEmpty()) {
             val toolbar = TopGroupOrgData(
                 titleGroupMlcData = TitleGroupMlcData(
-                    heroText = UiText.DynamicString("Сервіси")
+                    heroText = UiText.DynamicString("Сервіси"),
+                    componentId = UiText.StringResource(R.string.home_title_services_test_tag)
                 )
             )
             _topBarData.addIfNotNull(toolbar)
         }
     }
 
-    private fun getCategoriestData() {
+    private fun getCategoriesData() {
         executeActionOnFlow(contentLoadedIndicator = _contentLoaded.also {
             _contentLoadedKey.value = UIActionKeysCompose.PAGE_LOADING_TRIDENT
         }) {
@@ -192,13 +194,6 @@ class PublicServicesCategoriesComposeVM @Inject constructor(
                 categoriesData.categories.toTypedArray()
             )
         )
-    }
-
-    fun invalidateDataSource() {
-        executeActionOnFlow(
-        ) {
-            repository.load()
-        }
     }
 
     private fun doOnCategorySelected(category: PublicServiceCategory) {

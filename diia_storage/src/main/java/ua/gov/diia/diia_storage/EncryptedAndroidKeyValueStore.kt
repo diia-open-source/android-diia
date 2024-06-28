@@ -9,7 +9,7 @@ import ua.gov.diia.diia_storage.model.KeyValueStore
 class EncryptedAndroidKeyValueStore(
     private val context: Context,
     private val configuration: PreferenceConfiguration,
-) : AndroidKeyValueStore(), PinStore {
+) : AndroidKeyValueStore(), PinStore, ServiceUserUidStore {
 
     private var sharedPreferences: SharedPreferences
 
@@ -48,6 +48,19 @@ class EncryptedAndroidKeyValueStore(
         return sharedPreferences.contains(PIN)
     }
 
+    override suspend fun saveServiceUserUUID(uuid: String) {
+        sharedPreferences.edit().putString(SERVICE_USER_UUID, uuid).apply()
+    }
+
+    override suspend fun getServiceUserUUID(): String? {
+        val result = sharedPreferences.getString(SERVICE_USER_UUID, KeyValueStore.DEFAULT_STRING_VALUE)
+        return if (result != KeyValueStore.DEFAULT_STRING_VALUE) {
+            result
+        } else {
+            null
+        }
+    }
+
     override fun clear() {
         context.getSharedPreferences(
             configuration.preferenceName,
@@ -59,6 +72,7 @@ class EncryptedAndroidKeyValueStore(
 
     companion object {
         const val PIN = "pin"
+        const val SERVICE_USER_UUID = "service_user_uuid"
     }
 
 }

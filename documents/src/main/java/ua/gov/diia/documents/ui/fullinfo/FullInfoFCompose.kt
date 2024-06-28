@@ -13,15 +13,10 @@ import ua.gov.diia.core.util.extensions.activity.setWindowBrightness
 import ua.gov.diia.documents.ui.BottomDoc
 import ua.gov.diia.documents.ui.fullinfo.compose.FullInfoBottomSheet
 import ua.gov.diia.documents.util.view.showCopyDocIdClipedSnackBar
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class FullInfoFCompose : BottomDoc() {
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
 
     private var composeView: ComposeView? = null
     private val args: FullInfoFComposeArgs by navArgs()
@@ -33,9 +28,7 @@ class FullInfoFCompose : BottomDoc() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         composeView = ComposeView(requireContext())
         return composeView
@@ -47,12 +40,7 @@ class FullInfoFCompose : BottomDoc() {
         composeView?.setContent {
             val body = viewModel.bodyData
             val progressIndicator =
-                viewModel.progressIndicator.collectAsState(
-                    initial = Pair(
-                        "",
-                        true
-                    )
-                )
+                viewModel.progressIndicator.collectAsState(initial = Pair("", true))
 
             viewModel.apply {
                 docAction.collectAsEffect { docAction ->
@@ -95,13 +83,9 @@ class FullInfoFCompose : BottomDoc() {
                 }
             }
 
-            FullInfoBottomSheet(
-                progressIndicator = progressIndicator.value, data = body,
-                onUIAction = {
-                    viewModel.onUIAction(it)
-                },
-                diiaResourceIconProvider = diiaResourceIconProvider,
-            )
+            FullInfoBottomSheet(progressIndicator = progressIndicator.value, data = body, onUIAction = {
+                viewModel.onUIAction(it)
+            })
         }
     }
 

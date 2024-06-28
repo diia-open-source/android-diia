@@ -1,9 +1,12 @@
 package ua.gov.diia.search.adapters
 
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ua.gov.diia.search.R
 import ua.gov.diia.search.databinding.ItemRvSearchBinding
 import ua.gov.diia.search.databinding.ItemRvSearchTwoLinesBinding
 import ua.gov.diia.search.models.SearchableItem
@@ -23,9 +26,11 @@ class SearchAdapter(
         private val binding: ItemRvSearchBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(title: String) {
+        fun bind(title: String, disabled: Boolean?) {
             with(binding) {
                 tvText.text = title
+                @ColorRes val titleColorRes = if (disabled != null && disabled) R.color.black_alpha_30 else R.color.black
+                tvText.setTextColor(ContextCompat.getColor(itemView.context, titleColorRes))
             }
         }
     }
@@ -37,6 +42,9 @@ class SearchAdapter(
         fun bind(data: SearchableItemDoubleLine) {
             with(binding) {
                 item = data
+                @ColorRes val titleColorRes = if (data.isDisabled()) R.color.black_alpha_30 else R.color.black
+                title.setTextColor(ContextCompat.getColor(itemView.context, titleColorRes))
+                text.setTextColor(ContextCompat.getColor(itemView.context, titleColorRes))
                 executePendingBindings()
             }
         }
@@ -61,12 +69,23 @@ class SearchAdapter(
         when (val item = getItem(position)) {
             is SearchableItemDoubleLine -> {
                 (holder as SearchItemDoubleLineVH).bind(item)
-                holder.itemView.setOnClickListener { onItemClick(item.getQueryString()) }
+                if (!item.isDisabled()) {
+                    holder.itemView.setOnClickListener { onItemClick(item.getQueryString()) }
+                } else {
+                    holder.itemView.setOnClickListener(null)
+                }
             }
+
             is SearchableItem -> {
                 val typedVH = holder as SearchItemSingleLineVH
-                typedVH.bind(title = item.getDisplayTitle())
-                holder.itemView.setOnClickListener { onItemClick(item.getQueryString()) }
+                typedVH.bind(title = item.getDisplayTitle(), item.isDisabled())
+                if (!item.isDisabled()) {
+                    holder.itemView.setOnClickListener {
+                        onItemClick(item.getQueryString())
+                    }
+                } else {
+                    holder.itemView.setOnClickListener(null)
+                }
             }
         }
     }

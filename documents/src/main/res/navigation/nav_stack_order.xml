@@ -16,8 +16,8 @@
     <action
         android:id="@+id/action_global_to_stack_order"
         app:destination="@id/stackOrderF"
-        app:enterAnim="@anim/anim_fade_in"
-        app:exitAnim="@anim/anim_fade_out"
-        app:popEnterAnim="@anim/anim_fade_in"
-        app:popExitAnim="@anim/anim_fade_out" />
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
 </navigation>

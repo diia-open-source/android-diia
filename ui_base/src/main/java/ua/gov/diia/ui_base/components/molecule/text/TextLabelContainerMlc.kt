@@ -9,12 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.mlc.text.TextLabelContainerMlc
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextParameter
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersAtom
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
+import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStringOrNull
 import ua.gov.diia.ui_base.components.theme.White
 
 @Composable
@@ -47,6 +50,35 @@ fun TextLabelContainerMlc(
 data class TextLabelContainerMlcData(
     val data: TextWithParametersData? = null
 ) : UIElementData
+
+fun TextLabelContainerMlc?.toUIModel(
+    actionKey: String = UIActionKeysCompose.TEXT_WITH_PARAMETERS
+): TextLabelMlcData? {
+    val entity = this
+    if (entity?.text == null) return null
+    return TextLabelMlcData(
+        actionKey = actionKey,
+        text = UiText.DynamicString(entity.text ?: ""),
+        parameters = if (entity.parameters != null) {
+            mutableListOf<TextParameter>().apply {
+                entity.parameters?.forEach {
+                    add(
+                        TextParameter(
+                            data = TextParameter.Data(
+                                name = it.data?.name.toDynamicStringOrNull(),
+                                resource = it.data?.resource.toDynamicStringOrNull(),
+                                alt = it.data?.alt.toDynamicStringOrNull()
+                            ),
+                            type = it.type
+                        )
+                    )
+                }
+            }
+        } else {
+            emptyList()
+        }
+    )
+}
 
 @Composable
 @Preview

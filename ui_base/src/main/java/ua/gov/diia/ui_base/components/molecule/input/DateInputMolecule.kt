@@ -19,12 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.mlc.input.InputDateMlc
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
-import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.BlackAlpha30
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
@@ -152,14 +153,15 @@ private enum class DateSection(val index: Int) {
 
 data class DateInputMoleculeData(
     val actionKey: String = UIActionKeysCompose.DATE_INPUT,
+    val componentId: UiText? = null,
     val id: String? = null,
     val label: String? = null,
     val inputValue: String? = null,
     val hintMessage: String? = null,
     val errorMessage: String? = null,
     val interactionState: UIState.Interaction = UIState.Interaction.Enabled,
-    val validationState: UIState.Validation = UIState.Validation.NeverBeenPerformed
-) : UIElementData {
+    val validationState: UIState.Validation = UIState.Validation.NeverBeenPerformed,
+) : InputFormItem() {
 
     fun onInputChanged(newValue: String?): DateInputMoleculeData {
         if (newValue == null) return this
@@ -168,6 +170,16 @@ data class DateInputMoleculeData(
             validationState = UIState.Validation.Passed
         )
     }
+}
+
+fun InputDateMlc.toUiModel(): DateInputMoleculeData {
+    return DateInputMoleculeData(
+        componentId = this.componentId?.let { UiText.DynamicString(it) },
+        id = this.id,
+        label = this.label,
+        inputValue = this.value,
+        hintMessage = this.hint
+    )
 }
 
 @Composable

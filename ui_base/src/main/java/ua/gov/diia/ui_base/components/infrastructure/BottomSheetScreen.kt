@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtmData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -39,7 +38,6 @@ fun BottomSheetScreen(
     toolbar: SnapshotStateList<UIElementData>,
     body: SnapshotStateList<UIElementData>,
     bottom: SnapshotStateList<UIElementData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onEvent: (UIAction) -> Unit
 ) {
     Column(
@@ -71,7 +69,6 @@ fun BottomSheetScreen(
                     displayBlockDivider = bottom.isNotEmpty(),
                     progressIndicator = progressIndicator,
                     contentLoaded = contentLoaded,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
                     onUIAction = onEvent
                 )
             },
@@ -79,12 +76,10 @@ fun BottomSheetScreen(
                 BottomBarRootContainer(
                     bottomViews = bottom,
                     progressIndicator = progressIndicator,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
                     onUIAction = onEvent
                 )
             },
-            onEvent = onEvent,
-            diiaResourceIconProvider = diiaResourceIconProvider,
+            onEvent = onEvent
         )
     }
 }
@@ -114,8 +109,7 @@ fun BottomSheetPreivew() {
     BottomSheetScreen(
         toolbar = SnapshotStateList<UIElementData>(),
         body = bodyData,
-        bottom = SnapshotStateList<UIElementData>(),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
+        bottom = SnapshotStateList<UIElementData>()
     ) {
 
     }

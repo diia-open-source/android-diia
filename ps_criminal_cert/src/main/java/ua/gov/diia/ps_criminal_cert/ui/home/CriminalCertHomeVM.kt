@@ -23,6 +23,7 @@ import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
 import ua.gov.diia.core.util.extensions.lifecycle.combineWith
+import ua.gov.diia.ui_base.util.paging.offsetPagingData
 import ua.gov.diia.ps_criminal_cert.helper.PSCriminalCertHelper
 import ua.gov.diia.ps_criminal_cert.models.CriminalCertHomeState
 import ua.gov.diia.ps_criminal_cert.models.enums.CriminalCertStatus
@@ -30,10 +31,9 @@ import ua.gov.diia.ps_criminal_cert.models.response.CriminalCertListData.CertIte
 import ua.gov.diia.ps_criminal_cert.network.ApiCriminalCert
 import ua.gov.diia.ps_criminal_cert.ui.CriminalCertConst
 import ua.gov.diia.publicservice.helper.PSNavigationHelper
-import ua.gov.diia.ui_base.util.paging.offsetPagingData
 import javax.inject.Inject
 
-
+// todo split logic
 @HiltViewModel
 class CriminalCertHomeVM @Inject constructor(
     @AuthorizedClient private val api: ApiCriminalCert,

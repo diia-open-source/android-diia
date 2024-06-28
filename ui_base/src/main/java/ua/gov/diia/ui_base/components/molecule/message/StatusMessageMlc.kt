@@ -13,16 +13,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common.message.StatusMessage
+import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextParameter
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersAtom
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
+import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.WhiteAlpha50
+import ua.gov.diia.ui_base.mappers.toComposeTextWithParameters
 
 @Composable
 fun StatusMessageMlc(
@@ -36,6 +42,7 @@ fun StatusMessageMlc(
             .padding(top = 24.dp)
             .fillMaxWidth()
             .background(color = WhiteAlpha50, shape = RoundedCornerShape(8.dp))
+            .testTag(data.componentId?.asString() ?: "")
     ) {
         Row(
             modifier = Modifier
@@ -69,7 +76,32 @@ fun StatusMessageMlc(
 }
 
 
-data class StatusMessageMlcData(val icon: String? = null, val title: String, val description: TextWithParametersData?): UIElementData
+data class StatusMessageMlcData(
+    val icon: String? = null,
+    val title: String,
+    val description: TextWithParametersData?,
+    val componentId: UiText? = null,
+): UIElementData
+
+fun StatusMessage?.toUIModel(actionKey: String = UIActionKeysCompose.TEXT_WITH_PARAMETERS): StatusMessageMlcData? {
+    if (this == null) return null
+    return StatusMessageMlcData(
+        icon = this.icon,
+        title = this.title ?: "",
+        description = this.textWithParameters?.let {
+            it.toComposeTextWithParameters(actionKey = actionKey)
+        } ?: this.text.toComposeTextWithParameters(),
+        componentId = this.componentId?.let { UiText.DynamicString(it) }
+    )
+}
+
+fun String?.toUIModelTextWithParameters(): TextWithParametersData? {
+    if (this.isNullOrEmpty()) return null
+    return TextWithParametersData(
+        text = this.toDynamicString(),
+        parameters = emptyList()
+    )
+}
 
 @Composable
 @Preview

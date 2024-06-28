@@ -103,6 +103,15 @@ fun LocalDate.toServerSendFormat(): String = try {
     ""
 }
 
+fun String.toServerSendFormat(): String = try {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val date = LocalDate.parse(this, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+    formatter.format(date)
+} catch (e: Exception) {
+    ""
+}
+
+
 fun toServerSendFormat(date: LocalDate, time: LocalTime): String = try {
     val dateTime = ZonedDateTime.of(date, time, ZoneId.systemDefault())
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")

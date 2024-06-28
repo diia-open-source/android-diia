@@ -1,1 +1,1 @@
--keep public class ua.gov.diia.doc_driver_license.DriverLicenseV2
+-keep public class ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2

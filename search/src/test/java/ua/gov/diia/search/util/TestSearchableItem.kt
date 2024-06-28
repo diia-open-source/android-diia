@@ -12,4 +12,7 @@ data class TestSearchableItem(
     override fun getDisplayTitle(): String = displayTitle
 
     override fun getQueryString(): String = queryString
+
+    override fun isDisabled(): Boolean = false
+
 }

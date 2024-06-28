@@ -6,6 +6,7 @@ import ua.gov.diia.diia_storage.store.Preferences
 import ua.gov.diia.documents.models.DiiaDocument
 import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
 import ua.gov.diia.documents.models.LocalizationType
+import ua.gov.diia.documents.models.SourceType
 import java.util.UUID
 
 @Parcelize
@@ -24,6 +25,8 @@ data class DocTest(
     override fun getDocOrder() = DiiaDocumentWithMetadata.LAST_DOC_ORDER
     override fun setNewOrder(newOrder: Int) {
     }
+    override fun getSourceType() = SourceType.DYNAMIC
+    override fun getDocStackTitle() = ""
 
     override fun getDocColor() = R.color.colorPrimary
     override fun getDocNum() = id
@@ -60,6 +63,11 @@ data class DocTest2(
     override fun setNewOrder(newOrder: Int) {
     }
 
+    override fun getSourceType() = SourceType.DYNAMIC
+
+    override fun getDocStackTitle() = ""
+
+
     override fun getDocColor() = R.color.colorPrimary
     override fun getDocNum() = id
     override fun makeCopy(): DiiaDocument = this.copy()
@@ -95,6 +103,11 @@ data class DocTest3(
     override fun setNewOrder(newOrder: Int) {
     }
 
+    override fun getSourceType() = SourceType.DYNAMIC
+
+    override fun getDocStackTitle() = ""
+
+
     override fun getDocColor() = R.color.colorPrimary
     override fun getDocNum() = id
     override fun makeCopy(): DiiaDocument = this.copy()
@@ -129,7 +142,8 @@ data class DocTest4(
     override fun getDocOrder() = DiiaDocumentWithMetadata.LAST_DOC_ORDER
     override fun setNewOrder(newOrder: Int) {
     }
-
+    override fun getSourceType() = SourceType.DYNAMIC
+    override fun getDocStackTitle() = ""
     override fun getDocColor() = R.color.colorPrimary
     override fun getDocNum() = id
     override fun makeCopy(): DiiaDocument = this.copy()

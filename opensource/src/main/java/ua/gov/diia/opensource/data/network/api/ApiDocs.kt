@@ -7,12 +7,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
 import ua.gov.diia.core.network.annotation.Analytics
-import ua.gov.diia.doc_driver_license.DriverLicenseV2
+import ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
 import ua.gov.diia.documents.models.DocumentsOrder
 import ua.gov.diia.documents.models.ManualDocs
 import ua.gov.diia.documents.models.QRUrl
 import ua.gov.diia.documents.models.TypeDefinedDocumentsOrder
-import ua.gov.diia.documents.models.UpdatedDoc
 import ua.gov.diia.opensource.helper.documents.DocName
 import ua.gov.diia.opensource.model.documents.Docs
 
@@ -53,13 +52,6 @@ interface ApiDocs {
         @Path("documentId") documentId: String?,
         @Query("localization") localization: String,
     ): QRUrl
-
-    @Analytics("getDocumentById")
-    @GET("api/v2/documents/{docType}/{documentId}")
-    suspend fun getDocumentById(
-        @Path("docType") docType: String?,
-        @Path("documentId") documentId: String?
-    ): UpdatedDoc
 
     @Analytics("checkDriverLicense")
     @GET("api/v2/documents/${DocName.DRIVER_LICENSE}/verify")

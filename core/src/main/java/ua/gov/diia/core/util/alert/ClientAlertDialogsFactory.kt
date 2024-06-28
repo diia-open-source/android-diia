@@ -58,7 +58,11 @@ interface ClientAlertDialogsFactory {
 
     fun showAlertAfterInvalidPin(key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
 
+    fun showAlertSignatureInvalidPin(key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
+
     fun showAlertAfterConfirmPin(key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
+
+    fun showDocRemoveDialog(key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
 
     fun getUnsupportedGLEDialog(key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
 
@@ -81,4 +85,10 @@ interface ClientAlertDialogsFactory {
     fun failedToSendReportPoint(key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
 
     fun failedToSendReportShelter(key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
+
+    fun documentUpdated(key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
+
+    fun registerNotAvailable(docType: String?, key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
+
+    fun documentNotFound(key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY): TemplateDialogModel
 }

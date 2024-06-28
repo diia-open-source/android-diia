@@ -39,14 +39,18 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtom
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
+import ua.gov.diia.ui_base.components.atom.button.BtnStrokeAdditionalAtm
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.image.BlurBitmap
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.button.BtnToggleMlcData
 import ua.gov.diia.ui_base.components.molecule.loading.TridentLoaderMolecule
 import ua.gov.diia.ui_base.components.organism.group.ToggleButtonGroup
@@ -121,7 +125,11 @@ fun DocCodeOrg(
                                         ) {
                                             val originalQRBitmap = it.copy(it.config, true)
 
-                                            BlurBitmap(originalQRBitmap, 231.dp, 231.dp)
+                                            BlurBitmap(
+                                                bitmap = originalQRBitmap,
+                                                width = 231.dp,
+                                                height = 231.dp
+                                            )
                                         }
                                     }
                                 }
@@ -135,7 +143,7 @@ fun DocCodeOrg(
                                         ) {
                                             val originalEan13Bitmap = it.copy(it.config, true)
 
-                                            BlurBitmap(originalEan13Bitmap, 247.dp, 100.dp)
+                                            BlurBitmap(bitmap = originalEan13Bitmap, width = 247.dp, height = 100.dp)
                                         }
                                     }
                                 }
@@ -170,7 +178,7 @@ fun DocCodeOrg(
                                         )
                                     )
 
-                                    ButtonStrokeAdditionalAtom(
+                                    BtnStrokeAdditionalAtm(
                                         modifier = Modifier.padding(top = 24.dp),
                                         data = ButtonStrokeAdditionalAtomData(
                                             title = if (data.localization == Localization.eng) {
@@ -204,7 +212,9 @@ fun DocCodeOrg(
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Image(
-                                        modifier = Modifier.fillMaxWidth().aspectRatio(1f),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .aspectRatio(1f),
                                         bitmap = data.qrBitmap.asImageBitmap(),
                                         contentScale = ContentScale.Crop,
                                         contentDescription = stringResource(id = R.string.qr_code)
@@ -293,7 +303,7 @@ fun DocCodeOrg(
                                 )
                             )
                             Spacer(modifier = Modifier.height(24.dp))
-                            ButtonStrokeAdditionalAtom(
+                            BtnStrokeAdditionalAtm(
                                 modifier = Modifier,
                                 data = ButtonStrokeAdditionalAtomData(
                                     title = if (data.localization == Localization.eng) {
@@ -374,17 +384,23 @@ fun DocCodeOrgPreview() {
     val toggle = ToggleButtonGroupData(
         qr = BtnToggleMlcData(
             id = "qr",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_qr_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_qr_unselected),
-            selectionState = UIState.Selection.Selected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.QR_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.QR.code),
+            selectionState = UIState.Selection.Selected,
+            action = DataActionWrapper(
+                type = "qr"
+            )
         ),
         ean13 = BtnToggleMlcData(
             id = "ean",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_ean13_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_ean13_unselected),
-            selectionState = UIState.Selection.Unselected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE.code),
+            selectionState = UIState.Selection.Unselected,
+            action = DataActionWrapper(
+                type = "ean"
+            )
         )
     )
     val state = remember {
@@ -415,17 +431,23 @@ fun DocCodeOrgPreviewLoading() {
     val toggle = ToggleButtonGroupData(
         qr = BtnToggleMlcData(
             id = "qr",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_qr_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_qr_unselected),
-            selectionState = UIState.Selection.Selected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.QR_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.QR.code),
+            selectionState = UIState.Selection.Selected,
+            action = DataActionWrapper(
+                type = "qr"
+            )
         ),
         ean13 = BtnToggleMlcData(
             id = "ean",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_ean13_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_ean13_unselected),
-            selectionState = UIState.Selection.Unselected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE.code),
+            selectionState = UIState.Selection.Unselected,
+            action = DataActionWrapper(
+                type = "ean"
+            )
         )
     )
     val state = remember {
@@ -456,17 +478,23 @@ fun DocCodeOrgPreviewWithHttpExeption() {
     val toggle = ToggleButtonGroupData(
         qr = BtnToggleMlcData(
             id = "qr",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_qr_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_qr_unselected),
-            selectionState = UIState.Selection.Selected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.QR_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.QR.code),
+            selectionState = UIState.Selection.Selected,
+            action = DataActionWrapper(
+                type = "qr"
+            )
         ),
         ean13 = BtnToggleMlcData(
             id = "ean",
-            label = "Label",
-            iconSelected = UiText.StringResource(R.drawable.ic_doc_ean13_selected),
-            iconUnselected = UiText.StringResource(R.drawable.ic_doc_ean13_unselected),
-            selectionState = UIState.Selection.Unselected
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE.code),
+            selectionState = UIState.Selection.Unselected,
+            action = DataActionWrapper(
+                type = "ean"
+            )
         )
     )
     val state = remember {

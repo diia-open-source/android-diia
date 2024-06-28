@@ -13,7 +13,6 @@ import ua.gov.diia.documents.models.DiiaDocumentsWithOrder
 import ua.gov.diia.documents.models.DocumentsOrder
 import ua.gov.diia.documents.models.ManualDocs
 import ua.gov.diia.documents.models.TypeDefinedDocumentsOrder
-import ua.gov.diia.documents.models.UpdatedDoc
 import ua.gov.diia.opensource.data.network.api.ApiDocs
 import ua.gov.diia.opensource.model.documents.Docs
 import javax.inject.Inject
@@ -55,10 +54,6 @@ class ApiDocumentsWrapper @Inject constructor(
 
     override suspend fun getDocsManual(): ManualDocs {
        return apiDocs.getDocsManual()
-    }
-
-    override suspend fun getDocumentById(type: String, id: String): UpdatedDoc {
-        return apiDocs.getDocumentById(type, id)
     }
 
     private suspend fun loadDocs(map: Map<String, String> = emptyMap()): Docs {

@@ -43,9 +43,8 @@ fun View.showTopSnackBar(@StringRes res: Int, length: Int, topPadding: Float) {
             textV.setTypeface(textV.typeface, Typeface.BOLD)
             textV.setPadding(0, 0, 0, 0)
             textV.textSize = 12f
-            textV.gravity = Gravity.CENTER_HORIZONTAL
+            textV.gravity = Gravity.CENTER
             textV.isAllCaps = false
-            textV.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
         }
         setTextColor(context.getColorCompat(R.color.black))
         setText(res)

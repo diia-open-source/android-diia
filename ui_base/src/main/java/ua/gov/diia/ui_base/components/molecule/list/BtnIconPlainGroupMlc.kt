@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -20,6 +21,7 @@ import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableBlockItem
 import ua.gov.diia.ui_base.components.theme.PeriwinkleGray
 
@@ -62,7 +64,7 @@ fun BtnIconPlainGroupMlc(
             .fillMaxWidth()
             .border(
                 color = PeriwinkleGray, width = 1.dp, shape = RoundedCornerShape(8.dp)
-            )
+            ).testTag(data.componentId?.asString() ?: "")
     ) {
         data.items.forEachIndexed { index, item ->
             LoadActionAtom(
@@ -83,7 +85,8 @@ fun BtnIconPlainGroupMlc(
 }
 
 data class BtnIconPlainGroupMlcData(
-    val items: SnapshotStateList<LoadActionAtomData>
+    val items: SnapshotStateList<LoadActionAtomData>,
+    val componentId: UiText? = null
 ) : UIElementData, TableBlockItem
 
 @Composable

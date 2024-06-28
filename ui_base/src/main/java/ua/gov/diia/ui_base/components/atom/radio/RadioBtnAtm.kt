@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
@@ -30,6 +31,7 @@ import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.list.radio.RadioBtnGroupOrg
 import ua.gov.diia.ui_base.components.molecule.list.radio.RadioBtnGroupOrgData
 import ua.gov.diia.ui_base.components.subatomic.icon.IconBase64Subatomic
@@ -40,6 +42,7 @@ import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.Mantis
 
 @Composable
+@Deprecated("Use RadioBtnMlc")
 fun RadioBtnAtm(
     modifier: Modifier = Modifier,
     data: RadioBtnAtmData,
@@ -63,7 +66,8 @@ fun RadioBtnAtm(
                 if (data.interactionState == UIState.Interaction.Enabled) {
                     onClick.invoke()
                 }
-            }, verticalAlignment = Alignment.Top
+            }.testTag(data.componentId?.asString() ?: ""),
+        verticalAlignment = Alignment.Top
     ) {
         RadioButton(
             modifier = Modifier.size(20.dp),
@@ -181,7 +185,8 @@ data class RadioBtnAtmData(
     val interactionState: UIState.Interaction = UIState.Interaction.Enabled,
     val selectionState: UIState.Selection = UIState.Selection.Unselected,
     val logoLeft: String? = null,
-    val logoRight: String? = null
+    val logoRight: String? = null,
+    val componentId: UiText? = null
 ) : UIElementData, Cloneable, RadioBtnItem {
     public override fun clone(): RadioBtnAtmData {
         return super.clone() as RadioBtnAtmData

@@ -77,10 +77,14 @@ class PinInputVM @Inject constructor(
         _uiData.add(
             NavigationPanelMlcData(
                 title = UiText.StringResource(R.string.pin_input_title_text),
-                isContextMenuExist = false
+                isContextMenuExist = false,
+                componentId = UiText.StringResource(R.string.enter_pin_screen_title_test_tag),
             )
         )
-        _uiData.add(NumButtonTileOrganismData())
+        _uiData.add(NumButtonTileOrganismData(
+            componentId = UiText.StringResource(R.string.enter_pin_screen_btn_num_test_tag),
+            componentIdEllipse = UiText.StringResource(R.string.enter_pin_screen_ellips_test_tag)
+        ))
         _uiData.add(TextLabelMlcData(text = UiText.StringResource(R.string.pin_input_description_text)))
         checkForAlternativeAuth()
         resetAlternativeAuthCount()
@@ -216,7 +220,7 @@ class PinInputVM @Inject constructor(
 
     private fun validateAlternativeAuthTryCount() {
         alternativeAuthCount += 1
-        if (alternativeAuthCount > ALT_AUTH_TRY_COUNT) {
+        if (alternativeAuthCount >= ALT_AUTH_TRY_COUNT) {
             enabledAlternativeAuthBtn(false)
         }
     }

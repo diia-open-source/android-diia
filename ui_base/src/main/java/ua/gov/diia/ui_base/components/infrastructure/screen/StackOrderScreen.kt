@@ -12,7 +12,6 @@ import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.molecule.header.NavigationPanelMlc
@@ -28,7 +27,6 @@ fun StackOrderScreen(
     modifier: Modifier = Modifier,
     toolbar: SnapshotStateList<UIElementData>,
     body: SnapshotStateList<UIElementData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit,
     onMove: (Int, Int) -> Unit,
 ) {
@@ -46,8 +44,7 @@ fun StackOrderScreen(
                 TopGroupOrg(
                     modifier = modifier,
                     data = it,
-                    onUIAction = onUIAction,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onUIAction = onUIAction
                 )
             }
             if (it is NavigationPanelMlcData) {
@@ -66,8 +63,7 @@ fun StackOrderScreen(
                     modifier = modifier.fillMaxHeight(),
                     data = it,
                     onMove = onMove,
-                    onUIAction = onUIAction,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onUIAction = onUIAction
                 )
             }
         }

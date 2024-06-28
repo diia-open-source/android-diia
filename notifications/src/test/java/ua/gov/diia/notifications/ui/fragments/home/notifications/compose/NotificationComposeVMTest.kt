@@ -76,10 +76,13 @@ class NotificationComposeVMTest {
 
         notificationComposeVM = NotificationComposeVM(
             notificationsDataSource,
+            apiNotifications,
             dispatcherProvider,
             composeMapper,
             retryLastAction,
             errorHandling,
+            actionNotificationReceived,
+            actionNotificationRead,
             notificationHelper
         )
     }

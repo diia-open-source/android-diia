@@ -2,7 +2,7 @@ package ua.gov.diia.opensource.helper.documents
 
 import retrofit2.HttpException
 import ua.gov.diia.core.di.data_source.http.AuthorizedClient
-import ua.gov.diia.doc_driver_license.DriverLicenseV2
+import ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
 import ua.gov.diia.documents.barcode.DocumentBarcodeErrorLoadResult
 import ua.gov.diia.documents.barcode.DocumentBarcodeFactory
 import ua.gov.diia.documents.barcode.DocumentBarcodeRepository

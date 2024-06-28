@@ -13,8 +13,8 @@ import ua.gov.diia.address_search.models.AddressItem
 import ua.gov.diia.address_search.models.AddressParameter
 import ua.gov.diia.address_search.models.AddressSearchRequest
 import ua.gov.diia.address_search.network.ApiAddressSearch
-import ua.gov.diia.core.util.CombinedLiveData
 import ua.gov.diia.core.models.dialogs.TemplateDialogModel
+import ua.gov.diia.core.util.CombinedLiveData
 import ua.gov.diia.core.util.delegation.WithErrorHandling
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
@@ -252,11 +252,38 @@ open class AddressSearchVM(
     private val _selectedRegion = MutableLiveData<AddressItem?>()
     val selectedRegion = _selectedRegion.asLiveData()
 
-    val showRegionFieldError: LiveData<Boolean> = selectedRegion.map { region ->
-        region?.errorMessage != null
-    }
+//    val showRegionFieldError: LiveData<Boolean> = selectedRegion.map { region ->
+//        region?.errorMessage != null
+//    }
 
     val regionInput = MutableLiveData<String?>()
+
+    private val regionValidationRegex = MutableLiveData<String?>()
+
+    private val regionValidationRegexFlags = MutableLiveData<List<String>?>()
+
+    private val regionValidationPattern: Pattern? by lazy {
+        regionValidationRegex.value?.let { regex ->
+            val flags = cityValidationRegexFlags.value?.fold(0) { compiledFlags, flag ->
+                when (flag) {
+                    "i" -> compiledFlags or Pattern.CASE_INSENSITIVE
+                    else -> compiledFlags
+                }
+            } ?: 0
+            Pattern.compile(regex, flags)
+        }
+    }
+
+    private fun approveRegionField(value: String): Boolean =
+        regionValidationPattern?.matcher(value)?.matches() ?: true
+
+    val showRegionFieldError: LiveData<Boolean> = regionInput.map { region ->
+        if (region != null) {
+            !approveRegionField(region)
+        } else {
+            false
+        }
+    }
 
     fun selectRegion() {
         _regionFieldParams.value?.let { params ->
@@ -376,6 +403,36 @@ open class AddressSearchVM(
 
     val cityInput = MutableLiveData<String?>()
 
+    private val cityValidationRegex = MutableLiveData<String?>()
+
+    private val cityValidationRegexFlags = MutableLiveData<List<String>?>()
+
+
+    private val cityValidationPattern: Pattern? by lazy {
+        cityValidationRegex.value?.let { regex ->
+            val flags = cityValidationRegexFlags.value?.fold(0) { compiledFlags, flag ->
+                when (flag) {
+                    "i" -> compiledFlags or Pattern.CASE_INSENSITIVE
+                    else -> compiledFlags
+                }
+            } ?: 0
+            Pattern.compile(regex, flags)
+        }
+    }
+
+
+    private fun approveCityField(value: String): Boolean =
+        cityValidationPattern?.matcher(value)?.matches() ?: true
+
+
+    val showCityFieldError: LiveData<Boolean> = cityInput.map { city ->
+        if (city != null) {
+            !approveCityField(city)
+        } else {
+            false
+        }
+    }
+
     fun selectCity() {
         _cityFieldParams.value?.let { params ->
             startSelectionProcess(CompoundAddressResultKey.RESULT_KEY_CITY, params)
@@ -490,6 +547,34 @@ open class AddressSearchVM(
 
     val streetInput = MutableLiveData<String?>()
 
+    private val streetValidationRegex = MutableLiveData<String?>()
+
+    private val streetValidationRegexFlags = MutableLiveData<List<String>?>()
+
+    private val streetValidationPattern: Pattern? by lazy {
+        streetValidationRegex.value?.let { regex ->
+
+            val flags = streetValidationRegexFlags.value?.fold(0) { compiledFlags, flag ->
+                when (flag) {
+                    "i" -> compiledFlags or Pattern.CASE_INSENSITIVE
+                    else -> compiledFlags
+                }
+            } ?: 0
+            Pattern.compile(regex, flags)
+        }
+    }
+
+    private fun approveStreetField(value: String): Boolean =
+        streetValidationPattern?.matcher(value)?.matches() ?: true
+
+    val showStreetFieldError: LiveData<Boolean> = streetInput.map { street ->
+        if (street != null) {
+            !approveStreetField(street)
+        } else {
+            false
+        }
+    }
+
     fun selectStreet() {
         _streetFieldParams.value?.let { params ->
             startSelectionProcess(CompoundAddressResultKey.RESULT_KEY_STREET, params)
@@ -592,7 +677,7 @@ open class AddressSearchVM(
     private val apartmentValidationPattern: Pattern? by lazy {
         apartmentValidationRegex.value.let {
             Pattern.compile(
-                it
+                it ?: ""
             )
         }
     }
@@ -652,7 +737,7 @@ open class AddressSearchVM(
     private val corpsValidationPattern: Pattern? by lazy {
         corpsValidationRegex.value.let {
             Pattern.compile(
-                it
+                it ?: ""
             )
         }
     }
@@ -697,7 +782,7 @@ open class AddressSearchVM(
         params != null
     }
 
-    val zipFieldMode: LiveData<Int> = _corpsFieldParams.map { params ->
+    val zipFieldMode: LiveData<Int> = _zipFieldParams.map { params ->
         addressParameterMapper.getViewMode(params)
     }
 
@@ -786,12 +871,14 @@ open class AddressSearchVM(
                 d?.let(_selectedCountry::setValue)
             }
 
-            AddressSearchFieldType.FieldType.REGION -> { p, d ->
+            AddressSearchFieldType.FieldType.REGION, AddressSearchFieldType.FieldType.TEXT_REGION -> { p, d ->
                 _regionFieldParams.value = p
+                regionValidationRegex.value = p.validation?.regexp
+                regionValidationRegexFlags.value = p.validation?.flags
                 d?.let(_selectedRegion::setValue)
             }
 
-            AddressSearchFieldType.FieldType.DISTRICT -> { p, d ->
+            AddressSearchFieldType.FieldType.DISTRICT, AddressSearchFieldType.FieldType.TEXT_DISTRICT -> { p, d ->
                 _districtFieldParams.value = p
                 d?.let(_selectedDistrict::setValue)
             }
@@ -801,8 +888,10 @@ open class AddressSearchVM(
                 d?.let(_selectedCityType::setValue)
             }
 
-            AddressSearchFieldType.FieldType.CITY -> { p, d ->
+            AddressSearchFieldType.FieldType.CITY, AddressSearchFieldType.FieldType.TEXT_CITY -> { p, d ->
                 _cityFieldParams.value = p
+                cityValidationRegex.value = p.validation?.regexp
+                cityValidationRegexFlags.value = p.validation?.flags
                 d?.let(_selectedCity::setValue)
             }
 
@@ -816,8 +905,10 @@ open class AddressSearchVM(
                 d?.let(_selectedStreetType::setValue)
             }
 
-            AddressSearchFieldType.FieldType.STREET -> { p, d ->
+            AddressSearchFieldType.FieldType.STREET, AddressSearchFieldType.FieldType.TEXT_STREET -> { p, d ->
                 _streetFieldParams.value = p
+                streetValidationRegex.value = p.validation?.regexp
+                streetValidationRegexFlags.value = p.validation?.flags
                 d?.let(_selectedStreet::setValue)
             }
 

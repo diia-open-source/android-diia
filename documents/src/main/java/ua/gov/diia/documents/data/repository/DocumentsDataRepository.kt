@@ -25,7 +25,7 @@ interface DocumentsDataRepository : DataSource<List<DiiaDocumentWithMetadata>> {
         docType: String
     )
 
-    suspend fun getDocsByType(type: String): List<DiiaDocument?>?
+    suspend fun getDocsByType(type: String): List<DiiaDocument?>? //
 
     suspend fun loadLocalDocData(): List<DiiaDocumentWithMetadata>?
 

@@ -16,8 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -33,7 +32,6 @@ import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 fun BtnIconRoundedMlc(
     modifier: Modifier = Modifier,
     data: BtnIconRoundedMlcData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(
@@ -63,8 +61,7 @@ fun BtnIconRoundedMlc(
         ) {
             UiIconWrapperSubatomic(
                 modifier = Modifier.size(24.dp),
-                icon = data.icon,
-                diiaResourceIconProvider = diiaResourceIconProvider
+                icon = data.icon
             )
         }
 
@@ -97,12 +94,11 @@ data class BtnIconRoundedMlcData(
 fun BtnIconRoundedAtmPreview() {
     val data = BtnIconRoundedMlcData(
         id = "1",
-        icon = UiIcon.DrawableResource(CommonDiiaResourceIcon.ELLIPSE_WHITE_ARROW_RIGHT.code)
+        icon = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_WHITE_ARROW_RIGHT.code)
     )
 
     BtnIconRoundedMlc(
         data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
     ) {
 
     }
@@ -114,12 +110,11 @@ fun BtnIconRoundedAtmPreview_WithLabel() {
     val data = BtnIconRoundedMlcData(
         id = "1",
         label = UiText.DynamicString("label"),
-        icon = UiIcon.DrawableResource(CommonDiiaResourceIcon.ELLIPSE_WHITE_ARROW_RIGHT.code)
+        icon = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_WHITE_ARROW_RIGHT.code)
     )
 
     BtnIconRoundedMlc(
         data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
     ) {
 
     }

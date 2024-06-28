@@ -15,11 +15,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.disableByInteractionState
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
@@ -42,8 +42,7 @@ fun ListItemMlc(
     modifier: Modifier = Modifier,
     data: ListItemMlcData,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
-    onUIAction: (UIAction) -> Unit,
-    diiaResourceIconProvider: DiiaResourceIconProvider
+    onUIAction: (UIAction) -> Unit
 ) {
 
     var isLoading by remember {
@@ -58,8 +57,7 @@ fun ListItemMlc(
     }
 
     LaunchedEffect(key1 = progressIndicator) {
-        isLoading =
-            progressIndicator.first == data.id && progressIndicator.second
+        isLoading = progressIndicator.first == data.id && progressIndicator.second
     }
 
     LaunchedEffect(key1 = data.interactionState, key2 = isLoading) {
@@ -79,7 +77,8 @@ fun ListItemMlc(
             .conditional(!isLoading) {
                 noRippleClickable { onUIAction(onClickData) }
             }
-            .disableByInteractionState(data.interactionState),
+            .disableByInteractionState(data.interactionState)
+            .testTag(data.componentId?.asString() ?: ""),
         verticalAlignment = Alignment.CenterVertically
     ) {
         data.logoLeft?.let {
@@ -102,7 +101,7 @@ fun ListItemMlc(
                             .padding(end = 16.dp)
                             .size(32.dp),
                         painter = painterResource(
-                            id = diiaResourceIconProvider.getResourceId(it.code)
+                            id = DiiaResourceIcon.getResourceId(it.code)
                         ),
                         contentDescription = data.iconLeftContentDescription?.asString()
                     )
@@ -137,7 +136,7 @@ fun ListItemMlc(
                         .padding(end = 16.dp)
                         .size(24.dp),
                     painter = painterResource(
-                        id = diiaResourceIconProvider.getResourceId(it.code)
+                        id = DiiaResourceIcon.getResourceId(it.code)
                     ),
                     contentDescription = data.iconLeftContentDescription?.asString()
                 )
@@ -167,7 +166,7 @@ fun ListItemMlc(
                     .padding(start = 16.dp)
                     .size(24.dp),
                 painter = painterResource(
-                    id = diiaResourceIconProvider.getResourceId(it.code)
+                    id = DiiaResourceIcon.getResourceId(it.code)
                 ),
                 contentDescription = data.iconRightContentDescription?.asString()
             )
@@ -187,7 +186,8 @@ data class ListItemMlcData(
     val logoLeft: UiIcon? = null,
     val logoLeftContentDescription: UiText? = null,
     val action: DataActionWrapper? = null,
-    val interactionState: UIState.Interaction = UIState.Interaction.Enabled
+    val interactionState: UIState.Interaction = UIState.Interaction.Enabled,
+    val componentId: UiText? = null,
 ) : UIElementData
 
 
@@ -199,8 +199,8 @@ fun ListItemMlcPreview_Full() {
         label = UiText.DynamicString("Label"),
         description = UiText.DynamicString("Description"),
         logoLeft = UiIcon.DynamicIconBase64(PreviewBase64Icons.apple),
-        iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
-        iconRight = UiIcon.DrawableResource(CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
+        iconRight = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
         action = DataActionWrapper(
             type = "type",
             subtype = "subtype",
@@ -208,11 +208,8 @@ fun ListItemMlcPreview_Full() {
         ),
         interactionState = UIState.Interaction.Enabled
     )
-    ListItemMlc(
-        modifier = Modifier,
-        data = state,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {})
+    ListItemMlc(modifier = Modifier, data = state) {
+    }
 }
 
 @Composable
@@ -223,8 +220,8 @@ fun ListItemMlcPreview_Loading() {
         label = UiText.DynamicString("Label"),
         description = UiText.DynamicString("Description"),
         logoLeft = UiIcon.DynamicIconBase64(PreviewBase64Icons.apple),
-        iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
-        iconRight = UiIcon.DrawableResource(CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
+        iconRight = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
         action = DataActionWrapper(
             type = "type",
             subtype = "subtype",
@@ -234,10 +231,9 @@ fun ListItemMlcPreview_Loading() {
     )
     ListItemMlc(
         modifier = Modifier, data = state,
-        progressIndicator = "123" to true,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {}
-    )
+        progressIndicator = "123" to true
+    ) {
+    }
 }
 
 @Composable
@@ -248,8 +244,8 @@ fun ListItemMlcPreview_Disabled() {
         label = UiText.DynamicString("Label"),
         description = UiText.DynamicString("Description"),
         logoLeft = UiIcon.DynamicIconBase64(PreviewBase64Icons.apple),
-        iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
-        iconRight = UiIcon.DrawableResource(CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
+        iconRight = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
         action = DataActionWrapper(
             type = "type",
             subtype = "subtype",
@@ -257,11 +253,8 @@ fun ListItemMlcPreview_Disabled() {
         ),
         interactionState = UIState.Interaction.Disabled
     )
-    ListItemMlc(
-        modifier = Modifier,
-        data = state,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {})
+    ListItemMlc(modifier = Modifier, data = state) {
+    }
 }
 
 @Composable
@@ -277,12 +270,8 @@ fun ListItemMlcPreview_OnlyMandatoryFields() {
         ),
         interactionState = UIState.Interaction.Disabled
     )
-    ListItemMlc(
-        modifier = Modifier,
-        data = state,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {}
-    )
+    ListItemMlc(modifier = Modifier, data = state) {
+    }
 }
 
 @Composable
@@ -293,8 +282,8 @@ fun ListItemMlcPreview_VeryLongTitle() {
         label = UiText.DynamicString("Label Label Label Label Label Label"),
         description = UiText.DynamicString("Description"),
         logoLeft = UiIcon.DynamicIconBase64(PreviewBase64Icons.apple),
-        iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.MENU.code),
-        iconRight = UiIcon.DrawableResource(CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.MENU.code),
+        iconRight = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
         action = DataActionWrapper(
             type = "type",
             subtype = "subtype",
@@ -302,9 +291,6 @@ fun ListItemMlcPreview_VeryLongTitle() {
         ),
         interactionState = UIState.Interaction.Enabled
     )
-    ListItemMlc(
-        modifier = Modifier,
-        data = state,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {})
+    ListItemMlc(modifier = Modifier, data = state) {
+    }
 }

@@ -22,6 +22,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
+import ua.gov.diia.ui_base.models.homescreen.HomeMenuItemConstructor
+import ua.gov.diia.core.models.share.ShareByteArr
 import ua.gov.diia.core.network.connectivity.ConnectivityObserver
 import ua.gov.diia.core.util.DispatcherProvider
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
@@ -37,9 +39,10 @@ import ua.gov.diia.documents.barcode.DocumentBarcodeSuccessfulLoadResult
 import ua.gov.diia.documents.data.api.ApiDocuments
 import ua.gov.diia.documents.data.repository.DocumentsDataRepository
 import ua.gov.diia.documents.getOrAwaitValue
+import ua.gov.diia.documents.helper.DocumentsHelper
 import ua.gov.diia.documents.models.DiiaDocument
 import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.models.DocError
+import ua.gov.diia.doc_manual_options.models.DocManualOptions
 import ua.gov.diia.documents.models.LocalizationType
 import ua.gov.diia.documents.rules.MainDispatcherRule
 import ua.gov.diia.documents.ui.DocumentComposeMapper
@@ -62,7 +65,6 @@ import ua.gov.diia.ui_base.components.organism.pager.CardFace
 import ua.gov.diia.ui_base.components.organism.pager.DocCardFlipData
 import ua.gov.diia.ui_base.components.organism.pager.DocCarouselOrgData
 import ua.gov.diia.ui_base.components.organism.pager.DocsCarouselItem
-import ua.gov.diia.ui_base.models.homescreen.HomeMenuItemConstructor
 import kotlin.time.Duration.Companion.seconds
 
 @ExperimentalCoroutinesApi
@@ -89,10 +91,12 @@ class DocStackVMComposeTest {
     private val withPdfCertificate: WithPdfCertificate = mock()
     private val withCheckLocalizationDocs: WithCheckLocalizationDocs = mock()
     private val withRemoveDocument: WithRemoveDocument = mock()
+    private val documentsHelper: DocumentsHelper = mock()
+
     private val mockDoc =
-        DiiaDocumentWithMetadata(DocError(), "", "", 200, "doc_error")
+        DiiaDocumentWithMetadata(ua.gov.diia.doc_manual_options.models.DocManualOptions(), "", "", 200, "doc_manual_options")
     private val mockDoc2 =
-        DiiaDocumentWithMetadata(DocTest(), "", "", 200, "doc_error")
+        DiiaDocumentWithMetadata(DocTest(), "", "", 200, "doc_manual_options")
 
     private val documentsFlow: Flow<DataSourceDataResult<List<DiiaDocumentWithMetadata>>> =
         flowOf(DataSourceDataResult.successful(listOf(mockDoc2, mockDoc)))
@@ -118,7 +122,8 @@ class DocStackVMComposeTest {
             withUpdateExpiredDocs,
             withPdfCertificate,
             withCheckLocalizationDocs,
-            withRemoveDocument
+            withRemoveDocument,
+            documentsHelper
         )
     }
 
@@ -230,6 +235,30 @@ class DocStackVMComposeTest {
         vm.getCertificatePdf(DocTest())
         advanceUntilIdle()
         verify(withPdfCertificate, times(1)).loadCertificatePdf(any())
+    }
+
+    @Test
+    fun `test addAwardToGallery`() = runTest {
+        initVM()
+        vm.addDocToGallery()
+        advanceUntilIdle()
+        verify(documentsHelper, times(1)).addDocToGallery()
+    }
+
+    @Test
+    fun `test loadImageAndShare`() = runTest {
+        initVM()
+        val bytes = ShareByteArr(fileName = "", byteArray = ByteArray(0))
+        Mockito.`when`(documentsHelper.loadDocImageInByteArray(any())).thenReturn(bytes)
+        vm.docAction.test {
+            vm.loadImageAndShare("123")
+            advanceUntilIdle()
+            verify(documentsHelper, times(1)).loadDocImageInByteArray(any())
+            Assert.assertEquals(
+                awaitItem(),
+                DocStackVMCompose.DocActions.ShareImage(bytes)
+            )
+        }
     }
 
     @Test

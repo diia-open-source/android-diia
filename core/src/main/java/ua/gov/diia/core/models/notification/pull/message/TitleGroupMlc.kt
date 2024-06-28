@@ -13,5 +13,7 @@ data class TitleGroupMlc(
     @Json(name = "label")
     val label: String?,
     @Json(name = "leftNavIcon")
-    val leftNavIcon: LeftNavIcon?
+    val leftNavIcon: LeftNavIcon?,
+    @Json(name = "componentId")
+    val componentId: String? = null
 )

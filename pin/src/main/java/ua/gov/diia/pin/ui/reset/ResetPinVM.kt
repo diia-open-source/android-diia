@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.transform
 import ua.gov.diia.core.di.actions.GlobalActionLogout
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
+import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.alert.ClientAlertDialogsFactory
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
@@ -20,7 +21,7 @@ import ua.gov.diia.core.util.event.UiEvent
 import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
 import ua.gov.diia.pin.R
 import ua.gov.diia.pin.repository.LoginPinRepository
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -32,7 +33,6 @@ import ua.gov.diia.ui_base.components.molecule.header.TitleGroupMlcData
 import ua.gov.diia.ui_base.components.molecule.text.TextLabelMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 import ua.gov.diia.ui_base.components.organism.tile.NumButtonTileOrganismData
-import ua.gov.diia.ui_base.navigation.BaseNavigation
 import javax.inject.Inject
 
 @HiltViewModel
@@ -67,19 +67,26 @@ class ResetPinVM @Inject constructor(
                 titleGroupMlcData = TitleGroupMlcData(
                     heroText = UiText.StringResource(R.string.pin_reset_title_text),
                     leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                        code = CommonDiiaResourceIcon.BACK.code,
+                        code = DiiaResourceIcon.BACK.code,
                         accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
                         action = DataActionWrapper(
                             type = ActionsConst.ACTION_NAVIGATE_BACK,
                             subtype = null,
                             resource = null
                         )
-                    )
+                    ),
+                    componentId = UiText.StringResource(R.string.confirm_pin_screen_title_test_tag),
                 )
             )
         )
-        _uiData.add(TextLabelMlcData(text = UiText.StringResource(R.string.pin_reset_description_text)))
-        _uiData.add(NumButtonTileOrganismData())
+        _uiData.add(TextLabelMlcData(
+            text = UiText.StringResource(R.string.pin_reset_description_text),
+            componentId = UiText.StringResource(R.string.confirm_pin_screen_title_test_tag),
+        ))
+        _uiData.add(NumButtonTileOrganismData(
+            componentId = UiText.StringResource(R.string.confirm_pin_screen_btn_num_test_tag),
+            componentIdEllipse = UiText.StringResource(R.string.confirm_pin_screen_ellips_test_tag)
+        ))
     }
 
     private fun approvePin(pin: String) {

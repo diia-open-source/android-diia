@@ -7,19 +7,16 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import ua.gov.diia.core.util.extensions.fragment.navigate
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.pin.ui.create.compose.CreatePinScreen
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
-import javax.inject.Inject
+import ua.gov.diia.ui_base.navigation.BaseNavigation
 
 @AndroidEntryPoint
 class CreatePinF : Fragment() {
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
 
     private val viewModel: CreatePinVM by viewModels()
     private val args: CreatePinFArgs by navArgs()
@@ -51,14 +48,17 @@ class CreatePinF : Fragment() {
                         is CreatePinVM.Navigation.ToPinConformation -> {
                             navigateToConformation(navigation.pin)
                         }
+
+                        is BaseNavigation.Back -> {
+                            findNavController().popBackStack()
+                        }
                     }
                 }
             }
 
             CreatePinScreen(
                 data = uiDataElements,
-                onUIAction = { viewModel.onUIAction(it) },
-                diiaResourceIconProvider = diiaResourceIconProvider,
+                onUIAction = { viewModel.onUIAction(it) }
             )
         }
     }

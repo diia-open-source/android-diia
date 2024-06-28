@@ -16,6 +16,7 @@ object DateFormats {
     val penaltiesFormat: SimpleDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale("UK"))
     val debtsFormat: SimpleDateFormat = SimpleDateFormat("dd MMMM yyyy", Locale("UK"))
     val criminalCertFileFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("UK"))
+    val calendarMonthFormat: SimpleDateFormat = SimpleDateFormat("MM.yyyy", Locale("UK"))
 
     @Throws(ParseException::class)
     fun iso8601ToLocalCalendar(iso8601string: String): Calendar {

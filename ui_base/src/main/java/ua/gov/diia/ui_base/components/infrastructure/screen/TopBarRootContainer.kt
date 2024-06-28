@@ -7,8 +7,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -21,7 +20,6 @@ import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 fun TopBarRootContainer(
     modifier: Modifier = Modifier,
     topBarViews: SnapshotStateList<UIElementData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     topBarViews.forEach {
@@ -30,8 +28,7 @@ fun TopBarRootContainer(
                 TopGroupOrg(
                     modifier = modifier,
                     data = it,
-                    onUIAction = onUIAction,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onUIAction = onUIAction
                 )
             }
         }
@@ -48,7 +45,7 @@ fun TopBarRootContainerPreview() {
             titleGroupMlcData = TitleGroupMlcData(
                 heroText = UiText.StringResource(resId = R.string.notification_channel_messages),
                 leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                    code = CommonDiiaResourceIcon.BACK.code,
+                    code = DiiaResourceIcon.BACK.code,
                     accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
                     action = DataActionWrapper(
                         type = "back",
@@ -59,10 +56,7 @@ fun TopBarRootContainerPreview() {
             )
         )
     )
-    TopBarRootContainer(
-        topBarViews = toolbarData,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    TopBarRootContainer(topBarViews = toolbarData) {
 
     }
 }

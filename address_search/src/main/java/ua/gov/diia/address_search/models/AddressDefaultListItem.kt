@@ -15,5 +15,5 @@ data class AddressDefaultListItem(
     @Json(name = "errorMessage")
     val errorMessage: String?
 ) : Parcelable{
-    fun toAddressItem()  =  AddressItem(id,name, errorMessage)
+    fun toAddressItem()  =  AddressItem(id,name, errorMessage, false)
 }

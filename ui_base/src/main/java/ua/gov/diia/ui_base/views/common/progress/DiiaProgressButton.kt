@@ -188,6 +188,14 @@ class DiiaProgressButton @JvmOverloads constructor(
         textButton.setOnClickListener { listener?.invoke() }
     }
 
+    fun setOnButtonSingleClickListener(delay: Long = 1000L, action: (() -> Unit)?) {
+        textButton.setOnClickListener {
+            it.isClickable = false
+            action?.invoke()
+            postDelayed({ it.isClickable = true }, delay)
+        }
+    }
+
     fun setIsDone(done: Boolean) {
         if (done) doneIndicator.visibility = VISIBLE
         else doneIndicator.visibility = GONE

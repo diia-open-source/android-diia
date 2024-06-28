@@ -89,15 +89,16 @@ class SplashFVM @Inject constructor(
 
     fun doInit(
         skipInitialization: Boolean,
-        serviceUserUuid: String?
+        serviceUserUUID: String?
     ) {
-        this.serviceUserUuid = serviceUserUuid
-
-        if (serviceUserUuid != null) {
-            startLoginServiceUserFlow()
-        } else {
-            if (!skipInitialization) {
-                setupAppVersionVerificationServices()
+        viewModelScope.launch {
+            serviceUserUuid = serviceUserUUID ?: authorizationRepository.getServiceUserUUID()
+            if (serviceUserUUID != null) {
+                startLoginServiceUserFlow()
+            } else {
+                if (!skipInitialization) {
+                    setupAppVersionVerificationServices()
+                }
             }
         }
     }
@@ -153,7 +154,7 @@ class SplashFVM @Inject constructor(
         if (jobs.isEmpty()) {
             executeActionOnFlow {
                 if (isAuthServiceUserFlow) {
-                    _navigation.tryEmit(Navigation.ToPinCreation)
+                    resolveServiceUserNavigation()
                 } else {
                     viewModelScope.launch {
                         when (authorizationRepository.getUserType()) {
@@ -182,19 +183,31 @@ class SplashFVM @Inject constructor(
         }
     }
 
+    private fun resolveServiceUserNavigation() {
+        executeActionOnFlow {
+            if (splashHelper.isProtectionExists()) {
+                _navigation.tryEmit(Navigation.ToProtection)
+            } else {
+                _navigation.tryEmit(Navigation.ToPinCreation)
+            }
+        }
+    }
+
     fun setServiceUserPin(pin: String) {
         val authToken = serviceUserToken ?: return
+        val serviceUserUUID = serviceUserUuid ?: return
         executeActionOnFlow {
-            authorizeServiceUser(pin, authToken)
+            authorizeServiceUser(pin, authToken, serviceUserUUID)
             _navigation.tryEmit(Navigation.ToQrScanner)
         }
     }
 
-    private suspend fun authorizeServiceUser(pin: String, authToken: String) {
+    private suspend fun authorizeServiceUser(pin: String, authToken: String, serviceUserUuid: String) {
         //splits execution to separate coroutines to speed up execution time
         coroutineScope {
             launch { authorizationRepository.setToken(authToken) }
             launch { authorizationRepository.setIsServiceUser(true) }
+            launch { authorizationRepository.setServiceUserUUID(serviceUserUuid) }
             launch { splashHelper.setUserAuthorized(pin) }
         }
     }

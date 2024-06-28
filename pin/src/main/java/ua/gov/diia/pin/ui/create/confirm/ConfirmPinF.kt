@@ -18,7 +18,6 @@ import ua.gov.diia.core.util.extensions.fragment.setNavigationResult
 import ua.gov.diia.pin.helper.PinHelper
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.pin.ui.create.compose.CreatePinScreen
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,9 +29,6 @@ class ConfirmPinF : Fragment() {
 
     @Inject
     lateinit var pinHelper: PinHelper
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,8 +72,7 @@ class ConfirmPinF : Fragment() {
             }
             CreatePinScreen(
                 data = uiDataElements,
-                onUIAction = { viewModel.onUIAction(it) },
-                diiaResourceIconProvider = diiaResourceIconProvider,
+                onUIAction = { viewModel.onUIAction(it) }
             )
         }
         registerForTemplateDialogNavResult { action ->

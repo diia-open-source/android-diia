@@ -8,4 +8,5 @@ object CriminalCertConst {
     const val RATING_SERVICE_CODE = "criminal-cert"
     const val TEMPLATE_ACTION_OPEN_STATUS = "damagedPropertyRecoveryStatus"
 
+
 }

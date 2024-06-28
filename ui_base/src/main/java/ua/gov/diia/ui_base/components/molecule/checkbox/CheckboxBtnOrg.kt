@@ -8,8 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.general.ButtonStates
+import ua.gov.diia.core.models.common_compose.org.checkbox.CheckboxBtnOrg
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtmData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -18,6 +21,7 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.subatomic.border.diiaGreyBorder
+import ua.gov.diia.ui_base.util.toDataActionWrapper
 
 @Composable
 fun CheckboxBtnOrg(
@@ -32,6 +36,7 @@ fun CheckboxBtnOrg(
             .fillMaxWidth()
             .diiaGreyBorder()
             .padding(16.dp)
+            .testTag(data.componentId?.asString() ?: "")
     ) {
         data.options?.forEach { option ->
             CheckboxSquareMlc(
@@ -54,7 +59,8 @@ data class CheckboxBtnOrgData(
     val actionKey: String = UIActionKeysCompose.CHECKBOX_BTN_ORG,
     val id: String = "",
     val options: List<CheckboxSquareMlcData>?,
-    val buttonData: BtnPrimaryDefaultAtmData
+    val buttonData: BtnPrimaryDefaultAtmData,
+    val componentId: UiText? = null,
 ) : UIElementData {
 
     fun onOptionsCheckChanged(optionId: String?): CheckboxBtnOrgData {
@@ -121,6 +127,45 @@ data class CheckboxBtnOrgData(
             )
         )
     }
+}
+
+fun CheckboxBtnOrg?.toUIModel(): CheckboxBtnOrgData {
+    val checkboxBtnOrg = this
+    return CheckboxBtnOrgData(
+        options = SnapshotStateList<CheckboxSquareMlcData>().apply {
+            checkboxBtnOrg?.items?.forEachIndexed() { index, item ->
+                add(
+                    CheckboxSquareMlcData(
+                        id = item.checkboxSquareMlc.id ?: index.toString(),
+                        title = UiText.DynamicString(item.checkboxSquareMlc.label),
+                        interactionState = if (item.checkboxSquareMlc.blocker != null) {
+                            if (item.checkboxSquareMlc.blocker == false) {
+                                UIState.Interaction.Enabled
+                            } else {
+                                UIState.Interaction.Disabled
+                            }
+                        } else UIState.Interaction.Enabled,
+                        selectionState = UIState.Selection.Unselected
+                    )
+                )
+            }
+        },
+        buttonData = BtnPrimaryDefaultAtmData(
+            title = UiText.DynamicString(
+                checkboxBtnOrg?.btnPrimaryDefaultAtm?.label ?: "Далі"
+            ),
+            id = checkboxBtnOrg?.btnPrimaryDefaultAtm?.componentId ?: "",
+            interactionState = when (checkboxBtnOrg?.btnPrimaryDefaultAtm?.state
+                ?: ButtonStates.disabled) {
+                ButtonStates.enabled -> UIState.Interaction.Enabled
+                ButtonStates.disabled -> UIState.Interaction.Disabled
+                ButtonStates.invisible -> UIState.Interaction.Disabled
+                else -> UIState.Interaction.Disabled
+            },
+            action = checkboxBtnOrg?.btnPrimaryDefaultAtm?.action?.toDataActionWrapper()
+        ),
+        componentId = this?.componentId?.let { UiText.DynamicString(it) },
+    )
 }
 
 @Preview

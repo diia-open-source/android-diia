@@ -7,10 +7,5 @@
         android:id="@+id/docGalleryFCompose"
         android:name="ua.gov.diia.documents.ui.gallery.DocGalleryFCompose"
         android:label="previewFCompose">
-        <argument
-            android:name="settings"
-            android:defaultValue="@null"
-            app:argType="ua.gov.diia.documents.ui.gallery.DocFSettings"
-            app:nullable="true" />
     </keep_state_fragment>
 </navigation>

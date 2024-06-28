@@ -1,0 +1,2 @@
+-keep public class ua.gov.diia.ps_criminal_cert.models.CriminalCertUserData{*;}
+-keep public class ua.gov.diia.ps_criminal_cert.models.PreviousNames{*;}

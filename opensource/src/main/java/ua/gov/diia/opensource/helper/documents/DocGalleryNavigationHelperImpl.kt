@@ -18,6 +18,7 @@ import ua.gov.diia.documents.ui.DocsConst
 import ua.gov.diia.documents.ui.gallery.DocGalleryNavigationHelper
 import ua.gov.diia.documents.ui.gallery.DocGalleryVMCompose
 import ua.gov.diia.opensource.R
+import ua.gov.diia.opensource.ui.AppConst
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import javax.inject.Inject
 
@@ -93,10 +94,10 @@ class DocGalleryNavigationHelperImpl @Inject constructor(
         }
     }
 
-    fun registerFromRemoveDocument(fragment: Fragment, viewModel: DocVM) {
+    private fun registerFromRemoveDocument(fragment: Fragment, viewModel: DocVM) {
         with(fragment) {
 
-            registerForNavigationResult<ConsumableItem>(ActionsConst.RESULT_KEY_REMOVE_DOCUMENT) { key ->
+            registerForNavigationResult<ConsumableItem>(DocsConst.RESULT_KEY_REMOVE_DOC) { key ->
                 key.consumeEvent<DiiaDocument> { doc ->
                     if (previousDestinationId == R.id.homeF) {
                         findNavController().popBackStack()
@@ -107,7 +108,7 @@ class DocGalleryNavigationHelperImpl @Inject constructor(
         }
     }
 
-    fun registerFromKeyRating(fragment: Fragment, viewModel: DocVM) {
+    private fun registerFromKeyRating(fragment: Fragment, viewModel: DocVM) {
         with(fragment) {
             registerForNavigationResult<ConsumableItem>(DocsConst.RESULT_KEY_RATING) { event ->
                 event.consumeEvent<RatingRequest> { rating ->
@@ -125,7 +126,7 @@ class DocGalleryNavigationHelperImpl @Inject constructor(
     ) {
         with(fragment) {
 
-            registerForNavigationResult<ConsumableItem>(ActionsConst.RESULT_KEY_RATE_DOCUMENT) { key ->
+            registerForNavigationResult<ConsumableItem>(DocsConst.RESULT_KEY_RATE_DOCUMENT) { key ->
                 key.consumeEvent<DiiaDocument> { doc ->
                     if (previousDestinationId == R.id.homeF) {
                         findNavController().popBackStack()
@@ -138,7 +139,7 @@ class DocGalleryNavigationHelperImpl @Inject constructor(
 
     private fun registerFromOpenLink(fragment: Fragment) {
         with(fragment) {
-            registerForNavigationResult<ConsumableString>(ActionsConst.RESULT_KEY_OPEN_LINK) { key ->
+            registerForNavigationResult<ConsumableString>(AppConst.RESULT_KEY_OPEN_LINK) { key ->
                 key.consumeEvent { link ->
                     if (previousDestinationId == R.id.homeF) {
                         findNavController().popBackStack()
@@ -151,7 +152,7 @@ class DocGalleryNavigationHelperImpl @Inject constructor(
 
     private fun registerFromVerificationCode(fragment: Fragment, viewModel: DocVM) {
         with(fragment) {
-            registerForNavigationResult<ConsumableItem>(ActionsConst.RESULT_KEY_VERIFICATION_CODE) { key ->
+            registerForNavigationResult<ConsumableItem>(DocsConst.RESULT_KEY_VERIFICATION_CODE) { key ->
                 key.consumeEvent<VerificationAction> { action ->
                     if (previousDestinationId == R.id.homeF) {
                         findNavController().popBackStack()
@@ -169,7 +170,7 @@ class DocGalleryNavigationHelperImpl @Inject constructor(
 
     private fun registerFromEANCode(fragment: Fragment, viewModel: DocVM) {
         with(fragment) {
-            registerForNavigationResult<ConsumableItem>(ActionsConst.RESULT_KEY_EAN13_CODE) { key ->
+            registerForNavigationResult<ConsumableItem>(DocsConst.RESULT_KEY_EAN13_CODE) { key ->
                 key.consumeEvent<VerificationAction> { action ->
                     if (previousDestinationId == R.id.homeF) {
                         findNavController().popBackStack()
@@ -188,7 +189,7 @@ class DocGalleryNavigationHelperImpl @Inject constructor(
 
     private fun registerFromQRCode(fragment: Fragment, viewModel: DocVM) {
         with(fragment) {
-            registerForNavigationResult<ConsumableItem>(ActionsConst.RESULT_KEY_QR_CODE) { key ->
+            registerForNavigationResult<ConsumableItem>(DocsConst.RESULT_KEY_QR_CODE) { key ->
                 key.consumeEvent<VerificationAction> { action ->
                     if (previousDestinationId == R.id.homeF) {
                         findNavController().popBackStack()

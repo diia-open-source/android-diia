@@ -147,7 +147,8 @@ class FullInfoFComposeVM @Inject constructor(
                     eanCode = data.eanCode,
                     timerText = data.timerText,
                     exception = data.exception,
-                    expired = data.expired
+                    expired = data.expired,
+                    noRegistry = data.noRegistry
                 )
             }
 

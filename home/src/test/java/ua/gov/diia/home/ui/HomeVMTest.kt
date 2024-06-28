@@ -117,9 +117,7 @@ class HomeVMTest {
     fun createVM() {
 
         viewModel = HomeVM(
-            promoController,
             notificationController,
-            itnDataSource,
             dispatcherProvider,
             allowAuthorizedLinksFlow,
             globalActionDocLoadingIndicator,
@@ -239,7 +237,6 @@ class HomeVMTest {
 
             callback!!(template)
 
-            viewModel.updatePromoProcessCode()
             verify(promoController, times(1)).updatePromoProcessCode(10)
         }
     }
@@ -310,9 +307,7 @@ class HomeVMTest {
                     null
                 }
             viewModel = HomeVM(
-                promoController,
                 notificationController,
-                itnDataSource,
                 dispatcherProvider,
                 allowAuthorizedLinksFlow,
                 globalActionDocLoadingIndicator,
@@ -442,38 +437,6 @@ class HomeVMTest {
     }
 
     @Test
-    fun `test subscribe to beta by code`() {
-        runTest {
-            var callback: ((template: TemplateDialogModelWithProcessCode) -> Unit)? = null
-
-            `when`(promoController.checkPromo(any())).thenAnswer(Answer {
-                callback = (it.getArguments()
-                    .get(0) as ((template: TemplateDialogModelWithProcessCode) -> Unit))
-            })
-
-            createVM()
-            val templateDialogModel = mock<TemplateDialogModel>()
-            val template = TemplateDialogModelWithProcessCode(1, templateDialogModel)
-            callback!!(template)
-
-            viewModel.subscribeToBetaByCode()
-            verify(promoController, times(1)).subscribeToBetaByCode(any())
-        }
-    }
-
-    @Test
-    fun `test subscribe to beta by code throw exception`() {
-        runBlocking {
-            val exception = RuntimeException()
-
-            createVM()
-            `when`(promoController.subscribeToBetaByCode(null)).doThrow(exception)
-            viewModel.subscribeToBetaByCode()
-            verify(withCrashlytics, times(1)).sendNonFatalError(exception)
-        }
-    }
-
-    @Test
     fun `test allowAuthorizedDeepLinks emin flow with true value`() {
         runTest {
             createVM()
@@ -515,17 +478,6 @@ class HomeVMTest {
             viewModel.denyNotifications()
 
             verify(notificationController, times(1)).denyNotifications()
-        }
-    }
-
-    @Test
-    fun `test focusOnDocumentType pass global focus doc action`() {
-        runBlocking {
-            createVM()
-
-            val docType = "doc_type"
-            viewModel.focusOnDocumentType(docType)
-            Assert.assertEquals(docType, globalActionFocusOnDocument.value!!.peekContent())
         }
     }
 

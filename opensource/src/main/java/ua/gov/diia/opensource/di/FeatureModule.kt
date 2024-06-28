@@ -30,6 +30,7 @@ import ua.gov.diia.opensource.helper.PSNavigationHelperImpl
 import ua.gov.diia.opensource.helper.PinHelperImpl
 import ua.gov.diia.opensource.helper.PublicServiceHelperImpl
 import ua.gov.diia.opensource.helper.PublicServicesCategoriesTabMapperImpl
+import ua.gov.diia.opensource.helper.ServiceCardResourceHelperImpl
 import ua.gov.diia.opensource.helper.SplashHelperImpl
 import ua.gov.diia.opensource.util.DeeplinkProcessorImpl
 import ua.gov.diia.pin.helper.PinHelper
@@ -42,6 +43,7 @@ import ua.gov.diia.publicservice.ui.compose.PublicServiceCategoryDetailsComposeM
 import ua.gov.diia.publicservice.ui.compose.PublicServicesSearchComposeMapper
 import ua.gov.diia.publicservice.ui.compose.PublicServicesSearchComposeMapperImpl
 import ua.gov.diia.splash.helper.SplashHelper
+import ua.gov.diia.ui_base.helper.ServiceCardResourceHelper
 import java.util.concurrent.Executors
 import javax.inject.Singleton
 
@@ -57,6 +59,9 @@ interface FeatureModule {
 
     @Binds
     fun bindNotificationHelper(impl: NotificationHelperImpl): NotificationHelper
+
+    @Binds
+    fun bindServiceCardHelper(impl: ServiceCardResourceHelperImpl): ServiceCardResourceHelper
 
     companion object {
 

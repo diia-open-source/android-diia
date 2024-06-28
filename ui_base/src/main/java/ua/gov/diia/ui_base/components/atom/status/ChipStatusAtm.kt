@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.Green
 import ua.gov.diia.ui_base.components.theme.Grey
@@ -40,7 +42,8 @@ fun ChipStatusAtm(modifier: Modifier = Modifier, data: ChipStatusAtmData) {
                     StatusChipType.PENDING -> Yellow
                 }, shape = RoundedCornerShape(10.dp)
             )
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
+            .testTag(data.componentId?.asString() ?: ""),
         contentAlignment = Alignment.Center
     ) {
         data.title?.let {
@@ -63,7 +66,11 @@ fun ChipStatusAtm(modifier: Modifier = Modifier, data: ChipStatusAtmData) {
 
 }
 
-data class ChipStatusAtmData(val type: StatusChipType, val title: String? = null)
+data class ChipStatusAtmData(
+    val componentId: UiText? = null,
+    val type: StatusChipType,
+    val title: String? = null
+    )
 
 enum class StatusChipType {
     NEUTRAL, NEGATIVE, POSITIVE, PENDING

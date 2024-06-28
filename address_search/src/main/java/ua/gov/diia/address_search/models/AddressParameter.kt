@@ -53,7 +53,7 @@ data class AddressParameter(
     fun getDefaultAddress(): AddressItem? =
         defaultListItem?.toAddressItem()
             ?: if (defaultTextItem != null) {
-                AddressItem(id = null, name = defaultTextItem, errorMessage = null)
+                AddressItem(id = null, name = defaultTextItem, errorMessage = null, disabled = false)
             } else {
                 null
             }

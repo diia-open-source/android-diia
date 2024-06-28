@@ -50,10 +50,10 @@ fun BlurImage(
 }
 
 @Composable
-fun BlurBitmap(bitmap: Bitmap, width: Dp, height: Dp) {
+fun BlurBitmap(modifier: Modifier = Modifier, bitmap: Bitmap, width: Dp, height: Dp) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
         LegacyBlurImage(
-            modifier = Modifier
+            modifier = modifier
                 .size(width = width, height = height)
                 .alpha(0.05f),
             bitmap,
@@ -62,7 +62,7 @@ fun BlurBitmap(bitmap: Bitmap, width: Dp, height: Dp) {
     } else {
         BlurImage(
             bitmap,
-            Modifier
+            modifier
                 .size(width = width, height = height)
                 .alpha(0.05f)
                 .blur(5.dp)

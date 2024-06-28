@@ -7,7 +7,6 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 import ua.gov.diia.core.models.common_compose.atm.chip.ChipStatusAtm
-import ua.gov.diia.core.network.Http.HTTP_200
 import ua.gov.diia.documents.models.docgroups.*
 import ua.gov.diia.documents.models.docgroups.v2.*
 import ua.gov.diia.diia_storage.store.Preferences
@@ -28,7 +27,8 @@ data class DiiaDocumentWithMetadata(
     WithTimestamp,
     WithStatus,
     WithId,
-    WithOrder, Parcelable {
+    WithOrder,
+    Parcelable {
 
     fun setStatus(status: Int) {
         this.status = status
@@ -62,20 +62,6 @@ data class DiiaDocumentWithMetadata(
 
         const val LAST_DOC_ORDER = Int.MAX_VALUE - 1
         const val FIRST_DOC_ORDER = Int.MIN_VALUE + 1
-
-        private const val EMPTY_VALUE = ""
-        private const val ERROR_PLACEHOLDER = "error_placeholder"
-
-        val DOC_ERROR = DiiaDocumentWithMetadata(
-            DocError(),
-            EMPTY_VALUE,
-            EMPTY_VALUE,
-            HTTP_200,
-            ERROR_PLACEHOLDER,
-            //should be after last doc
-            LAST_DOC_ORDER + 1
-        )
-
     }
 
 }
@@ -131,12 +117,15 @@ interface DiiaDocument : Expiring,
     WithStatus,
     WithWeight,
     WithOrder,
+    WithSourceType,
     Parcelable {
 
     fun docId() = String()
 
     @ColorRes
     fun getDocColor(): Int
+
+    fun getDocStackTitle(): String
 
     fun getItemType(): String
 
@@ -207,6 +196,14 @@ interface WithDocName {
     fun getDocOrderDescription(): String?
 }
 
+interface WithSourceType {
+    fun getSourceType(): SourceType
+}
+
+enum class SourceType {
+    STATIC, DYNAMIC
+}
+
 interface WithRegistrationPlace {
     var currentRegistrationPlaceUA: String?
 }
@@ -216,7 +213,7 @@ interface WithQrCode {
     val qr: String?
 }
 
-interface Passport: WithRegistrationPlace, WithTaxpayerCard {
+interface Passport : WithRegistrationPlace, WithTaxpayerCard {
 
     val recordNumber: String?
 
@@ -225,7 +222,7 @@ interface Passport: WithRegistrationPlace, WithTaxpayerCard {
 interface WithFrontCard {
     fun getTicker(): TickerAtm?
 
-    fun getDocHeading():  DocHeadingOrg?
+    fun getDocHeading(): DocHeadingOrg?
 
     fun getDocButtonHeading(): DocButtonHeadingOrg?
 

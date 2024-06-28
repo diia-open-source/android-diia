@@ -13,8 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.icon.DoubleIconAtm
 import ua.gov.diia.ui_base.components.atom.icon.DoubleIconAtmData
 import ua.gov.diia.ui_base.components.atom.icon.IconAtm
@@ -36,7 +35,6 @@ fun WhiteCardMlc(
     modifier: Modifier = Modifier,
     data: WhiteCardMlcData,
     isFirstAtBody: Boolean = false,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     val onClick = UIAction(
@@ -78,8 +76,7 @@ fun WhiteCardMlc(
             data.doubleIconAtm?.let {
                 DoubleIconAtm(
                     modifier = Modifier.padding(end = 8.dp),
-                    data = it,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    data = it
                 ) {
                     onUIAction(onClick)
                 }
@@ -87,8 +84,7 @@ fun WhiteCardMlc(
             data.iconAtm?.let {
                 IconAtm(
                     modifier = Modifier.padding(end = 8.dp),
-                    data = it,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    data = it
                 ) {
                     onUIAction(onClick)
                 }
@@ -97,8 +93,7 @@ fun WhiteCardMlc(
             data.smallIcon?.let {
                 SmallIconAtm(
                     modifier = Modifier.padding(start = 8.dp),
-                    data = it,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    data = it
                 ) {
                     onUIAction(onClick)
                 }
@@ -125,7 +120,7 @@ fun WhiteCardMlc_Preview() {
         title = UiText.DynamicString("Title"),
         label = UiText.DynamicString("Label")
     )
-    WhiteCardMlc(data = data, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()) {
+    WhiteCardMlc(data = data) {
 
     }
 }
@@ -136,9 +131,9 @@ fun WhiteCardMlc_PreviewIconNext() {
     val data = WhiteCardMlcData(
         title = UiText.DynamicString("Title"),
         label = UiText.DynamicString("Label"),
-        smallIcon = SmallIconAtmData(code = CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code)
+        smallIcon = SmallIconAtmData(code = DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code)
     )
-    WhiteCardMlc(data = data, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()) {
+    WhiteCardMlc(data = data) {
 
     }
 }
@@ -149,10 +144,10 @@ fun WhiteCardMlc_IconStartSingle_PreviewIconNext() {
     val data = WhiteCardMlcData(
         title = UiText.DynamicString("Title"),
         label = UiText.DynamicString("Label"),
-        smallIcon = SmallIconAtmData(code = CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
-        iconAtm = IconAtmData(code = CommonDiiaResourceIcon.DEFAULT.code)
+        smallIcon = SmallIconAtmData(code = DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        iconAtm = IconAtmData(code = DiiaResourceIcon.SHELTER.code)
     )
-    WhiteCardMlc(data = data, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()) {
+    WhiteCardMlc(data = data) {
 
     }
 }
@@ -163,11 +158,11 @@ fun WhiteCardMlc_IconStartDouble_PreviewIconNext() {
     val data = WhiteCardMlcData(
         title = UiText.DynamicString("Title"),
         label = UiText.DynamicString("Label"),
-        smallIcon = SmallIconAtmData(code = CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
-        doubleIconAtm = DoubleIconAtmData(code = CommonDiiaResourceIcon.SAFETY_LARGE.code),
+        smallIcon = SmallIconAtmData(code = DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        doubleIconAtm = DoubleIconAtmData(code = DiiaResourceIcon.SAFETY_LARGE.code),
 
         )
-    WhiteCardMlc(data = data, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()) {
+    WhiteCardMlc(data = data) {
     }
 }
 
@@ -177,11 +172,11 @@ fun WhiteCardMlc_BothStartIcons_PreviewIconNext() {
     val data = WhiteCardMlcData(
         title = UiText.DynamicString("Title"),
         label = UiText.DynamicString("Label"),
-        smallIcon = SmallIconAtmData(code = CommonDiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
-        iconAtm = IconAtmData(code = CommonDiiaResourceIcon.DEFAULT.code),
-        doubleIconAtm = DoubleIconAtmData(code = CommonDiiaResourceIcon.SAFETY_LARGE.code),
+        smallIcon = SmallIconAtmData(code = DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        iconAtm = IconAtmData(code = DiiaResourceIcon.SHELTER.code),
+        doubleIconAtm = DoubleIconAtmData(code = DiiaResourceIcon.SAFETY_LARGE.code),
 
         )
-    WhiteCardMlc(data = data, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()) {
+    WhiteCardMlc(data = data) {
     }
 }

@@ -17,14 +17,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ua.gov.diia.core.controller.DeeplinkProcessor
 import ua.gov.diia.core.controller.NotificationController
-import ua.gov.diia.core.controller.PromoController
 import ua.gov.diia.core.di.actions.GlobalActionAllowAuthorizedLinks
 import ua.gov.diia.core.di.actions.GlobalActionConfirmDocumentRemoval
 import ua.gov.diia.core.di.actions.GlobalActionDocLoadingIndicator
 import ua.gov.diia.core.di.actions.GlobalActionFocusOnDocument
 import ua.gov.diia.core.di.actions.GlobalActionSelectedMenuItem
+import ua.gov.diia.core.models.ConsumableString
 import ua.gov.diia.core.models.dialogs.TemplateDialogModel
-import ua.gov.diia.ui_base.models.homescreen.HomeMenuItemConstructor
+import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.DispatcherProvider
 import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.delegation.WithDeeplinkHandling
@@ -33,6 +33,7 @@ import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.extensions.vm.executeAction
 import ua.gov.diia.diia_storage.store.datasource.itn.ItnDataRepository
+import ua.gov.diia.documents.data.repository.DocumentsDataRepository
 import ua.gov.diia.home.R
 import ua.gov.diia.home.model.HomeMenuItem
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -42,13 +43,12 @@ import ua.gov.diia.ui_base.components.infrastructure.findAndChangeFirstByInstanc
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.tab.TabItemMoleculeData
 import ua.gov.diia.ui_base.components.organism.bottom.TabBarOrganismData
+import ua.gov.diia.ui_base.models.homescreen.HomeMenuItemConstructor
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeVM @Inject constructor(
-    private val promoController: PromoController,
     private val notificationController: NotificationController,
-    private val itnDataSource: ItnDataRepository,
     private val dispatcherProvider: DispatcherProvider,
     @GlobalActionAllowAuthorizedLinks val allowAuthorizedLinksFlow: MutableSharedFlow<UiDataEvent<Boolean>>,
     @GlobalActionDocLoadingIndicator val globalActionDocLoadingIndicator: MutableSharedFlow<UiDataEvent<Boolean>>,
@@ -56,6 +56,8 @@ class HomeVM @Inject constructor(
     @GlobalActionFocusOnDocument val globalActionFocusOnDocument: MutableStateFlow<UiDataEvent<String>?>,
     @GlobalActionSelectedMenuItem val globalActionSelectedMenuItem: MutableStateFlow<UiDataEvent<HomeMenuItemConstructor>?>,
     private val withRetryLastAction: WithRetryLastAction,
+    private val documentsDataSource: DocumentsDataRepository,
+    private val itnDataSource: ItnDataRepository,
     private val errorHandlingDelegate: WithErrorHandling,
     private val deepLinkDelegate: WithDeeplinkHandling,
     private val composeMapper: HomeScreenComposeMapper,
@@ -77,8 +79,6 @@ class HomeVM @Inject constructor(
     private val _showTemplate = MutableLiveData<UiDataEvent<TemplateDialogModel>>()
     val showTemplate: LiveData<UiDataEvent<TemplateDialogModel>>
         get() = _showTemplate
-
-    private val _processCode = MutableLiveData<Int>()
 
     private val _hasUnreadNotifications = MediatorLiveData<Boolean?>(null)
     val hasUnreadNotifications: LiveData<Boolean?>
@@ -116,14 +116,14 @@ class HomeVM @Inject constructor(
             }
         }
 
-        checkPromo()
-
-        invalidateDataSource()
-
         //selects initial menu item
         configureBottomTabBar()
         setSelectedMenuItem(HomeMenuItem.FEED)
         checkPushTokenInSync()
+
+        viewModelScope.launch {
+            itnDataSource.invalidate()
+        }
     }
 
     private fun configureBottomTabBar() {
@@ -132,21 +132,24 @@ class HomeVM @Inject constructor(
             iconSelected = UiText.StringResource(R.drawable.ic_tab_feed_selected),
             iconUnselected = UiText.StringResource(R.drawable.ic_tab_feed_unselected),
             actionKey = HomeActions.HOME_FEED.toString(),
-            id = HomeActions.HOME_FEED.toString()
+            id = HomeActions.HOME_FEED.toString(),
+            componentId = UiText.StringResource(R.string.home_tab_feed_test_tag)
         )
         val tabDocuments = TabItemMoleculeData(
             label = "Документи",
             iconSelected = UiText.StringResource(R.drawable.ic_tab_documents_selected),
             iconUnselected = UiText.StringResource(R.drawable.ic_tab_documents_unselected),
             actionKey = HomeActions.HOME_DOCUMENTS.toString(),
-            id = HomeActions.HOME_DOCUMENTS.toString()
+            id = HomeActions.HOME_DOCUMENTS.toString(),
+            componentId = UiText.StringResource(R.string.home_tab_documents_test_tag)
         )
         val tabServices = TabItemMoleculeData(
             label = "Сервіси",
             iconSelected = UiText.StringResource(R.drawable.ic_tab_services_selected),
             iconUnselected = UiText.StringResource(R.drawable.ic_tab_services_unselected),
             actionKey = HomeActions.HOME_SERVICES.toString(),
-            id = HomeActions.HOME_SERVICES.toString()
+            id = HomeActions.HOME_SERVICES.toString(),
+            componentId = UiText.StringResource(R.string.home_tab_services_test_tag)
         )
         val tabMenu = TabItemMoleculeData(
             label = "Меню",
@@ -156,10 +159,11 @@ class HomeVM @Inject constructor(
             iconUnselectedWithBadge = UiText.StringResource(R.drawable.ic_tab_menu_unselected_badge),
             actionKey = HomeActions.HOME_MENU.toString(),
             id = HomeActions.HOME_MENU.toString(),
-            showBadge = hasUnreadNotifications.value ?: false
+            showBadge = hasUnreadNotifications.value ?: false,
+            componentId = UiText.StringResource(R.string.home_tab_menu_test_tag)
         )
         val tabs = listOf(tabFeed, tabDocuments, tabServices, tabMenu)
-        val resultList = tabs.toComposeTabBarOrganism()
+        val resultList = toComposeTabBarOrganism(tabs)
 
         _bottomData.addIfNotNull(resultList)
     }
@@ -196,16 +200,6 @@ class HomeVM @Inject constructor(
         }
     }
 
-    private fun invalidateDataSource() {
-        viewModelScope.launch {
-            try {
-                notificationController.invalidateNotificationDataSource()
-                itnDataSource.invalidate()
-            } catch (e: Exception) {
-                withCrashlytics.sendNonFatalError(e)
-            }
-        }
-    }
     fun confirmRemoveDocFromGallery(docName: String) {
         viewModelScope.launch {
             globalActionConfirmDocumentRemoval.emit(UiDataEvent(docName))
@@ -225,36 +219,6 @@ class HomeVM @Inject constructor(
                 notificationController.checkPushTokenInSync()
             } catch (exc: Exception) {
                 withCrashlytics.sendNonFatalError(exc)
-            }
-        }
-    }
-
-    private fun checkPromo() {
-        viewModelScope.launch {
-            try {
-                promoController.checkPromo {promoTemplate ->
-                    promoTemplate.processCode.let { _processCode.value = it }
-                    _showTemplate.value = UiDataEvent(promoTemplate.template)
-                }
-            } catch (e: Exception) {
-                withCrashlytics.sendNonFatalError(e)
-            }
-        }
-    }
-
-
-    fun updatePromoProcessCode() {
-        viewModelScope.launch {
-            _processCode.value?.let { promoController.updatePromoProcessCode(it) }
-        }
-    }
-
-    fun subscribeToBetaByCode() {
-        viewModelScope.launch {
-            try {
-                promoController.subscribeToBetaByCode(_processCode.value)
-            } catch (e: Exception) {
-                withCrashlytics.sendNonFatalError(e)
             }
         }
     }
@@ -288,16 +252,11 @@ class HomeVM @Inject constructor(
     private fun updateMenuTabItemData(hasUnreadNotification: Boolean) {
         _bottomData.findAndChangeFirstByInstance<TabBarOrganismData> { tabOrganism ->
 
-            val menuItem = tabOrganism.tabs.find { it.id == HomeActions.HOME_MENU.toString()} ?: return@findAndChangeFirstByInstance tabOrganism
-            val index = tabOrganism.tabs.indexOfLast { it.id ==  HomeActions.HOME_MENU.toString() }
+            val menuItem = tabOrganism.tabs.find { it.id == HomeActions.HOME_MENU.toString() }
+                ?: return@findAndChangeFirstByInstance tabOrganism
+            val index = tabOrganism.tabs.indexOfLast { it.id == HomeActions.HOME_MENU.toString() }
             tabOrganism.tabs[index] = menuItem.copy(showBadge = hasUnreadNotification)
             tabOrganism
-        }
-    }
-
-    fun focusOnDocumentType(documentType: String) {
-        viewModelScope.launch {
-            globalActionFocusOnDocument.emit(UiDataEvent(documentType))
         }
     }
 
@@ -309,5 +268,18 @@ class HomeVM @Inject constructor(
                 }
             }
         }
+    }
+
+    //in case it's first launch after login, we should do fetch user docs data
+    fun handleNavigationFlowArgs(launchFlow: ConsumableString?) {
+        launchFlow?.consumeEvent { flow ->
+            if (flow == ActionsConst.ACTION_AUTH_FLOW) {
+                fetchDocs()
+            }
+        }
+    }
+
+    fun fetchDocs(){
+        documentsDataSource.invalidate()
     }
 }

@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtom
+import ua.gov.diia.ui_base.components.atom.button.BtnStrokeAdditionalAtm
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -55,7 +55,7 @@ fun SmallButtonPanelMlc(
             )
         }
 
-        ButtonStrokeAdditionalAtom(
+        BtnStrokeAdditionalAtm(
             data = data.buttonStrokeAdditionalAtomData,
             onUIAction = onUIAction
         )

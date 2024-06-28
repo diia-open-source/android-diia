@@ -14,23 +14,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.button.ButtonIconCircledLargeAtmData
-import ua.gov.diia.ui_base.components.atom.button.ButtonWhiteLargeAtom
-import ua.gov.diia.ui_base.components.atom.button.ButtonWhiteLargeAtomData
+import ua.gov.diia.ui_base.components.atom.button.BtnWhiteLargeAtm
+import ua.gov.diia.ui_base.components.atom.button.BtnWhiteLargeAtmData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.list.ListItemMlcData
 
 @Composable
 fun ActivityViewOrg(
     modifier: Modifier = Modifier,
     data: ActivityViewOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Column(
@@ -38,12 +37,8 @@ fun ActivityViewOrg(
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.Bottom
     ) {
-        ContextMenuOrg(
-            data = data.contextMenuOrg,
-            diiaResourceIconProvider = diiaResourceIconProvider,
-            onUIAction = onUIAction
-        )
-        ButtonWhiteLargeAtom(
+        ContextIconMenuOrg(data = data.contextMenuOrg, onUIAction = onUIAction)
+        BtnWhiteLargeAtm(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .align(Alignment.CenterHorizontally)
@@ -56,8 +51,8 @@ fun ActivityViewOrg(
 }
 
 data class ActivityViewOrgData(
-    val contextMenuOrg: ContextMenuOrgData,
-    val button: ButtonWhiteLargeAtomData
+    val contextMenuOrg: ContextIconMenuOrgData,
+    val button: BtnWhiteLargeAtmData
 ) : UIElementData
 
 @Preview
@@ -67,13 +62,13 @@ fun ActivityViewOrgPreview() {
         add(
             ListItemMlcData(
                 label = UiText.DynamicString("Label"),
-                iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.DOC_INFO.code)
+                iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.DOC_INFO.code)
             )
         )
         add(
             ListItemMlcData(
                 label = UiText.DynamicString("Label"),
-                iconLeft = UiIcon.DrawableResource(CommonDiiaResourceIcon.DOC_INFO.code)
+                iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.DOC_INFO.code)
             )
         )
     }
@@ -87,24 +82,17 @@ fun ActivityViewOrgPreview() {
         label = "Label",
         icon = UiText.StringResource(R.drawable.ic_doc_ean13_selected),
     )
-    val contextMenuOrgData =
-        ContextMenuOrgData(itemsList, itemsList, null, qr, ean13, true)
-    val button = ButtonWhiteLargeAtomData(
-        title = "Label",
+    val contextIconMenuOrgData = ContextIconMenuOrgData(itemsList, itemsList, null, qr, ean13, true)
+    val button = BtnWhiteLargeAtmData(
+        title = "Label".toDynamicString(),
         id = "",
         interactionState = UIState.Interaction.Enabled
     )
-    val data = ActivityViewOrgData(
-        contextMenuOrg = contextMenuOrgData,
-        button = button
-    )
+    val data = ActivityViewOrgData(contextMenuOrg = contextIconMenuOrgData, button = button)
     val state = remember {
         mutableStateOf(data)
     }
-    ActivityViewOrg(
-        data = state.value,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {
+    ActivityViewOrg(data = state.value) {
 
     }
 }

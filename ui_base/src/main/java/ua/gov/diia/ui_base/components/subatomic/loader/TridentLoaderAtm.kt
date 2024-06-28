@@ -21,7 +21,7 @@ fun TridentLoaderAtm(modifier: Modifier = Modifier) {
     val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
 
     LottieAnimation(
-        modifier = Modifier
+        modifier = modifier
             .size(width = 80.dp, height = 80.dp),
         alignment = Alignment.Center,
         composition = composition,

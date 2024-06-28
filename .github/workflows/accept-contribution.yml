@@ -1,0 +1,41 @@
+name: Accept contribution
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Number of accepted PR
+        required: true
+
+jobs:
+  accept-contribution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish changes
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_MAIN_TRIGGER_TOKEN }}
+          PUBLISH_GROUP: ${{ secrets.PUBLISH_GROUP }}
+          TARGET_PROJECT: ${{ secrets.TARGET_PROJECT }}
+          PUBLISH_BRANCH: o_s_dev
+          PROJECT_CI_API : ${{ secrets.PROJECT_CI_API }}
+          PR_NUMBER: ${{ inputs.pr_number }}
+        run: |
+
+          TARGET_PROJECT_ID=$(curl --fail --request GET --header "PRIVATE-TOKEN:$GITLAB_TOKEN" \
+          "$PROJECT_CI_API/$(echo "$PUBLISH_GROUP/$TARGET_PROJECT" | sed 's/\//%2F/g')" | jq -r '.id')
+          
+          TRIGGER_TOKEN=$(curl --fail --request POST --header "PRIVATE-TOKEN:$GITLAB_TOKEN" \
+          --form description="trigger token for PR $PR_NUMBER" \
+          "$PROJECT_CI_API/$TARGET_PROJECT_ID"/triggers)
+          
+          PIPELINE_TOKEN=$(echo "$TRIGGER_TOKEN" | jq -r '.token')
+          PIPELINE_TOKEN_ID=$(echo "$TRIGGER_TOKEN" | jq -r '.id')
+
+          curl --fail --request POST \
+          --form token="$PIPELINE_TOKEN" \
+          --form ref="$PUBLISH_BRANCH" \
+          --form variables[PR_NUMBER]="$PR_NUMBER" \
+          "$PROJECT_CI_API/$TARGET_PROJECT_ID/trigger/pipeline"
+          
+          curl --fail --request DELETE --header "PRIVATE-TOKEN:$GITLAB_TOKEN" \
+          "$PROJECT_CI_API/$TARGET_PROJECT_ID/triggers/$PIPELINE_TOKEN_ID"

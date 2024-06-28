@@ -1,17 +1,19 @@
 package ua.gov.diia.ui_base.components.organism.document
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import androidx.constraintlayout.compose.ConstraintLayout
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerAtm
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
@@ -54,153 +56,170 @@ fun DocPhotoOrg(
     data: DocPhotoOrgData,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
     cardFocus: CardFocus = CardFocus.UNDEFINED,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
-    val tickerDisplayed =
-        remember { mutableStateOf(cardFocus != CardFocus.OUT_OF_FOCUS) }
+    val tickerDisplayed = remember { mutableStateOf(cardFocus != CardFocus.OUT_OF_FOCUS) }
 
     LaunchedEffect(key1 = cardFocus) {
         tickerDisplayed.value = cardFocus != CardFocus.OUT_OF_FOCUS
     }
 
+    val alphaValue by animateFloatAsState(
+        targetValue = if (progressIndicator.first == UIActionKeysCompose.DOC_ORG_DATA_UPDATE_DOC && progressIndicator.second) 0f else 1f,
+        animationSpec = tween(
+            durationMillis = 1500,
+        ),
+        label = "alphaValue"
+    )
+
+    val offsetY by animateFloatAsState(
+        targetValue = if (progressIndicator.first == UIActionKeysCompose.DOC_ORG_DATA_UPDATE_DOC && progressIndicator.second) 100f else 0f,
+        animationSpec = tween(
+            durationMillis = 500,
+        ),
+        label = "offsetY"
+    )
+
     Column(
         modifier = modifier
     ) {
-        if (data.actionKey == progressIndicator.first && progressIndicator.second) {
+        if ((data.actionKey == progressIndicator.first || progressIndicator.first == UIActionKeysCompose.DOC_ORG_DATA_UPDATE_DOC) && progressIndicator.second) {
             Box(
                 modifier = modifier
                     .fillMaxWidth()
                     .aspectRatio(0.7F)
                     .background(
-                        color = White,
+                        color = if (progressIndicator.first == UIActionKeysCompose.DOC_ORG_DATA_UPDATE_DOC) WhiteAlpha40 else White,
                         shape = RoundedCornerShape(24.dp)
                     )
             ) {
                 TridentLoaderMolecule()
             }
         } else {
-            Box(
-                modifier = modifier
-                    .fillMaxWidth()
+            ConstraintLayout(
+                modifier = Modifier
+                    .offset(y = offsetY.dp)
+                    .alpha(alphaValue)
                     .aspectRatio(0.7F)
-                    .background(
-                        color = WhiteAlpha40,
-                        shape = RoundedCornerShape(24.dp)
-                    )
+                    .background(color = WhiteAlpha40, shape = RoundedCornerShape(24.dp))
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    data.docHeading?.let {
-                        DocHeadingOrg(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    top = 20.dp,
-                                    start = 16.dp,
-                                    end = 10.dp
-                                ),
-                            data = it,
-                            onUIAction = onUIAction
-                        )
-                    }
-                    data.subtitleLabelMlc?.let {
-                        SubtitleLabelMlc(
-                            modifier = Modifier
-                                .padding(horizontal = 4.dp)
-                                .fillMaxWidth(),
-                            data = it
-                        )
-                    }
-                    if (!data.tableBlockTwoColumns.isNullOrEmpty()) {
-                        data.tableBlockTwoColumns.forEach {
-                            TableBlockTwoColumnsPlainOrg(
-                                modifier = Modifier,
-                                data = it,
-                                onUIAction = onUIAction
-                            )
-                        }
-                    }
-                    if (!data.tableBlockOrgData.isNullOrEmpty()) {
-                        data.tableBlockOrgData.forEach {
-                            TableBlockPlaneOrg(
-                                modifier = Modifier,
-                                data = it,
-                                onUIAction = onUIAction,
-                                diiaResourceIconProvider = diiaResourceIconProvider,
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-
-
-                    data.smallEmojiPanelMlcData?.let {
-                        SmallEmojiPanelMlc(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .background(
-                                    WhiteAlpha50,
-                                    shape = RoundedCornerShape(16.dp)
-                                )
-                                .padding(16.dp),
-                            data = it,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
-                        )
-                    }
-
-                    data.tickerAtomData?.let {
-                        TickerAtm(
-                            modifier = Modifier.alpha(if (tickerDisplayed.value) 1f else 0f),
-                            data = it,
-                            onUIAction = onUIAction
-                        )
-
-                    }
-
-                    data.docButtonHeading?.let {
-                        DocButtonHeadingOrg(
-                            modifier = Modifier,
-                            data = it,
-                            onUIAction = {
-                                if (data.docCover == null) {
-                                    onUIAction(it)
-                                }
+                val (v1, v2, v3, v4, v5, v6, v7, v8, v9) = createRefs()
+                data.docHeading?.let {
+                    DocHeadingOrg(
+                        modifier = Modifier
+                            .constrainAs(v1) {
+                                top.linkTo(parent.top, margin = 20.dp)
                             },
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                        data = it,
+                        onUIAction = onUIAction
+                    )
+                }
+                data.subtitleLabelMlc?.let {
+                    SubtitleLabelMlc(
+                        modifier = Modifier
+                            .constrainAs(v4) {
+                                top.linkTo(v1.bottom)
+                            }
+                            .padding(horizontal = 4.dp),
+                        data = it
+                    )
+                }
+                if (!data.tableBlockTwoColumns.isNullOrEmpty()) {
+                    data.tableBlockTwoColumns.forEach {
+                        TableBlockTwoColumnsPlainOrg(
+                            modifier = Modifier.constrainAs(v2) {
+                                top.linkTo(v1.bottom)
+                            },
+                            data = it,
+                            onUIAction = onUIAction
                         )
-                        Spacer(modifier = Modifier.height(28.dp))
                     }
                 }
-                if (data.docCover != null) {
+                if (!data.tableBlockOrgData.isNullOrEmpty()) {
+                    data.tableBlockOrgData.forEach {
+                        TableBlockPlaneOrg(
+                            modifier = Modifier.constrainAs(v3) {
+                                if (data.subtitleLabelMlc != null) {
+                                    top.linkTo(v4.bottom)
+                                } else {
+                                    top.linkTo(v1.bottom)
+                                }
+                            },
+                            data = it,
+                            onUIAction = onUIAction
+                        )
+                    }
+                }
+
+                data.smallEmojiPanelMlcData?.let {
+                    SmallEmojiPanelMlc(
+                        modifier = Modifier
+                            .constrainAs(v5) {
+                                bottom.linkTo(v6.top, margin = 10.dp)
+                                start.linkTo(v1.start, margin = 16.dp)
+                                end.linkTo(parent.end, margin = 16.dp)
+                            }
+                            //.padding(10.dp)
+                            .background(WhiteAlpha50, shape = RoundedCornerShape(16.dp))
+                            .padding(16.dp),
+                        data = it,
+                    )
+                }
+
+                data.tickerAtomData?.let {
+                    TickerAtm(
+                        modifier = Modifier
+                            .constrainAs(v6) {
+                                bottom.linkTo(v7.top)
+                            }
+                            .alpha(if (tickerDisplayed.value) 1f else 0f),
+                        data = it,
+                        onUIAction = onUIAction
+                    )
+
+                }
+
+                data.docButtonHeading?.let {
+                    DocButtonHeadingOrg(
+                        modifier = Modifier.constrainAs(v7) {
+                            bottom.linkTo(parent.bottom, margin = 28.dp)
+                        },
+                        data = it,
+                        onUIAction = {
+                            if (data.docCover == null) {
+                                onUIAction(it)
+                            }
+                        }
+                    )
+                }
+                data.docCover?.let {
                     DocCoverMlc(
                         modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
+                            .constrainAs(v8) {
+                                bottom.linkTo(parent.bottom)
+                            }
                             .alpha(if (tickerDisplayed.value) 1f else 0f),
                         data = data.docCover,
                         onUIAction = onUIAction
                     )
                 }
-            }
+                if (data.docButtonHeading?.isStack == true) {
+                    Column(
+                        modifier = Modifier
+                            .constrainAs(v9) {
+                                top.linkTo(parent.bottom)
+                            }
+                            .height(10.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 26.dp)
+                            .background(
+                                color = WhiteAlpha25,
+                                shape = RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp)
+                            ),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-            if (data.docButtonHeading?.isStack == true) {
-                Column(
-                    modifier = modifier
-                        .height(10.dp)
-                        .fillMaxWidth()
-                        .padding(horizontal = 26.dp)
-                        .background(
-                            color = WhiteAlpha25,
-                            shape = RoundedCornerShape(
-                                bottomEnd = 24.dp,
-                                bottomStart = 24.dp
-                            )
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
+                    }
                 }
             }
         }
@@ -220,7 +239,9 @@ data class DocPhotoOrgData(
     val smallEmojiPanelMlcData: SmallEmojiPanelMlcData? = null
 ) : UIElementData
 
-@Preview
+@Preview(
+
+)
 @Composable
 fun DocPhotoOrgPreview() {
     val tickerAtomData = TickerAtomData(
@@ -252,10 +273,7 @@ fun DocPhotoOrgPreview() {
                 title = UiText.DynamicString("Номер:"),
                 value = "XX000000"
             ),
-            TableItemVerticalMlcData(
-                id = "03",
-                valueAsBase64String = PreviewBase64Images.sign
-            )
+            TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )
 
@@ -263,7 +281,7 @@ fun DocPhotoOrgPreview() {
     val emoji = SmallEmojiPanelMlcData(
         text = UiText.DynamicString("Booster vaccine dose"),
         icon = UiIcon.DrawableResource(
-            code = CommonDiiaResourceIcon.TRIDENT.code
+            code = DiiaResourceIcon.TRIDENT.code
         )
     )
 
@@ -280,11 +298,7 @@ fun DocPhotoOrgPreview() {
         isCurrentPage = true,
         smallEmojiPanelMlcData = emoji
     )
-    DocPhotoOrg(
-        modifier = Modifier,
-        data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    DocPhotoOrg(modifier = Modifier, data) {}
 }
 
 @Preview
@@ -320,10 +334,7 @@ fun DocPhotoOrgWithStackPreview() {
                 title = UiText.DynamicString("Номер:"),
                 value = "XX000000"
             ),
-            TableItemVerticalMlcData(
-                id = "03",
-                valueAsBase64String = PreviewBase64Images.sign
-            )
+            TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )
 
@@ -339,11 +350,7 @@ fun DocPhotoOrgWithStackPreview() {
         tableBlockTwoColumns = listOf(tableBlockTwoColumns),
         isCurrentPage = true
     )
-    DocPhotoOrg(
-        modifier = Modifier,
-        data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    DocPhotoOrg(modifier = Modifier, data) {}
 }
 
 @Preview
@@ -378,10 +385,7 @@ fun DocPhotoOrgWithCoverPreview() {
                 title = UiText.DynamicString("Номер:"),
                 value = "XX000000"
             ),
-            TableItemVerticalMlcData(
-                id = "03",
-                valueAsBase64String = PreviewBase64Images.sign
-            )
+            TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )
 
@@ -399,7 +403,7 @@ fun DocPhotoOrgWithCoverPreview() {
     val emoji = SmallEmojiPanelMlcData(
         text = UiText.DynamicString("Booster vaccine dose"),
         icon = UiIcon.DrawableResource(
-            code = CommonDiiaResourceIcon.TRIDENT.code
+            code = DiiaResourceIcon.TRIDENT.code
         )
     )
 
@@ -417,11 +421,7 @@ fun DocPhotoOrgWithCoverPreview() {
         isCurrentPage = true,
         smallEmojiPanelMlcData = emoji
     )
-    DocPhotoOrg(
-        modifier = Modifier,
-        data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    DocPhotoOrg(modifier = Modifier, data) {}
 }
 
 @Preview
@@ -454,10 +454,7 @@ fun DocNoPhotoOrgPreview() {
                 title = UiText.DynamicString("Номер:"),
                 value = "XX000000"
             ),
-            TableItemVerticalMlcData(
-                id = "03",
-                valueAsBase64String = PreviewBase64Images.sign
-            )
+            TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )
 
@@ -468,15 +465,12 @@ fun DocNoPhotoOrgPreview() {
                 subtitles = null
             )
         ),
+        subtitleLabelMlc = SubtitleLabelMlcData(UiText.DynamicString("PHOKPP")),
         docButtonHeading = docButtonHeading,
         tickerAtomData = tickerAtomData,
         tableBlockOrgData = listOf(tableBlockOrgData)
     )
-    DocPhotoOrg(
-        modifier = Modifier,
-        data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    DocPhotoOrg(modifier = Modifier, data) {}
 }
 
 @Preview
@@ -488,11 +482,6 @@ fun DocPhotoOrgLoadingPreview() {
         tickerAtomData = null,
         tableBlockOrgData = null
     )
-    DocPhotoOrg(
-        modifier = Modifier,
-        data,
-        progressIndicator = Pair(data.actionKey, true),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
-    ) {}
+    DocPhotoOrg(modifier = Modifier, data, progressIndicator = Pair(data.actionKey, true)) {}
 
 }

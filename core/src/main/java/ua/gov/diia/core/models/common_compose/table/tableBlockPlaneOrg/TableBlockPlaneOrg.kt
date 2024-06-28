@@ -18,4 +18,6 @@ data class TableBlockPlaneOrg(
     val tableMainHeadingMlc: TableMainHeadingMlc? = null,
     @Json(name = "tableSecondaryHeadingMlc")
     val tableSecondaryHeadingMlc: TableSecondaryHeadingMlc? = null,
+    @Json(name = "componentId")
+    val componentId: String? = null,
 ): Parcelable

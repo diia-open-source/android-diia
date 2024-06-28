@@ -20,14 +20,9 @@ import ua.gov.diia.core.util.extensions.fragment.registerForTemplateDialogNavRes
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.pin.ui.reset.compose.ResetPinScreen
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ResetPinF : Fragment() {
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
 
     private val viewModel: ResetPinVM by viewModels()
     private val args: ResetPinFArgs by navArgs()
@@ -67,8 +62,7 @@ class ResetPinF : Fragment() {
                 ResetPinScreen(
                     data = uiDataElements,
                     contentLoaded = validationFinished.value,
-                    onUIAction = { viewModel.onUIAction(it) },
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onUIAction = { viewModel.onUIAction(it) }
                 )
             }
         }

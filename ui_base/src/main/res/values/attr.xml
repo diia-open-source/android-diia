@@ -533,6 +533,12 @@
         <attr name="msgDescription" />
     </declare-styleable>
 
+    <declare-styleable name="DiiaPlaceholderCenterMessage">
+        <attr name="msgEmoji" />
+        <attr name="msgTitle" />
+        <attr name="msgDescription" />
+    </declare-styleable>
+
     <declare-styleable name="DiiaStatusMessage">
         <attr name="msgEmoji" />
         <attr name="msgText" />

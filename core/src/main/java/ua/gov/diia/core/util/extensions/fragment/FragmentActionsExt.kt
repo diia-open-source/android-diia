@@ -38,3 +38,8 @@ fun Fragment.openPlayMarket(withCrashlytics: WithCrashlytics) {
         withCrashlytics.sendNonFatalError(e)
     }
 }
+
+fun Fragment.handlePhoneIntent(data: String) {
+    val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", data, null)) ;
+    context?.startActivity(intent)
+}

@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.debugInspectorInfo
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -28,6 +29,7 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose.PIN_CLEARED_NUM_BUTTON_ORGANISM
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose.PIN_CREATED_NUM_BUTTON_ORGANISM
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.input.tile.NumButtonTileMlc
 import ua.gov.diia.ui_base.components.molecule.progress.EllipseStepperMolecule
 import ua.gov.diia.ui_base.components.molecule.progress.EllipseStepperMoleculeData
@@ -56,7 +58,8 @@ fun NumButtonTileOrganism(
     Column(
         modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .testTag(data.componentId?.asString() ?: ""),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         EllipseStepperMolecule(
@@ -65,7 +68,8 @@ fun NumButtonTileOrganism(
                 .shake(enabled = data.clearWithShake) {
                     userPinInput.value = ""
                     onUIAction.invoke(UIAction(PIN_CLEARED_NUM_BUTTON_ORGANISM, userPinInput.value))
-                },
+                }
+                .testTag(data.componentIdEllipse?.asString() ?: ""),
             data = EllipseStepperMoleculeData(data.pinLength, userPinInput.value.length)
         )
         Spacer(modifier = Modifier.size(32.dp))
@@ -124,7 +128,9 @@ data class NumButtonTileOrganismData(
     val hasBiometric: Boolean = false,
     val clearPin: Boolean = false,
     val clearWithShake: Boolean = false,
-) : UIElementData
+    val componentId: UiText? = null,
+    val componentIdEllipse: UiText? = null,
+    ) : UIElementData
 
 @Composable
 @Preview

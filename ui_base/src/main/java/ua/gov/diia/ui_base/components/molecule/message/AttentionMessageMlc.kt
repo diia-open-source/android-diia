@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -21,12 +22,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ua.gov.diia.core.models.common.message.AttentionMessageMlc
 import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextParameter
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersAtom
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStringOrNull
 import ua.gov.diia.ui_base.components.subatomic.border.diiaRadialGradientBorder
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.White
@@ -44,6 +48,7 @@ fun AttentionMessageMlc(
             .fillMaxWidth()
             .background(color = White, shape = RoundedCornerShape(8.dp))
             .diiaRadialGradientBorder()
+            .testTag(data.componentId?.asString() ?: "")
     ) {
         Row(
             modifier = Modifier
@@ -83,7 +88,41 @@ fun AttentionMessageMlc(
 }
 
 
-data class AttentionMessageMlcData(val icon: String, val title: String? = null, val description: TextWithParametersData) : UIElementData
+data class AttentionMessageMlcData(
+    val componentId: UiText? = null,
+    val icon: String,
+    val title: String? = null,
+    val description: TextWithParametersData
+) : UIElementData
+
+fun AttentionMessageMlc?.toUIModel(): AttentionMessageMlcData? {
+    val entity: AttentionMessageMlc = this ?: return null
+    return AttentionMessageMlcData(
+        icon = this.icon ?: "",
+        title = entity.title,
+        componentId = this.componentId.toDynamicStringOrNull(),
+        description = TextWithParametersData(
+            text = UiText.DynamicString(entity.text ?: ""),
+            parameters = if (this.parameters != null) {
+                mutableListOf<TextParameter>().apply {
+                    entity.parameters?.forEach {
+                        add(
+                            TextParameter(
+                                data = TextParameter.Data(
+                                    name = it?.data?.name.toDynamicStringOrNull(),
+                                    resource = it?.data?.resource.toDynamicStringOrNull(),
+                                    alt = it?.data?.alt.toDynamicStringOrNull()
+                                ),
+                                type = it?.type
+                            )
+                        )
+                    }
+                }
+
+            } else emptyList()
+        )
+    )
+}
 
 @Composable
 @Preview

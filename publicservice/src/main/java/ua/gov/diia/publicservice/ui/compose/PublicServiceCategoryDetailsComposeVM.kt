@@ -12,6 +12,7 @@ import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
+import ua.gov.diia.publicservice.R
 import ua.gov.diia.ui_base.util.navigation.generateComposeNavigationPanel
 import ua.gov.diia.publicservice.helper.PublicServiceHelper
 import ua.gov.diia.publicservice.models.PublicService
@@ -21,6 +22,7 @@ import ua.gov.diia.ui_base.components.infrastructure.addIfNotNull
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.navigation.NavigationPath
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +54,10 @@ class PublicServiceCategoryDetailsComposeVM @Inject constructor(
     fun doInit(category: PublicServiceCategory) {
         _category.value = category
         _toolBarData.addIfNotNull(
-            generateComposeNavigationPanel(title = category.name)
+            generateComposeNavigationPanel(
+                title = category.name,
+                componentId = UiText.StringResource(R.string.home_navigation_panel_subcategories_test_tag)
+            )
         )
         _bodyData.addIfNotNull(
             category.publicServices.toComposeListItemGroupOrg()

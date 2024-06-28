@@ -26,6 +26,7 @@ import ua.gov.diia.ui_base.components.molecule.header.NavigationPanelMlcData
 import ua.gov.diia.ui_base.components.molecule.text.TextLabelMlcData
 import ua.gov.diia.ui_base.components.organism.tile.NumButtonTileOrganism
 import ua.gov.diia.ui_base.components.organism.tile.NumButtonTileOrganismData
+import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 import ua.gov.diia.ui_base.components.subatomic.loader.TridentLoaderWithUIBlocking
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 
@@ -45,6 +46,7 @@ fun PinInputScreen(
                 )
                 .fillMaxSize()
                 .safeDrawingPadding()
+                .provideTestTagsAsResourceId()
         ) {
             val title = createRef()
             val numButton = createRef()
@@ -84,7 +86,7 @@ fun PinInputScreen(
                                 bottom.linkTo(parent.bottom, margin = 30.dp)
                             },
                         text = AnnotatedString(item.text.asString()),
-                        style = DiiaTextStyle.t3TextBody,
+                        style = DiiaTextStyle.t1BigText,
                     ) {
                         onUIAction(UIAction(actionKey = item.actionKey))
                     }

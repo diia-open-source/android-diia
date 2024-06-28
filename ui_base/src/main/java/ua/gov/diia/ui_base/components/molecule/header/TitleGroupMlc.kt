@@ -17,12 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -37,13 +37,14 @@ fun TitleGroupMlc(
     modifier: Modifier = Modifier,
     data: TitleGroupMlcData,
     onUIAction: (UIAction) -> Unit,
-    diiaResourceIconProvider: DiiaResourceIconProvider
 ) {
     Column(
         modifier = modifier
             .padding(horizontal = 24.dp)
             .padding(top = 32.dp, bottom = 16.dp)
-            .fillMaxWidth(), horizontalAlignment = Alignment.Start
+            .fillMaxWidth()
+            .testTag(data.componentId?.asString() ?: ""),
+        horizontalAlignment = Alignment.Start
     ) {
         data.leftNavIcon?.let {
             Image(
@@ -61,7 +62,7 @@ fun TitleGroupMlc(
                         )
                     },
                 painter = painterResource(
-                    id = diiaResourceIconProvider.getResourceId(it.code)
+                    id = DiiaResourceIcon.getResourceId(it.code)
                 ),
                 contentDescription = it.accessibilityDescription?.toString()
             )
@@ -99,10 +100,10 @@ fun TitleGroupMlc(
                             )
                         },
                     painter = painterResource(
-                        id = diiaResourceIconProvider.getResourceId(it.code)
+                        id = DiiaResourceIcon.getResourceId(it.code)
                     ),
                     contentDescription = stringResource(
-                        id = diiaResourceIconProvider.getContentDescription(
+                        id = DiiaResourceIcon.getContentDescription(
                             it.code
                         )
                     )
@@ -127,7 +128,8 @@ data class TitleGroupMlcData(
     val leftNavIcon: LeftNavIcon? = null,
     val heroText: UiText,
     val label: UiText? = null,
-    val mediumIconRight: MediumIconRight? = null
+    val mediumIconRight: MediumIconRight? = null,
+    val componentId: UiText? = null,
 ) : UIElementData {
     data class LeftNavIcon(
         val code: String,
@@ -147,7 +149,7 @@ fun TitleGroupMlcPreview_Full() {
     TitleGroupMlc(
         data = TitleGroupMlcData(
             leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                code = CommonDiiaResourceIcon.BACK.code,
+                code = DiiaResourceIcon.BACK.code,
                 accessibilityDescription = "123".toDynamicString(),
                 action = DataActionWrapper(
                     type = "type",
@@ -156,7 +158,7 @@ fun TitleGroupMlcPreview_Full() {
                 )
             ),
             mediumIconRight = TitleGroupMlcData.MediumIconRight(
-                code = CommonDiiaResourceIcon.ELLIPSE_SETTINGS.code,
+                code = DiiaResourceIcon.ELLIPSE_SETTINGS.code,
                 action = DataActionWrapper(
                     type = "type",
                     subtype = "subtype",
@@ -165,10 +167,10 @@ fun TitleGroupMlcPreview_Full() {
             ),
             heroText = UiText.DynamicString("Hero text"),
             label = UiText.DynamicString("label"),
-        ),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {}
-    )
+        )
+    ) {
+
+    }
 }
 
 
@@ -179,7 +181,7 @@ fun TitleGroupMlcPreview_WithoutNavigation() {
         data = TitleGroupMlcData(
             leftNavIcon = null,
             mediumIconRight = TitleGroupMlcData.MediumIconRight(
-                code = CommonDiiaResourceIcon.ELLIPSE_SETTINGS.code,
+                code = DiiaResourceIcon.ELLIPSE_SETTINGS.code,
                 action = DataActionWrapper(
                     type = "type",
                     subtype = "subtype",
@@ -188,10 +190,10 @@ fun TitleGroupMlcPreview_WithoutNavigation() {
             ),
             heroText = UiText.DynamicString("Hero text"),
             label = UiText.DynamicString("label"),
-        ),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {}
-    )
+        )
+    ) {
+
+    }
 }
 
 @Preview
@@ -203,8 +205,8 @@ fun TitleGroupMlcPreview_Poor() {
             mediumIconRight = null,
             heroText = UiText.DynamicString("Hero text"),
             label = UiText.DynamicString("label"),
-        ),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {}
-    )
+        )
+    ) {
+
+    }
 }

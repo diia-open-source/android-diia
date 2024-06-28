@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -28,16 +30,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtmData
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtmData
+import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryWideAtmData
 import ua.gov.diia.ui_base.components.atom.button.BtnStrokeDefaultAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnStrokeDefaultAtmData
-import ua.gov.diia.ui_base.components.atom.divider.GradientDividerAtom
 import ua.gov.diia.ui_base.components.atom.divider.DividerWithSpace
 import ua.gov.diia.ui_base.components.atom.divider.DividerWithSpaceData
+import ua.gov.diia.ui_base.components.atom.divider.GradientDividerAtom
 import ua.gov.diia.ui_base.components.atom.divider.TableDividerAtm
 import ua.gov.diia.ui_base.components.atom.divider.TableDividerAtmData
 import ua.gov.diia.ui_base.components.atom.media.ArticlePicAtm
@@ -51,17 +53,19 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.molecule.button.BtnLoadIconPlainGroupMlc
+import ua.gov.diia.ui_base.components.molecule.button.BtnLoadIconPlainGroupMlcData
 import ua.gov.diia.ui_base.components.molecule.button.SmallButtonPanelMlc
 import ua.gov.diia.ui_base.components.molecule.button.SmallButtonPanelMlcData
 import ua.gov.diia.ui_base.components.molecule.card.AlertCardMlc
 import ua.gov.diia.ui_base.components.molecule.card.AlertCardMlcData
 import ua.gov.diia.ui_base.components.molecule.card.CardMlc
 import ua.gov.diia.ui_base.components.molecule.card.CardMlcData
-import ua.gov.diia.ui_base.components.molecule.card.ProcessCardMoleculeDataDeprecated
-import ua.gov.diia.ui_base.components.molecule.card.ProcessCardMoleculeDeprecated
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxBtnOrg
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxBtnOrgData
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxSquareMlcData
+import ua.gov.diia.ui_base.components.molecule.divider.DividerLineMlc
+import ua.gov.diia.ui_base.components.molecule.divider.DividerLineMlcData
 import ua.gov.diia.ui_base.components.molecule.header.NavigationPanelMlcData
 import ua.gov.diia.ui_base.components.molecule.header.SheetNavigationBarMolecule
 import ua.gov.diia.ui_base.components.molecule.header.SheetNavigationBarMoleculeData
@@ -100,8 +104,14 @@ import ua.gov.diia.ui_base.components.molecule.text.TextLabelMlc
 import ua.gov.diia.ui_base.components.molecule.text.TextLabelMlcData
 import ua.gov.diia.ui_base.components.molecule.text.TitleLabelMlc
 import ua.gov.diia.ui_base.components.molecule.text.TitleLabelMlcData
+import ua.gov.diia.ui_base.components.organism.FileUploadGroupOrg
+import ua.gov.diia.ui_base.components.organism.FileUploadGroupOrgData
 import ua.gov.diia.ui_base.components.organism.FullScreenVideoOrg
 import ua.gov.diia.ui_base.components.organism.FullScreenVideoOrgData
+import ua.gov.diia.ui_base.components.organism.GroupFilesAddOrg
+import ua.gov.diia.ui_base.components.organism.GroupFilesAddOrgData
+import ua.gov.diia.ui_base.components.organism.MediaUploadGroupOrg
+import ua.gov.diia.ui_base.components.organism.MediaUploadGroupOrgData
 import ua.gov.diia.ui_base.components.organism.bottom.BottomGroupOrg
 import ua.gov.diia.ui_base.components.organism.bottom.BottomGroupOrgData
 import ua.gov.diia.ui_base.components.organism.carousel.ArticlePicCarouselOrg
@@ -114,16 +124,12 @@ import ua.gov.diia.ui_base.components.organism.header.MediaTitleOrg
 import ua.gov.diia.ui_base.components.organism.header.MediaTitleOrgData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrg
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
-import ua.gov.diia.ui_base.components.organism.image.QRShareOrg
-import ua.gov.diia.ui_base.components.organism.image.QRShareOrgData
 import ua.gov.diia.ui_base.components.organism.input.QuestionFormsOrg
 import ua.gov.diia.ui_base.components.organism.input.QuestionFormsOrgData
 import ua.gov.diia.ui_base.components.organism.input.QuestionFormsOrgDataLocal
 import ua.gov.diia.ui_base.components.organism.input.QuestionFormsOrgLocal
 import ua.gov.diia.ui_base.components.organism.list.CardsListOrg
 import ua.gov.diia.ui_base.components.organism.list.CardsListOrgData
-import ua.gov.diia.ui_base.components.organism.list.CardsListOrgDataDeprecated
-import ua.gov.diia.ui_base.components.organism.list.CardsListOrgDeprecated
 import ua.gov.diia.ui_base.components.organism.list.CheckboxRoundGroupOrg
 import ua.gov.diia.ui_base.components.organism.list.CheckboxRoundGroupOrgData
 import ua.gov.diia.ui_base.components.organism.list.CheckboxRoundGroupOrganism
@@ -144,10 +150,10 @@ import ua.gov.diia.ui_base.components.organism.list.PaginatedCardListOrg
 import ua.gov.diia.ui_base.components.organism.list.PaginatedCardListOrgData
 import ua.gov.diia.ui_base.components.organism.list.PlainListWithSearchOrganism
 import ua.gov.diia.ui_base.components.organism.list.PlainListWithSearchOrganismData
+import ua.gov.diia.ui_base.components.organism.list.SingleChoiceWithAdditionalInputOrg
+import ua.gov.diia.ui_base.components.organism.list.SingleChoiceWithAdditionalInputOrgData
 import ua.gov.diia.ui_base.components.organism.list.SingleChoiceWithAltOrganism
 import ua.gov.diia.ui_base.components.organism.list.SingleChoiceWithAltOrganismData
-import ua.gov.diia.ui_base.components.organism.list.SingleChoiceWithAdditionalInputOrgData
-import ua.gov.diia.ui_base.components.organism.list.SingleChoiceWithAdditionalInputOrg
 import ua.gov.diia.ui_base.components.organism.list.SingleChoiceWithButtonOrganism
 import ua.gov.diia.ui_base.components.organism.list.SingleChoiceWithButtonOrganismData
 import ua.gov.diia.ui_base.components.organism.list.SingleChoiceWithSearchOrganism
@@ -156,8 +162,13 @@ import ua.gov.diia.ui_base.components.organism.list.pagination.SimplePaginationL
 import ua.gov.diia.ui_base.components.organism.list.pagination.SimplePaginationListOrganismData
 import ua.gov.diia.ui_base.components.organism.pager.DocCarouselOrg
 import ua.gov.diia.ui_base.components.organism.pager.DocCarouselOrgData
+import ua.gov.diia.ui_base.components.organism.sharing.SharingCodesOrg
+import ua.gov.diia.ui_base.components.organism.sharing.SharingCodesOrgData
 import ua.gov.diia.ui_base.components.organism.table.ContentTableOrganism
 import ua.gov.diia.ui_base.components.organism.table.ContentTableOrganismData
+import ua.gov.diia.ui_base.components.organism.table.TableBlockAccordionOrg
+import ua.gov.diia.ui_base.components.organism.table.TableBlockAccordionOrgData
+import ua.gov.diia.ui_base.components.subatomic.ticker.NoInternetTicker
 
 @Composable
 fun ColumnScope.BodyRootContainer(
@@ -167,12 +178,12 @@ fun ColumnScope.BodyRootContainer(
     connectivityState: Boolean = true,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
     contentLoaded: Pair<String, Boolean> = Pair("", false),
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     val lazyListScrollState = rememberLazyListState()
     val scrollState = rememberScrollState()
     var displayBottomGradient by remember { mutableStateOf(false) }
+    var displayBottomSpacer by remember { mutableStateOf(false) }
     var displayView by remember { mutableStateOf(true) }
 
     LaunchedEffect(
@@ -182,6 +193,7 @@ fun ColumnScope.BodyRootContainer(
         if (bodyViews.any { it is CardsListOrgData || it is PaginatedCardListOrgData || it is SimplePaginationListOrganismData || it is MessageListOrganismData }) {
             displayBottomGradient = displayBlockDivider && lazyListScrollState.canScrollForward
             displayView = !lazyListScrollState.canScrollBackward
+            displayBottomSpacer = displayBlockDivider == false
         }
     }
 
@@ -189,9 +201,10 @@ fun ColumnScope.BodyRootContainer(
         key1 = scrollState.canScrollBackward,
         key2 = scrollState.canScrollForward,
     ) {
-        if (bodyViews.none { it is CardsListOrgData || it is PaginatedCardListOrgData || it is SimplePaginationListOrganismData || it is MessageListOrganismData}) {
+        if (bodyViews.none { it is CardsListOrgData || it is PaginatedCardListOrgData || it is SimplePaginationListOrganismData || it is MessageListOrganismData }) {
             displayBottomGradient = displayBlockDivider && scrollState.canScrollForward
             displayView = true
+            displayBottomSpacer = displayBlockDivider == false
         }
     }
 
@@ -243,7 +256,6 @@ fun ColumnScope.BodyRootContainer(
                         PlainListWithSearchOrganism(
                             modifier = modifier,
                             data = element,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
                             onUIAction = onUIAction
                         )
                     }
@@ -277,8 +289,7 @@ fun ColumnScope.BodyRootContainer(
                         ArticlePicCarouselOrg(
                             modifier = modifier,
                             data = element,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
@@ -337,6 +348,7 @@ fun ColumnScope.BodyRootContainer(
                             )
                         }
                     }
+
                     is SingleChoiceWithAdditionalInputOrgData -> {
                         AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
                             SingleChoiceWithAdditionalInputOrg(
@@ -489,8 +501,7 @@ fun ColumnScope.BodyRootContainer(
                             DocCarouselOrg(
                                 data = element,
                                 progressIndicator = progressIndicator,
-                                onUIAction = onUIAction,
-                                diiaResourceIconProvider = diiaResourceIconProvider,
+                                onUIAction = onUIAction
                             )
                         }
                     }
@@ -508,6 +519,16 @@ fun ColumnScope.BodyRootContainer(
                         AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
                             BtnIconPlainGroupMlc(
                                 modifier = elementModifier,
+                                data = element,
+                                progressIndicator = progressIndicator,
+                                onUIAction = onUIAction
+                            )
+                        }
+                    }
+
+                    is BtnLoadIconPlainGroupMlcData -> {
+                        AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
+                            BtnLoadIconPlainGroupMlc(
                                 data = element,
                                 progressIndicator = progressIndicator,
                                 onUIAction = onUIAction
@@ -535,16 +556,6 @@ fun ColumnScope.BodyRootContainer(
                         }
                     }
 
-                    is QRShareOrgData -> {
-                        AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
-                            QRShareOrg(
-                                data = element,
-                                progressIndicator = progressIndicator,
-                                onUIAction = onUIAction
-                            )
-                        }
-                    }
-
                     is SingleChoiceMlclData -> {
                         AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
                             SingleChoiceMlcl(
@@ -563,22 +574,11 @@ fun ColumnScope.BodyRootContainer(
                         }
                     }
 
-                    is ProcessCardMoleculeDataDeprecated -> {
-                        AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
-                            ProcessCardMoleculeDeprecated(
-                                data = element,
-                                progressIndicator = progressIndicator,
-                                onUIAction = onUIAction
-                            )
-                        }
-                    }
-
                     is CardMlcData -> {
                         AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
                             CardMlc(
                                 data = element,
                                 progressIndicator = progressIndicator,
-                                diiaResourceIconProvider = diiaResourceIconProvider,
                                 onUIAction = onUIAction
                             )
                         }
@@ -589,7 +589,26 @@ fun ColumnScope.BodyRootContainer(
                             TableBlockOrg(
                                 modifier = Modifier,
                                 data = element,
-                                diiaResourceIconProvider = diiaResourceIconProvider,
+                                onUIAction = onUIAction
+                            )
+                        }
+                    }
+
+                    is TableBlockPlaneOrgData -> {
+                        AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
+                            TableBlockPlaneOrg(
+                                modifier = Modifier,
+                                data = element,
+                                onUIAction = onUIAction
+                            )
+                        }
+                    }
+
+                    is TableBlockAccordionOrgData -> {
+                        AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
+                            TableBlockAccordionOrg(
+                                modifier = Modifier,
+                                data = element,
                                 onUIAction = onUIAction
                             )
                         }
@@ -599,8 +618,7 @@ fun ColumnScope.BodyRootContainer(
                         AnimatedVisibility(visible = !lazyListScrollState.canScrollBackward) {
                             CheckboxRoundGroupOrg(
                                 data = element,
-                                onUIAction = onUIAction,
-                                diiaResourceIconProvider = diiaResourceIconProvider,
+                                onUIAction = onUIAction
                             )
                         }
                     }
@@ -613,13 +631,18 @@ fun ColumnScope.BodyRootContainer(
                         TableBlockPlaneOrg(
                             modifier = Modifier.padding(horizontal = 8.dp),
                             data = element,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
                     is TableDividerAtmData -> {
                         TableDividerAtm(
+                            data = element
+                        )
+                    }
+
+                    is DividerLineMlcData -> {
+                        DividerLineMlc(
                             data = element
                         )
                     }
@@ -642,7 +665,6 @@ fun ColumnScope.BodyRootContainer(
                         MediaTitleOrg(
                             modifier = modifier,
                             data = element,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
                             onUIAction = onUIAction
                         )
                     }
@@ -657,8 +679,7 @@ fun ColumnScope.BodyRootContainer(
                     is CheckboxRoundSeeAllOrgData -> {
                         CheckboxRoundSeeAllOrg(
                             data = element,
-                            onUIAction = onUIAction,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            onUIAction = onUIAction
                         )
                     }
 
@@ -669,34 +690,55 @@ fun ColumnScope.BodyRootContainer(
                     is AlertCardMlcData -> {
                         AlertCardMlc(modifier, element, onUIAction)
                     }
+
                     is ListItemGroupOrgData -> {
                         ListItemGroupOrg(
                             data = element,
                             onUIAction = onUIAction,
-                            progressIndicator = progressIndicator,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            progressIndicator = progressIndicator
                         )
                     }
+
+                    is MediaUploadGroupOrgData -> {
+                        MediaUploadGroupOrg(
+                            data = element,
+                            onUIAction = onUIAction
+                        )
+                    }
+
+                    is FileUploadGroupOrgData -> {
+                        FileUploadGroupOrg(
+                            data = element,
+                            onUIAction = onUIAction
+                        )
+                    }
+
+                    is GroupFilesAddOrgData -> {
+                        GroupFilesAddOrg(
+                            data = element,
+                            onUIAction = onUIAction
+                        )
+                    }
+
                     is DividerWithSpaceData -> {
                         DividerWithSpace(
                             data = element
                         )
                     }
+                    is SharingCodesOrgData -> {
+                        SharingCodesOrg(
+                            data = element,
+                            onUIAction = onUIAction,
+                            progressIndicator = progressIndicator
+                        )
+                    }
                 }
-            }
-            bodyViews.firstOrNull { it is CardsListOrgDataDeprecated }?.let {
-                CardsListOrgDeprecated(
-                    data = it as CardsListOrgDataDeprecated,
-                    lazyListState = lazyListScrollState,
-                    onUIAction = onUIAction
-                )
             }
             bodyViews.firstOrNull { it is CardsListOrgData }?.let {
                 CardsListOrg(
                     data = it as CardsListOrgData,
                     lazyListState = lazyListScrollState,
-                    onUIAction = onUIAction,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onUIAction = onUIAction
                 )
             }
             bodyViews.firstOrNull { it is MessageListOrganismData }?.let {
@@ -712,7 +754,6 @@ fun ColumnScope.BodyRootContainer(
                 PaginatedCardListOrg(
                     data = it as PaginatedCardListOrgData,
                     lazyListState = lazyListScrollState,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
                     onUIAction = onUIAction
                 )
             }
@@ -724,15 +765,27 @@ fun ColumnScope.BodyRootContainer(
                     onUIAction = onUIAction
                 )
             }
+            addBottomPadding(displayBottomSpacer)
         }
         GradientDividerContentBlock(displayBottomGradient)
-        LinearLoaderContentBlock(contentLoaded, diiaResourceIconProvider, onUIAction)
+        LinearLoaderContentBlock(contentLoaded, onUIAction)
+    }
+}
+
+@Composable
+fun BoxScope.NoInternetBlock(internetAvailable: Boolean) {
+    if (!internetAvailable) {
+        NoInternetTicker(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(alignment = Alignment.BottomCenter)
+        )
     }
 }
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
-private fun BoxScope.GradientDividerContentBlock(displayBottomGradient: Boolean) {
+fun BoxScope.GradientDividerContentBlock(displayBottomGradient: Boolean) {
     if (displayBottomGradient && !WindowInsets.isImeVisible) {
         GradientDividerAtom(
             modifier = Modifier
@@ -745,7 +798,6 @@ private fun BoxScope.GradientDividerContentBlock(displayBottomGradient: Boolean)
 @Composable
 private fun LinearLoaderContentBlock(
     contentLoaded: Pair<String, Boolean>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     if (!contentLoaded.second) {
@@ -757,8 +809,7 @@ private fun LinearLoaderContentBlock(
                             title = UiText.DynamicString(""),
                             isContextMenuExist = false
                         )
-                    ), onUIAction = onUIAction,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    ), onUIAction = onUIAction
                 )
                 LinearLoadingMolecule(
                     labelDisplayed = true
@@ -771,6 +822,14 @@ private fun LinearLoaderContentBlock(
                 labelDisplayed = false
             )
         }
+        if (contentLoaded.first == UIActionKeysCompose.PAGE_LOADING_LINEAR_WITHOUT_BACK_BTN_WITH_LABEL) {
+            Column(modifier = Modifier) {
+                Spacer(modifier = Modifier.height(16.dp))
+                LinearLoadingMolecule(
+                    labelDisplayed = true
+                )
+            }
+        }
     }
 }
 
@@ -780,6 +839,15 @@ private fun getTopPadding(isFirst: Boolean, element: UIElementData): Dp {
         is BtnPlainAtmData -> 8.dp
         is DownloadListGroupOrganismData -> 12.dp
         else -> 24.dp
+    }
+}
+
+@Composable
+private fun addBottomPadding(displayBottomSpacer: Boolean) {
+    if (displayBottomSpacer) {
+        Box(modifier = Modifier) {
+            Spacer(modifier = Modifier.height(32.dp))
+        }
     }
 }
 
@@ -813,8 +881,11 @@ fun BodyRootContainer_HelloScreenPreview() {
                         interactionState = UIState.Interaction.Disabled
                     )
                 ),
-                SearchInputV2Data(
-
+                SearchInputV2Data(),
+                BtnPrimaryWideAtmData(
+                    title = UiText.DynamicString("Label"),
+                    id = "id",
+                    interactionState = UIState.Interaction.Enabled
                 )
             )
         )
@@ -822,8 +893,7 @@ fun BodyRootContainer_HelloScreenPreview() {
 
     Column {
         BodyRootContainer(
-            bodyViews = stub,
-            diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
+            bodyViews = stub
         ) {
 
         }
@@ -850,8 +920,7 @@ fun BodyRootContainer_Test() {
 
     Column {
         BodyRootContainer(
-            bodyViews = stub,
-            diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+            bodyViews = stub
         ) {
 
         }
@@ -868,8 +937,7 @@ fun BodyRootContainer_LinearLoading() {
     Column {
         BodyRootContainer(
             bodyViews = stub,
-            contentLoaded = contentLoaded,
-            diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+            contentLoaded = contentLoaded
         ) {
 
         }

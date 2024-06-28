@@ -33,6 +33,7 @@ fun Modifier.diiaRadialGradientBorder() =
 
         border(
             2.dp, brush = Brush.radialGradient(
+//                center = Offset.Zero,
                 center = Offset(0.0f, 100.0f),
                 radius = screenWidth * RADIUS_MULTIPLIER,
                 colors = listOf(

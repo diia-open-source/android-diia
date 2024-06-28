@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -38,8 +38,7 @@ import ua.gov.diia.ui_base.components.theme.White
 fun CheckIconMlc(
     modifier: Modifier = Modifier,
     data: CheckIconMlcData,
-    onUIAction: (UIAction) -> Unit,
-    diiaResourceIconProvider: DiiaResourceIconProvider
+    onUIAction: (UIAction) -> Unit
 ) {
 
     Column(modifier = modifier.width(width = 64.dp)) {
@@ -65,7 +64,7 @@ fun CheckIconMlc(
             ) {
                 Image(
                     modifier = modifier.size(24.dp),
-                    painter = painterResource(diiaResourceIconProvider.getResourceId(data.icon.code)),
+                    painter = painterResource(DiiaResourceIcon.getResourceId(data.icon.code)),
                     contentDescription = "contentDescription",
                     colorFilter = ColorFilter.tint(White),
                 )
@@ -124,10 +123,10 @@ fun CheckIconMlcPreview() {
             icon = UiIcon.DrawableResource("charging"),
             title = UiText.DynamicString("Генератор"),
             selectionState = UIState.Selection.Selected
-        ),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {}
-    )
+        )
+    ) {
+
+    }
 }
 
 @Composable
@@ -139,8 +138,8 @@ fun CheckIconMlcPreview2() {
             icon = UiIcon.DrawableResource("charging"),
             title = UiText.DynamicString("Тепло"),
             selectionState = UIState.Selection.Selected
-        ),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-        onUIAction = {}
-    )
+        )
+    ) {
+
+    }
 }

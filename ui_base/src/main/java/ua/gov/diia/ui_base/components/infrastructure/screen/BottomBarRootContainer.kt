@@ -1,11 +1,11 @@
 package ua.gov.diia.ui_base.components.infrastructure.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxBtnOrg
@@ -20,9 +20,9 @@ fun BottomBarRootContainer(
     modifier: Modifier = Modifier,
     bottomViews: SnapshotStateList<UIElementData>,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
+    val lazyListScrollState = rememberLazyListState()
     if (bottomViews.size != 0) {
         Column(modifier = modifier) {
             bottomViews.forEachIndexed { index, element ->
@@ -46,8 +46,7 @@ fun BottomBarRootContainer(
                         ListItemGroupOrg(
                             data = element,
                             onUIAction = onUIAction,
-                            progressIndicator = progressIndicator,
-                            diiaResourceIconProvider = diiaResourceIconProvider,
+                            progressIndicator = progressIndicator
                         )
                     }
                 }

@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -50,7 +51,6 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtmData
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.PublicServiceScreen
@@ -104,9 +104,7 @@ fun TextInputMolecule(
         }
     }
 
-    BasicTextField(value = data.inputValue ?: "",
-        enabled = data.isEnabled,
-        modifier = modifier
+    BasicTextField(value = data.inputValue ?: "", enabled = data.isEnabled, modifier = modifier
             .onFocusChanged {
                 focusState = when (focusState) {
                     UIState.Focus.NeverBeenFocused -> {
@@ -139,22 +137,15 @@ fun TextInputMolecule(
                     optionalId = data.id
                 )
             )
-        },
-        textStyle = TextStyle(
+        }, textStyle = TextStyle(
             fontFamily = FontFamily(Font(R.font.e_ukraine_regular)),
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
             lineHeight = 17.sp,
-            color = getColorForInput(
-                data.isEnabled,
-                focusState,
-                data.validation
-            )
-        ),
-        keyboardOptions = KeyboardOptions(
+            color = getColorForInput(data.isEnabled, focusState, data.validation)
+        ), keyboardOptions = KeyboardOptions(
             imeAction = imeAction, keyboardType = data.keyboardType
-        ),
-        keyboardActions = KeyboardActions(onNext = {
+        ), keyboardActions = KeyboardActions(onNext = {
             localFocusManager.moveFocus(FocusDirection.Next)
         }, onDone = {
             keyboardController?.let {
@@ -163,16 +154,12 @@ fun TextInputMolecule(
             }
         }),
         singleLine = true,
-        cursorBrush = SolidColor(
-            getColorForInput(
-                data.isEnabled,
-                focusState,
-                data.validation
-            )
-        ),
+        cursorBrush = SolidColor(getColorForInput(data.isEnabled, focusState, data.validation)),
         decorationBox = @Composable { innerTextField ->
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(data.componentId?.asString() ?: ""),
             ) {
                 data.label?.let {
                     Text(
@@ -217,9 +204,7 @@ fun TextInputMolecule(
                         Text(
                             modifier = Modifier
                                 .padding(top = 8.dp)
-                                .bringIntoViewRequester(
-                                    bringIntoErrorViewRequester
-                                ),
+                                .bringIntoViewRequester(bringIntoErrorViewRequester),
                             text = errorMsg,
                             style = DiiaTextStyle.t4TextSmallDescription,
                             color = Red
@@ -234,9 +219,7 @@ fun TextInputMolecule(
                         Text(
                             modifier = Modifier
                                 .padding(top = 8.dp)
-                                .bringIntoViewRequester(
-                                    bringIntoHintViewRequester
-                                ),
+                                .bringIntoViewRequester(bringIntoHintViewRequester),
                             text = data.hintMessage,
                             style = DiiaTextStyle.t4TextSmallDescription,
                             color = BlackAlpha30
@@ -290,11 +273,8 @@ private fun getColorForBottomLine(
 }
 
 private fun getColorForInput(
-    isEnabled: Boolean,
-    focusState: UIState.Focus,
-    validationState: UIState.Validation
-): Color {
-    return if (isEnabled) {
+    isEnabled: Boolean, focusState: UIState.Focus, validationState: UIState.Validation): Color {
+    return if (isEnabled){
         when (focusState) {
             UIState.Focus.NeverBeenFocused, UIState.Focus.FirstTimeInFocus -> Black
             UIState.Focus.InFocus, UIState.Focus.OutOfFocus -> {
@@ -312,16 +292,18 @@ private fun getColorForInput(
 
 data class TextInputMoleculeData(
     val actionKey: String = UIActionKeysCompose.TEXT_INPUT,
+    val componentId: UiText? = null,
     val id: String? = null,
     val label: String? = null,
     val inputValue: String? = null,
     val placeholder: String? = null,
     val hintMessage: String? = null,
     var errorMessage: String? = null,
+    var inputCode: String? = null,
     val validationData: List<ValidationTextItem>? = null,
     val keyboardType: KeyboardType = KeyboardType.Text,
     val validation: UIState.Validation = UIState.Validation.NeverBeenPerformed,
-    val isEnabled: Boolean = true
+    val isEnabled : Boolean = true,
 ) : InputFormItem() {
     data class ValidationTextItem(
         val regex: String,
@@ -333,11 +315,9 @@ data class TextInputMoleculeData(
         if (newValue == null) return this
 
         val numRegex = "^[+,0-9]"
-        val newValidationValue = if (this.id == "phoneNumber") {
-            newValue.filter { n -> numRegex.toRegex().matches(n.toString()) }
-        } else {
-            newValue
-        }
+        val newValidationValue = if(this.id == "phoneNumber") {
+            newValue.filter { n -> numRegex.toRegex().matches(n.toString())}
+        } else { newValue }
 
         return this.copy(
             inputValue = newValidationValue,
@@ -351,16 +331,7 @@ data class TextInputMoleculeData(
                 }
 
                 else -> {
-                    if (newValue.matches(
-                            Regex(
-                                this.validationData?.first()?.regex ?: ".*"
-                            )
-                        )
-                    ) {
-                        UIState.Validation.Passed
-                    } else {
-                        UIState.Validation.Failed
-                    }
+                    dataValidation(newValue)
                 }
             }
         )
@@ -448,18 +419,15 @@ fun TextInputMoleculePreview() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(White),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(White), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         TextInputMolecule(modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .focusRequester(focusRequester),
-            data = state.value,
-            onUIAction = {
-                state.value = state.value.onInputChanged(it.data)
-            })
+            .focusRequester(focusRequester), data = state.value, onUIAction = {
+            state.value = state.value.onInputChanged(it.data)
+        })
 
         Button(modifier = Modifier.padding(bottom = 16.dp), onClick = {
             focusManager.clearFocus()
@@ -504,18 +472,15 @@ fun TextInputMoleculePreview_Prefilled() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(White),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(White), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         TextInputMolecule(modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .focusRequester(focusRequester),
-            data = state.value,
-            onUIAction = {
-                state.value = state.value.onInputChanged(it.data)
-            })
+            .focusRequester(focusRequester), data = state.value, onUIAction = {
+            state.value = state.value.onInputChanged(it.data)
+        })
 
         Button(modifier = Modifier.padding(bottom = 16.dp), onClick = {
             focusManager.clearFocus()
@@ -621,10 +586,9 @@ fun InputWithScroll_Preview() {
 
         bottomData.findAndChangeFirstByInstance<BottomGroupOrgData> { item ->
             if (index != -1) {
-                (bodyData[index] as QuestionFormsOrgData).isFormFilledAndValid()
-                    .let {
-                        item.activateButtonsIgnoreCheckbox(it)
-                    }
+                (bodyData[index] as QuestionFormsOrgData).isFormFilledAndValid().let {
+                    item.activateButtonsIgnoreCheckbox(it)
+                }
             } else {
                 item
             }
@@ -637,7 +601,5 @@ fun InputWithScroll_Preview() {
         bottom = bottomData,
         onEvent = {
             onNewValue(it.optionalId, it.data)
-        },
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    )
+        })
 }

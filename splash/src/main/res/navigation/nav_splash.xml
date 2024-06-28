@@ -9,7 +9,6 @@
         android:id="@+id/splashF"
         android:name="ua.gov.diia.splash.ui.SplashF"
         android:label="SplashF">
-
         <deepLink
             android:id="@+id/deepLinkDocumentCheck"
             app:popUpTo="@id/splashF"
@@ -92,6 +91,15 @@
             app:uri="diia://diia.app/message/public/{messageId}" />
 
         <deepLink
+            android:id="@+id/deepLinkPetition"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/petition/{id}" />
+        <deepLink
+            android:id="@+id/deepLinkDiiaPetition"
+            app:popUpTo="@id/splashF"
+            app:uri="diia://diia.app/petition/{id}" />
+
+        <deepLink
             android:id="@+id/deepLinkChangeRegistrationApplication"
             app:popUpTo="@id/splashF"
             app:uri="https://diia.app/residence-registration/application/{id}/verify/{otp}" />
@@ -149,7 +157,6 @@
             android:id="@+id/deepLinkStartFlowResidenceRegistration"
             app:popUpTo="@id/splashF"
             app:uri="https://diia.app/residence-registration/verify/{otp}" />
-
 
         <action
             android:id="@+id/action_splashF_to_rootDF"

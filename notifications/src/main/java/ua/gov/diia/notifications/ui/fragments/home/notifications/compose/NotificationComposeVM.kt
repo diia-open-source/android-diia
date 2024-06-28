@@ -30,7 +30,7 @@ import ua.gov.diia.notifications.ui.fragments.home.notifications.compose.Notific
 import ua.gov.diia.notifications.ui.fragments.home.notifications.compose.NotificationsActionKey.REMOVE_NOTIFICATION
 import ua.gov.diia.notifications.ui.fragments.home.notifications.compose.NotificationsActionKey.SELECT_NOTIFICATION
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.addIfNotNull
@@ -161,7 +161,7 @@ class NotificationComposeVM @Inject constructor(
             titleGroupMlcData = TitleGroupMlcData(
                 heroText = "Повідомлення".toDynamicString(),
                 mediumIconRight = TitleGroupMlcData.MediumIconRight(
-                    code = CommonDiiaResourceIcon.ELLIPSE_SETTINGS.code,
+                    code = DiiaResourceIcon.ELLIPSE_SETTINGS.code,
                     action = DataActionWrapper(
                         type = OPEN_NOTIFICATION_SETTINGS,
                         subtype = null,
@@ -169,7 +169,7 @@ class NotificationComposeVM @Inject constructor(
                     )
                 ),
                 leftNavIcon = TitleGroupMlcData.LeftNavIcon(
-                    code = CommonDiiaResourceIcon.BACK.code,
+                    code = DiiaResourceIcon.BACK.code,
                     action = DataActionWrapper(
                         type = UIActionKeysCompose.TOOLBAR_NAVIGATION_BACK,
                         subtype = null,
@@ -238,6 +238,7 @@ class NotificationComposeVM @Inject constructor(
                                 _contentLoaded.value = false
                                 _contentLoadedKey.value = PAGE_LOADING_TRIDENT
                             }
+
                             LoadingState.ADDITIONAL_PAGE_LOADING -> {
                                 _contentLoaded.value = false
                                 _contentLoadedKey.value = PAGE_LOADING_LINEAR_PAGINATION

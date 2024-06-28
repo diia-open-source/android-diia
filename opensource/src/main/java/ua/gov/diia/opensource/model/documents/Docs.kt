@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 import ua.gov.diia.diia_storage.store.Preferences
-import ua.gov.diia.doc_driver_license.DriverLicenseV2
+import ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
 import ua.gov.diia.documents.models.Expiring
 import ua.gov.diia.documents.models.WithTimestamp
 

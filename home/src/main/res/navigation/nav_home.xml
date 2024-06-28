@@ -7,7 +7,16 @@
     <fragment
         android:id="@+id/homeF"
         android:name="ua.gov.diia.home.ui.HomeF"
-        android:label="home"/>
+        android:label="home">
+
+        <argument
+            android:name="launchFlow"
+            app:nullable="true"
+            android:defaultValue="@null"
+            app:argType="ua.gov.diia.core.models.ConsumableString" />
+
+    </fragment>
+
     <action
         android:id="@+id/action_global_to_QrScanF"
         app:destination="@id/qrScanF" />

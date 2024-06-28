@@ -96,7 +96,8 @@ fun TickerAtm(
                         data.type == TickerType.SMALL_POSITIVE ||
                         data.type == TickerType.SMALL_WARNING ||
                         data.type == TickerType.SMALL_QUESTIONNAIRE ||
-                        data.type == TickerType.SMALL_NEGATIVE
+                        data.type == TickerType.SMALL_NEGATIVE ||
+                        data.type == TickerType.SMALL_INFORMATIVE
             ) {
                 drawBehind {
                     drawRect(
@@ -106,9 +107,6 @@ fun TickerAtm(
                                 WarningYellow
                             }
 
-                            TickerType.SMALL_INFORMATIVE -> {
-                                Bubbles
-                            }
 
                             TickerType.SMALL_NEUTRAL, TickerType.BIG_NEUTRAL -> {
                                 BrightGray
@@ -118,7 +116,7 @@ fun TickerAtm(
                                 RedNegative
                             }
 
-                            TickerType.SMALL_QUESTIONNAIRE -> {
+                            TickerType.SMALL_QUESTIONNAIRE, TickerType.SMALL_INFORMATIVE -> {
                                 Bubbles
                             }
 
@@ -213,6 +211,14 @@ fun TickerAtmBigWarningPreview() {
 @Composable
 fun TickerAtmSmallWarningPreview() {
     val data = TickerAtomData(title = "No internet", type = TickerType.SMALL_WARNING)
+
+    TickerAtm(data = data) {}
+}
+
+@Preview
+@Composable
+fun TickerAtmSmallInformativePreview() {
+    val data = TickerAtomData(title = "Small informative", type = TickerType.SMALL_INFORMATIVE)
 
     TickerAtm(data = data) {}
 }

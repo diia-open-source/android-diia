@@ -32,8 +32,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideSubcomposition
 import com.bumptech.glide.integration.compose.RequestState
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -53,7 +52,6 @@ import ua.gov.diia.ui_base.components.theme.Transparent
 fun ImageCardMlc(
     modifier: Modifier = Modifier,
     data: ImageCardMlcData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Box(
@@ -122,8 +120,7 @@ fun ImageCardMlc(
                     UiIconWrapperSubatomic(
                         modifier = Modifier
                             .padding(start = 8.dp)
-                            .size(24.dp), icon = it,
-                        diiaResourceIconProvider = diiaResourceIconProvider
+                            .size(24.dp), icon = it
                     )
                 }
             }
@@ -176,8 +173,7 @@ fun ImageCardMlcPreview() {
     )
     ImageCardMlc(
         modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        data = data
     ) {}
 }
 
@@ -187,11 +183,10 @@ fun ImageCardMlcPreview_WithIcon() {
     val data = ImageCardMlcData(
         title = UiText.DynamicString("label label label label label label label"),
         image = "https://business.diia.gov.ua/uploads/4/22881-main.jpg",
-        iconEnd = UiIcon.DrawableResource(CommonDiiaResourceIcon.ELLIPSE_WHITE_ARROW_RIGHT.code),
+        iconEnd = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_WHITE_ARROW_RIGHT.code),
     )
     ImageCardMlc(
         modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
+        data = data
     ) {}
 }

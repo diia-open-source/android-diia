@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.mlc.text.TitleLabelMlc
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 
 @Composable
@@ -20,7 +23,8 @@ fun TitleLabelMlc(
         modifier = modifier
             .padding(horizontal = 24.dp)
             .padding(top = 8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .testTag(data.componentId?.asString() ?: ""),
         text = data.label,
         style = DiiaTextStyle.h1Heading
     )
@@ -29,7 +33,15 @@ fun TitleLabelMlc(
 data class TitleLabelMlcData(
     val actionKey: String = UIActionKeysCompose.TEXT_LABEL_MLC,
     val label: String,
+    val componentId: UiText? = null,
 ): UIElementData
+
+fun TitleLabelMlc.toUIModel(): TitleLabelMlcData {
+    return TitleLabelMlcData(
+        label = this.label,
+        componentId = UiText.DynamicString(this.componentId.orEmpty())
+    )
+}
 
 @Preview
 @Composable

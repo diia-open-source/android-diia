@@ -3,7 +3,7 @@ package ua.gov.diia.ps_criminal_cert.models.response
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import ua.gov.diia.ui_base.views.NameModel
-import ua.gov.diia.core.models.common.message.AttentionMessage
+import ua.gov.diia.core.models.common.message.AttentionMessageMlc
 import ua.gov.diia.ps_criminal_cert.models.enums.CriminalCertScreen
 import ua.gov.diia.core.models.dialogs.TemplateDialogModel
 
@@ -28,7 +28,7 @@ data class CriminalCertRequester(
         @Json(name = "title")
         val title: String,
         @Json(name = "attentionMessage")
-        val attentionMessage: AttentionMessage?,
+        val attentionMessage: AttentionMessageMlc?,
         @Json(name = "fullName")
         val fullName: Name,
         @Json(name = "nextScreen")

@@ -14,15 +14,10 @@ import ua.gov.diia.biometric.ui.compose.BiometricSetupScreen
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.extensions.fragment.registerForTemplateDialogNavResult
 import ua.gov.diia.core.util.extensions.fragment.setNavigationResult
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class BiometricSetupF : Fragment() {
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
 
     private val viewModel: BiometricSetupVM by viewModels()
     private val args: BiometricSetupFArgs by navArgs()
@@ -54,8 +49,7 @@ class BiometricSetupF : Fragment() {
 
             BiometricSetupScreen(
                 data = uiDataElements,
-                onUIAction = { viewModel.onUIAction(it) },
-                diiaResourceIconProvider = diiaResourceIconProvider,
+                onUIAction = { viewModel.onUIAction(it) }
             )
         }
 

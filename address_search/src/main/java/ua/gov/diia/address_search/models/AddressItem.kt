@@ -1,6 +1,5 @@
 package ua.gov.diia.address_search.models
 
-
 import android.content.Context
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -16,7 +15,9 @@ data class AddressItem(
     @Json(name = "name")
     val name: String?,
     @Json(name = "errorMessage")
-    val errorMessage: String?
+    val errorMessage: String?,
+    @Json(name = "disabled")
+    val disabled: Boolean?
 ) : SearchableBullet, SearchableItem {
 
     override fun getDisplayName(context: Context): String = name ?: "Unknown"
@@ -24,4 +25,5 @@ data class AddressItem(
     override fun getDisplayTitle(): String = name ?: "Unknown"
 
     override fun getQueryString(): String = name ?: "Unknown"
+    override fun isDisabled(): Boolean = disabled ?: false
 }

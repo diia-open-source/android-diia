@@ -92,11 +92,12 @@ dependencies {
 
     implementation project(':core')
     implementation project(':diia_storage')
+    implementation project(':documents')
+    implementation project(':ui_base')
     implementation deps.activity_ktx
     implementation deps.fragment_ktx
     implementation deps.appcompat
     implementation deps.lottie
-    implementation project(path: ':ui_base')
 
     //Compose
     implementation deps.activity_compose

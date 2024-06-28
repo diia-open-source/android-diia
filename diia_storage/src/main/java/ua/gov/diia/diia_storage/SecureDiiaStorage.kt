@@ -16,6 +16,7 @@ class SecureDiiaStorage(
 
     override val currentKeyValueStore: BaseSecuredKeyValueStore = keyValueStore
     override var pinStorage: PinStore = currentKeyValueStore as PinStore
+    override var serviceUserUUIDStorage: ServiceUserUidStore = currentKeyValueStore as ServiceUserUidStore
 
     override fun delete(key: PreferenceKey) {
         keyValueStore.delete(key)

@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtmData
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtmData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -42,7 +41,6 @@ fun BottomSheetDetailsScreen(
     progressIndicator: Pair<String, Boolean> = Pair("", true),
     body: SnapshotStateList<UIElementData>,
     bottom: SnapshotStateList<UIElementData>? = null,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onEvent: (UIAction) -> Unit
 ) {
 
@@ -80,19 +78,17 @@ fun BottomSheetDetailsScreen(
             },
             content = {
                 BodyRootContainer(
-                    modifier = Modifier,
                     bodyViews = body,
-                    displayBlockDivider = body.isNotEmpty(),
+                    displayBlockDivider = bottom != null && bottom.size != 0,
                     progressIndicator = progressIndicator,
                     contentLoaded = contentLoaded,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
                     onUIAction = onEvent
                 )
-                if (bottom != null) {
+
+                if (bottom != null && bottom.size != 0) {
                     BottomBarRootContainer(
                         bottomViews = bottom,
                         progressIndicator = progressIndicator,
-                        diiaResourceIconProvider = diiaResourceIconProvider,
                         onUIAction = onEvent
                     )
                 }
@@ -123,7 +119,6 @@ fun BottomSheetDetailsPreview() {
     }
     BottomSheetDetailsScreen(
         body = bodyData,
-        bottom = bottomData,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
+        bottom = bottomData
     ) {}
 }

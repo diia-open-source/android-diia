@@ -10,7 +10,9 @@ data class ChipTabsOrg(
     @Json(name = "label")
     val label: String?,
     @Json(name = "preselectedCode")
-    val preselectedCode: String
+    val preselectedCode: String,
+    @Json(name = "componentId")
+    val componentId: String?
 ) {
     @JsonClass(generateAdapter = true)
     data class Item(

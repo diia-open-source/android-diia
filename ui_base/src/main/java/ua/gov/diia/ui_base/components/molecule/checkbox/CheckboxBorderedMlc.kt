@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -29,6 +30,7 @@ fun CheckboxBorderedMlc(
             .fillMaxWidth()
             .diiaWhiteBorder()
             .padding(20.dp)
+            .testTag(data.componentId?.asString() ?: "")
     )
     {
         CheckboxSquareMlc(
@@ -42,6 +44,7 @@ fun CheckboxBorderedMlc(
 data class CheckboxBorderedMlcData(
     val actionKey: String = UIActionKeysCompose.CHECKBOX_BTN_ORG,
     val data: CheckboxSquareMlcData,
+    val componentId: UiText? = null,
 ) : UIElementData {
 
     fun onOptionsCheckChanged(): CheckboxBorderedMlcData {

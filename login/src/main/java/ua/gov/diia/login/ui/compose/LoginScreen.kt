@@ -22,10 +22,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.login.R
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextParameter
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxSquareMlcData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -45,6 +46,7 @@ import ua.gov.diia.ui_base.components.organism.list.ListItemGroupOrg
 import ua.gov.diia.ui_base.components.organism.list.ListItemGroupOrgData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrg
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
+import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 import ua.gov.diia.ui_base.components.subatomic.loader.TridentLoaderWithUIBlocking
 import ua.gov.diia.ui_base.components.theme.BlackAlpha30
 
@@ -53,12 +55,12 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     toolbar: SnapshotStateList<UIElementData>,
     body: SnapshotStateList<UIElementData>,
+    bottom: SnapshotStateList<UIElementData>,
     screenNavigationProcessing: State<Boolean>,
     isLoading: Pair<String, Boolean>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onEvent: (UIAction) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().provideTestTagsAsResourceId()) {
         Column(
             modifier = modifier
                 .paint(
@@ -76,7 +78,8 @@ fun LoginScreen(
                             indication = null,
                             onClick = {}
                         )
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .testTag(stringResource(R.string.login_screen_loading_test_tag)),
                     backgroundColor = BlackAlpha30
                 )
             }
@@ -86,8 +89,7 @@ fun LoginScreen(
                         is TopGroupOrgData -> {
                             TopGroupOrg(
                                 data = item,
-                                onUIAction = onEvent,
-                                diiaResourceIconProvider = diiaResourceIconProvider,
+                                onUIAction = onEvent
                             )
                         }
                     }
@@ -106,6 +108,7 @@ fun LoginScreen(
                     when (element) {
                         is TextLabelMlcData -> {
                             TextLabelMlc(
+                                modifier = Modifier.testTag(stringResource(R.string.login_screen_text_test_tag)),
                                 data = element,
                                 onUIAction = onEvent
                             )
@@ -131,8 +134,7 @@ fun LoginScreen(
                                             listVisible.value = true
                                         }
                                     }
-                                    .alpha(if (listVisible.value) 1f else 0f),
-                                diiaResourceIconProvider = diiaResourceIconProvider,
+                                    .alpha(if (listVisible.value) 1f else 0f)
                             )
                         }
                     }
@@ -152,6 +154,8 @@ fun LoginScreenPreview(
 ) {
     val _toolbarData = remember { mutableStateListOf<UIElementData>() }
     val _bodyData = remember { mutableStateListOf<UIElementData>() }
+    val _bottomData = remember { mutableStateListOf<UIElementData>() }
+
     _toolbarData.add(
         TopGroupOrgData(
             titleGroupMlcData = TitleGroupMlcData(
@@ -213,8 +217,8 @@ fun LoginScreenPreview(
     LoginScreen(
         toolbar = _toolbarData,
         body = _bodyData,
+        bottom = _bottomData,
         screenNavigationProcessing = navState,
         isLoading = "" to false,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
     ) {}
 }

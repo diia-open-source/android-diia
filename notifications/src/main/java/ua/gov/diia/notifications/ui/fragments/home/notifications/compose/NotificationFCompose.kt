@@ -8,16 +8,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ua.gov.diia.core.di.actions.GlobalActionNotificationsPop
 import ua.gov.diia.core.models.notification.pull.PullNotificationItemSelection
+import ua.gov.diia.core.util.event.UiEvent
+import ua.gov.diia.core.util.event.observeUiEvent
 import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.extensions.fragment.findNavControllerById
 import ua.gov.diia.core.util.extensions.fragment.navigate
 import ua.gov.diia.notifications.NavNotificationsDirections
 import ua.gov.diia.notifications.R
 import ua.gov.diia.notifications.models.notification.pull.MessageIdentification
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.ServiceScreen
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -26,11 +29,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class NotificationFCompose : Fragment() {
 
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
-
     private var composeView: ComposeView? = null
     val vm: NotificationComposeVM by viewModels()
+
+    @Inject
+    @GlobalActionNotificationsPop
+    lateinit var actionNotificationsPop: MutableLiveData<UiEvent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +58,7 @@ class NotificationFCompose : Fragment() {
         composeView?.setContent {
             val topBar = vm.topBarData
             val body = vm.bodyData
-            val contentLoaded = vm.contentLoaded.collectAsState(
-                initial = Pair(
+            val contentLoaded = vm.contentLoaded.collectAsState(initial = Pair(
                     UIActionKeysCompose.PAGE_LOADING_LINEAR_PAGINATION, true
                 )
             )
@@ -72,6 +75,9 @@ class NotificationFCompose : Fragment() {
                         navigateToSettings()
                     }
                 }
+            }
+            actionNotificationsPop.observeUiEvent(this){
+                findNavController().popBackStack()
             }
             vm.openResource.collectAsEffect {
                 navigateToDirection(it.peekContent())
@@ -96,9 +102,7 @@ class NotificationFCompose : Fragment() {
                 contentLoaded = contentLoaded.value,
                 onEvent = {
                     vm.onUIAction(it)
-                },
-                diiaResourceIconProvider = diiaResourceIconProvider,
-            )
+                })
         }
     }
 

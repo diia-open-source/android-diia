@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import ua.gov.diia.core.di.actions.GlobalActionLazy
 import ua.gov.diia.core.di.data_source.http.UnauthorizedClient
 import ua.gov.diia.core.models.ActionDataLazy
+import ua.gov.diia.core.models.common_compose.atm.SpacerAtmType
 import ua.gov.diia.core.network.apis.ApiAuth
 import ua.gov.diia.core.util.CommonConst.BUILD_TYPE_DEBUG
 import ua.gov.diia.core.util.CommonConst.BUILD_TYPE_STAGE
@@ -36,7 +37,6 @@ import ua.gov.diia.login.R
 import ua.gov.diia.login.network.ApiLogin
 import ua.gov.diia.pin.repository.LoginPinRepository
 import ua.gov.diia.ui_base.components.atom.space.SpacerAtmData
-import ua.gov.diia.ui_base.components.atom.space.SpacerAtmType
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextParameter
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.addAllIfNotNull
@@ -120,6 +120,9 @@ class LoginVM @Inject constructor(
     private val _bodyData = mutableStateListOf<UIElementData>()
     val bodyData: SnapshotStateList<UIElementData> = _bodyData
 
+    private val _bottomData = mutableStateListOf<UIElementData>()
+    val bottomData: SnapshotStateList<UIElementData> = _bottomData
+
     init {
         if (getBuildType() == BUILD_TYPE_STAGE || getBuildType() == BUILD_TYPE_DEBUG) {
 
@@ -152,7 +155,8 @@ class LoginVM @Inject constructor(
                     label = UiText.StringResource(
                         R.string.login_screen_title_subtext,
                         getVersionName(),
-                    )
+                    ),
+                    componentId = UiText.StringResource(R.string.login_screen_title_test_tag)
                 )
             )
         )
@@ -179,8 +183,10 @@ class LoginVM @Inject constructor(
                     title = UiText.StringResource(R.string.login_screen_checkbox_text),
                     interactionState = UIState.Interaction.Enabled,
                     selectionState = UIState.Selection.Selected,
-                    contentDescription = UiText.StringResource(R.string.accessibility_login_screen_checkbox_text)
-                )
+                    contentDescription = UiText.StringResource(R.string.accessibility_login_screen_checkbox_text),
+                    componentId = UiText.StringResource(R.string.login_screen_checkbox_square_test_tag)
+                ),
+                componentId = UiText.StringResource(R.string.login_screen_checkbox_test_tag)
             )
         )
     }
@@ -210,7 +216,8 @@ class LoginVM @Inject constructor(
             _bodyData.add(
                 ListItemGroupOrgData(
                     title = UiText.StringResource(R.string.login_screen_bank_list_title),
-                    itemsList = list
+                    itemsList = list,
+                    componentId = UiText.StringResource(R.string.login_screen_list_items_test_tag),
                 )
             )
             _bodyData.add(SpacerAtmData(SpacerAtmType.SPACER_32))
@@ -225,7 +232,7 @@ class LoginVM @Inject constructor(
             label = UiText.StringResource(titleResId),
             logoLeft = UiIcon.DrawableResInt(iconResId),
             interactionState = state,
-            logoLeftContentDescription = UiText.StringResource(descriptionResId),
+            logoLeftContentDescription = UiText.StringResource(descriptionResId)
         )
     } else {
         null

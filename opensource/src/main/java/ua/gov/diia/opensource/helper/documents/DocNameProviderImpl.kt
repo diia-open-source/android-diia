@@ -1,6 +1,6 @@
 package ua.gov.diia.opensource.helper.documents
 
-import ua.gov.diia.doc_driver_license.DriverLicenseV2
+import ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
 import ua.gov.diia.documents.models.DiiaDocument
 import ua.gov.diia.documents.util.DocNameProvider
 import javax.inject.Inject

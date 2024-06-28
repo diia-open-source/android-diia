@@ -1,15 +1,18 @@
 package ua.gov.diia.ui_base.components.organism.list
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryAdditionalAtmData
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
 import ua.gov.diia.ui_base.components.atom.status.ChipStatusAtmData
@@ -31,7 +34,6 @@ fun CardsListOrg(
     data: CardsListOrgData,
     lazyListState: LazyListState = rememberLazyListState(),
     progressIndicator: Pair<String, Boolean> = Pair("", false),
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     LazyColumn(
@@ -43,7 +45,6 @@ fun CardsListOrg(
             CardMlc(
                 data = item,
                 progressIndicator = progressIndicator,
-                diiaResourceIconProvider = diiaResourceIconProvider,
                 onUIAction = onUIAction
             )
         }
@@ -51,6 +52,24 @@ fun CardsListOrg(
 }
 
 data class CardsListOrgData(val items: List<CardMlcData>) : UIElementData
+
+fun LazyListScope.loadItems(
+    item: CardsListOrgData,
+    progressIndicator: Pair<String, Boolean> = Pair("", false),
+    onUIAction: (UIAction) -> Unit = {}
+) {
+    item {
+        Spacer(Modifier.height(4.dp))
+    }
+    items(item.items) { item ->
+        CardMlc(
+            data = item, progressIndicator = progressIndicator, onUIAction = onUIAction
+        )
+    }
+    item {
+        Spacer(Modifier.height(20.dp))
+    }
+}
 
 @Composable
 @Preview
@@ -65,10 +84,7 @@ fun CardListOrganismPreview() {
         icon = UiIcon.DynamicIconBase64(PreviewBase64Icons.apple),
         subtitle = UiText.DynamicString("Subtitle"),
         description = UiText.DynamicString("Description"),
-        ticker = TickerAtomData(
-            title = "Ticker text!",
-            type = TickerType.SMALL_NEUTRAL
-        ),
+        ticker = TickerAtomData(title = "Ticker text!", type = TickerType.SMALL_NEUTRAL),
         botLabel = UiText.DynamicString("5 000 грн"),
         btnPrimary = BtnPrimaryAdditionalAtmData(
             actionKey = "primaryButton",
@@ -84,21 +100,7 @@ fun CardListOrganismPreview() {
         )
     )
     CardsListOrg(
-        data = CardsListOrgData(
-            listOf(
-                dataData,
-                dataData,
-                dataData,
-                dataData,
-                dataData,
-                dataData,
-                dataData,
-                dataData,
-                dataData,
-                dataData
-            )
-        ),
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
+        data = CardsListOrgData(listOf(dataData, dataData, dataData, dataData, dataData, dataData, dataData, dataData, dataData, dataData))
     ) {
 
     }

@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import ua.gov.diia.core.models.common_compose.mlc.text.SmallEmojiPanelMlc
 import ua.gov.diia.core.models.common_compose.table.Item
 import ua.gov.diia.core.models.common_compose.table.TableItemHorizontalMlc
-import ua.gov.diia.core.models.common_compose.table.TableItemPrimaryMlc
 import ua.gov.diia.core.models.common_compose.table.TableItemVerticalMlc
 import ua.gov.diia.core.models.common_compose.table.tableBlockOrg.TableBlockOrg
 import ua.gov.diia.core.models.common_compose.table.tableBlockPlaneOrg.TableBlockPlaneOrg
@@ -23,8 +22,8 @@ import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.Size
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableBlockItem
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMoleculeData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toUIModel
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesMlcData
 import ua.gov.diia.ui_base.components.molecule.tile.SmallEmojiPanelMlcData
 import ua.gov.diia.ui_base.components.organism.document.TableBlockOrgData
@@ -152,19 +151,6 @@ private fun SmallEmojiPanelMlc?.toComposeEmojiPanelMlc(): SmallEmojiPanelMlcData
     )
 }
 
-private fun TableItemPrimaryMlc?.toComposeTableItemPrimary(): TableItemPrimaryMlcData? {
-    return this?.let {
-        TableItemPrimaryMlcData(
-            componentId = this.componentId.orEmpty(),
-            title = this.label.let { UiText.DynamicString(it) },
-            value = this.value,
-            icon = this.icon?.let {
-                UiIcon.DrawableResource(code = it.code)
-            }
-        )
-    }
-}
-
 private fun Item?.toComposeTableBlockItem(valueImage: String?): TableBlockItem? {
     return this?.let {
         when {
@@ -180,7 +166,7 @@ private fun Item?.toComposeTableBlockItem(valueImage: String?): TableBlockItem? 
                 valueImage
             )
 
-            this.tableItemPrimaryMlc != null -> tableItemPrimaryMlc.toComposeTableItemPrimary()
+            this.tableItemPrimaryMlc != null -> tableItemPrimaryMlc.toUIModel()
             this.tableItemVerticalMlc != null -> tableItemVerticalMlc.toComposeTableItemVertical(
                 valueImage
             )
@@ -231,7 +217,7 @@ fun TableBlockTwoColumnsOrg?.toComposeTableBlockTwoColumnsOrg(
 fun TableBlockOrg?.toComposeTableBlockOrg(valueImage: String?): TableBlockOrgData? {
     return this?.let {
         TableBlockOrgData(
-            componentId = this.componentId.orEmpty(),
+            componentId = UiText.DynamicString(this.componentId.orEmpty()),
             headerMain = if (this.tableMainHeadingMlc != null) TableHeadingMoleculeData(
                 title = this.tableMainHeadingMlc?.label?.let { UiText.DynamicString(it) },
                 icon = if (this.tableMainHeadingMlc?.icon?.code != null) {

@@ -11,20 +11,23 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
+import ua.gov.diia.core.models.ConsumableEvent
 import ua.gov.diia.core.models.ConsumableItem
-import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
+import ua.gov.diia.core.models.ConsumableString
 import ua.gov.diia.core.util.extensions.fragment.setNavigationResult
+import ua.gov.diia.documents.R
 import ua.gov.diia.documents.helper.DocumentsHelper
 import ua.gov.diia.documents.models.DiiaDocument
 import ua.gov.diia.documents.models.LocalizationType
 import ua.gov.diia.documents.models.docgroups.v2.VerificationAction
+import ua.gov.diia.documents.ui.DocsConst
 import ua.gov.diia.documents.util.DocNameProvider
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
-import ua.gov.diia.ui_base.components.atom.button.ButtonWhiteLargeAtomData
+import ua.gov.diia.ui_base.components.atom.button.BtnWhiteLargeAtmData
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.event.DocAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.organism.list.ActivityViewOrg
 import ua.gov.diia.ui_base.components.organism.list.ActivityViewOrgData
 import ua.gov.diia.ui_base.fragments.BaseBottomDialog
@@ -41,9 +44,6 @@ class DocActionsDFCompose : BaseBottomDialog() {
 
     @Inject
     lateinit var docActionsNavigationHandler: DocActionsNavigationHandler
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
     private val vm: DocActionsVMCompose by viewModels()
     private var composeView: ComposeView? = null
     private val args: DocActionsDFComposeArgs by navArgs()
@@ -51,6 +51,7 @@ class DocActionsDFCompose : BaseBottomDialog() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).apply {
             setCanceledOnTouchOutside(true)
+            window?.setWindowAnimations(R.style.BottomDialogAnimation)
         }
     }
 
@@ -74,13 +75,6 @@ class DocActionsDFCompose : BaseBottomDialog() {
         composeView?.setContent {
 
             vm.apply {
-                navigation.collectAsEffect { navigation ->
-                    docActionsNavigationHandler.handleNavigation(
-                        this@DocActionsDFCompose,
-                        navigation,
-                        args
-                    )
-                }
                 docAction.collectAsEffect { docAction ->
                     handleAction(
                         this@DocActionsDFCompose,
@@ -101,8 +95,8 @@ class DocActionsDFCompose : BaseBottomDialog() {
                 resources
             )
 
-            val button = ButtonWhiteLargeAtomData(
-                title = "Закрити",
+            val button = BtnWhiteLargeAtmData(
+                title = "Закрити".toDynamicString(),
                 id = "",
                 interactionState = UIState.Interaction.Enabled
             )
@@ -116,8 +110,7 @@ class DocActionsDFCompose : BaseBottomDialog() {
                 onUIAction = {
                     vm.onUIAction(it)
 
-                },
-                diiaResourceIconProvider = diiaResourceIconProvider,
+                }
             )
         }
     }
@@ -127,14 +120,12 @@ class DocActionsDFCompose : BaseBottomDialog() {
         composeView = null
     }
 
-    fun handleAction(
+    private fun handleAction(
         fragment: DocActionsDFCompose,
         vm: DocActionsVMCompose,
         action: DocAction,
         args: DocActionsDFComposeArgs
     ) {
-        documentsHelper.handleAction(fragment, action, args)
-
         with(fragment) {
             when (action) {
                 is DocActionsVMCompose.DocActions.RemoveDoc -> {
@@ -143,7 +134,7 @@ class DocActionsDFCompose : BaseBottomDialog() {
                         dismiss()
                         setNavigationResult(
                             arbitraryDestination = args.resultDestinationId,
-                            key = ActionsConst.RESULT_KEY_REMOVE_DOCUMENT,
+                            key = DocsConst.RESULT_KEY_REMOVE_DOCUMENT,
                             data = ConsumableItem(doc)
                         )
                     }
@@ -155,7 +146,7 @@ class DocActionsDFCompose : BaseBottomDialog() {
                         dismiss()
                         setNavigationResult(
                             arbitraryDestination = args.resultDestinationId,
-                            key = ActionsConst.RESULT_KEY_UPDATE_DOCUMENT,
+                            key = DocsConst.RESULT_KEY_UPDATE_DOCUMENT,
                             data = ConsumableItem(doc)
                         )
                     }
@@ -183,17 +174,26 @@ class DocActionsDFCompose : BaseBottomDialog() {
                         dismiss()
                         setNavigationResult(
                             arbitraryDestination = args.resultDestinationId,
-                            key = ActionsConst.RESULT_KEY_RATE_DOCUMENT,
+                            key = DocsConst.RESULT_KEY_RATE_DOCUMENT,
                             data = ConsumableItem(doc)
                         )
                     }
+                }
+
+                is DocActionsVMCompose.DocActions.AddDoc -> {
+                    dismiss()
+                    setNavigationResult(
+                        arbitraryDestination = args.resultDestinationId,
+                        key = DocsConst.RESULT_KEY_ADD_DOC,
+                        data = ConsumableEvent()
+                    )
                 }
 
                 is DocActionsVMCompose.DocActions.OpenVerificationCode -> {
                     dismiss()
                     setNavigationResult(
                         arbitraryDestination = args.resultDestinationId,
-                        key = ActionsConst.RESULT_KEY_VERIFICATION_CODE,
+                        key = DocsConst.RESULT_KEY_VERIFICATION_CODE,
                         data = ConsumableItem(
                             VerificationAction(
                                 actionKey = UIActionKeysCompose.DOC_CARD_FORCE_FLIP,
@@ -209,7 +209,7 @@ class DocActionsDFCompose : BaseBottomDialog() {
                     dismiss()
                     setNavigationResult(
                         arbitraryDestination = args.resultDestinationId,
-                        key = ActionsConst.RESULT_KEY_QR_CODE,
+                        key = DocsConst.RESULT_KEY_QR_CODE,
                         data = ConsumableItem(
                             VerificationAction(
                                 actionKey = UIActionKeysCompose.DOC_CARD_FORCE_FLIP,
@@ -225,7 +225,7 @@ class DocActionsDFCompose : BaseBottomDialog() {
                     dismiss()
                     setNavigationResult(
                         arbitraryDestination = args.resultDestinationId,
-                        key = ActionsConst.RESULT_KEY_EAN13_CODE,
+                        key = DocsConst.RESULT_KEY_EAN13_CODE,
                         data = ConsumableItem(
                             VerificationAction(
                                 actionKey = UIActionKeysCompose.DOC_CARD_FORCE_FLIP,
@@ -237,6 +237,24 @@ class DocActionsDFCompose : BaseBottomDialog() {
                     )
                 }
 
+                is DocActionsVMCompose.DocActions.ShareWithFriends -> {
+                    dismiss()
+                    val doc = args.doc as DiiaDocument
+                    val docId = doc.id ?: return
+                    setNavigationResult(
+                        arbitraryDestination = args.resultDestinationId,
+                        key = DocsConst.RESULT_KEY_SHARE_AWARD,
+                        data = ConsumableString(docId)
+                    )
+                }
+
+                is DocActionsVMCompose.DocActions.NavigateByDocAction -> {
+                    docActionsNavigationHandler.handleNavigation(
+                        this@DocActionsDFCompose,
+                        action,
+                        args
+                    )
+                }
             }
 
         }

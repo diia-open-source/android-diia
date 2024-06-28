@@ -132,6 +132,9 @@ dependencies {
     //Compose
     implementation deps.activity_compose
 
+    //Video
+    implementation deps.light_compressor
+
     //test
     testImplementation deps.junit
     testImplementation deps.mockk_android

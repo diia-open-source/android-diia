@@ -11,17 +11,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import ua.gov.diia.publicservice.models.PublicService
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.ui_base.components.infrastructure.ServiceScreen
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PublicServiceCategoryDetailsComposeF : Fragment() {
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
 
     private var composeView: ComposeView? = null
     private val args: PublicServiceCategoryDetailsComposeFArgs by navArgs()
@@ -64,9 +59,7 @@ class PublicServiceCategoryDetailsComposeF : Fragment() {
                 body = body,
                 onEvent = {
                     viewModel.onUIAction(it)
-                },
-            diiaResourceIconProvider = diiaResourceIconProvider,
-            )
+                })
         }
     }
 

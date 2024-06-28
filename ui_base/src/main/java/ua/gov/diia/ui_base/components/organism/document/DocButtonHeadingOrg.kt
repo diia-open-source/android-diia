@@ -10,14 +10,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.icon.IconAtm
 import ua.gov.diia.ui_base.components.atom.icon.IconAtmData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
-import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.doc.DocNumberCopyMlc
 import ua.gov.diia.ui_base.components.molecule.doc.DocNumberCopyMlcData
 import ua.gov.diia.ui_base.components.molecule.doc.DocNumberCopyWhiteMlc
@@ -33,7 +32,6 @@ import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesWhiteMlc
 fun DocButtonHeadingOrg(
     modifier: Modifier,
     data: DocButtonHeadingOrgData,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     Row(
@@ -79,7 +77,6 @@ fun DocButtonHeadingOrg(
                 StackMlc(
                     modifier = Modifier.padding(start = 8.dp),
                     data = it,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
                     onUIAction = { onUIAction(UIAction(actionKey = UIActionKeysCompose.DOC_STACK)) }
                 )
             }
@@ -90,7 +87,6 @@ fun DocButtonHeadingOrg(
                 IconAtm(
                     modifier = Modifier.padding(start = 8.dp),
                     data = it,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
                     onUIAction = { onUIAction(UIAction(actionKey = UIActionKeysCompose.DOC_ELLIPSE_MENU)) }
                 )
             }
@@ -123,11 +119,7 @@ fun DocButtonHeadingOrgPreview() {
         ),
         isStack = false
     )
-    DocButtonHeadingOrg(
-        modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    DocButtonHeadingOrg(modifier = Modifier, data = data) {}
 }
 
 @Composable
@@ -137,16 +129,14 @@ fun DocButtonHeadingOrgPreviewDocCopy() {
         id = "1",
         docNumberCopy = DocNumberCopyMlcData(
             id = "123",
-            value = "1234567890",
-            icon = UiText.StringResource(R.drawable.ic_copy_settings)
+            value = "1234567890".toDynamicString(),
+            icon = IconAtmData(
+                code = DiiaResourceIcon.COPY.code
+            )
         ),
         isStack = false
     )
-    DocButtonHeadingOrg(
-        modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    DocButtonHeadingOrg(modifier = Modifier, data = data) {}
 }
 
 @Composable
@@ -161,9 +151,5 @@ fun DocButtonHeadingOrgWithStackPreview() {
         isStack = true,
         size = 2
     )
-    DocButtonHeadingOrg(
-        modifier = Modifier,
-        data = data,
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(),
-    ) {}
+    DocButtonHeadingOrg(modifier = Modifier, data = data) {}
 }

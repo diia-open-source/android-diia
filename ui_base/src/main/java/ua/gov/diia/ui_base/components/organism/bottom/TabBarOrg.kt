@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.R
@@ -35,7 +36,9 @@ fun TabBarOrg(
         modifier = modifier
             .background(Black)
             .fillMaxWidth()
-            .padding(start = 24.dp, top = 16.dp, end = 24.dp, bottom = 12.dp),
+            .padding(start = 24.dp, top = 16.dp, end = 24.dp, bottom = 12.dp)
+            .testTag(data.componentId?.asString() ?: ""),
+
         userScrollEnabled = false,
         state = lazyListState,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -52,7 +55,8 @@ fun TabBarOrg(
 }
 
 data class TabBarOrganismData(
-    val tabs: SnapshotStateList<TabItemMoleculeData>
+    val tabs: SnapshotStateList<TabItemMoleculeData>,
+    val componentId: UiText? = null
 ) : UIElementData {
     fun onTabClicked(tabId: String?): TabBarOrganismData {
         if (tabId == null) return this

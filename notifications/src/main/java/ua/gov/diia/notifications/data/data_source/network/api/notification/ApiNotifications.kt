@@ -1,13 +1,14 @@
 package ua.gov.diia.notifications.data.data_source.network.api.notification
 
 import retrofit2.http.*
+import ua.gov.diia.core.models.notification.pull.message.NotificationFull
+import ua.gov.diia.core.network.annotation.Analytics
 import ua.gov.diia.notifications.models.notification.SubscribeResponse
 import ua.gov.diia.notifications.models.notification.Subscriptions
+import ua.gov.diia.notifications.models.notification.TemplateDialogModelWithProcessCode
 import ua.gov.diia.notifications.models.notification.pull.PullNotificationsResponse
 import ua.gov.diia.notifications.models.notification.pull.PullNotificationsToModify
 import ua.gov.diia.notifications.models.notification.pull.UpdatePullNotificationResponse
-import ua.gov.diia.core.models.notification.pull.message.NotificationFull
-import ua.gov.diia.core.network.annotation.Analytics
 
 interface ApiNotifications {
 
@@ -42,4 +43,17 @@ interface ApiNotifications {
     @Analytics("unsubscribe")
     @DELETE("api/v1/user/subscription/{code}")
     suspend fun unsubscribe(@Path("code") code: String): SubscribeResponse
+
+    @Analytics("refuseNacpDeclarantRelatives")
+    @POST("api/v1/public-service/nacp-declarant-relatives/{requestId}/refuse")
+    suspend fun refuseNacpDeclarantRelatives(
+        @Path("requestId") requestId: String,
+        @Query("force") force: Boolean
+    ): TemplateDialogModelWithProcessCode
+
+    @Analytics("confirmNacpDeclarantRelatives")
+    @POST("api/v1/public-service/nacp-declarant-relatives/{requestId}/confirm")
+    suspend fun confirmNacpDeclarantRelatives(
+        @Path("requestId") requestId: String,
+    ): TemplateDialogModelWithProcessCode
 }

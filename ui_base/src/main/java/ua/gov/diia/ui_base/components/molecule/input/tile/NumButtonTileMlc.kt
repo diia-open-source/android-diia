@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -34,7 +35,11 @@ fun NumButtonTileMlc(
     hasBiometric: Boolean = false,
     onUIAction: (UIAction) -> Unit
 ) {
-    Column(modifier.padding(top = 8.dp).fillMaxWidth().wrapContentHeight()) {
+    Column(
+        modifier
+            .padding(top = 8.dp)
+            .fillMaxWidth()
+            .wrapContentHeight()) {
         Row(
             Modifier
                 .height(91.dp)
@@ -47,21 +52,24 @@ fun NumButtonTileMlc(
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numOneAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numOneAcb }
+                    .testTag(stringResource(id = R.string.btn_num_1_test_tag)),
                 data = BtnNumAtmData(id = "1", number = 1),
                 onUIAction = onUIAction
             )
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numTwoAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numTwoAcb }
+                    .testTag(stringResource(id = R.string.btn_num_2_test_tag)),
                 data = BtnNumAtmData(id = "2", number = 2),
                 onUIAction = onUIAction
             )
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numThreeAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numThreeAcb }
+                    .testTag(stringResource(id = R.string.btn_num_3_test_tag)),
                 data = BtnNumAtmData(id = "3", number = 3),
                 onUIAction = onUIAction
             )
@@ -81,21 +89,24 @@ fun NumButtonTileMlc(
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numFourAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numFourAcb }
+                    .testTag(stringResource(id = R.string.btn_num_4_test_tag)),
                 data = BtnNumAtmData(id = "4", number = 4),
                 onUIAction = onUIAction
             )
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numFiveAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numFiveAcb }
+                    .testTag(stringResource(id = R.string.btn_num_5_test_tag)),
                 data = BtnNumAtmData(id = "5", number = 5),
                 onUIAction = onUIAction
             )
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numSixAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numSixAcb }
+                    .testTag(stringResource(id = R.string.btn_num_6_test_tag)),
                 data = BtnNumAtmData(id = "6", number = 6),
                 onUIAction = onUIAction
             )
@@ -115,21 +126,24 @@ fun NumButtonTileMlc(
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numSevenAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numSevenAcb }
+                    .testTag(stringResource(id = R.string.btn_num_7_test_tag)),
                 data = BtnNumAtmData(id = "7", number = 7),
                 onUIAction = onUIAction
             )
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numEightAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numEightAcb }
+                    .testTag(stringResource(id = R.string.btn_num_8_test_tag)),
                 data = BtnNumAtmData(id = "8", number = 8),
                 onUIAction = onUIAction
             )
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numNineAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numNineAcb }
+                    .testTag(stringResource(id = R.string.btn_num_9_test_tag)),
                 data = BtnNumAtmData(id = "9", number = 9),
                 onUIAction = onUIAction
             )
@@ -165,7 +179,8 @@ fun NumButtonTileMlc(
             BtnNumAtm(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .semantics(mergeDescendants = true) { contentDescription = numZeroAcb },
+                    .semantics(mergeDescendants = true) { contentDescription = numZeroAcb }
+                    .testTag(stringResource(id = R.string.btn_num_0_test_tag)),
                 data = BtnNumAtmData(id = "0", number = 0),
                 onUIAction = onUIAction
             )

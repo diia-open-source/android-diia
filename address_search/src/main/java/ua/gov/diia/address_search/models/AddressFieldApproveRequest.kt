@@ -5,7 +5,8 @@ import java.util.regex.Pattern
 data class AddressFieldApproveRequest(
     val mandatory: Boolean,
     val data: Any?,
-    val regex: String?
+    val regex: String?,
+    val flags: List<String>?
 ) {
 
     fun approved(): Boolean = when (data) {
@@ -20,13 +21,21 @@ data class AddressFieldApproveRequest(
                 passedValidation
             }
         }
+
         else -> if (mandatory) data != null else true
     }
 
     private val validationPattern: Pattern? by lazy {
-        regex.let {
+        regex?.let { regex ->
+            val flags = flags?.fold(0) { compiledFlags, flag ->
+                when (flag) {
+                    "i" -> compiledFlags or Pattern.CASE_INSENSITIVE
+                    // Add other flag mappings as needed
+                    else -> compiledFlags
+                }
+            } ?: 0
             Pattern.compile(
-                it
+                regex, flags
             )
         }
     }

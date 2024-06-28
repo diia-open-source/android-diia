@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.R
@@ -36,7 +37,8 @@ fun TabItemMolecule(
                         states = listOf(UIState.Selection.Selected)
                     )
                 )
-            },
+            }
+            .testTag(data.componentId?.asString() ?: ""),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -87,7 +89,8 @@ data class TabItemMoleculeData(
     val iconSelectedWithBadge: UiText? = null,
     val iconUnselectedWithBadge: UiText? = null,
     val showBadge: Boolean = false,
-    val selectionState: UIState.Selection = UIState.Selection.Unselected
+    val selectionState: UIState.Selection = UIState.Selection.Unselected,
+    val componentId: UiText? = null
 ) : UIElementData
 
 @Composable

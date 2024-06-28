@@ -33,6 +33,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -97,7 +98,8 @@ fun SearchInputV2(
                             UIState.Focus.InFocus -> UIState.Focus.OutOfFocus
                             UIState.Focus.OutOfFocus -> UIState.Focus.InFocus
                         }
-                    },
+                    }
+                    .testTag(data.componentId?.asString() ?: ""),
                 value = data.searchFieldValue?.asString() ?: "",
                 onValueChange = {
                     onUIAction(
@@ -191,6 +193,7 @@ fun SearchInputV2(
                     .noRippleClickable {
                         onUIAction(UIAction(actionKey = data.actionKey))
                     }
+                    .testTag(data.componentId?.asString() ?: "")
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -236,7 +239,8 @@ data class SearchInputV2Data(
     val placeholder: UiText? = null,
     val mode: Int = Mode.EDITABLE.value,
     val contentDescription: UiText? = null,
-) : UIElementData {
+    val componentId: UiText? = null,
+    ) : UIElementData {
     fun onChange(newValue: String?): SearchInputV2Data {
         return this.copy(
             searchFieldValue = UiText.DynamicString(newValue ?: "")

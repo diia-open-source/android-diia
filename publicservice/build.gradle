@@ -132,6 +132,8 @@ dependencies {
     kapt deps.glide_compiler
     //Compose
     implementation deps.activity_compose
+    implementation deps.compose_ui
+    implementation deps.compose_material
 
     //test
     testImplementation deps.junit

@@ -17,7 +17,7 @@ import ua.gov.diia.ui_base.components.theme.BlackSqueezeTransparent
 import ua.gov.diia.ui_base.components.theme.ColumbiaBlue
 
 @Composable
-fun BoxScope.GradientDividerAtom(modifier: Modifier = Modifier) {
+fun GradientDividerAtom(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Box(
             modifier = Modifier

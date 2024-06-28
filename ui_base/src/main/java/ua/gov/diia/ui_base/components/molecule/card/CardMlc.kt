@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -32,12 +33,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ua.gov.diia.core.models.common_compose.mlc.card.CardMlc
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryAdditionalAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryAdditionalAtmData
-import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtom
+import ua.gov.diia.ui_base.components.atom.button.BtnStrokeAdditionalAtm
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
+import ua.gov.diia.ui_base.components.atom.button.toUIModel
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
 import ua.gov.diia.ui_base.components.atom.status.ChipStatusAtm
 import ua.gov.diia.ui_base.components.atom.status.ChipStatusAtmData
@@ -68,8 +71,7 @@ fun CardMlc(
     modifier: Modifier = Modifier,
     data: CardMlcData,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
-    onUIAction: (UIAction) -> Unit,
-    diiaResourceIconProvider: DiiaResourceIconProvider
+    onUIAction: (UIAction) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -80,7 +82,8 @@ fun CardMlc(
             )
             .background(
                 color = White, shape = RoundedCornerShape(8.dp)
-            ),
+            )
+            .testTag(data.componentId?.asString() ?: ""),
         horizontalAlignment = Alignment.Start
     ) {
         Column(
@@ -156,10 +159,10 @@ fun CardMlc(
                                     .padding(end = 8.dp)
                                     .size(16.dp),
                                 painter = painterResource(
-                                    id = diiaResourceIconProvider.getResourceId(data.icon.code)
+                                    id = DiiaResourceIcon.getResourceId(data.icon.code)
                                 ),
                                 contentDescription = stringResource(
-                                    id = diiaResourceIconProvider.getContentDescription(
+                                    id = DiiaResourceIcon.getContentDescription(
                                         data.icon.code
                                     )
                                 ),
@@ -196,7 +199,80 @@ fun CardMlc(
                         style = DiiaTextStyle.t2TextDescription
                     )
                 }
+            }
 
+            data.subtitles?.let { subtitleItems ->
+                subtitleItems.forEach{ item ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(top = 8.dp),
+
+                            verticalAlignment = Alignment.Top
+                        ) {
+                            item.icon?.let { uIcon ->
+                                when (uIcon) {
+                                    is UiIcon.DynamicIconBase64 -> {
+                                        IconBase64Subatomic(
+                                            modifier = Modifier
+                                                .padding(end = 8.dp)
+                                                .size(16.dp)
+                                                .noRippleClickable {
+                                                    onUIAction(
+                                                        UIAction(
+                                                            actionKey = data.actionKey,
+                                                            data = data.id
+                                                        )
+                                                    )
+                                                }, base64Image = uIcon.value
+                                        )
+                                    }
+                                    is UiIcon.DrawableResource -> {
+                                        Image(
+                                            modifier = Modifier
+                                                .padding(end = 8.dp)
+                                                .size(16.dp),
+                                            painter = painterResource(
+                                                id = DiiaResourceIcon.getResourceId(uIcon.code)
+                                            ),
+                                            contentDescription = stringResource(
+                                                id = DiiaResourceIcon.getContentDescription(
+                                                    uIcon.code
+                                                )
+                                            ),
+                                            colorFilter = ColorFilter.tint(Black)
+                                        )
+                                    }
+                                    is UiIcon.PlainString -> {
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(end = 8.dp)
+                                                .size(16.dp),
+                                            text = uIcon.value,
+                                            style = TextStyle(
+                                                fontFamily = FontFamily(Font(R.font.e_ukraine_regular)),
+                                                fontWeight = FontWeight.Normal,
+                                                fontSize = 16.sp,
+                                                lineHeight = 16.sp
+                                            )
+                                        )
+                                    }
+                                    else -> {
+                                    }
+                                }
+                            }
+                            item.value.let {
+                                Text(
+                                    modifier = Modifier,
+                                    text = it,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = DiiaTextStyle.t2TextDescription
+                                )
+                            }
+                        }
+                    }
             }
             data.description?.let {
                 Text(
@@ -249,7 +325,7 @@ fun CardMlc(
             }
 
             data.btnStroke?.let {
-                ButtonStrokeAdditionalAtom(
+                BtnStrokeAdditionalAtm(
                     modifier = Modifier.padding(top = 16.dp),
                     data = data.btnStroke,
                     progressIndicator = progressIndicator,
@@ -276,18 +352,94 @@ fun CardMlc(
 
 data class CardMlcData(
     val actionKey: String = UIActionKeysCompose.CARD_MLC,
+    val componentId: UiText? = null,
     val id: String,
     val chip: ChipStatusAtmData? = null,
     val label: UiText? = null,
     val title: UiText? = null,
     val icon: UiIcon? = null,
     val subtitle: UiText? = null,
+    val subtitles: List<CMSubtitle>? = null,
     val description: UiText? = null,
     val ticker: TickerAtomData? = null,
     val botLabel: UiText? = null,
     val btnPrimary: BtnPrimaryAdditionalAtmData? = null,
     val btnStroke: ButtonStrokeAdditionalAtomData? = null
-) : UIElementData
+) : UIElementData {
+    data class CMSubtitle(
+        val icon: UiIcon?,
+        val value: String
+    )
+}
+
+fun CardMlc.toUIModel(): CardMlcData {
+    val subList: MutableList<CardMlcData.CMSubtitle> = mutableListOf()
+    this.subtitles?.forEach { subtitle ->
+        subList.add(
+            CardMlcData.CMSubtitle(
+                icon = subtitle.icon?.let { UiIcon.DrawableResource(it) },
+                value = subtitle.value ?: ""
+            )
+        )
+    }
+    return CardMlcData(
+        componentId = this.componentId?.let { UiText.DynamicString(it) },
+        id = this.id,
+        chip = this.chipStatusAtm?.let {
+            ChipStatusAtmData(
+                componentId = it.componentId?.let { cId -> UiText.DynamicString(cId) },
+                type = when (it.type) {
+                    ChipType.success.toString() -> StatusChipType.POSITIVE
+                    ChipType.pending.toString() -> StatusChipType.PENDING
+                    ChipType.fail.toString() -> StatusChipType.NEGATIVE
+                    ChipType.neutral.toString() -> StatusChipType.NEUTRAL
+                    else -> StatusChipType.NEUTRAL
+                },
+                title = it.name
+            )
+        },
+        label = this.label?.let { UiText.DynamicString(it) },
+        title = this.title?.let { UiText.DynamicString(it) },
+        icon = this.subtitle?.icon?.let { UiIcon.DynamicIconBase64(it) },
+        subtitle = this.subtitle?.value?.let { UiText.DynamicString(it) },
+        subtitles = subList,
+        description = this.description?.let { UiText.DynamicString(it) },
+        ticker = if (this.ticker != null) {
+            this.ticker?.let {
+                TickerAtomData(
+                    componentId = it.componentId.orEmpty(),
+                    title = it.value,
+                    type = when (it.type) {
+                        ua.gov.diia.core.models.common_compose.atm.text.TickerAtm.TickerType.warning -> TickerType.SMALL_WARNING
+                        ua.gov.diia.core.models.common_compose.atm.text.TickerAtm.TickerType.positive -> TickerType.SMALL_POSITIVE
+                        ua.gov.diia.core.models.common_compose.atm.text.TickerAtm.TickerType.neutral -> TickerType.SMALL_NEUTRAL
+                        ua.gov.diia.core.models.common_compose.atm.text.TickerAtm.TickerType.informative -> TickerType.SMALL_INFORMATIVE
+                    }
+                )
+            }
+        } else {
+            this.tickerAtm?.let {
+                TickerAtomData(
+                    componentId = it.componentId.orEmpty(),
+                    title = it.value,
+                    type = when (it.type) {
+                        ua.gov.diia.core.models.common_compose.atm.text.TickerAtm.TickerType.warning -> TickerType.SMALL_WARNING
+                        ua.gov.diia.core.models.common_compose.atm.text.TickerAtm.TickerType.positive -> TickerType.SMALL_POSITIVE
+                        ua.gov.diia.core.models.common_compose.atm.text.TickerAtm.TickerType.neutral -> TickerType.SMALL_NEUTRAL
+                        ua.gov.diia.core.models.common_compose.atm.text.TickerAtm.TickerType.informative -> TickerType.SMALL_INFORMATIVE
+                    }
+                )
+            }
+        },
+        botLabel = this.botLabel?.let { UiText.DynamicString(it) },
+        btnPrimary = this.btnPrimaryAdditionalAtm?.toUIModel(),
+        btnStroke = this.btnStrokeAdditionalAtm?.toUIModel()
+    )
+}
+
+enum class ChipType {
+    success, pending, fail, neutral;
+}
 
 @Composable
 @Preview
@@ -318,10 +470,11 @@ fun CardMlcPreview_FullState() {
         )
     )
     Box(modifier = Modifier.background(AzureishWhite)) {
-        CardMlc(data = state, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(), onUIAction = {})
+        CardMlc(data = state) {
+
+        }
     }
 }
-
 
 @Composable
 @Preview
@@ -352,10 +505,11 @@ fun CardMlcPreview_Divider() {
         )
     )
     Box(modifier = Modifier.background(AzureishWhite)) {
-        CardMlc(data = state, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(), onUIAction = {})
+        CardMlc(data = state) {
+
+        }
     }
 }
-
 
 @Composable
 @Preview
@@ -381,10 +535,11 @@ fun CardMlcPreview_Poor() {
         btnStroke = null
     )
     Box(modifier = Modifier.background(AzureishWhite)) {
-        CardMlc(data = state, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(), onUIAction = {})
+        CardMlc(data = state) {
+
+        }
     }
 }
-
 
 @Composable
 @Preview
@@ -410,7 +565,9 @@ fun CardMlcPreview_PoorV2() {
         )
     )
     Box(modifier = Modifier.background(AzureishWhite)) {
-        CardMlc(data = state, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(), onUIAction = {})
+        CardMlc(data = state) {
+
+        }
     }
 }
 
@@ -441,10 +598,11 @@ fun CardMlcPreview_Poor_Gradient() {
         )
     )
     Box(modifier = Modifier.background(AzureishWhite)) {
-        CardMlc(data = state, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(), onUIAction = {})
+        CardMlc(data = state) {
+
+        }
     }
 }
-
 
 @Composable
 @Preview
@@ -475,6 +633,51 @@ fun CardMlcPreview_LongText() {
         )
     )
     Box(modifier = Modifier.background(AzureishWhite)) {
-        CardMlc(data = state, diiaResourceIconProvider = DiiaResourceIconProvider.forPreview(), onUIAction = {})
+        CardMlc(data = state) {
+
+        }
+    }
+}
+
+@Composable
+@Preview
+fun CardMlcPreview_Subtitles() {
+    val state = CardMlcData(
+        id = "123",
+        chip = ChipStatusAtmData(type = StatusChipType.POSITIVE, title = "Confirm"),
+        label = UiText.DynamicString("Label"),
+        title = UiText.DynamicString("Card title"),
+        icon = UiIcon.DynamicIconBase64(PreviewBase64Icons.apple),
+        subtitle = UiText.DynamicString("Subtitle"),
+        subtitles = listOf(
+            CardMlcData.CMSubtitle(
+                icon = UiIcon.DrawableResource("someDocs"),
+                value = "Subtitle 1"
+            ),
+            CardMlcData.CMSubtitle(
+                icon = UiIcon.DrawableResource("add"),
+                value = "Subtitle 2"
+            )
+        ),
+        description = UiText.DynamicString("Description"),
+        ticker = null,
+        botLabel = UiText.DynamicString("5 000 грн"),
+        btnPrimary = BtnPrimaryAdditionalAtmData(
+            actionKey = "primaryButton",
+            id = "primaryId",
+            title = UiText.DynamicString("label"),
+            interactionState = UIState.Interaction.Enabled
+        ),
+        btnStroke = ButtonStrokeAdditionalAtomData(
+            actionKey = "alternativeButton",
+            id = "alternativeId",
+            title = UiText.DynamicString("label"),
+            interactionState = UIState.Interaction.Enabled
+        )
+    )
+    Box(modifier = Modifier.background(AzureishWhite)) {
+        CardMlc(data = state) {
+
+        }
     }
 }

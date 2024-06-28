@@ -19,17 +19,12 @@ import ua.gov.diia.core.util.extensions.fragment.hideKeyboard
 import ua.gov.diia.core.util.extensions.fragment.navigate
 import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.core.util.extensions.fragment.registerForTemplateDialogNavResult
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.infrastructure.ServiceScreen
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class BankSelectionF : Fragment() {
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
 
     private val args: BankSelectionFArgs by navArgs()
     private val viewModel: BankSelectionVM by viewModels()
@@ -82,8 +77,7 @@ class BankSelectionF : Fragment() {
                 toolbar = toolbar,
                 body = body,
                 contentLoaded = contentLoaded.value,
-                onEvent = { viewModel.onUIAction(it) },
-                diiaResourceIconProvider = diiaResourceIconProvider,
+                onEvent = { viewModel.onUIAction(it) }
             )
         }
 

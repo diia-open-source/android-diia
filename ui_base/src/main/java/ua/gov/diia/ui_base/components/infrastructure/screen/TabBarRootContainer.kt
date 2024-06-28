@@ -9,6 +9,7 @@ import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.organism.bottom.TabBarOrganism
 import ua.gov.diia.ui_base.components.organism.bottom.TabBarOrganismData
+import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 
 @Composable
 fun TabBarRootContainer(
@@ -18,6 +19,7 @@ fun TabBarRootContainer(
 ) {
     Column(
         modifier = modifier.navigationBarsPadding()
+            .provideTestTagsAsResourceId()
     ) {
         tabBarVies.forEach {
             when (it) {

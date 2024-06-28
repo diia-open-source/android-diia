@@ -14,4 +14,8 @@ internal class WithCrashlyticsImpl @Inject constructor() : WithCrashlytics {
         e.message?.let { FirebaseCrashlytics.getInstance().setCustomKey(KEY_MESSAGE, it) }
         FirebaseCrashlytics.getInstance().recordException(e)
     }
+
+    override fun sendMarkedErr(msg: String) {
+        FirebaseCrashlytics.getInstance().recordException(Throwable(msg))
+    }
 }

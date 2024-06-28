@@ -31,7 +31,7 @@ import ua.gov.diia.core.util.event.UiEvent
 import ua.gov.diia.diia_storage.DiiaStorage
 import ua.gov.diia.menu.MainDispatcherRule
 import ua.gov.diia.menu.MenuContentController
-import ua.gov.diia.ui_base.components.CommonDiiaResourceIcon
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -254,7 +254,7 @@ class MenuComposeVMTest {
             notificationCallback!!.invoke(10)
             notificationCallback!!.invoke(0)
 
-            assertEquals(CommonDiiaResourceIcon.NOTIFICATION_MESSAGE.code, (menuComposeVM.bodyData[0] as ListItemGroupOrgData).itemsList[0].iconLeft!!.code)
+            assertEquals(DiiaResourceIcon.NOTIFICATION_MESSAGE.code, (menuComposeVM.bodyData[0] as ListItemGroupOrgData).itemsList[0].iconLeft!!.code)
         }
     }
 }

@@ -73,7 +73,7 @@ data class ArticlePicAtmData(
 @Composable
 fun ArticlePicAtmPreview() {
     val iconCorrect =
-        "your_url"
+        "https://deep-image.ai/blog/content/images/2022/09/underwater-magic-world-8tyxt9yz.jpeg"
     ArticlePicAtm(
         modifier = Modifier, data = ArticlePicAtmData(
             url = iconCorrect,
@@ -87,7 +87,7 @@ fun ArticlePicAtmPreview() {
 @Preview
 @Composable
 fun ArticlePicAtmPreview_Invalid() {
-    val iconIncorrect = "your_url"
+    val iconIncorrect = "https://business.diia.gov.ua/uplosdfsdfads/4/22881-main.jpg"
     ArticlePicAtm(
         modifier = Modifier, data = ArticlePicAtmData(
             url = iconIncorrect,

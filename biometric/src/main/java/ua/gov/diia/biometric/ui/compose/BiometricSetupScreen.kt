@@ -11,6 +11,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -19,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtmData
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtm
@@ -34,12 +34,12 @@ import ua.gov.diia.ui_base.components.molecule.text.TextLabelMlc
 import ua.gov.diia.ui_base.components.molecule.text.TextLabelMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrg
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
+import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 
 @Composable
 fun BiometricSetupScreen(
     modifier: Modifier = Modifier,
     data: SnapshotStateList<UIElementData>,
-    diiaResourceIconProvider: DiiaResourceIconProvider,
     onUIAction: (UIAction) -> Unit
 ) {
     ConstraintLayout(
@@ -50,6 +50,7 @@ fun BiometricSetupScreen(
             )
             .fillMaxSize()
             .safeDrawingPadding()
+            .provideTestTagsAsResourceId()
     ) {
         val (title, descriptionText, iconZone, button, altButton) = createRefs()
         data.forEach { item ->
@@ -61,8 +62,7 @@ fun BiometricSetupScreen(
                         top.linkTo(parent.top)
                     },
                     data = item,
-                    onUIAction = onUIAction,
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onUIAction = onUIAction
                 )
             }
 
@@ -86,7 +86,8 @@ fun BiometricSetupScreen(
                         bottom.linkTo(button.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                    },
+                    }
+                    .testTag(stringResource(id = ua.gov.diia.biometric.R.string.biometric_screen_icon_test_tag)),
                 painter = painterResource(id = R.drawable.ic_biometric_auth),
                 contentDescription = stringResource(id = R.string.accessibility_biometric_methods_icon),
             )
@@ -158,9 +159,5 @@ fun BiometricSetupScreenPreview() {
             interactionState = UIState.Interaction.Enabled
         )
     )
-    BiometricSetupScreen(
-        data = uiData,
-        onUIAction = { },
-        diiaResourceIconProvider = DiiaResourceIconProvider.forPreview()
-    )
+    BiometricSetupScreen(data = uiData, onUIAction = { })
 }

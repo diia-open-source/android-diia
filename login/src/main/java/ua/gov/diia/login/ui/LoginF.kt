@@ -9,18 +9,18 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ua.gov.diia.pin.model.CreatePinFlowType
+import ua.gov.diia.core.models.ConsumableString
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.delegation.WithAppConfig
 import ua.gov.diia.core.util.extensions.fragment.currentDestinationId
 import ua.gov.diia.core.util.extensions.fragment.navigate
-import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.core.util.extensions.fragment.registerForNavigationResultOnce
 import ua.gov.diia.core.util.extensions.fragment.registerForTemplateDialogNavResult
+import ua.gov.diia.login.ui.compose.LoginScreen
+import ua.gov.diia.pin.model.CreatePinFlowType
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
-import ua.gov.diia.login.ui.compose.LoginScreen
-import ua.gov.diia.ui_base.components.DiiaResourceIconProvider
+import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.verification.ui.controller.VerificationControllerOnFlowF
 import ua.gov.diia.web.util.extensions.fragment.navigateToWebView
 import javax.inject.Inject
@@ -33,9 +33,6 @@ class LoginF : VerificationControllerOnFlowF() {
 
     @Inject
     lateinit var appConfig: WithAppConfig
-
-    @Inject
-    lateinit var diiaResourceIconProvider: DiiaResourceIconProvider
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,10 +84,10 @@ class LoginF : VerificationControllerOnFlowF() {
                 LoginScreen(
                     toolbar = verificationVM.toolbarData,
                     body = verificationVM.bodyData,
+                    bottom = verificationVM.bottomData,
                     screenNavigationProcessing = verificationVM.progressState,
                     isLoading = isLoading.value,
-                    onEvent = { verificationVM.onUIAction(it) },
-                    diiaResourceIconProvider = diiaResourceIconProvider,
+                    onEvent = { verificationVM.onUIAction(it) }
                 )
             }
         }
@@ -112,7 +109,11 @@ class LoginF : VerificationControllerOnFlowF() {
     }
 
     private fun navigateToHomeScreen() {
-        navigate(LoginFDirections.actionDestinationLoginToHomeF())
+        navigate(
+            LoginFDirections.actionDestinationLoginToHomeF(
+                launchFlow = ConsumableString(ActionsConst.ACTION_AUTH_FLOW)
+            )
+        )
     }
 
     private companion object {

@@ -14,14 +14,15 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
-import ua.gov.diia.core.util.extensions.context.getDrawableSafe
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.adapters.binding.bindBase64
+import ua.gov.diia.core.util.extensions.context.getDrawableSafe
 
 class DiiaProgressTextWithImage @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : ConstraintLayout(context, attrs) {
 
+//    private val borderBack: View
     private val progressIndicator: View
     private val imageIcon: ImageView
     private val title: TextView
@@ -29,6 +30,7 @@ class DiiaProgressTextWithImage @JvmOverloads constructor(
     init {
         inflate(context, R.layout.view_progress_text_with_image, this)
 
+//        borderBack = findViewById(R.id.v_border_back)
         progressIndicator = findViewById(R.id.progress_indicator)
         imageIcon = findViewById(R.id.iv_icon_start)
         title = findViewById(R.id.tv_progress_text_title)
