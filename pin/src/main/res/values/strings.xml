@@ -6,10 +6,10 @@
 
     <!-- Authorization. Create pin screen -->
     <string name="create_screen_title_text">Придумайте\nкод з 4 цифр</string>
-    <string name="create_screen_description_text">Цей код ви будете вводити для входу у застосунок Дія.</string>
+    <string name="create_screen_description_text">Цей код ви будете вводити для входу в застосунок Дія.</string>
 
     <string name="confirm_screen_title_text">Повторіть\nкод з 4 цифр</string>
-    <string name="confirm_screen_description_text">Переконайтеся, що не помилилися і пам\'ятаєте код для входу.</string>
+    <string name="confirm_screen_description_text">Переконайтеся, що не помилилися й пам\'ятаєте код для входу.</string>
 
     <!-- Authorization. Create pin screen for sign -->
     <string name="create_screen_title_text_sign">Придумайте\nкод з 5 цифр</string>
@@ -26,7 +26,7 @@
     <string name="pin_reset_create_description_text">Цей код ви будете вводити для входу у застосунок Дія.</string>
 
     <string name="pin_reset_confirm_title_text">Повторіть\nкод з 4 цифр</string>
-    <string name="pin_reset_confirm_description_text">Переконайтеся, що не помилилися і пам\'ятаєте код для входу.</string>
+    <string name="pin_reset_confirm_description_text">Переконайтеся, що не помилилися й пам\'ятаєте код для входу.</string>
 
     <!-- Authorization. Pin input signature cerf -->
     <string name="pin_input_signature_title_text">Код для Дія.Підпис</string>

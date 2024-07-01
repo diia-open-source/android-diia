@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SSL Errors -->
-    <string name="error_ssl_title">Помилка сертифікату SSL</string>
+    <string name="error_ssl_title">Помилка сертифіката SSL</string>
     <string name="error_ssl_cant_check">Неможливо підтвердити сертифікат джерела.</string>
-    <string name="error_ssl_expire">Закінчився термін дії сертифікату джерела.</string>
-    <string name="error_ssl_valid_error">Помилка валідації сертифікату джерела.</string>
+    <string name="error_ssl_expire">Закінчився термін дії сертифіката джерела.</string>
+    <string name="error_ssl_valid_error">Помилка валідації сертифіката джерела.</string>
     <string name="error_ssl_not_yet_error">Сертифікат джерела наразі не валідний.</string>
     <string name="error_ssl_continue_anyway">%s\nВи хочете все одно продовжити?</string>
 
