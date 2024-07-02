@@ -14,6 +14,7 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.plus
 import retrofit2.Retrofit
+import retrofit2.create
 import ua.gov.diia.core.di.data_source.http.AuthorizedClient
 import ua.gov.diia.core.util.date.CurrentDateProvider
 import ua.gov.diia.core.util.delegation.WithCrashlytics
@@ -129,7 +130,7 @@ interface DocumentsModule {
         @AuthorizedClient
         fun provideApiDocs(
             @AuthorizedClient retrofit: Retrofit,
-        ): ApiDocs = retrofit.create(ApiDocs::class.java)
+        ): ApiDocs = retrofit.create()
 
         @Provides
         @GlobalActionUpdateDocument

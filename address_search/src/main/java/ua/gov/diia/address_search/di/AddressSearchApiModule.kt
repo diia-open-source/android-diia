@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.create
 import ua.gov.diia.address_search.network.ApiAddressSearch
 import ua.gov.diia.core.di.data_source.http.AuthorizedClient
 
@@ -16,5 +17,5 @@ object AddressSearchApiModule {
     @AuthorizedClient
     fun provideApiAddressSearch(
         @AuthorizedClient retrofit: Retrofit
-    ): ApiAddressSearch = retrofit.create(ApiAddressSearch::class.java)
+    ): ApiAddressSearch = retrofit.create()
 }
