@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="expand_collapse">Expand/collapse</string>
+    <string name="arrow_back">Return</string>
+    <string name="context_menu">Context menu</string>
+    <string name="details">Details</string>
+    <string name="decrease_value">Decrease value</string>
+    <string name="increase_value">Increase value</string>
+    <string name="select_date">Select date</string>
+    <string name="select_time">Select time</string>
+    <string name="day_placeholder">dd</string>
+    <string name="month_placeholder">mm</string>
+    <string name="year_placeholder">yyyy</string>
+    <string name="clean_search_field">Clear search field</string>
+    <string name="code_input_text_hint_1">A</string>
+    <string name="code_input_text_hint_2">1</string>
+    <string name="code_input_text_hint_3">2</string>
+    <string name="code_input_text_hint_4">B</string>
+    <string name="notification_channel_messages">Message</string>
+    <string name="loading_ellipsized">Loading…</string>
+    <string name="close">Close</string>
+    <string name="qr_code">QR Code</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="not_handled_icon">Icon description is missing</string>
+    <string name="empty_string" />
+
+    <!--    NFC  -->
+    <string name="dialog_nfc_ready_to_read">Ready for reading</string>
+    <string name="dialog_nfc_hold_the_card">Hold the card and phone in the same position</string>
+    <string name="dialog_nfc_scan_in_progress">Reading</string>
+    <string name="nfc_scan_stop">Stop</string>
+    <string name="nfc_scan_success">Continue</string>
+    <string name="nfc_scanning_title_success_icon">👍</string>
+    <string name="nfc_scanning_title_success">Thanks</string>
+    <string name="nfc_instructions_scanning">Hold the card and phone in the same position</string>
+    <string name="nfc_instructions_start">Attach the document media (chip) to the back of the phone</string>
+    <string name="nfc_instructions_success">Data reading completed successfully</string>
+
+    <!--    Login  -->
+    <string name="login_screen_bank_list_title">Log in via:</string>
+
+
+    <string name="error_message_notifications_icon">👌</string>
+    <string name="error_message_notifications_empty">You have no new messages.</string>
+
+    <string name="doc_stack_order_group_count">%d documents</string>
+
+    <string name="no_internet">No access to the Internet. Data is not being updated • No internet access. Data is not being updated • No internet access. Data is not being updated • No internet access. •</string>
+
+    <!--  Public service icon's content description  -->
+    <string name="ps_icon_description_donation">Допомога армії</string>
+    <string name="ps_icon_description_certificates">Довідки та витяги</string>
+</resources>

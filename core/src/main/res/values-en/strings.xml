@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="try_again">Try again</string>
+    <!-- identity check -->
+    <string name="identity_error_try_again">Try again</string>
+    <string name="update_data">Update data</string>
+    <string name="identity_error_unknown">Unfortunately, an error occurred</string>
+    <string name="identity_error_no_internet">No internet. Please check your connection and try again</string>
+    <string name="identity_error_timeout">Waiting time for a response has expired</string>
+    <string name="idenity_error_understood">Understood</string>
+    <string name="identity_error_not_registered">The request is not registered in Diia</string>
+    <string name="share_error_acquirer_not_found">The requestor is not registered with Diia. To protect your personal data, we send digital copies of documents only to those who have registered with Diia.</string>
+    <string name="error_dialog_back">Go back</string>
+
+    <string name="error_document_not_found">No documents were found for your request</string>
+    <string name="error_service_not_available">The service is not available</string>
+
+    <string name="share_doc_not_present">The request contains documents that are missing from Diia</string>
+    <string name="share_doc_timeout">Термін дії QR-коду закінчився</string>
+
+    <!-- pay Error -->
+    <string name="identity_error_payment">Payment has not been completed</string>
+    <string name="payment_value_changed">The amount to be paid has changed</string>
+    <string name="dl_replace_not_sent">The application was not sent</string>
+    <string name="dl_replace_return_to_docs">Back to documents</string>
+    <string name="error_add_doc_request_limit">The number of attempts has been expired. Please try again later</string>
+    <!--    actions     -->
+    <string name="allow">Allow</string>
+    <string name="open_settings">Settings</string>
+    <string name="deny">No, thanks</string>
+    <string name="close">Close</string>
+    <!-- Camera permission -->
+    <string name="camera_permission_request">This is required to verify documents by QR code. It is also used to compare your photo with the ones in the registers, when confirming your identity or signing documents. Diia does not store these photos.</string>
+    <string name="camera_permission_request_rational">To continue, give the Action access to the camera. You can do this in Settings.</string>
+    <string name="camera_permission_request_title">The app needs access to the device\'s camera</string>
+    <string name="camera_permission_request_title_rational">Access to the camera is required</string>
+    <string name="camera_permission_to_settings">Go to Settings</string>
+    <string name="camera_permission_rationale_title"><u>Learn more about camera access here</u></string>
+    <string name="camera_permission_rationale">The action can request access to the camera to verify documents or user data by scanning a QR code, creating a remote qualified electronic signature, identifying a person (by comparing a photo with the Unified Demographic Register), and using a qualified remote electronic signature. The camera is not used for any other purpose. By this consent, you confirm such actions.</string>
+
+    <!--- Location permission -->
+    <string name="location_permission_request_title">Give Diia one-time access to geolocation?</string>
+    <string name="location_permission_request">Give the Diia access to your geolocation to confirm your location. In this way, Diia will verify the validity of the address specified as the current one. The geolocation will not be used for any other purpose.</string>
+    <string name="location_permission_rationale_title"><u>Read more about access to geolocation here</u></string>
+    <string name="location_permission_rationale">The action can request access to geolocation to verify the validity of the address specified as the current one. IMPORTANT!!! Geolocation will not be used for any other purpose.</string>
+
+    <!--- Notifications permission -->
+    <string name="notifications_permission_request_title">Would you like to receive push notifications from Diia?</string>
+    <string name="notifications_permission_request">To make it easier to receive government services in Diia, grant permission to send push notifications. The app will notify you of fines, court hearings and decisions, credit history requests, new wholesale orders, and the status of ordered services.</string>
+
+    <!-- Already in app -->
+    <string name="already_auth_error_title">You are already logged in to the app.</string>
+    <string name="already_auth_error_message">To authorize using another method, you must first log out.</string>
+    <string name="already_auth_error_stay_in_app"><u>No, stay in the app</u></string>
+
+    <!-- Storage permission -->
+    <string name="file_permission_request_title">Give Diia access to file storage</string>
+    <string name="file_permission_request">This is necessary to save receipts, declarations, and statements, as well as to attach photos when creating petitions.</string>
+    <string name="file_permission_rationale_title"><u>Read more about access to storage</u></string>
+    <string name="file_permission_rationale">Grant Diia access to an external file storage. This is necessary to store copies of documents confirming the provision of electronic services, as well as to upload photos when creating electronic petitions to local authorities. We use this access only for these purposes and do not share it with anyone without your consent. You hereby authorize us to do so.</string>
+
+    <!-- Pin code flows -->
+    <string name="pin_create_title">Create a code with %s digits</string>
+    <string name="pin_confirm_title">Repeat the code with %s digits</string>
+    <string name="pin_description_create_authorization">You will enter this code to log in to the Diia app.</string>
+    <string name="pin_description_create_signature">You will enter this code to sign documents using Diia.Sign.</string>
+    <string name="pin_description_confirm_authorization">Make sure you didn\'t make a mistake and remember your login code.</string>
+    <string name="pin_description_confirm_signature">Make sure you didn\'t make a mistake and remember the code for Diia.Sign.</string>
+    <string name="pin_description_confirm_reset">To make sure that it is you who is changing the login code</string>
+    <string name="pin_input_header_auth">Login code</string>
+    <string name="pin_input_header_update">New 4-digit code</string>
+    <string name="pin_input_header_reset">Repeat the 4-digit code</string>
+    <string name="pin_input_header_signature">Code for Diia.Sign</string>
+    <string name="pin_input_reset_title_auth">I don\'t remember the login code</string>
+    <string name="pin_input_reset_title_signature">I don\'t remember the code for Diia.Sign</string>
+
+    <string name="log_out">Log out</string>
+
+    <!-- Face Recognition -->
+    <string name="alert_verification_failure">Verification failed</string>
+    <string name="alert_verification_failure_advice">Try to verify your identity through your online banking</string>
+    <string name="reference_why_underline"><u>Why is this so?</u></string>
+    <string name="popup_why_header">Why is this so?</string>
+    <string name="popup_why_driverlicence">A new register of driver\'s licenses was created in 2013. Out of 9.5 million holders of driver\'s licenses, only 2.5 million had their photos displayed.\n\nOur IT team managed to obtain high-quality data from the demographic register and enabled 6 million Ukrainians to receive electronic documents.\n\nWe will continue to do everything possible to ensure that the quality of data and its security in the registers grows every day. If your ID is not displayed, you will receive advice on how to fix it.</string>
+    <string name="popup_why_vehiclelicence">A high-quality register of certificates was created only in 2013. Therefore, drivers who purchased a vehicle before 2013 but did not perform other registration actions afterwards (for example, registering a gas installation, changing the color of a car, etc.) may not see their own documents.\n\nIf your vehicle registration certificate is not displayed in the application, you will receive tips on how to fix it.</string>
+    <string name="mrz_instruction_text"><![CDATA[Click the Read button and hover the photo frame over the code on the back of the document.\n\nThe code is located at the bottom of the document card and contains a set of letters, numbers, "<" signs, and your first and last name in English.]]></string>
+    <string name="mrz_instruction_title">Read the document number</string>
+    <string name="mrz_do_read">Read more</string>
+
+    <string name="pin_fail_t3">Log in</string>
+    <string name="reset_pin_dialog_forget_header">Forgot the login code?</string>
+    <string name="reset_pin_dialog_need_auth_again_message">Re-authorize in the application</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="critical_error_title">⚡ Attention!</string>
+
+    <string name="debt_on_hold">All stopped (+%1$d)</string>
+    <string name="error_add_doc_request_limit_desc">Please, try again later</string>
+    <string name="critical_error_icon">⚡</string>
+    <string name="identity_error_no_internet_desc">Check your connection and try again</string>
+
+    <string name="settings_dialog_title_faq">Diia wants to open %s</string>
+    <string name="settings_dialog_title_not_support">«%s» is not installed on your device</string>
+    <string name="settings_dialog_title_logout">Want to exit the app?</string>
+    <string name="settings_dialog_logout_text">You will need to log in again</string>
+    <string name="settings_dialog_logout_leave">Log out</string>
+    <string name="settings_dialog_logout_stay">Stay</string>
+    <string name="settings_dialog_support_open">Open</string>
+    <string name="settings_dialog_support_cancel">Cancel</string>
+
+    <string name="browser">Browser</string>
+    <string name="num_copied">Device number copied</string>
+    <string name="criminal_cert_details_download_zip">Download the archive with the extract</string>
+
+    <string name="retry">Retry</string>
+    <string name="phone_number_mask_input_hint">0123456789123456789</string>
+    <string name="text_length_counter">Characters left: %d</string>
+    <string name="home_loading" />
+</resources>

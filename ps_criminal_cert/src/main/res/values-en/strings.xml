@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="criminal_cert_title">Criminal record certificate</string>
+    <string name="criminal_cert_order">Order an extract</string>
+    <string name="criminal_cert_start">Start</string>
+    <string name="criminal_cert_tab_title_done">Done</string>
+    <string name="criminal_cert_tab_title_processing">Processing</string>
+    <string name="criminal_cert_state_processing">Processing</string>
+    <string name="criminal_cert_state_done">Extract is ready</string>
+    <string name="criminal_cert_to_details">Details</string>
+    <string name="criminal_cert_next">Next</string>
+    <string name="criminal_cert_details_download_zip">Download the archive with the extract</string>
+    <string name="criminal_cert_requester_add_prev_first_name">Add a previous name</string>
+    <string name="criminal_cert_requester_add_prev_middle_name">Add a previous middle name</string>
+    <string name="criminal_cert_requester_add_prev_last_name">Add a previous last name</string>
+    <string name="criminal_cert_requester_prev_last_name">Previous last name</string>
+    <string name="criminal_cert_requester_prev_first_name">Previous name</string>
+    <string name="criminal_cert_requester_prev_middle_name">Previous middle name</string>
+    <string name="criminal_cert_requester_middle_name">Middle name</string>
+    <string name="criminal_cert_requester_first_name">First name</string>
+    <string name="criminal_cert_requester_last_name">Last name</string>
+    <string name="criminal_cert_contacts_input_phone_title">Contact phone number</string>
+    <string name="criminal_cert_address_title">Place of residence registration</string>
+    <string name="criminal_cert_address_description">Please provide the current address of your place of residence.</string>
+    <string name="criminal_cert_confirm_action">Send</string>
+</resources>

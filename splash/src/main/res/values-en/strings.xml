@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Authorization. Splash screen -->
+    <string name="splash_screen_title_text">Hello 👋</string>
+
+</resources>

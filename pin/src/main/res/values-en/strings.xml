@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Authorization. Pin input screen -->
+    <string name="pin_input_title_text">Login code</string>
+    <string name="pin_input_description_text">I don\'t remember my PIN</string>
+
+    <!-- Authorization. Create pin screen -->
+    <string name="create_screen_title_text">Come up with a\n4-digit code</string>
+    <string name="create_screen_description_text">You will enter this code to log in to the Diia app.</string>
+
+    <string name="confirm_screen_title_text">Repeat the\n4-digit code</string>
+    <string name="confirm_screen_description_text">Make sure you didn\'t make a mistake and remember your login code.</string>
+
+    <!-- Authorization. Create pin screen for sign -->
+    <string name="create_screen_title_text_sign">Come up with a\n5-digit code</string>
+    <string name="create_screen_description_text_sign">You will enter this code to use Diia.Sign</string>
+
+    <string name="confirm_screen_title_text_sign">Repeat the\n5-digit code</string>
+    <string name="confirm_screen_description_text_sign">You will enter this code to use Diia.Sign</string>
+
+    <!-- Authorization. Reset pin screen -->
+    <string name="pin_reset_title_text">Repeat the\n4-digit code</string>
+    <string name="pin_reset_description_text">To make sure it\'s you, changing the login code.</string>
+
+    <string name="pin_reset_create_title_text">New\n4-digit code</string>
+    <string name="pin_reset_create_description_text">You will enter this code to log in to the Diia app.</string>
+
+    <string name="pin_reset_confirm_title_text">Repeat the\n4-digit code</string>
+    <string name="pin_reset_confirm_description_text">Make sure you didn\'t make a mistake and remember your login code.</string>
+
+    <!-- Authorization. Pin input signature cerf -->
+    <string name="pin_input_signature_title_text">Code for Diia.Sign</string>
+    <string name="pin_input_signature_description_text">I don\'t remember code for Diia.Sign</string>
+
+</resources>
