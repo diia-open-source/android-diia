@@ -35,7 +35,7 @@ jobs:
           --form token="$PIPELINE_TOKEN" \
           --form ref="$PUBLISH_BRANCH" \
           --form variables[PR_NUMBER]="$PR_NUMBER" \
-          "$PROJECT_CI_API/$TARGET_PROJECT_ID/trigger/pipeline"
+          "$PROJECT_CI_API/$TARGET_PROJECT_ID/trigger/pipeline" > /dev/null
           
           curl --fail --request DELETE --header "PRIVATE-TOKEN:$GITLAB_TOKEN" \
-          "$PROJECT_CI_API/$TARGET_PROJECT_ID/triggers/$PIPELINE_TOKEN_ID"
+          "$PROJECT_CI_API/$TARGET_PROJECT_ID/triggers/$PIPELINE_TOKEN_ID" > /dev/null
