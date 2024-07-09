@@ -73,7 +73,7 @@ class HomeF @Inject constructor(
             composeTabBar.apply {
                 setContent {
                     TabBarRootContainer(
-                        tabBarVies = viewModel.bottomData,
+                        tabBarViews = viewModel.bottomData,
                         onUIAction = {
                             viewModel.onUIAction(it)
                         }
