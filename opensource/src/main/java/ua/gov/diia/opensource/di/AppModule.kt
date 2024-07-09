@@ -17,6 +17,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import retrofit2.Retrofit
+import retrofit2.create
 import ua.gov.diia.core.controller.PromoController
 import ua.gov.diia.core.data.repository.DataRepository
 import ua.gov.diia.core.data.repository.SystemRepository
@@ -145,7 +146,7 @@ interface AppModule {
         @UnauthorizedClient
         fun provideApiAuth(
             @UnauthorizedClient retrofit: Retrofit
-        ): ApiAuth = retrofit.create(ApiAuth::class.java)
+        ): ApiAuth = retrofit.create()
 
         @Provides
         @Singleton

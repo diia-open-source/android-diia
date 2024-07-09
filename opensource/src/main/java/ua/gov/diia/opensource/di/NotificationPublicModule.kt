@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.create
 import ua.gov.diia.core.data.data_source.network.api.notification.ApiNotificationsPublic
 import ua.gov.diia.core.di.data_source.http.AuthorizedClient
 import ua.gov.diia.core.di.data_source.http.UnauthorizedClient
@@ -17,11 +18,11 @@ object NotificationPublicModule {
     @AuthorizedClient
     fun provideApiNotificationPublicAuthorized(
         @AuthorizedClient retrofit: Retrofit
-    ): ApiNotificationsPublic = retrofit.create(ApiNotificationsPublic::class.java)
+    ): ApiNotificationsPublic = retrofit.create()
 
     @Provides
     @UnauthorizedClient
     fun provideApiNotificationPublicUnauthorized(
         @UnauthorizedClient retrofit: Retrofit
-    ): ApiNotificationsPublic = retrofit.create(ApiNotificationsPublic::class.java)
+    ): ApiNotificationsPublic = retrofit.create()
 }

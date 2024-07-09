@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.create
 import ua.gov.diia.core.di.data_source.http.AuthorizedClient
 import ua.gov.diia.ps_criminal_cert.network.ApiCriminalCert
 
@@ -16,5 +17,5 @@ object CriminalCertApiModule {
     @AuthorizedClient
     fun provideApiCriminalCert(
         @AuthorizedClient retrofit: Retrofit
-    ): ApiCriminalCert = retrofit.create(ApiCriminalCert::class.java)
+    ): ApiCriminalCert = retrofit.create()
 }
