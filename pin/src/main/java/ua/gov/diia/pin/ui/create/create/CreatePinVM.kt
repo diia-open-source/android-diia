@@ -2,6 +2,7 @@ package ua.gov.diia.pin.ui.create.create
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
@@ -26,7 +27,9 @@ import ua.gov.diia.ui_base.navigation.BaseNavigation
 import javax.inject.Inject
 
 @HiltViewModel
-class CreatePinVM @Inject constructor() : ViewModel() {
+class CreatePinVM @Inject constructor(
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val _uiData = mutableStateListOf<UIElementData>()
     val uiData: SnapshotStateList<UIElementData> = _uiData
@@ -37,7 +40,12 @@ class CreatePinVM @Inject constructor() : ViewModel() {
     )
     val navigation = _navigation.asSharedFlow()
 
-    fun doInit(flowType: CreatePinFlowType) {
+    init {
+        doInit()
+    }
+
+    fun doInit() {
+        val flowType: CreatePinFlowType = savedStateHandle["flowType"] ?: return
 
         var title = R.string.create_screen_title_text
         var descText = R.string.create_screen_description_text
