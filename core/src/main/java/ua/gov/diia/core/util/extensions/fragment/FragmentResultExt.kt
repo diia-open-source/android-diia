@@ -1,7 +1,10 @@
 package ua.gov.diia.core.util.extensions.fragment
 
 import androidx.annotation.IdRes
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.SavedStateHandle
@@ -66,8 +69,9 @@ inline fun Fragment.registerForTemplateDialogNavResult(
     key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY,
     crossinline resultEvent: (String) -> Unit
 ) {
-    registerForNavigationResult<ConsumableString>(key) { event ->
-        event.consumeEvent { action -> resultEvent.invoke(action) }
+    setFragmentResultListener(key) { _, bundle ->
+        val event = bundle.getParcelable<ConsumableString>(key)
+        event?.consumeEvent { action -> resultEvent.invoke(action) }
     }
 }
 
@@ -113,7 +117,7 @@ fun <T : Any> Fragment.setNavigationResult(
     key: String,
     navController: NavController = findNavController()
 ) {
-    navController.previousBackStackEntry?.savedStateHandle?.set(key, result)
+    setFragmentResult(key, bundleOf(key to  result))
 }
 
 /**
