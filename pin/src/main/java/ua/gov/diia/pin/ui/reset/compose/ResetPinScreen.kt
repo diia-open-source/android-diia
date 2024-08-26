@@ -32,8 +32,8 @@ fun ResetPinScreen(
 }
 
 private val testData = getPinTestData(
-    topGroupText = "Повторіть код з 4 цифр",
-    textWithParameters = "Щоб впевнитися, що це ви змінюєте код для входу.",
+    headerText = "Повторіть код з 4 цифр",
+    bodyText = "Щоб впевнитися, що це ви змінюєте код для входу.",
 )
 
 @Composable

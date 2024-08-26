@@ -16,10 +16,10 @@ import ua.gov.diia.ui_base.components.organism.tile.NumButtonTileOrganismData
 inline fun <reified T> List<T>.asSnapshotStateList() =
     remember { mutableStateListOf(*this.toTypedArray()) }
 
-fun getPinTestData(topGroupText: String, textWithParameters: String, pinLength: Int = 4) = listOf(
+fun getPinTestData(headerText: String, bodyText: String, pinLength: Int = 4) = listOf(
     TopGroupOrgData(
         titleGroupMlcData = TitleGroupMlcData(
-            heroText = UiText.DynamicString(topGroupText),
+            heroText = UiText.DynamicString(headerText),
             leftNavIcon = TitleGroupMlcData.LeftNavIcon(
                 code = DiiaResourceIcon.BACK.code,
                 accessibilityDescription = UiText.StringResource(R.string.accessibility_back_button),
@@ -32,7 +32,7 @@ fun getPinTestData(topGroupText: String, textWithParameters: String, pinLength: 
         )
     ),
     TextWithParametersData(
-        text = UiText.DynamicString(textWithParameters)
+        text = UiText.DynamicString(bodyText)
     ),
     NumButtonTileOrganismData(pinLength = pinLength)
 )

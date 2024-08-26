@@ -85,8 +85,8 @@ fun CreatePinScreen(
 }
 
 private val testData = getPinTestData(
-    topGroupText = "Повторіть код з 4 цифр",
-    textWithParameters = "Цей код ви будете вводити для входу у застосунок Дія.",
+    headerText = "Повторіть код з 4 цифр",
+    bodyText = "Цей код ви будете вводити для входу у застосунок Дія.",
     pinLength = 5
 )
 
