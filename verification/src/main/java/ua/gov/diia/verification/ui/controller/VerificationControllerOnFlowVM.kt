@@ -118,7 +118,7 @@ abstract class VerificationControllerOnFlowVM(
     }
 
     protected suspend fun doVerificationMethodsApiCall(schema: String): VerificationMethodsData {
-        return withContext(Dispatchers.Default) {
+        return withContext(Dispatchers.IO) {
             apiVerification.getVerificationMethods(schema, flowProcessId).also {
                 flowProcessId = it.processId
                 verificationRequestData = it
