@@ -96,7 +96,7 @@ abstract class VerificationControllerVM(
             progressIndicator = _verifyingUser,
             templateKey = VERIFICATION_ALERT_DIALOG_ACTION
         ) {
-            val response = withContext(Dispatchers.Default) {
+            val response = withContext(Dispatchers.IO) {
                 apiVerification.getVerificationMethods(schema, flowProcessId).also {
                     flowProcessId = it.processId
                     verificationRequestData = it
