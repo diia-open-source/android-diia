@@ -9,8 +9,12 @@ data class SelectorOrg(
     val componentId: String? = null,
     @Json(name = "id")
     val id: String?,
+    @Json(name = "inputCode")
+    val inputCode: String?,
     @Json(name = "blocker")
     val blocker: Boolean?,
+    @Json(name = "mandatory")
+    val mandatory: Boolean?,
     @Json(name = "label")
     val label: String,
     @Json(name = "placeholder")
@@ -19,6 +23,8 @@ data class SelectorOrg(
     val hint: String?,
     @Json(name = "value")
     val value: String?,
+    @Json(name = "valueId")
+    val valueId: String?,
     @Json(name = "selectorListWidgetOrg")
-    val selectorListWidgetOrg: SelectorListWidgetOrg?,
+    val selectorListWidgetOrg: SelectorListWidgetOrg?
 )

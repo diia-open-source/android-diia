@@ -14,6 +14,8 @@ data class RadioBtnMlc(
     val logoLeft: String?,
     @Json(name = "logoRight")
     val logoRight: String?,
+    @Json(name = "largeLogoRight")
+    val largeLogoRight: String?,
     @Json(name = "label")
     val label: String,
     @Json(name = "description")
@@ -26,4 +28,6 @@ data class RadioBtnMlc(
     val isEnabled: Boolean?,
     @Json(name = "componentId")
     val componentId: String?,
+    @Json(name = "dataJson")
+    val dataJson: String? = null,
 ): Parcelable

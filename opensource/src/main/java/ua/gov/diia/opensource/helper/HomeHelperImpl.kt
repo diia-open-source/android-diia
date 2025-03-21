@@ -2,16 +2,15 @@ package ua.gov.diia.opensource.helper
 
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
+import ua.gov.diia.documents.ui.gallery.DocGalleryFCompose
+import ua.gov.diia.publicservice.ui.categories.compose.PublicServicesCategoriesComposeF
 import ua.gov.diia.home.helper.HomeHelper
 import ua.gov.diia.ui_base.models.homescreen.HomeMenuItemConstructor
-import ua.gov.diia.documents.ui.gallery.DocGalleryFCompose
 import ua.gov.diia.home.model.HomeMenuItem
 import ua.gov.diia.home.ui.HomeActions
 import ua.gov.diia.menu.ui.MenuFCompose
 import ua.gov.diia.opensource.NavHomeChildrenDirections
 import ua.gov.diia.opensource.R
-import ua.gov.diia.opensource.ui.fragments.FeedF
-import ua.gov.diia.publicservice.ui.categories.compose.PublicServicesCategoriesComposeF
 
 class HomeHelperImpl: HomeHelper {
 
@@ -19,8 +18,7 @@ class HomeHelperImpl: HomeHelper {
         DocGalleryFCompose::class.java -> HomeMenuItem.DOCUMENTS
         MenuFCompose::class.java -> HomeMenuItem.MENU
         PublicServicesCategoriesComposeF::class.java -> HomeMenuItem.SERVICES
-        FeedF::class.java -> HomeMenuItem.FEED
-        else -> HomeMenuItem.MENU
+        else -> HomeMenuItem.DOCUMENTS
     }
 
     override fun getGraphId(): Int {
@@ -32,6 +30,7 @@ class HomeHelperImpl: HomeHelper {
         HomeActions.HOME_MENU -> NavHomeChildrenDirections.globalToMenuFCompose()
         HomeActions.HOME_SERVICES -> NavHomeChildrenDirections.globalToPublicServicesFCompose()
         HomeActions.HOME_FEED -> NavHomeChildrenDirections.globalToFeedF()
-        else -> NavHomeChildrenDirections.globalToMenuFCompose()
+        else -> NavHomeChildrenDirections.globalToDocGalleryFCompose()
     }
+
 }

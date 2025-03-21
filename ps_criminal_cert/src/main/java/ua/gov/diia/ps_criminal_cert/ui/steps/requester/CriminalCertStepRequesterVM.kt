@@ -1,6 +1,7 @@
 package ua.gov.diia.ps_criminal_cert.ui.steps.requester
 
 import android.app.Application
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,8 +46,18 @@ class CriminalCertStepRequesterVM @Inject constructor(
 
     private val _state = MutableLiveData<CriminalCertRequester>()
     val state = _state.asLiveData()
+    val isAllNamesValid: MediatorLiveData<Boolean> = MediatorLiveData<Boolean>().apply {
+        addSource(_state) { state ->
+            value = state?.let {
+                it.prevLastNameData.allValid &&
+                        it.prevMiddleNameData.allValid &&
+                        it.prevFirstNameData.allValid
+            }
+        }
+    }
 
-    private val _onNextEvent = MutableLiveData<UiDataEvent<Pair<CriminalCertScreen, PreviousNames>>>()
+    private val _onNextEvent =
+        MutableLiveData<UiDataEvent<Pair<CriminalCertScreen, PreviousNames>>>()
     val onNextEvent = _onNextEvent.asLiveData()
 
     fun loadContent() {
@@ -155,7 +166,7 @@ class CriminalCertStepRequesterVM @Inject constructor(
                 prevFirstNameData = state.prevFirstNameData.copy(
                     list = state.prevFirstNameData.list.map {
                         if (name.id == it.id) {
-                            it.copy(name = name.name)
+                            it.copy(name = name.name, isValid = name.isValid)
                         } else {
                             it
                         }
@@ -171,7 +182,7 @@ class CriminalCertStepRequesterVM @Inject constructor(
                 prevMiddleNameData = state.prevMiddleNameData.copy(
                     list = state.prevMiddleNameData.list.map {
                         if (name.id == it.id) {
-                            it.copy(name = name.name)
+                            it.copy(name = name.name, isValid = name.isValid)
                         } else {
                             it
                         }
@@ -187,7 +198,7 @@ class CriminalCertStepRequesterVM @Inject constructor(
                 prevLastNameData = state.prevLastNameData.copy(
                     list = state.prevLastNameData.list.map {
                         if (name.id == it.id) {
-                            it.copy(name = name.name)
+                            it.copy(name = name.name, isValid = name.isValid)
                         } else {
                             it
                         }

@@ -7,10 +7,16 @@ import ua.gov.diia.core.models.common_compose.mlc.checkbox.CheckboxRoundMlc
 
 @JsonClass(generateAdapter = true)
 data class CheckboxRoundGroupOrg(
+    @Json(name = "componentId")
+    val componentId: String?,
     @Json(name = "id")
     val id: String?,
+    @Json(name = "inputCode")
+    val inputCode: String?,
     @Json(name = "title")
     val title: String?,
+    @Json(name = "mandatory")
+    val mandatory: Boolean?,
     @Json(name = "blocker")
     val blocker: Boolean?,
     @Json(name = "condition")

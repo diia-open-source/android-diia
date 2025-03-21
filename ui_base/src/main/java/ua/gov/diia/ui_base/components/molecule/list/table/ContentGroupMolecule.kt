@@ -11,6 +11,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.ui_base.components.conditional
+import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
@@ -20,8 +22,8 @@ import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.Acc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.ContentGroupItem
 import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.TableBlockMolecule
 import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.TableBlockMoleculeData
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMoleculeData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableMainHeadingMlcData
 
 @Composable
 fun ContentGroupMolecule(
@@ -30,7 +32,12 @@ fun ContentGroupMolecule(
     progressIndicator: Pair<String, Boolean> = Pair("", false),
     onUIAction: (UIAction) -> Unit
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier
+        .fillMaxWidth()
+        .conditional(data.usePadding) {
+            padding(horizontal = 24.dp)
+                .padding(top = 24.dp)
+        }) {
         data.items.forEachIndexed { index, item ->
             when (item) {
                 is AccordionListMoleculeData -> {
@@ -48,6 +55,7 @@ fun ContentGroupMolecule(
                         onUIAction = onUIAction
                     )
                 }
+
                 else -> {}
             }
 
@@ -58,28 +66,72 @@ fun ContentGroupMolecule(
     }
 }
 
-data class ContentGroupMoleculeData(val items: List<ContentGroupItem>)
+data class ContentGroupMoleculeData(
+    val items: List<ContentGroupItem>,
+    val usePadding: Boolean = false
+) : UIElementData
 
 @Composable
 @Preview
 fun ContentGroupMoleculePreview() {
     val tableBlockState = TableBlockMoleculeData(
-        header = TableHeadingMoleculeData(id = "123", title = "Heading".let { UiText.DynamicString(it) }), items = listOf(
-            TableItemHorizontalMlcData(id = "1", title = UiText.DynamicString("Item title"), value = "Value"),
-            TableItemHorizontalMlcData(id = "2", title = UiText.DynamicString("Item title 2"), value = "Value"),
-            TableItemHorizontalMlcData(id = "3", title = UiText.DynamicString("Item title 3"), value = "Value"),
-            TableItemHorizontalMlcData(id = "4", title = UiText.DynamicString("Item title 4"), value = "Value"),
-            TableItemHorizontalMlcData(id = "5", title = UiText.DynamicString("Item title 5"), value = "Value"),
+        header = TableMainHeadingMlcData(
+            title = "Heading".let { UiText.DynamicString(it) }), items = listOf(
+            TableItemHorizontalMlcData(
+                id = "1",
+                title = UiText.DynamicString("Item title"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "2",
+                title = UiText.DynamicString("Item title 2"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "3",
+                title = UiText.DynamicString("Item title 3"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "4",
+                title = UiText.DynamicString("Item title 4"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "5",
+                title = UiText.DynamicString("Item title 5"),
+                value = "Value"
+            ),
         )
     )
 
     val tableBlockForAccordion = TableBlockMoleculeData(
         items = listOf(
-            TableItemHorizontalMlcData(id = "1", title = UiText.DynamicString("Item title"), value = "Value"),
-            TableItemHorizontalMlcData(id = "2", title = UiText.DynamicString("Item title 2"), value = "Value"),
-            TableItemHorizontalMlcData(id = "3", title = UiText.DynamicString("Item title 3"), value = "Value"),
-            TableItemHorizontalMlcData(id = "4", title = UiText.DynamicString("Item title 4"), value = "Value"),
-            TableItemHorizontalMlcData(id = "5", title = UiText.DynamicString("Item title 5"), value = "Value"),
+            TableItemHorizontalMlcData(
+                id = "1",
+                title = UiText.DynamicString("Item title"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "2",
+                title = UiText.DynamicString("Item title 2"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "3",
+                title = UiText.DynamicString("Item title 3"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "4",
+                title = UiText.DynamicString("Item title 4"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "5",
+                title = UiText.DynamicString("Item title 5"),
+                value = "Value"
+            ),
         )
     )
 
@@ -92,7 +144,8 @@ fun ContentGroupMoleculePreview() {
         )
     )
 
-    val accordionListState = AccordionListMoleculeData(listOf(accordionItem, accordionItem, accordionItem))
+    val accordionListState =
+        AccordionListMoleculeData(listOf(accordionItem, accordionItem, accordionItem))
 
     val startState = ContentGroupMoleculeData(
         items = listOf(

@@ -3,6 +3,7 @@ package ua.gov.diia.core.models.common_compose.org.input.question_form
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import ua.gov.diia.core.models.common_compose.mlc.list.ListItemMlc
+import ua.gov.diia.core.models.common_compose.mlc.list.ListWidgetItemMlc
 
 @JsonClass(generateAdapter = true)
 data class SelectorListWidgetOrg(
@@ -15,5 +16,7 @@ data class SelectorListWidgetOrg(
 @JsonClass(generateAdapter = true)
 data class SelectorListWidgetOrgItem(
     @Json(name = "listItemMlc")
-    val listItemMlc: ListItemMlc
+    val listItemMlc: ListItemMlc?,
+    @Json(name = "listWidgetItemMlc")
+    val listWidgetItemMlc: ListWidgetItemMlc?,
 )

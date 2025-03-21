@@ -7,5 +7,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class DotNavigationAtm(
     @Json(name = "count")
-    val count: Int
+    val count: Int,
+    @Json(name = "componentId")
+    val componentId: String? = null
 )

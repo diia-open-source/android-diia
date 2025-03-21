@@ -27,7 +27,6 @@ fun <T> T.executeAction(
     viewModelScope.launch(dispatcher) {
         try {
             action.invoke(this)
-            contentLoadedIndicator?.postValue(true)
             resetErrorCounter()
         } catch (e: Exception) {
             setLastAction {
@@ -44,6 +43,7 @@ fun <T> T.executeAction(
             errorIndicator?.postValue(true)
         } finally {
             progressIndicator?.postValue(false)
+            contentLoadedIndicator?.postValue(true)
         }
     }
 }
@@ -62,7 +62,6 @@ fun <T> T.executeActionOnFlow(
     viewModelScope.launch(dispatcher) {
         try {
             action.invoke(this)
-            contentLoadedIndicator?.value = true
             resetErrorCounter()
         } catch (e: Exception) {
             setLastAction {
@@ -79,6 +78,7 @@ fun <T> T.executeActionOnFlow(
             errorIndicator?.value = true
         } finally {
             progressIndicator?.value = false
+            contentLoadedIndicator?.value = true
         }
     }
 }

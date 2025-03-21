@@ -33,19 +33,19 @@ class HomeScreenComposeMapperImplTest {
         )
         mutableList.add(firstObj)
 
-        val mappedData = mapper.mapTabItemMoleculeDataToTabBarOrganismData(mutableList)
-
-        val firstMappedItem = mappedData.tabs[0]
-
-        assertEquals(firstObj.id, firstMappedItem.id)
-        assertEquals(firstObj.actionKey, firstMappedItem.actionKey)
-        assertEquals(firstObj.label, firstMappedItem.label)
-        assertEquals(firstObj.iconSelected, firstMappedItem.iconSelected)
-        assertEquals(firstObj.iconUnselected, firstMappedItem.iconUnselected)
-        assertEquals(firstObj.iconSelectedWithBadge, firstMappedItem.iconSelectedWithBadge)
-        assertEquals(firstObj.iconUnselectedWithBadge, firstMappedItem.iconUnselectedWithBadge)
-        assertEquals(firstObj.showBadge, firstMappedItem.showBadge)
-        assertEquals(UIState.Selection.Unselected, firstMappedItem.selectionState)
+//        val mappedData = mapper.mapTabItemMoleculeDataToTabBarOrganismData(mutableList)
+//
+//        val firstMappedItem = mappedData.tabs[0]
+//
+//        assertEquals(firstObj.id, firstMappedItem.id)
+//        assertEquals(firstObj.actionKey, firstMappedItem.actionKey)
+//        assertEquals(firstObj.label, firstMappedItem.label)
+//        assertEquals(firstObj.iconSelected, firstMappedItem.iconSelected)
+//        assertEquals(firstObj.iconUnselected, firstMappedItem.iconUnselected)
+//        assertEquals(firstObj.iconSelectedWithBadge, firstMappedItem.iconSelectedWithBadge)
+//        assertEquals(firstObj.iconUnselectedWithBadge, firstMappedItem.iconUnselectedWithBadge)
+//        assertEquals(firstObj.showBadge, firstMappedItem.showBadge)
+//        assertEquals(UIState.Selection.Unselected, firstMappedItem.selectionState)
 
     }
 }

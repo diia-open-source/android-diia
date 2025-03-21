@@ -28,8 +28,4 @@
     <string name="pin_reset_confirm_title_text">Повторіть\nкод з 4 цифр</string>
     <string name="pin_reset_confirm_description_text">Переконайтеся, що не помилилися й пам\'ятаєте код для входу.</string>
 
-    <!-- Authorization. Pin input signature cerf -->
-    <string name="pin_input_signature_title_text">Код для Дія.Підпис</string>
-    <string name="pin_input_signature_description_text">Не пам\'ятаю код для Дія.Підпис</string>
-
 </resources>

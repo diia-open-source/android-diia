@@ -9,6 +9,8 @@ import ua.gov.diia.address_search.models.AddressSearchRequest
 import ua.gov.diia.search.models.SearchableBullet
 import ua.gov.diia.search.models.SearchableItem
 import ua.gov.diia.core.util.event.observeUiDataEvent
+import ua.gov.diia.core.util.event.observeUiEvent
+import ua.gov.diia.core.util.extensions.fragment.hideKeyboard
 import ua.gov.diia.core.util.extensions.fragment.registerForNavigationResultOnce
 
 abstract class AddressSearchControllerF : Fragment() {
@@ -18,7 +20,7 @@ abstract class AddressSearchControllerF : Fragment() {
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.closeKeyboard.observeUiEvent(viewLifecycleOwner) { hideKeyboard() }
         viewModel.navigateToAddressSelection.observeUiDataEvent(viewLifecycleOwner,this::navigateToSearch)
 
         registerForNavigationResultOnce(CompoundAddressResultKey.RESULT_KEY_REAL_ESTATE, viewModel::setSelectedRealEstate)

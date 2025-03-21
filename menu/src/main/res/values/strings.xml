@@ -6,6 +6,7 @@
     <string name="settings_support_label">Служба підтримки</string>
     <string name="settings_diia_id">Дія.Підпис</string>
     <string name="settings_notifications">Повідомлення</string>
+    <string name="setting_my_info">Відомості про мене</string>
     <string name="settings_signing_history">Історія підписань</string>
     <string name="settings_faq_label">Питання та відповіді</string>
     <string name="settings_copy_device_id_label">Копіювати номер пристрою</string>

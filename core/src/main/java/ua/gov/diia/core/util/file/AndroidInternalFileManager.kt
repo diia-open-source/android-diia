@@ -17,6 +17,11 @@ open class AndroidInternalFileManager(
         return file
     }
 
+    override fun createFile(filename: String): File {
+        val file = File(getDir(), filename)
+        return file
+    }
+
     override fun getFile(filename: String): File {
         return File(getDir(), filename)
     }

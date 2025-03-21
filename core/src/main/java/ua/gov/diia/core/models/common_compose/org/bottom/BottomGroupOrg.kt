@@ -10,8 +10,11 @@ import ua.gov.diia.core.models.common_compose.atm.button.BtnPrimaryLargeAtm
 import ua.gov.diia.core.models.common_compose.atm.button.BtnPrimaryWideAtm
 import ua.gov.diia.core.models.common_compose.atm.button.BtnStrokeDefaultAtm
 import ua.gov.diia.core.models.common_compose.atm.button.BtnStrokeWhiteAtm
+import ua.gov.diia.core.models.common_compose.atm.text.TickerAtm
 import ua.gov.diia.core.models.common_compose.mlc.button.BtnIconPlainGroupMlc
+import ua.gov.diia.core.models.common_compose.mlc.button.BtnLoadIconPlainGroupMlc
 import ua.gov.diia.core.models.common_compose.org.checkbox.CheckboxBtnOrg
+import ua.gov.diia.core.models.common_compose.org.checkbox.CheckboxBtnWhiteOrg
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -28,6 +31,8 @@ data class BottomGroupOrg(
     val btnPlainAtm: BtnPlainAtm?,
     @Json(name = "checkboxBtnOrg")
     val checkboxBtnOrg: CheckboxBtnOrg?,
+    @Json(name = "checkboxBtnWhiteOrg")
+    val checkboxBtnWhiteOrg: CheckboxBtnWhiteOrg?,
     @Json(name = "bottomGroupOrg")
     val bottomGroupOrg: BottomGroup?,
     @Json(name = "btnPrimaryLargeAtm")
@@ -36,4 +41,8 @@ data class BottomGroupOrg(
     val btnIconPlainGroupMlc: BtnIconPlainGroupMlc?,
     @Json(name = "btnPrimaryWideAtm")
     val btnPrimaryWideAtm: BtnPrimaryWideAtm? = null,
-): Parcelable
+    @Json(name = "btnLoadIconPlainGroupMlc")
+    val btnLoadIconPlainGroupMlc: BtnLoadIconPlainGroupMlc?,
+    @Json(name = "tickerAtm")
+    val tickerAtm: TickerAtm?
+) : Parcelable

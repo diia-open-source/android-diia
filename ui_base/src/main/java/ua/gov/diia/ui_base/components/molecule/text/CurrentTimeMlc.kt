@@ -1,6 +1,5 @@
 package ua.gov.diia.ui_base.components.molecule.text
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -16,6 +15,7 @@ import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.noRippleClickable
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.util.toDataActionWrapper
@@ -29,7 +29,7 @@ fun CurrentTimeMlc(
     Box(
         modifier = modifier
             .padding(16.dp)
-            .clickable { onUIAction(UIAction(data.actionKey, action = data.action)) }
+            .noRippleClickable { onUIAction(UIAction(data.actionKey, action = data.action)) }
             .testTag(data.componentId?.asString() ?: ""),
         contentAlignment = Alignment.Center
     ) {

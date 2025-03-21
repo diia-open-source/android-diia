@@ -1,6 +1,5 @@
 package ua.gov.diia.address_search.models
 
-
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -15,6 +14,10 @@ data class AddressParameter(
     val label: String?,
     @Json(name = "hint")
     val hint: String?,
+    @Json(name = "comment")
+    val comment: String?,
+    @Json(name = "mask")
+    val mask: String?,
     @Json(name = "input")
     val input: AddressFieldInputType?,
     @Json(name = "mandatory")
@@ -35,8 +38,15 @@ data class AddressParameter(
         else -> SearchType.LIST
     }
 
-    fun getFieldMode() : AddressFieldMode = when(input){
-        AddressFieldInputType.textField -> AddressFieldMode.EDITABLE
+    fun getFieldMode(): AddressFieldMode = when (input) {
+        AddressFieldInputType.textField -> {
+            if (mask == null) {
+                AddressFieldMode.EDITABLE
+            } else {
+                AddressFieldMode.MASKED_FIELD
+            }
+        }
+
         else -> AddressFieldMode.BUTTON
     }
 
@@ -61,5 +71,5 @@ data class AddressParameter(
 }
 
 enum class AddressFieldMode{
-    BUTTON, EDITABLE
+    BUTTON, EDITABLE, MASKED_FIELD
 }

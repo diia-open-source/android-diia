@@ -18,10 +18,10 @@ import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStr
 import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.ContentGroupItemV2
 import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.TableBlockOrg
 import ua.gov.diia.ui_base.components.molecule.list.table.items.contentgroup.TableBlockOrgData
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlcData
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMoleculeData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toTableMainHeadingMlcData
 
 @Deprecated("Use tableBlockOrg")
 @Composable
@@ -63,7 +63,7 @@ data class ContentGroupMoleculeV2Data(val items: List<ContentGroupItemV2>) : UIE
 @Preview
 fun ContentGroupMoleculeV2Preview() {
     val tableBlockStateH = TableBlockOrgData(
-        header = TableHeadingMoleculeData(id = "123", title = "Heading HorizontalTable".let { UiText.DynamicString(it) }),
+        header = "Heading HorizontalTable".toDynamicString().toTableMainHeadingMlcData(),
         items = listOf(
             TableItemHorizontalMlcData(id = "1", title = UiText.DynamicString("Item title"), value = "Value"),
             TableItemHorizontalMlcData(id = "3", title = UiText.DynamicString("РНОКПП:"), value = "1234567890"),
@@ -81,13 +81,13 @@ fun ContentGroupMoleculeV2Preview() {
     )
 
     val tableBlockStateV = TableBlockOrgData(
-        header = TableHeadingMoleculeData(id = "123", title ="Heading VerticalTable".let { UiText.DynamicString(it) }),
+        header = "Heading VerticalTable".toDynamicString().toTableMainHeadingMlcData(),
         items = listOf(
-            TableItemVerticalMlcData(id = "1", title = UiText.DynamicString("Item title:"), value = "Value"),
+            TableItemVerticalMlcData(id = "1", title = UiText.DynamicString("Item title:"), value = UiText.DynamicString("Value")),
             TableItemVerticalMlcData(
                 id = "5",
                 title = UiText.DynamicString("Адреса:"),
-                value = "м. Київ, Голосіївський район, вул. Генерала Тупікова,  буд. 12/а, кв. 16"
+                value = UiText.DynamicString("м. Київ, Голосіївський район, вул. Генерала Тупікова,  буд. 12/а, кв. 16")
             ),
         )
     )

@@ -2,16 +2,16 @@ package ua.gov.diia.ui_base.components.atom.button
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -39,6 +39,15 @@ fun BtnStrokeDefaultAtm(
     data: BtnStrokeDefaultAtmData,
     onUIAction: (UIAction) -> Unit
 ) {
+
+    val isLoading = remember {
+        mutableStateOf(data.id == progressIndicator.first && progressIndicator.second)
+    }
+
+    LaunchedEffect(key1 = data.id == progressIndicator.first, key2 = progressIndicator.second) {
+        isLoading.value = data.id == progressIndicator.first && progressIndicator.second
+    }
+
     Button(modifier = modifier
         .padding(top = 16.dp)
         .padding(horizontal = 40.dp, vertical = 16.dp)
@@ -51,30 +60,36 @@ fun BtnStrokeDefaultAtm(
                 UIState.Interaction.Disabled -> BlackAlpha10
                 UIState.Interaction.Enabled -> Black
             }
-        ), enabled = data.interactionState == UIState.Interaction.Enabled, onClick = {
-            onUIAction(
-                UIAction(
-                    actionKey = data.actionKey,
-                    data = data.id,
-                    action = data.action
+        ),
+        enabled = data.interactionState == UIState.Interaction.Enabled,
+        onClick = {
+            if (!isLoading.value) {
+                onUIAction(
+                    UIAction(
+                        actionKey = data.actionKey,
+                        data = data.id,
+                        action = data.action
+                    )
                 )
-            )
-        }) {
-        AnimatedVisibility(visible = data.id == progressIndicator.first && progressIndicator.second) {
-            Row {
-                LoaderCircularEclipse23Subatomic(modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.width(8.dp))
             }
         }
-        Text(
-            modifier = Modifier.padding(vertical = 8.dp),
-            text = data.title.asString(),
-            color = if (data.interactionState == UIState.Interaction.Disabled) {
-                BlackAlpha10
-            } else {
-                Black
-            }, style = DiiaTextStyle.t1BigText
-        )
+    ) {
+        AnimatedVisibility(visible = isLoading.value) {
+            LoaderCircularEclipse23Subatomic(
+                modifier = Modifier.padding(vertical = 7.dp).size(18.dp))
+
+        }
+        if(!isLoading.value){
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = data.title.asString(),
+                color = if (data.interactionState == UIState.Interaction.Disabled) {
+                    BlackAlpha10
+                } else {
+                    Black
+                }, style = DiiaTextStyle.t1BigText
+            )
+        }
     }
 }
 
@@ -85,10 +100,10 @@ data class BtnStrokeDefaultAtmData(
     val title: UiText,
     val interactionState: UIState.Interaction,
     val action: DataActionWrapper? = null,
-    ) : UIElementData
+) : UIElementData
 
 fun BtnStrokeDefaultAtm.toUIModel(
-    id: String = "",
+    id: String = UIActionKeysCompose.BUTTON_REGULAR,
     componentIdExternal: UiText? = null
 ): BtnStrokeDefaultAtmData {
     return BtnStrokeDefaultAtmData(

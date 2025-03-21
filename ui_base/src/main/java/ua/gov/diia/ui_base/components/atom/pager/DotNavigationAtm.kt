@@ -2,7 +2,9 @@ package ua.gov.diia.ui_base.components.atom.pager
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.Honeydew
 
@@ -12,7 +14,8 @@ fun DotNavigationAtm(
     data: DotNavigationAtmData
 ) {
     BaseViewPagerIndicator(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(data.componentId?.asString() ?: ""),
         activeDotIndex = data.activeDotIndex,
         totalDotsCounter = data.totalCount,
         activeDotColor = Black,
@@ -22,7 +25,8 @@ fun DotNavigationAtm(
 
 data class DotNavigationAtmData(
     val activeDotIndex: Int,
-    val totalCount: Int
+    val totalCount: Int,
+    val componentId: UiText? = null
 )
 
 @Preview

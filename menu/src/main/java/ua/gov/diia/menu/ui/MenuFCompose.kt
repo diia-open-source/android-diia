@@ -76,7 +76,7 @@ class MenuFCompose : Fragment() {
                     }
 
                     is MenuTabNavigation.NavigateToNotifications -> {
-                        navigateToNotifications()
+                        viewModel.navigateToNotifications(this@MenuFCompose)
                     }
                 }
             }
@@ -84,9 +84,9 @@ class MenuFCompose : Fragment() {
 
                 when (val action = it.getContentIfNotHandled()) {
 
-                    MenuAction.OpenPlayMarketAction -> {
-                        openPlayMarket(withCrashlytics)
-                    }
+//                    MenuAction.OpenPlayMarketAction -> {
+//                        openPlayMarket(withCrashlytics)
+//                    }
 
                     MenuAction.OpenSupportAction -> {
                         navigate(

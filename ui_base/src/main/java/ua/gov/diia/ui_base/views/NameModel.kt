@@ -8,5 +8,6 @@ data class NameModel(
     val title: String,
     val hint: String,
     val fieldMode: DiiaCardInputField.FieldMode = DiiaCardInputField.FieldMode.EDITABLE,
-    val withRemove: Boolean = true
+    val withRemove: Boolean = true,
+    val isValid: Boolean = true,
 )

@@ -10,16 +10,11 @@ import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import ua.gov.diia.core.util.extensions.context.serviceDownloadManager
 import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.net.URLConnection
 import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
-import java.util.zip.ZipOutputStream
 
 class DownloaderImpl(val context: Context) : Downloader {
 

@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -64,9 +63,7 @@ import ua.gov.diia.ui_base.components.theme.BlackAlpha30
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.White
 
-@OptIn(
-    ExperimentalFoundationApi::class
-)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SelectorOrg(
     modifier: Modifier = Modifier,
@@ -129,12 +126,14 @@ fun SelectorOrg(
                         text = data.label,
                         style = DiiaTextStyle.t4TextSmallDescription,
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(end = 12.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         if (data.inputValue.isNullOrEmpty()) {
@@ -157,7 +156,7 @@ fun SelectorOrg(
                         .fillMaxWidth()
                         .padding(top = 6.dp)
                         .height(2.dp)
-                        .background(getColorForBottomLine(data = data))
+                        .background(BlackAlpha30)
                 )
 
                 AnimatedVisibility(focusState == UIState.Focus.FirstTimeInFocus) {
@@ -176,13 +175,6 @@ fun SelectorOrg(
         })
 }
 
-private fun getColorForBottomLine(
-    data: SelectorOrgData,
-): Color {
-    return if (data.inputValue.isNullOrEmpty()) BlackAlpha30 else Black
-}
-
-
 data class SelectorOrgData(
     val actionKey: String = UIActionKeysCompose.SELECTOR_ORG,
     val componentId: UiText? = null,
@@ -190,7 +182,9 @@ data class SelectorOrgData(
     val label: String? = null,
     val inputValue: String? = null,
     val placeholder: String? = null,
-    val hintMessage: String? = null
+    val hintMessage: String? = null,
+    val inputCode: String? = null,
+    val mandatory: Boolean? = null
 ) : InputFormItem() {
     fun onInputChanged(newValue: String?): SelectorOrgData {
         if (newValue == null) return this
@@ -198,14 +192,16 @@ data class SelectorOrgData(
     }
 }
 
-fun SelectorOrg.toUiModel(): SelectorOrgData {
+fun SelectorOrg.toUIModel(): SelectorOrgData {
     return SelectorOrgData(
         componentId = componentId?.let { UiText.DynamicString(it) },
         id = this.id,
         label = this.label,
         inputValue = this.value,
         placeholder = this.placeholder,
-        hintMessage = this.hint
+        hintMessage = this.hint,
+        inputCode = this.inputCode,
+        mandatory = this.mandatory
     )
 }
 

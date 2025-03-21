@@ -23,6 +23,7 @@ import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.pin.helper.PinHelper
 import ua.gov.diia.pin.model.CreatePinFlowType
 import ua.gov.diia.pin.rules.MainDispatcherRule
+import ua.gov.diia.pin.util.AndroidClientAlertDialogsFactory.Companion.CONFIRM_PIN
 import ua.gov.diia.pin.utils.StubErrorHandlerOnFlow
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -62,7 +63,7 @@ class ConfirmPinVMTest(
             retryLastAction = retryLastAction
         )
         viewModel.doInit(flowType, "1234")
-        whenever(alertDialogsFactory.showAlertAfterConfirmPin()).doReturn(template())
+        whenever(alertDialogsFactory.showCustomAlert(CONFIRM_PIN)).doReturn(template())
     }
 
     @Test

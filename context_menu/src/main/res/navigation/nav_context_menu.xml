@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_context_menu"
+    app:startDestination="@id/destination_contextMenu">
+
+    <dialog
+        android:id="@+id/destination_contextMenu"
+        android:name="ua.gov.diia.context_menu.ui.ContextMenuDF">
+        <argument
+            android:name="items"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]" />
+    </dialog>
+
+</navigation>

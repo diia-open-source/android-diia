@@ -1,2 +1,5 @@
--keep public class ua.gov.diia.documents.models.ManualDocs
+-keep public class ua.gov.diia.core.models.document.ManualDocs
 -keep public class ua.gov.diia.documents.models.docgroups.** {public *;}
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation

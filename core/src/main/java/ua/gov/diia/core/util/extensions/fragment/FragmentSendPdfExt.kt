@@ -1,5 +1,6 @@
 package ua.gov.diia.core.util.extensions.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -10,14 +11,18 @@ import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.file.AndroidInternalFileManager
 
 fun Fragment.sendImage(byte: ByteArray, fileName: String, applicationId: String) {
-    val fileManager = AndroidInternalFileManager(requireContext(), "docs")
+    context?.sendImage(byte, fileName, applicationId)
+}
+
+fun Context.sendImage(byte: ByteArray, fileName: String, applicationId: String) {
+    val fileManager = AndroidInternalFileManager(this, "docs")
     fileManager.saveFile(fileName, byte)
 
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "image/*"
         putExtra(
             Intent.EXTRA_STREAM, FileProvider.getUriForFile(
-                requireContext(),
+                this@sendImage,
                 applicationId,
                 fileManager.getFile(fileName),
             )
@@ -29,14 +34,18 @@ fun Fragment.sendImage(byte: ByteArray, fileName: String, applicationId: String)
 }
 
 fun Fragment.sendPdf(pdfInBytes: ByteArray, fileName: String, applicationId: String) {
-    val fileManager = AndroidInternalFileManager(requireContext(), "docs")
+    context?.sendPdf(pdfInBytes, fileName, applicationId)
+}
+
+fun Context.sendPdf(pdfInBytes: ByteArray, fileName: String, applicationId: String) {
+    val fileManager = AndroidInternalFileManager(this, "docs")
     fileManager.saveFile(fileName, pdfInBytes)
 
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "application/pdf"
         putExtra(
             Intent.EXTRA_STREAM, FileProvider.getUriForFile(
-                requireContext(),
+                this@sendPdf,
                 applicationId,
                 fileManager.getFile(fileName)
             )

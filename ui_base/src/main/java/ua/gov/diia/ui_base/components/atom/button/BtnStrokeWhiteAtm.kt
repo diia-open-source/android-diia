@@ -2,16 +2,16 @@ package ua.gov.diia.ui_base.components.atom.button
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -38,10 +38,16 @@ fun BtnStrokeWhiteAtm(
     data: BtnStrokeWhiteAtmData,
     onUIAction: (UIAction) -> Unit
 ) {
+    val isLoading = remember {
+        mutableStateOf(data.id == progressIndicator.first && progressIndicator.second)
+    }
+
+    LaunchedEffect(key1 = data.id == progressIndicator.first, key2 = progressIndicator.second) {
+        isLoading.value = data.id == progressIndicator.first && progressIndicator.second
+    }
     Button(
         modifier = modifier
             .padding(top = 16.dp)
-            .padding(horizontal = 40.dp, vertical = 16.dp)
             .defaultMinSize(minWidth = 160.dp)
             .testTag(data.componentId?.asString() ?: ""),
         colors = ButtonDefaults.buttonColors(
@@ -56,30 +62,37 @@ fun BtnStrokeWhiteAtm(
         ),
         enabled = data.interactionState == UIState.Interaction.Enabled,
         onClick = {
-            onUIAction(
-                UIAction(
-                    actionKey = data.actionKey,
-                    data = data.id,
-                    action = data.action
+            if (!isLoading.value) {
+                onUIAction(
+                    UIAction(
+                        actionKey = data.actionKey,
+                        data = data.id,
+                        action = data.action
+                    )
                 )
-            )
-        }) {
-        AnimatedVisibility(visible = data.id == progressIndicator.first && progressIndicator.second) {
-            Row {
-                LoaderCircularEclipse23Subatomic(modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.width(8.dp))
             }
         }
-        Text(
-            modifier = Modifier.padding(vertical = 8.dp),
-            text = data.title.asString(),
-            color = if (data.interactionState == UIState.Interaction.Disabled) {
-                Color.Transparent
-            } else {
-                White
-            },
-            style = DiiaTextStyle.t1BigText
-        )
+    ) {
+        AnimatedVisibility(visible = isLoading.value) {
+            LoaderCircularEclipse23Subatomic(
+                modifier = Modifier
+                    .padding(vertical = 7.dp)
+                    .size(18.dp)
+            )
+
+        }
+        if (!isLoading.value) {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = data.title.asString(),
+                color = if (data.interactionState == UIState.Interaction.Disabled) {
+                    Color.Transparent
+                } else {
+                    White
+                },
+                style = DiiaTextStyle.t1BigText
+            )
+        }
     }
 }
 

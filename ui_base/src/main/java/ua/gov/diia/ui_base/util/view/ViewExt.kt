@@ -25,7 +25,7 @@ fun View.showCopyDeviceUuidClipedSnackBar(uuid: String, topPadding: Float = 24f,
     context.serviceClipboard?.setPrimaryClip(clip)
 
     showTopSnackBar(
-        R.string.num_copied,
+        R.string.num_device_copied,
         Snackbar.LENGTH_LONG,
         topPadding,
         bottomPadding,

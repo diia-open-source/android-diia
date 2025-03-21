@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bank_id_title">BankID</string>
+    <string name="bank_id_title">BankID HБУ</string>
     <string name="bank_selection_title_text">Оберіть свій банк</string>
     <string name="bank_selection_description_text">Для авторизації за допомогою BankID, оберіть свій банк та увійдіть до системи інтернет-банкінгу. Авторизація не передбачає жодного доступу до фінансової інформації.</string>
     <string name="bank_selection_search_text">Пошук</string>

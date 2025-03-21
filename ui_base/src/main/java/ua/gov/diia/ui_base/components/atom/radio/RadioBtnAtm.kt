@@ -177,6 +177,7 @@ fun RadioBtnAtm(
 data class RadioBtnAtmData(
     val actionKey: String = UIActionKeysCompose.RADIO_BUTTON,
     val id: String,
+    val optionId: String? = null,
     val label: String,
     val mode: RadioButtonMode = RadioButtonMode.SINGLE_CHOICE,
     val accordionTitle: String? = null,

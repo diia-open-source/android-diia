@@ -32,6 +32,14 @@ annotation class GlobalActionFocusOnDocument
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
+annotation class GlobalActionDeleteDocument
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class GlobalActionUpdateLocalDocument
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
 annotation class GlobalActionSelectedMenuItem
 
 @Qualifier
@@ -42,7 +50,6 @@ annotation class GlobalActionLazy
 @Retention(AnnotationRetention.BINARY)
 annotation class GlobalActionNetworkState
 
-//TODO potential move to notficiation package
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class GlobalActionNotificationRead

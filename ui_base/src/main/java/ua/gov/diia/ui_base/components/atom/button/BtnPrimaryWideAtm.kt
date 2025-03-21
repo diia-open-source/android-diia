@@ -1,12 +1,9 @@
 package ua.gov.diia.ui_base.components.atom.button
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -20,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.core.models.common_compose.atm.button.BtnPrimaryWideAtm
 import ua.gov.diia.core.models.common_compose.general.ButtonStates
-import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -53,7 +49,6 @@ fun BtnPrimaryWideAtm(
     Button(
         modifier = modifier
             .padding(top = 16.dp)
-            .padding(horizontal = 32.dp)
             .fillMaxWidth()
             .testTag(data.componentId?.asString() ?: ""),
         colors = ButtonDefaults.buttonColors(
@@ -74,21 +69,18 @@ fun BtnPrimaryWideAtm(
         }
     ) {
         AnimatedVisibility(visible = isLoading.value) {
-            Row(modifier = Modifier.padding(start = 16.dp)) {
-                LoaderCircularEclipse23Subatomic(modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-            }
+            LoaderCircularEclipse23Subatomic(modifier = Modifier.padding(vertical = 7.dp).size(18.dp))
+
         }
-        Text(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp, end = 16.dp)
-                .conditional(!isLoading.value) {
-                    padding(start = 16.dp)
-                },
-            text = data.title.asString(),
-            color = White,
-            style = DiiaTextStyle.t1BigText
-        )
+        if(!isLoading.value){
+            Text(
+                modifier = Modifier
+                    .padding(top = 8.dp, bottom = 8.dp),
+                text = data.title.asString(),
+                color = White,
+                style = DiiaTextStyle.t1BigText
+            )
+        }
     }
 }
 
@@ -109,13 +101,13 @@ data class BtnPrimaryWideAtmData(
 }
 
 fun BtnPrimaryWideAtm.toUIModel(
-    id: String = "",
+    id: String = if (componentId.isNullOrBlank()) UIActionKeysCompose.BUTTON_REGULAR else componentId.orEmpty(),
     componentIdExternal: UiText? = null
 ): BtnPrimaryWideAtmData {
     return BtnPrimaryWideAtmData(
         componentId = componentIdExternal ?: componentId.orEmpty().toDynamicString(),
         title = label.toDynamicString(),
-        id = this.componentId ?: id,
+        id = id,
         interactionState = state?.let {
             when (state) {
                 ButtonStates.enabled -> UIState.Interaction.Enabled

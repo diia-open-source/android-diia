@@ -3,7 +3,7 @@ package ua.gov.diia.ui_base.components.infrastructure.state
 sealed class UIState {
 
     sealed class Validation : UIState() {
-        object NeverBeenPerformed: Validation()
+        object NeverBeenPerformed : Validation()
         object Passed : Validation()
         object Failed : Validation()
         object InProgress : Validation()

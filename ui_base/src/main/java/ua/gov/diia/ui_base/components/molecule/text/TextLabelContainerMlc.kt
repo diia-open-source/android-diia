@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.core.models.common_compose.mlc.text.TextLabelContainerMlc
@@ -32,9 +33,8 @@ fun TextLabelContainerMlc(
             .padding(horizontal = 24.dp)
             .padding(top = if (isFirstAtBody) 8.dp else 24.dp)
             .fillMaxWidth()
-            .background(
-                color = White, shape = RoundedCornerShape(16.dp)
-            )
+            .background(color = White, shape = RoundedCornerShape(16.dp))
+            .testTag(data.componentId?.asString() ?: ""),
     ) {
         data.data?.let {
             TextWithParametersAtom(
@@ -48,6 +48,7 @@ fun TextLabelContainerMlc(
 }
 
 data class TextLabelContainerMlcData(
+    val componentId: UiText? = null,
     val data: TextWithParametersData? = null
 ) : UIElementData
 
@@ -57,6 +58,7 @@ fun TextLabelContainerMlc?.toUIModel(
     val entity = this
     if (entity?.text == null) return null
     return TextLabelMlcData(
+        componentId = UiText.DynamicString(this?.componentId.orEmpty()),
         actionKey = actionKey,
         text = UiText.DynamicString(entity.text ?: ""),
         parameters = if (entity.parameters != null) {
@@ -80,9 +82,7 @@ fun TextLabelContainerMlc?.toUIModel(
     )
 }
 
-@Composable
-@Preview
-fun TextLabelContainerMlcPreview() {
+fun generateTextLabelContainerMlcMockData(): TextLabelContainerMlcData {
     val phoneText =
         UiText.DynamicString("Щоб вирішити це питання, будь ласка, зверніться до ДМС України \nза номером {dmsPhoneNumber}")
     val phoneParameter = TextParameter(
@@ -95,6 +95,13 @@ fun TextLabelContainerMlcPreview() {
     )
     val textWithParametersData =
         TextWithParametersData(text = phoneText, parameters = listOf(phoneParameter))
-    val data = TextLabelContainerMlcData(data = textWithParametersData)
-    TextLabelContainerMlc(modifier = Modifier, data = data) {}
+    return TextLabelContainerMlcData(
+        data = textWithParametersData
+    )
+}
+
+@Composable
+@Preview
+fun TextLabelContainerMlcPreview() {
+    TextLabelContainerMlc(modifier = Modifier, data = generateTextLabelContainerMlcMockData()) {}
 }

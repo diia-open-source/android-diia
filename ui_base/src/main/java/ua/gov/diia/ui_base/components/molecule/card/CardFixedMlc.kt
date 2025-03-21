@@ -29,6 +29,7 @@ import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
 import ua.gov.diia.ui_base.components.atom.status.ChipStatusAtm
 import ua.gov.diia.ui_base.components.atom.status.ChipStatusAtmData
 import ua.gov.diia.ui_base.components.atom.status.StatusChipType
+import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
@@ -176,7 +177,7 @@ data class CardFixedMlcData(
     val alternativeButton: ButtonStrokeAdditionalAtomData? = null,
     val chip: ChipStatusAtmData? = null,
     val label: UiText? = null,
-)
+) : UIElementData
 
 @Composable
 @Preview

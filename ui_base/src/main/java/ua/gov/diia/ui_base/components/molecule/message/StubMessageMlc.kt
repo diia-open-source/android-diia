@@ -16,14 +16,17 @@ import ua.gov.diia.core.models.common_compose.mlc.text.StubMessageMlc
 import ua.gov.diia.ui_base.components.atom.button.BtnStrokeAdditionalAtm
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
 import ua.gov.diia.ui_base.components.atom.button.toUIModel
+import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextParameter
+import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersAtom
+import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.conditional
-import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStringOrNull
+import ua.gov.diia.ui_base.components.organism.list.pagination.SimplePagination
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 
 @Composable
@@ -35,7 +38,7 @@ fun StubMessageMlc(
 ) {
     Column(
         modifier = modifier
-            .conditional(useDesignTopPadding){
+            .conditional(useDesignTopPadding) {
                 padding(top = 64.dp)
             }
             .padding(horizontal = 24.dp)
@@ -49,18 +52,23 @@ fun StubMessageMlc(
                 lineHeight = 48.sp
             )
         )
-        Text(
-            modifier = Modifier.padding(top = 16.dp),
-            text = data.title.asString(),
-            textAlign = TextAlign.Center,
-            style = DiiaTextStyle.h3SmallHeading
-        )
-        data.description?.let {
+        data.title?.let {
             Text(
-                modifier = Modifier.padding(top = 8.dp),
-                text = data.description.asString(),
+                modifier = Modifier.padding(top = 16.dp),
+                text = data.title.asString(),
                 textAlign = TextAlign.Center,
-                style = DiiaTextStyle.t3TextBody
+                style = DiiaTextStyle.h3SmallHeading
+            )
+        }
+        data.description?.let {
+            TextWithParametersAtom(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .align(Alignment.CenterHorizontally),
+                data = data.description,
+                style = DiiaTextStyle.t3TextBody.copy(textAlign = TextAlign.Center),
+                onUIAction = onUIAction
+
             )
         }
         data.button?.let {
@@ -75,34 +83,102 @@ fun StubMessageMlc(
 
 data class StubMessageMlcData(
     val icon: UiText,
-    val title: UiText,
-    val description: UiText? = null,
+    val title: UiText? = null,
+    val description: TextWithParametersData? = null,
     val button: ButtonStrokeAdditionalAtomData? = null,
     val componentId: UiText? = null,
-    ) : UIElementData
+    override val id: String = "",
+) : SimplePagination
 
 fun StubMessageMlc?.toUIModel(): StubMessageMlcData? {
     val entity: StubMessageMlc = this ?: return null
     return StubMessageMlcData(
         icon = entity.icon.toDynamicString(),
-        title = entity.title.toDynamicString(),
-        description = entity.description.toDynamicStringOrNull(),
+        title = entity.title?.toDynamicString(),
+        description = TextWithParametersData(
+            text = UiText.DynamicString(entity.description ?: ""),
+            parameters = if (this.parameters != null) {
+                mutableListOf<TextParameter>().apply {
+                    entity.parameters?.forEach {
+                        add(
+                            TextParameter(
+                                data = TextParameter.Data(
+                                    name = it.data?.name.toDynamicStringOrNull(),
+                                    resource = it.data?.resource.toDynamicStringOrNull(),
+                                    alt = it.data?.alt.toDynamicStringOrNull()
+                                ),
+                                type = it.type
+                            )
+                        )
+                    }
+                }
+
+            } else emptyList()
+        ),
         componentId = entity.componentId.toDynamicStringOrNull(),
-        button = entity.btnStrokeAdditionalAtm?.toUIModel()
+        button = entity.btnStrokeAdditionalAtm?.toUIModel(),
+        id = entity.componentId.orEmpty(),
     )
 }
 
+enum class StubMessageMlcMockType {
+    icontitle, titledescription, description, btndescription, btntitle;
+}
+
+fun generateStubMessageMlcMockData(mockType: StubMessageMlcMockType): StubMessageMlcData {
+    return when (mockType) {
+        StubMessageMlcMockType.icontitle -> StubMessageMlcData(
+            icon = UiText.DynamicString("\uD83D\uDC4C"),
+            title = UiText.DynamicString("У вас все добре"),
+        )
+
+        StubMessageMlcMockType.titledescription -> StubMessageMlcData(
+            icon = UiText.DynamicString("\uD83D\uDC4C"),
+            title = UiText.DynamicString("У вас все добре"),
+            description = TextWithParametersData(
+                text = UiText.DynamicString("Відкритих проваджень немає")
+            )
+        )
+
+        StubMessageMlcMockType.btndescription -> StubMessageMlcData(
+            icon = UiText.DynamicString("\uD83D\uDC4C"),
+            title = UiText.DynamicString("У вас все добре"),
+            description = TextWithParametersData(
+                text = UiText.DynamicString("Відкритих проваджень немає")
+            ),
+            button = ButtonStrokeAdditionalAtomData(
+                actionKey = UIActionKeysCompose.BUTTON_REGULAR,
+                id = "1",
+                title = UiText.DynamicString("Label"),
+                interactionState = UIState.Interaction.Enabled
+            )
+        )
+
+        StubMessageMlcMockType.btntitle -> StubMessageMlcData(
+            icon = UiText.DynamicString("\uD83D\uDC4C"),
+            title = UiText.DynamicString("У вас все добре"),
+            button = ButtonStrokeAdditionalAtomData(
+                actionKey = UIActionKeysCompose.BUTTON_REGULAR,
+                id = "1",
+                title = UiText.DynamicString("Label"),
+                interactionState = UIState.Interaction.Enabled
+            )
+        )
+
+        StubMessageMlcMockType.description -> StubMessageMlcData(
+            icon = UiText.DynamicString("\uD83D\uDC4C"),
+            description = TextWithParametersData(
+                text = UiText.DynamicString("Відкритих проваджень немає")
+            )
+        )
+    }
+}
 
 @Composable
 @Preview
 fun StubMessageMlcPreview_Icon_Title() {
-    val data = StubMessageMlcData(
-        icon = UiText.DynamicString("\uD83D\uDC4C"),
-        title = UiText.DynamicString("У вас все добре"),
-    )
-
     StubMessageMlc(
-        data = data
+        data = generateStubMessageMlcMockData(StubMessageMlcMockType.icontitle)
     ) {
 
     }
@@ -111,14 +187,18 @@ fun StubMessageMlcPreview_Icon_Title() {
 @Composable
 @Preview
 fun StubMessageMlcPreview_Icon_Title_Description() {
-    val data = StubMessageMlcData(
-        icon = UiText.DynamicString("\uD83D\uDC4C"),
-        title = UiText.DynamicString("У вас все добре"),
-        description = UiText.DynamicString("Відкритих проваджень немає")
-    )
-
     StubMessageMlc(
-        data = data
+        data = generateStubMessageMlcMockData(StubMessageMlcMockType.titledescription)
+    ) {
+
+    }
+}
+
+@Composable
+@Preview
+fun StubMessageMlcPreview_Icon_Description() {
+    StubMessageMlc(
+        data = generateStubMessageMlcMockData(StubMessageMlcMockType.description)
     ) {
 
     }
@@ -127,20 +207,8 @@ fun StubMessageMlcPreview_Icon_Title_Description() {
 @Composable
 @Preview
 fun StubMessageMlcPreview_Icon_Title_Description_Button() {
-    val data = StubMessageMlcData(
-        icon = UiText.DynamicString("\uD83D\uDC4C"),
-        title = UiText.DynamicString("У вас все добре"),
-        description = UiText.DynamicString("Відкритих проваджень немає"),
-        button = ButtonStrokeAdditionalAtomData(
-            actionKey = UIActionKeysCompose.BUTTON_REGULAR,
-            id = "1",
-            title = UiText.DynamicString("Label"),
-            interactionState = UIState.Interaction.Enabled
-        )
-    )
-
     StubMessageMlc(
-        data = data
+        data = generateStubMessageMlcMockData(StubMessageMlcMockType.btndescription)
     ) {}
 
 }
@@ -148,19 +216,8 @@ fun StubMessageMlcPreview_Icon_Title_Description_Button() {
 @Composable
 @Preview
 fun StubMessageMlcPreview_Icon_Title_Button() {
-    val data = StubMessageMlcData(
-        icon = UiText.DynamicString("\uD83D\uDC4C"),
-        title = UiText.DynamicString("У вас все добре"),
-        button = ButtonStrokeAdditionalAtomData(
-            actionKey = UIActionKeysCompose.BUTTON_REGULAR,
-            id = "1",
-            title = UiText.DynamicString("Label"),
-            interactionState = UIState.Interaction.Enabled
-        )
-    )
-
     StubMessageMlc(
-        data = data
+        data = generateStubMessageMlcMockData(StubMessageMlcMockType.btntitle)
     ) {}
 
 }

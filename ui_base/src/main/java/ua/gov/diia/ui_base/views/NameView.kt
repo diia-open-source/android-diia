@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import androidx.core.content.withStyledAttributes
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
+import ua.gov.diia.core.util.inputs.isPersonNameValid
 import java.lang.Integer.max
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.databinding.ItemViewNameBinding
@@ -97,12 +98,17 @@ class NameView @JvmOverloads constructor(
         binding.addBtn.isVisible = isVisible == true
     }
 
+    fun isNameSymbolsValid(name: String): Boolean {
+        return name.isEmpty() || isPersonNameValid(name)
+    }
+
     inner class ViewHolder(
         val binding: ItemViewNameBinding,
     ) {
         private var model: NameModel? = null
 
         init {
+            binding.nameInput.setFieldErrorText(R.string.ukraine_validation_input_error)
             binding.nameInput.setTextInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS)
             binding.nameInput.setImeOptions(EditorInfo.IME_ACTION_DONE)
             binding.nameInput.setSelectableClickListener {
@@ -111,7 +117,9 @@ class NameView @JvmOverloads constructor(
             }
             binding.nameInput.doOnTextChanged { text ->
                 val name = model ?: return@doOnTextChanged
-                onChanged?.invoke(name.copy(name = text))
+                val isNameSymbolsValid = isNameSymbolsValid(text)
+                binding.nameInput.setFieldError(!isNameSymbolsValid)
+                onChanged?.invoke(name.copy(name = text, isValid = isNameSymbolsValid))
             }
             binding.deleteBtn.setOnClickListener {
                 val name = model ?: return@setOnClickListener

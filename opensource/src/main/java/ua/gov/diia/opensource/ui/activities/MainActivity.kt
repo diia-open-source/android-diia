@@ -2,22 +2,16 @@ package ua.gov.diia.opensource.ui.activities
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collectLatest
 import ua.gov.diia.core.di.actions.GlobalActionLogout
 import ua.gov.diia.core.models.deeplink.DeepLinkActionViewMessage
 import ua.gov.diia.core.models.dialogs.TemplateDialogModel
@@ -30,11 +24,13 @@ import ua.gov.diia.core.util.event.observeUiEvent
 import ua.gov.diia.diia_storage.DiiaStorage
 import ua.gov.diia.notifications.NavNotificationsDirections
 import ua.gov.diia.notifications.models.notification.pull.MessageIdentification
-import ua.gov.diia.opensource.NavMainXmlDirections
+import ua.gov.diia.opensource.NavMainDirections
 import ua.gov.diia.opensource.R
-import ua.gov.diia.opensource.di.GlobalActionProlongUser
-import ua.gov.diia.opensource.util.ext.navigate
-import ua.gov.diia.opensource.util.setUpEdgeToEdge
+import ua.gov.diia.opensource.di.actions.GlobalActionProlongUser
+import ua.gov.diia.opensource.util.extensions.activity.adjustFontScale
+import ua.gov.diia.opensource.util.extensions.activity.navigate
+import ua.gov.diia.opensource.util.extensions.activity.overrideConfiguration
+import ua.gov.diia.opensource.util.extensions.activity.setUpEdgeToEdge
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,29 +50,27 @@ abstract class MainActivity : AppCompatActivity() {
     @GlobalActionProlongUser
     lateinit var actionUserVerification: MutableLiveData<UiDataEvent<TemplateDialogModel>>
 
-    private val viewModel by viewModels<MainActivityVM>()
-
-    private val navController: NavController
-        get() = findNavController(R.id.nav_host)
+    private val vm by viewModels<MainActivityVM>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_Diia_NoActionBar)
         setUpEdgeToEdge()
-        super.onCreate(savedInstanceState)
         adjustFontScale(resources.configuration)
+
         setUpAnalytics()
         setContentView(R.layout.activity_main)
-        actionLogout.observeUiEvent(this, viewModel::doLogout)
-        viewModel.restartApp.observeUiEvent(this, ::restartMainNavGraph)
-        viewModel.apply {
-            timeoutDestination.observeUiDataEvent(this@MainActivity) {
-                restartMainNavGraph()
-            }
 
-            deeplinkFlow.flowWithLifecycle(lifecycle)
-                .onEach {
-                    val data = it?.peekContent() ?: return@onEach
+        processIntent(intent)
 
+        actionLogout.observeUiEvent(this, vm::doLogout)
+
+        vm.apply {
+
+            lifecycleScope.launchWhenStarted {
+                deeplinkFlow.collectLatest {
+                    val data = it?.peekContent() ?: return@collectLatest
+                    //unauthorized message processing authorized is in HomeF
                     if (data is DeepLinkActionViewMessage) {
                         if (!data.needAuth) {
                             navigate(
@@ -90,17 +84,20 @@ abstract class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
-                }.launchIn(lifecycleScope)
+                }
+            }
         }
+
+        vm.restartApp.observeUiEvent(this, ::restartMainNavGraph)
+
         actionUserVerification.observeUiDataEvent(this) { template ->
             navigate(
-                NavMainXmlDirections.actionGlobalToTemplateDialog(
+                NavMainDirections.actionGlobalToTemplateDialog(
                     template.copy(key = ActionsConst.KEY_GLOBAL_PROCESSING)
                 )
             )
         }
-        processIntent(intent)
-        viewModel.checkPinCount()
+        vm.checkPinCount()
     }
 
 
@@ -109,48 +106,32 @@ abstract class MainActivity : AppCompatActivity() {
         overrideConfiguration(newBase)
     }
 
-    private fun adjustFontScale(configuration: Configuration) {
-        if (Build.VERSION.SDK_INT < 27) {
-            configuration.fontScale = 1.0f
-            val metrics: DisplayMetrics = resources.displayMetrics
-            val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            wm.defaultDisplay.getMetrics(metrics)
-            metrics.scaledDensity = configuration.fontScale * metrics.density
-            baseContext.resources.updateConfiguration(configuration, metrics)
-        }
-    }
-
-    private fun overrideConfiguration(context: Context?) {
-        if (Build.VERSION.SDK_INT >= 27) {
-            val newOverride = Configuration(context?.resources?.configuration)
-            newOverride.fontScale = 1.0f
-            applyOverrideConfiguration(newOverride)
-        }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        processIntent(intent)
-    }
-
     private fun restartMainNavGraph(
         skipInitialization: Boolean = true,
-        serviceUserUUID: String? = null,
+        serviceUserUUID: String? = null
     ) {
-        NavMainXmlDirections.actionGlobalToSplashClearStack(
+        NavMainDirections.actionGlobalToSplashClearStack(
             skipInitialization = skipInitialization,
             uuid4 = serviceUserUUID
         ).let { navController.navigate(it) }
+    }
+
+    private val navController: NavController
+        get() = findNavController(R.id.nav_host)
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        processIntent(intent)
     }
 
     private fun processIntent(intent: Intent?) {
         val path = intent?.data?.path
         if (path?.startsWith("/auth") == false) {
             //after push is clicked, navigate to HomeF as there we handle all nav logic
-            if (viewModel.allowAuthorizedDeepLinks) {
+            if (vm.allowAuthorizedDeepLinks) {
                 navController.popBackStack(R.id.homeF, false)
             }
-            viewModel.processIntentPath(path)
+            vm.processIntentPath(path)
         }
     }
 

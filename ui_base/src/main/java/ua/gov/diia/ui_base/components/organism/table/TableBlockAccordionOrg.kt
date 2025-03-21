@@ -164,11 +164,11 @@ fun TableBlockAccordionOrg?.toUIModel(): TableBlockAccordionOrgData? {
                     TableItemHorizontalMlcData(
                         componentId = listMlcl.tableItemHorizontalMlc?.componentId.orEmpty(),
                         title = listMlcl.tableItemHorizontalMlc?.label?.let {
-                            UiText.DynamicString(
-                                it
-                            )
+                            UiText.DynamicString(it)
                         },
-                        secondaryTitle = listMlcl.tableItemHorizontalMlc?.secondaryLabel,
+                        secondaryTitle = listMlcl.tableItemHorizontalMlc?.secondaryLabel?.let {
+                            UiText.DynamicString(it)
+                        },
                         value = listMlcl.tableItemHorizontalMlc?.value,
                         secondaryValue = listMlcl.tableItemHorizontalMlc?.secondaryValue,
                         supportText = listMlcl.tableItemHorizontalMlc?.supportingValue,
@@ -182,9 +182,9 @@ fun TableBlockAccordionOrg?.toUIModel(): TableBlockAccordionOrgData? {
                     TableItemVerticalMlcData(
                         componentId = listMlcl.tableItemVerticalMlc?.componentId.orEmpty(),
                         title = listMlcl.tableItemVerticalMlc?.label?.let { UiText.DynamicString(it) },
-                        secondaryTitle = listMlcl.tableItemVerticalMlc?.secondaryLabel,
-                        value = listMlcl.tableItemVerticalMlc?.value,
-                        secondaryValue = listMlcl.tableItemVerticalMlc?.secondaryValue,
+                        secondaryTitle = listMlcl.tableItemVerticalMlc?.secondaryLabel?.let { UiText.DynamicString(it) },
+                        value = listMlcl.tableItemVerticalMlc?.value?.let { UiText.DynamicString(it) },
+                        secondaryValue = listMlcl.tableItemVerticalMlc?.secondaryValue?.let { UiText.DynamicString(it) },
                         supportText = listMlcl.tableItemVerticalMlc?.supportingValue,
                         valueAsBase64String = listMlcl.tableItemVerticalMlc?.valueImage
                     )

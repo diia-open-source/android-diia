@@ -1,5 +1,7 @@
 package ua.gov.diia.documents.data.api
 
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.ManualDocs
 import ua.gov.diia.documents.models.*
 
 interface ApiDocuments {

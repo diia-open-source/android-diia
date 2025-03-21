@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment
 import ua.gov.diia.core.util.extensions.fragment.currentDestinationId
 import ua.gov.diia.core.util.extensions.fragment.findNavControllerById
 import ua.gov.diia.core.util.extensions.fragment.navigate
-import ua.gov.diia.opensource.NavMainXmlDirections
+import ua.gov.diia.opensource.NavMainDirections
 import ua.gov.diia.opensource.R
-import ua.gov.diia.opensource.util.ext.navigateToPublicService
+import ua.gov.diia.opensource.util.extensions.fragment.navigateToPublicService
 import ua.gov.diia.publicservice.helper.PublicServiceHelper
 import ua.gov.diia.publicservice.models.PublicService
 import ua.gov.diia.publicservice.models.PublicServiceCategory
@@ -15,7 +15,7 @@ class PublicServiceHelperImpl : PublicServiceHelper {
     override fun navigateToCategoryServices(fragment: Fragment, category: PublicServiceCategory) {
         fragment.apply {
             navigate(
-                NavMainXmlDirections.actionGlobalDestinationCategoryDetailsCompose(
+                NavMainDirections.actionGlobalDestinationCategoryDetailsCompose(
                     category = category,
                     resultDestinationId = currentDestinationId ?: return
                 ),
@@ -27,7 +27,7 @@ class PublicServiceHelperImpl : PublicServiceHelper {
     override  fun navigateToServiceSearch(fragment: Fragment, data: Array<PublicServiceCategory>) {
         fragment.apply {
             navigate(
-                NavMainXmlDirections.actionGlobalDestinationPsSearchCompose(
+                NavMainDirections.actionGlobalDestinationPsSearchCompose(
                     arbitraryDestinationId = currentDestinationId ?: return,
                     categories = data
                 ),

@@ -8,9 +8,6 @@
         android:id="@+id/destination_login"
         android:name="ua.gov.diia.login.ui.LoginF">
         <deepLink
-            android:id="@+id/deepLinkAuth"
-            app:uri="https://diia.app/auth/callback/{bank_response}" />
-        <deepLink
             android:id="@+id/deepLinkDiiaAuth"
             app:uri="diia://diia.app/auth/callback/{bank_response}" />
         <action

@@ -6,14 +6,14 @@ This is module responsible for public services receiving and representation.
 1. Copy module folder to your project and add module to gradle dependency like this:
 
 ```groovy
-implementation project(':publicservice')
+implementation project(':ps:publicservice')
 ```
 
 2. Module requires next modules to work
 ```groovy
-implementation project(path: ':ui_base')
-implementation project(path: ':core')
-implementation project(path: ':diia_storage')
+implementation project(path: ':libs:ui_base')
+implementation project(path: ':libs:core')
+implementation project(path: ':libs:diia_storage')
 ```
 
 3. Enter point should implement next interfaces and provide them through Hilt DI:

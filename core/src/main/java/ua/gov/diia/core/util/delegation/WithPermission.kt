@@ -61,7 +61,7 @@ enum class Permission {
         @StringRes
         get() = when (this) {
             CAMERA -> R.string.camera_permission_request_title
-            LOCATION -> R.string.location_permission_request_title
+            LOCATION  -> R.string.location_permission_request_title
             STORAGE_READ,
             STORAGE_WRITE -> R.string.file_permission_request_title
 
@@ -138,4 +138,5 @@ interface WithPermission : DefaultLifecycleObserver {
 
     fun <T : Fragment> T.approvePermission(permission: Permission)
 
+    fun <T : Fragment> T.requestAppSettings(permission: Permission)
 }

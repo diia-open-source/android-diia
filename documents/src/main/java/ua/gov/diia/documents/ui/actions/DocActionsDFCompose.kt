@@ -13,13 +13,12 @@ import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import ua.gov.diia.core.models.ConsumableEvent
 import ua.gov.diia.core.models.ConsumableItem
-import ua.gov.diia.core.models.ConsumableString
 import ua.gov.diia.core.util.extensions.fragment.setNavigationResult
 import ua.gov.diia.documents.R
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.LocalizationType
-import ua.gov.diia.documents.models.docgroups.v2.VerificationAction
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.LocalizationType
+import ua.gov.diia.core.models.document.docgroups.v2.VerificationAction
 import ua.gov.diia.documents.ui.DocsConst
 import ua.gov.diia.documents.util.DocNameProvider
 import ua.gov.diia.ui_base.components.atom.button.BtnWhiteLargeAtmData
@@ -240,11 +239,10 @@ class DocActionsDFCompose : BaseBottomDialog() {
                 is DocActionsVMCompose.DocActions.ShareWithFriends -> {
                     dismiss()
                     val doc = args.doc as DiiaDocument
-                    val docId = doc.id ?: return
                     setNavigationResult(
                         arbitraryDestination = args.resultDestinationId,
-                        key = DocsConst.RESULT_KEY_SHARE_AWARD,
-                        data = ConsumableString(docId)
+                        key = DocsConst.RESULT_KEY_SHARE_DOC,
+                        data = ConsumableItem(doc)
                     )
                 }
 

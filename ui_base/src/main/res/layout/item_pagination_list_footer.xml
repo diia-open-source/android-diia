@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/xlarge">
+
+        <ua.gov.diia.ui_base.views.DiiaPlaceholderMessage
+            android:id="@+id/footer_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:msgEmoji="@string/emoji_confused_man"
+            app:msgText="Не вдалося завантажити дані." />
+
+        <ua.gov.diia.ui_base.views.common.progress.DiiaProgressButton
+            android:id="@+id/footer_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/xlarge"
+            app:buttonMode="outlined"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/footer_message"
+            app:title="Спробувати ще" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

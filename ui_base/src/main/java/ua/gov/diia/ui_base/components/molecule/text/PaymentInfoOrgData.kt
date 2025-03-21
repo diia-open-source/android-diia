@@ -19,7 +19,10 @@ import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.Table
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalLargeMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlc
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toUIModel
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toUiModel
 import ua.gov.diia.ui_base.components.theme.BlackSqueeze
 import ua.gov.diia.ui_base.components.theme.White
 
@@ -42,6 +45,12 @@ fun PaymentInfoOrg(
                     TableItemHorizontalMlc(
                         modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
                         data = it
+                    )
+                }
+                if (it is TableItemPrimaryMlcData) {
+                    TableItemPrimaryMlc(
+                        modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                        data = it,
                     )
                 }
             }
@@ -77,6 +86,8 @@ fun PaymentInfoOrg.toUiModel(): PaymentInfoOrgData {
     val itemsTableBlock = mutableListOf<TableBlockItem>()
     this.items.forEach {
         it.tableItemPrimaryMlc.toUIModel()?.let { itemsTableBlock.add(it) }
+        it.tableItemHorizontalMlc?.toUiModel()?.let { itemsTableBlock.add(it) }
+        it.tableItemHorizontalLargeMlc?.toUiModel()?.let { itemsTableBlock.add(it) }
     }
     return PaymentInfoOrgData(
         componentId = UiText.DynamicString(this.componentId.orEmpty()),

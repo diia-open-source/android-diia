@@ -8,11 +8,11 @@
 
     <include app:graph="@navigation/nav_public_service_categories" />
 
-    <keep_state_fragment
+    <fragment
         android:id="@+id/menuFCompose"
         android:name="ua.gov.diia.menu.ui.MenuFCompose" />
 
-    <keep_state_fragment
+    <fragment
         android:id="@+id/feedF"
         android:name="ua.gov.diia.opensource.ui.fragments.FeedF" />
 

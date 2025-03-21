@@ -13,7 +13,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/large"
-            app:fieldAllowedSymbols="АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщьЮюЯя '-"
             app:fieldMaxLength="70"
             app:fieldMode="editable"
             app:fieldTitleColor="@color/black"

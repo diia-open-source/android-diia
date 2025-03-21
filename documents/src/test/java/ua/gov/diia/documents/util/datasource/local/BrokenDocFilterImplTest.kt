@@ -10,8 +10,8 @@ import org.junit.Test
 import org.mockito.Mockito
 import ua.gov.diia.documents.data.datasource.local.BrokenDocFilterImpl
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 
 class BrokenDocFilterImplTest {
 

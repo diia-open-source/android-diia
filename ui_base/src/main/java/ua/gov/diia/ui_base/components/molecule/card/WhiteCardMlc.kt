@@ -5,21 +5,30 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.icon.DoubleIconAtm
 import ua.gov.diia.ui_base.components.atom.icon.DoubleIconAtmData
 import ua.gov.diia.ui_base.components.atom.icon.IconAtm
 import ua.gov.diia.ui_base.components.atom.icon.IconAtmData
+import ua.gov.diia.ui_base.components.atom.icon.LargeIconAtm
+import ua.gov.diia.ui_base.components.atom.icon.LargeIconAtmData
 import ua.gov.diia.ui_base.components.atom.icon.SmallIconAtm
 import ua.gov.diia.ui_base.components.atom.icon.SmallIconAtmData
+import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -30,6 +39,7 @@ import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.WhiteAlpha50
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun WhiteCardMlc(
     modifier: Modifier = Modifier,
@@ -54,15 +64,40 @@ fun WhiteCardMlc(
                 onUIAction(onClick)
             }
     ) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = data.title.asString(),
-            color = Black,
-            style = DiiaTextStyle.h2MediumHeading
-        )
+
+        data.image?.let {
+            GlideImage(
+                model = data.image,
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .height(80.dp)
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
+                    .clip(shape = RoundedCornerShape(12.dp))
+
+            ) {
+                it.error(R.drawable.diia_article_placeholder)
+                    .placeholder(R.drawable.diia_article_placeholder)
+                    .load(data.image)
+            }
+        }
+        data.title?.let {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = it.asString(),
+                color = Black,
+                style = DiiaTextStyle.h2MediumHeading
+            )
+        }
         Text(
             modifier = Modifier
-                .padding(vertical = 12.dp)
+                .conditional(data.title != null) {
+                    padding(vertical = 12.dp)
+                }
+                .conditional(data.title == null) {
+                    padding(bottom = 12.dp)
+                }
                 .fillMaxWidth(),
             text = data.label.asString(),
             color = Black,
@@ -71,7 +106,7 @@ fun WhiteCardMlc(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Bottom
         ) {
             data.doubleIconAtm?.let {
                 DoubleIconAtm(
@@ -83,6 +118,14 @@ fun WhiteCardMlc(
             }
             data.iconAtm?.let {
                 IconAtm(
+                    modifier = Modifier.padding(end = 8.dp),
+                    data = it
+                ) {
+                    onUIAction(onClick)
+                }
+            }
+            data.largeIconAtm?.let {
+                LargeIconAtm(
                     modifier = Modifier.padding(end = 8.dp),
                     data = it
                 ) {
@@ -108,9 +151,11 @@ data class WhiteCardMlcData(
     val smallIcon: SmallIconAtmData? = null,
     val iconAtm: IconAtmData? = null,
     val doubleIconAtm: DoubleIconAtmData? = null,
-    val title: UiText,
+    val title: UiText? = null,
     val label: UiText,
-    val action: DataActionWrapper? = null
+    val action: DataActionWrapper? = null,
+    val largeIconAtm: LargeIconAtmData? = null,
+    val image: String? = null
 ) : UIElementData
 
 @Preview
@@ -177,6 +222,44 @@ fun WhiteCardMlc_BothStartIcons_PreviewIconNext() {
         doubleIconAtm = DoubleIconAtmData(code = DiiaResourceIcon.SAFETY_LARGE.code),
 
         )
+    WhiteCardMlc(data = data) {
+    }
+}
+
+@Preview
+@Composable
+fun WhiteCardMlc_LargeIcon() {
+    val data = WhiteCardMlcData(
+        title = UiText.DynamicString("Title"),
+        label = UiText.DynamicString("Label"),
+        smallIcon = SmallIconAtmData(code = DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        largeIconAtm = LargeIconAtmData(code = DiiaResourceIcon.MADE_IN_UA.code)
+    )
+    WhiteCardMlc(data = data) {
+    }
+}
+
+@Preview
+@Composable
+fun WhiteCardMlc_NoTitle() {
+    val data = WhiteCardMlcData(
+        label = UiText.DynamicString("Label"),
+        smallIcon = SmallIconAtmData(code = DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        largeIconAtm = LargeIconAtmData(code = DiiaResourceIcon.MADE_IN_UA.code)
+    )
+    WhiteCardMlc(data = data) {
+    }
+}
+
+@Preview
+@Composable
+fun WhiteCardMlc_Image() {
+    val data = WhiteCardMlcData(
+        label = UiText.DynamicString("Label"),
+        smallIcon = SmallIconAtmData(code = DiiaResourceIcon.ELLIPSE_ARROW_RIGHT.code),
+        largeIconAtm = LargeIconAtmData(code = DiiaResourceIcon.MADE_IN_UA.code),
+        image = "https://deep-image.ai/blog/content/images/2022/09/underwater-magic-world-8tyxt9yz.jpeg"
+    )
     WhiteCardMlc(data = data) {
     }
 }

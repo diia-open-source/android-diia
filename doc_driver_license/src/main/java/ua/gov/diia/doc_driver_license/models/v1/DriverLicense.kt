@@ -6,15 +6,15 @@ import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 import ua.gov.diia.doc_driver_license.R
 import ua.gov.diia.doc_driver_license.models.DocName
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.models.DocWeight
-import ua.gov.diia.documents.models.DocumentWithPhoto
-import ua.gov.diia.documents.models.LocalizationType
-import ua.gov.diia.documents.models.Preferences
-import ua.gov.diia.documents.models.SourceType
-import ua.gov.diia.documents.models.WithOrder
-import ua.gov.diia.documents.models.docgroups.BaseDocumentGroup
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DocWeight
+import ua.gov.diia.core.models.document.DocumentWithPhoto
+import ua.gov.diia.core.models.document.LocalizationType
+import ua.gov.diia.core.models.document.Preferences
+import ua.gov.diia.core.models.document.SourceType
+import ua.gov.diia.core.models.document.WithOrder
+import ua.gov.diia.core.models.document.docgroups.BaseDocumentGroup
 
 @Parcelize
 @JsonClass(generateAdapter = true)

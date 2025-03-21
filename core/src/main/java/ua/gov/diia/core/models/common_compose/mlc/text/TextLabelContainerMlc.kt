@@ -6,6 +6,8 @@ typealias TextParameterApi = ua.gov.diia.core.models.common.message.TextParamete
 
 @JsonClass(generateAdapter = true)
 data class TextLabelContainerMlc(
+    @Json(name = "componentId")
+    val componentId: String?,
     @Json(name = "label")
     val label: String?,
     @Json(name = "text")

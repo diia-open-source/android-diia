@@ -1,6 +1,7 @@
 package ua.gov.diia.documents.ui
 
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.BaseLocalizationChecker
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 import javax.inject.Inject
 
 class WithCheckLocalizationDocsImpl @Inject constructor(

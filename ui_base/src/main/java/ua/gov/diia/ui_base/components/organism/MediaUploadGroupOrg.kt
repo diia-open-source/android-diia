@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.core.models.common_compose.org.media.MediaUploadGroupOrg
@@ -47,11 +48,12 @@ fun MediaUploadGroupOrg(
 ) {
     val listState = rememberLazyListState()
 
-    Column(modifier = modifier
-        .padding(top = 24.dp, start = 24.dp, end = 24.dp,)
-        .background(
-            color = White, shape = RoundedCornerShape(8.dp)
-        )) {
+    Column(
+        modifier = modifier
+            .padding(top = 24.dp, start = 24.dp, end = 24.dp)
+            .background(color = White, shape = RoundedCornerShape(8.dp))
+            .testTag(data.componentId?.asString() ?: "")
+    ) {
 
         data.title?.let {
             Text(
@@ -108,7 +110,7 @@ fun MediaUploadGroupOrg(
             modifier = modifier
                 .fillMaxWidth()
                 .clickable {
-                    if (data.photoItems?.size?.let{ it  < 10 } ?: true) {
+                    if (data.photoItems?.size?.let { it < 10 } ?: true) {
                         onUIAction(
                             UIAction(
                                 actionKey = data.actionKey,
@@ -124,7 +126,7 @@ fun MediaUploadGroupOrg(
                     .padding(vertical = 16.dp),
                 data = data.button,
 
-            ){
+                ) {
                 onUIAction(
                     UIAction(
                         actionKey = data.actionKey,
@@ -137,6 +139,7 @@ fun MediaUploadGroupOrg(
 }
 
 data class MediaUploadGroupOrgData(
+    val componentId: UiText? = null,
     val actionKey: String = UIActionKeysCompose.MEDIA_UPLOAD_GROUP_ORG,
     val title: UiText? = null,
     val description: UiText? = null,
@@ -150,13 +153,14 @@ data class MediaUploadGroupOrgData(
         return this.copy(
             photoItems = if (newItems.isEmpty()) null else newItems,
             button = this.button.changeInteractionState(
-                photoItems?.size?.let{ it  < 10 } ?: true)
+                photoItems?.size?.let { it < 10 } ?: true)
         )
     }
 }
 
 fun MediaUploadGroupOrg.toUiModel(): MediaUploadGroupOrgData {
     return MediaUploadGroupOrgData(
+        componentId = this.componentId?.let { UiText.DynamicString(it) },
         title = this.title?.let { UiText.DynamicString(it) },
         description = this.description?.let { UiText.DynamicString(it) },
         maxCount = maxCount,
@@ -164,75 +168,84 @@ fun MediaUploadGroupOrg.toUiModel(): MediaUploadGroupOrgData {
     )
 }
 
+enum class MediaUploadGroupOrgMockType {
+    nophoto, morephoto, onephoto
+}
+
+fun generateMediaUploadGroupOrgMockData(mockType: MediaUploadGroupOrgMockType): MediaUploadGroupOrgData {
+    return when (mockType) {
+        MediaUploadGroupOrgMockType.nophoto -> MediaUploadGroupOrgData(
+            title = UiText.DynamicString("title"),
+            description = UiText.DynamicString("description"),
+            button = BtnPlainIconAtmData(
+                id = "123",
+                label = UiText.DynamicString("label"),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.ADD.code)
+            )
+        )
+
+        MediaUploadGroupOrgMockType.morephoto -> MediaUploadGroupOrgData(
+            title = UiText.DynamicString("Додати фото"),
+            description = UiText.DynamicString("Вага фото не має перевищувати 5МБ"),
+            button = BtnPlainIconAtmData(
+                id = "123",
+                label = UiText.DynamicString("Додати фото"),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.ADD.code)
+            ),
+            photoItems = SnapshotStateList<SmallPicAtmData>().apply {
+                repeat(5) { i ->
+                    add(
+                        SmallPicAtmData(
+                            id = "00$i",
+                            url = "https://diia.gov.ua/img/diia-october-prod/uploads/public/65b/cf6/157/thumb_901_730_410_0_0_auto.jpg",
+                            label = UiText.DynamicString("Сталась помилка")
+                        )
+                    )
+                }
+            }
+        )
+
+        MediaUploadGroupOrgMockType.onephoto -> MediaUploadGroupOrgData(
+            title = UiText.DynamicString("Додати фото"),
+            description = UiText.DynamicString("Вага фото не має перевищувати 5МБ"),
+            button = BtnPlainIconAtmData(
+                id = "123",
+                label = UiText.DynamicString("Додати фото"),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.ADD.code)
+            ),
+            photoItems = SnapshotStateList<SmallPicAtmData>().apply {
+                add(
+                    SmallPicAtmData(
+                        id = "001",
+                        url = "https://diia.gov.ua/img/diia-october-prod/uploads/public/65b/cf6/157/thumb_901_730_410_0_0_auto.jpg",
+                        label = UiText.DynamicString("Лейбл")
+                    )
+                )
+            }
+        )
+    }
+}
+
 @Preview
 @Composable
 fun MediaTitleOrgPreview() {
-    val data = MediaUploadGroupOrgData(
-        title = UiText.DynamicString("title"),
-        description = UiText.DynamicString("description"),
-        button = BtnPlainIconAtmData(
-            id = "123",
-            label = UiText.DynamicString("label"),
-            icon = UiIcon.DrawableResource(DiiaResourceIcon.ADD.code)
-        )
-    )
-
-    MediaUploadGroupOrg(data = data) {
-
+    MediaUploadGroupOrg(
+        data = generateMediaUploadGroupOrgMockData(MediaUploadGroupOrgMockType.nophoto)
+    ) {
     }
-
 }
 
 @Preview
 @Composable
 fun MediaTitleOrgTestPreview() {
-    val data = MediaUploadGroupOrgData(
-        title = UiText.DynamicString("Додати фото"),
-        description = UiText.DynamicString("Вага фото не має перевищувати 5МБ"),
-        button = BtnPlainIconAtmData(
-            id = "123",
-            label = UiText.DynamicString("Додати фото"),
-            icon = UiIcon.DrawableResource(DiiaResourceIcon.ADD.code)
-        ),
-        photoItems = SnapshotStateList<SmallPicAtmData>().apply {
-            repeat(5) { i ->
-                add(
-                    SmallPicAtmData(
-                        id = "00$i",
-                        url = "https://diia.gov.ua/img/diia-october-prod/uploads/public/65b/cf6/157/thumb_901_730_410_0_0_auto.jpg",
-                        label = UiText.DynamicString("Сталась помилка")
-                    )
-                )
-            }
-        }
-    )
-
-
-    MediaUploadGroupOrg(data = data) {}
+    MediaUploadGroupOrg(data = generateMediaUploadGroupOrgMockData(MediaUploadGroupOrgMockType.morephoto)) {}
 }
 
 @Preview
 @Composable
 fun MediaTitleOrgTestPreview_With_One_Photo() {
-    val data = MediaUploadGroupOrgData(
-        title = UiText.DynamicString("Додати фото"),
-        description = UiText.DynamicString("Вага фото не має перевищувати 5МБ"),
-        button = BtnPlainIconAtmData(
-            id = "123",
-            label = UiText.DynamicString("Додати фото"),
-            icon = UiIcon.DrawableResource(DiiaResourceIcon.ADD.code)
-        ),
-        photoItems = SnapshotStateList<SmallPicAtmData>().apply {
-            add(
-                SmallPicAtmData(
-                    id = "001",
-                    url = "https://diia.gov.ua/img/diia-october-prod/uploads/public/65b/cf6/157/thumb_901_730_410_0_0_auto.jpg",
-                    label = UiText.DynamicString("Лейбл")
-                )
-            )
-        }
-    )
 
-
-    MediaUploadGroupOrg(data = data) {}
+    MediaUploadGroupOrg(
+        data = generateMediaUploadGroupOrgMockData(MediaUploadGroupOrgMockType.onephoto)
+    ) {}
 }

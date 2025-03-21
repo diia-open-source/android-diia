@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerType
+import ua.gov.diia.ui_base.components.atom.text.TickerUsage
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -128,7 +129,8 @@ data class DocCarouselOrgData(val data: SnapshotStateList<DocsCarouselItem>, val
 @Composable
 fun DocCarouselOrgPreview() {
     val tickerAtomData = TickerAtomData(
-        type = TickerType.BIG_POSITIVE,
+        type = TickerType.INFORMATIVE,
+        usage = TickerUsage.GRAND,
         title = "Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • "
     )
     val docButtonHeading = DocButtonHeadingOrgData(
@@ -149,12 +151,12 @@ fun DocCarouselOrgPreview() {
             TableItemVerticalMlcData(
                 id = "01",
                 title = UiText.DynamicString("Дата\nнародження:"),
-                value = "24.08.1991"
+                value = UiText.DynamicString("24.08.1991")
             ),
             TableItemVerticalMlcData(
                 id = "02",
                 title = UiText.DynamicString("Номер:"),
-                value = "XX000000"
+                value = UiText.DynamicString("XX000000")
             ),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )

@@ -3,32 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/nav_splash"
-    android:id="@+id/nav_main.xml">
-
-    <include app:graph="@navigation/nav_home" />
-    <include app:graph="@navigation/nav_biometric" />
-    <include app:graph="@navigation/nav_verification" />
-    <include app:graph="@navigation/nav_error" />
-    <include app:graph="@navigation/nav_login" />
-    <include app:graph="@navigation/nav_pin_create" />
-    <include app:graph="@navigation/nav_pin_input" />
-    <include app:graph="@navigation/nav_pin_reset" />
-    <include app:graph="@navigation/nav_web" />
-    <include app:graph="@navigation/nav_template_dialog" />
-    <include app:graph="@navigation/nav_splash" />
-    <include app:graph="@navigation/nav_menu_actions" />
-    <include app:graph="@navigation/nav_public_service_category_details" />
-    <include app:graph="@navigation/nav_public_service_search" />
-    <include app:graph="@navigation/nav_system_dialog" />
-    <include app:graph="@navigation/nav_bankid" />
-    <include app:graph="@navigation/nav_criminal_cert" />
-    <include app:graph="@navigation/nav_doc_actions"/>
-    <include app:graph="@navigation/nav_doc_stack"/>
-    <include app:graph="@navigation/nav_doc_full_info"/>
-    <include app:graph="@navigation/nav_stack_order"/>
-    <include app:graph="@navigation/nav_notifications"/>
-    <include app:graph="@navigation/nav_notification_details" />
-    <include app:graph="@navigation/nav_notification_settings" />
+    android:id="@+id/nav_main">
 
     <action
         android:id="@+id/action_global_destination_systemDialog"
@@ -36,7 +11,11 @@
 
     <action
         android:id="@+id/action_global_destination_contextMenu"
-        app:destination="@id/destination_contextMenu" />
+        app:destination="@id/nav_context_menu">
+        <argument
+            android:name="items"
+            app:argType="ua.gov.diia.core.models.ContextMenuField[]" />
+    </action>
 
     <action
         android:id="@+id/action_global_notificationFCompose"
@@ -165,28 +144,6 @@
     </action>
 
     <action
-        android:id="@+id/action_global_to_damaged_property_recovery"
-        app:destination="@+id/nav_damaged_property_recovery"
-        app:popUpTo="@+id/DPRecoveryHomeF"
-        app:popUpToInclusive="true">
-        <argument
-            android:name="otp"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="applicationId"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="previewItem"
-            android:defaultValue="@null"
-            app:argType="ua.gov.diia.core.models.ConsumableItem"
-            app:nullable="true" />
-    </action>
-
-    <action
         android:id="@+id/action_homeF_to_criminal_cert"
         app:destination="@+id/nav_criminal_cert"
         app:enterAnim="@anim/slide_in_right"
@@ -256,24 +213,32 @@
         <argument
             android:name="manualDocs"
             android:defaultValue="@null"
-            app:argType="ua.gov.diia.documents.models.ManualDocs"
+            app:argType="ua.gov.diia.core.models.document.ManualDocs"
             app:nullable="true" />
         <argument
             android:name="resultDestinationId"
             app:argType="integer" />
     </action>
 
-    <dialog
-        android:id="@+id/destination_contextMenu"
-        android:name="ua.gov.diia.opensource.ui.fragments.context.ContextMenuDF">
+    <action
+        android:id="@+id/action_global_to_notification_full"
+        app:destination="@id/nav_notification_details"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right">
         <argument
-            android:name="items"
-            app:argType="ua.gov.diia.core.models.ContextMenuField[]" />
-    </dialog>
+            android:name="messageId"
+            app:argType="ua.gov.diia.notifications.models.notification.pull.MessageIdentification" />
+    </action>
+
+    <action
+        android:id="@+id/action_global_to_QrScanF"
+        app:destination="@id/qrScanF" />
 
     <dialog
         android:id="@+id/destination_systemDialog"
-        android:name="ua.gov.diia.opensource.ui.fragments.system.SystemDialog">
+        android:name="ua.gov.diia.opensource.ui.fragments.dialogs.system_new.SystemDialog">
         <argument
             android:name="resultKey"
             app:argType="string"
@@ -282,5 +247,31 @@
             android:name="dialog"
             app:argType="ua.gov.diia.core.models.common.template_dialogs.SystemDialogData" />
     </dialog>
+
+    <include app:graph="@navigation/nav_home" />
+    <include app:graph="@navigation/nav_biometric" />
+    <include app:graph="@navigation/nav_verification" />
+    <include app:graph="@navigation/nav_error" />
+    <include app:graph="@navigation/nav_login" />
+    <include app:graph="@navigation/nav_pin_create" />
+    <include app:graph="@navigation/nav_pin_input" />
+    <include app:graph="@navigation/nav_pin_reset" />
+    <include app:graph="@navigation/nav_web" />
+    <include app:graph="@navigation/nav_template_dialog" />
+    <include app:graph="@navigation/nav_splash" />
+    <include app:graph="@navigation/nav_menu_actions" />
+    <include app:graph="@navigation/nav_public_service_category_details" />
+    <include app:graph="@navigation/nav_public_service_search" />
+    <include app:graph="@navigation/nav_system_dialog" />
+    <include app:graph="@navigation/nav_bankid" />
+    <include app:graph="@navigation/nav_criminal_cert" />
+    <include app:graph="@navigation/nav_doc_actions"/>
+    <include app:graph="@navigation/nav_doc_stack"/>
+    <include app:graph="@navigation/nav_doc_full_info"/>
+    <include app:graph="@navigation/nav_stack_order"/>
+    <include app:graph="@navigation/nav_notifications"/>
+    <include app:graph="@navigation/nav_notification_details" />
+    <include app:graph="@navigation/nav_notification_settings" />
+    <include app:graph="@navigation/nav_context_menu" />
 
 </navigation>

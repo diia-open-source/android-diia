@@ -7,15 +7,15 @@ This is module responsible for Driver license document implementation.
 1. Copy module folder to your project and add module to gradle dependency like this:
 
 ```groovy
-implementation project(':doc_driver_license')
+implementation project(':doc:doc_driver_license')
 ```
 
 2. Module requires next modules to work
 
 ```groovy
-implementation project(path: ':ui_base')
-implementation project(path: ':core')
-implementation project(path: ':documents')
+implementation project(path: ':libs:ui_base')
+implementation project(path: ':libs:core')
+implementation project(path: ':doc:documents')
 ```
 
 3. Add following field inside document api response

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/emoji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/xlarge"
+        android:minWidth="@dimen/xxlarge"
+        android:minHeight="@dimen/xxlarge"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/emoji_attention" />
+
+    <TextView
+        android:id="@+id/info_text"
+        style="@style/LineExtraXText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/xlarge"
+        android:layout_marginTop="@dimen/large"
+        android:gravity="center"
+        android:lineSpacingExtra="4sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emoji"
+        tools:text="Ідентифікатор доступу:"
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/info_title"
+        style="@style/LineExtraXText18"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/xlarge"
+        android:layout_marginTop="@dimen/large"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emoji"
+        tools:text="Ідентифікатор доступу:" />
+
+    <TextView
+        android:id="@+id/info_description"
+        style="@style/CheckBoxBlack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/xlarge"
+        android:layout_marginTop="@dimen/middle"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/info_title"
+        tools:text="Ідентифікатор доступу:" />
+
+</merge>

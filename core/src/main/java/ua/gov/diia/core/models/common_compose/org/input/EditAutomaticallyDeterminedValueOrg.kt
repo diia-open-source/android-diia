@@ -2,7 +2,7 @@ package ua.gov.diia.core.models.common_compose.org.input
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import ua.gov.diia.core.models.common_compose.mlc.input.InputTextMlc
+import ua.gov.diia.core.models.common_compose.mlc.input.InputTextMultilineMlc
 
 @JsonClass(generateAdapter = true)
 data class EditAutomaticallyDeterminedValueOrg(
@@ -14,6 +14,6 @@ data class EditAutomaticallyDeterminedValueOrg(
     val label: String?,
     @Json(name = "value")
     val value: String?,
-    @Json(name = "inputTextMlc")
-    val inputTextMlc: InputTextMlc?
+    @Json(name = "inputTextMultilineMlc")
+    val inputTextMlc: InputTextMultilineMlc?
 )

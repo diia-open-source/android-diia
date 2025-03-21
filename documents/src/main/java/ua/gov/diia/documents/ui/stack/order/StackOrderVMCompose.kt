@@ -12,22 +12,20 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ua.gov.diia.core.network.Http
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst.ACTION_NAVIGATE_BACK
-import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRatingDialogOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
-import ua.gov.diia.ui_base.util.navigation.generateComposeNavigationPanel
 import ua.gov.diia.documents.R
 import ua.gov.diia.documents.data.repository.DocumentsDataRepository
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 import ua.gov.diia.documents.models.DocOrder
 import ua.gov.diia.documents.models.DocumentOrderModel
-import ua.gov.diia.documents.models.SourceType
+import ua.gov.diia.core.models.document.SourceType
 import ua.gov.diia.documents.models.TypeDefinedDocOrder
 import ua.gov.diia.documents.ui.DocsConst
-import ua.gov.diia.documents.ui.DocumentComposeMapper
+import ua.gov.diia.ui_base.mappers.document.DocumentComposeMapper
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -42,6 +40,8 @@ import ua.gov.diia.ui_base.components.molecule.header.TitleGroupMlcData
 import ua.gov.diia.ui_base.components.molecule.list.ListItemDragMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 import ua.gov.diia.ui_base.components.organism.list.ListItemDragOrgData
+import ua.gov.diia.ui_base.navigation.BaseNavigation
+import ua.gov.diia.ui_base.util.navigation.generateComposeNavigationPanel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -75,13 +75,15 @@ class StackOrderVMCompose @Inject constructor(
 
     fun doInit(docType: String) {
         this.docType = docType
+        documentsDataSource.invalidate()
+        
         viewModelScope.launch {
             documentsDataSource.data.collectLatest { documents ->
                 documents.data?.let { dataResult ->
                     val docs = if (docType == DocsConst.DOCUMENT_TYPE_ALL) {
                         dataResult
                             .asSequence()
-                            .filter { it.diiaDocument != null && it.diiaDocument.getSourceType() != SourceType.STATIC }
+                            .filter { it.diiaDocument != null && (it.diiaDocument as DiiaDocument).getSourceType() != SourceType.STATIC }
                             .filter { d -> documentsHelper.isDocumentValid(d) }
                             .groupBy { it.diiaDocument!!.getItemType() }
                             .mapNotNull { diaDocument -> diaDocument.value.minByOrNull { it.diiaDocument!!.getDocOrder() }!! }
@@ -89,7 +91,7 @@ class StackOrderVMCompose @Inject constructor(
                             .toList()
                     } else {
                         dataResult
-                            .filter { it.diiaDocument != null && it.diiaDocument.getItemType() == docType }
+                            .filter { it.diiaDocument != null && (it.diiaDocument as DiiaDocument).getItemType() == docType }
                             .sortedBy { it.diiaDocument!!.getDocOrder() }
                     }
 
@@ -182,9 +184,10 @@ class StackOrderVMCompose @Inject constructor(
 
     private fun DiiaDocumentWithMetadata.toTypedDragMlcData(): ListItemDragMlcData? {
         if (diiaDocument == null) return null
-        val id = diiaDocument.getDocNum() ?: diiaDocument.docId()
-        val num = diiaDocument.getDocOrderLabel()
-        val date = diiaDocument.getDocOrderDescription() ?: diiaDocument.getDisplayDate()
+        val doc = diiaDocument as DiiaDocument
+        val id = doc.getDocNum() ?: doc.docId()
+        val num = doc.getDocOrderLabel()
+        val date = doc.getDocOrderDescription() ?: doc.getDisplayDate()
         return if (!num.isNullOrEmpty()) {
             ListItemDragMlcData(
                 id = id,
@@ -255,9 +258,9 @@ class StackOrderVMCompose @Inject constructor(
             else -> {
                 val name =
                     if (docData?.diiaDocument?.getDocStackTitle() != null
-                        && docData.diiaDocument.getDocStackTitle().isNotEmpty()
+                        && (docData.diiaDocument as DiiaDocument).getDocStackTitle().isNotEmpty()
                     ) {
-                        docData.diiaDocument.getDocStackTitle().toDynamicString()
+                        (docData.diiaDocument as DiiaDocument).getDocStackTitle().toDynamicString()
                     } else {
                         docData?.diiaDocument?.getDocName().toDynamicString()
                     }

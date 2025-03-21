@@ -1,9 +1,9 @@
 package ua.gov.diia.doc_driver_license.utils
 
+import ua.gov.diia.core.models.document.BaseLocalizationChecker
 import ua.gov.diia.doc_driver_license.models.DocName
 import ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.ui.BaseLocalizationChecker
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 
 class DriverLicenceLocalizationChecker: BaseLocalizationChecker {
     override fun checkLocalizationDocs(

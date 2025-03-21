@@ -136,6 +136,11 @@
             app:uri="diia://diia.app/mortgage/verify/{otp}" />
 
         <deepLink
+            android:id="@+id/deepLinkMarriagePriorityArmy"
+            app:popUpTo="@id/splashF"
+            app:uri="https://diia.app/marriage/priority/army?code={code}" />
+
+        <deepLink
             android:id="@+id/deepLinkStartFlowDamagePropertyRecovery"
             app:popUpTo="@id/splashF"
             app:uri="https://diia.app/damaged-property-recovery/verify/{otp}" />

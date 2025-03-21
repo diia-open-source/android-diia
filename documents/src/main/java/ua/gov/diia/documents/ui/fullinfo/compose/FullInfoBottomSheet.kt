@@ -32,10 +32,16 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.organism.document.ContentTableOrg
 import ua.gov.diia.ui_base.components.organism.document.ContentTableOrgData
-import ua.gov.diia.ui_base.components.organism.document.DocCodeOrg
-import ua.gov.diia.ui_base.components.organism.document.DocCodeOrgData
 import ua.gov.diia.ui_base.components.organism.document.DocHeadingOrg
 import ua.gov.diia.ui_base.components.organism.document.DocHeadingOrgData
+import ua.gov.diia.ui_base.components.organism.document.TableBlockOrg
+import ua.gov.diia.ui_base.components.organism.document.TableBlockOrgData
+import ua.gov.diia.ui_base.components.organism.document.VerificationCodesOrg
+import ua.gov.diia.ui_base.components.organism.document.VerificationCodesOrgData
+import ua.gov.diia.ui_base.components.organism.list.ChipBlackGroupOrg
+import ua.gov.diia.ui_base.components.organism.list.ChipBlackGroupOrgData
+import ua.gov.diia.ui_base.components.organism.list.ListItemGroupOrg
+import ua.gov.diia.ui_base.components.organism.list.ListItemGroupOrgData
 import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 import ua.gov.diia.ui_base.components.theme.BlueHighlight
 import ua.gov.diia.ui_base.components.theme.Gray
@@ -87,7 +93,7 @@ fun FullInfoBottomSheet(
                         .navigationBarsPadding()
                         .background(color = BlueHighlight)
                 ) {
-                    data.forEach { item ->
+                    data.forEachIndexed { index, item ->
                         when (item) {
                             is DocHeadingOrgData -> {
                                 DocHeadingOrg(
@@ -110,18 +116,15 @@ fun FullInfoBottomSheet(
 
                             is ContentTableOrgData -> {
                                 ContentTableOrg(
-                                    modifier = Modifier.padding(
-                                        bottom = 24.dp
-                                    ),
                                     data = item,
                                     onUIAction = onUIAction
                                 )
                             }
 
-                            is DocCodeOrgData -> {
-                                DocCodeOrg(
+                            is VerificationCodesOrgData -> {
+                                VerificationCodesOrg(
                                     modifier = Modifier.padding(
-                                        bottom = 24.dp,
+                                        top = 16.dp,
                                         start = 24.dp,
                                         end = 24.dp
                                     ),
@@ -130,6 +133,30 @@ fun FullInfoBottomSheet(
                                     onUIAction = onUIAction
                                 )
                             }
+
+                            is TableBlockOrgData -> {
+                                TableBlockOrg(
+                                    data = item,
+                                    onUIAction = onUIAction
+                                )
+                            }
+
+                            is ListItemGroupOrgData -> {
+                                ListItemGroupOrg(
+                                    data = item,
+                                    onUIAction = onUIAction
+                                )
+                            }
+
+                            is ChipBlackGroupOrgData -> {
+                                ChipBlackGroupOrg(
+                                    data = item,
+                                    onUIAction = onUIAction
+                                )
+                            }
+                        }
+                        if (index == data.size - 1) {
+                            Spacer(modifier = Modifier.height(32.dp))
                         }
                     }
                 }

@@ -8,14 +8,14 @@ flows as authorization, session prolongation, etc.
 1. Copy module folder to your project and add module to gradle dependency like this:
 
 ```groovy
-implementation project(':verification')
+implementation project(':features:verification')
 ```
 
 2. Module requires next modules to work
 
 ```groovy
-implementation project(':core')
-implementation project(':diia_storage')
+implementation project(':libs:core')
+implementation project(':libs:diia_storage')
 ```
 
 3. Add next nav graphs to main navigation graph

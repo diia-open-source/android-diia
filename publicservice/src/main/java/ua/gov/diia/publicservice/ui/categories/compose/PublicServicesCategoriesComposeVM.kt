@@ -14,8 +14,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import ua.gov.diia.core.data.repository.DataRepository
-import ua.gov.diia.ui_base.navigation.BaseNavigation
+import ua.gov.diia.core.di.data_source.http.AuthorizedClient
 import ua.gov.diia.core.util.DispatcherProvider
+import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
@@ -27,6 +28,7 @@ import ua.gov.diia.publicservice.models.PublicService
 import ua.gov.diia.publicservice.models.PublicServiceCategory
 import ua.gov.diia.publicservice.models.PublicServiceTab
 import ua.gov.diia.publicservice.models.PublicServicesCategories
+import ua.gov.diia.publicservice.network.ApiPublicServices
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.addAllIfNotNull
 import ua.gov.diia.ui_base.components.infrastructure.addIfNotNull
@@ -36,13 +38,16 @@ import ua.gov.diia.ui_base.components.infrastructure.navigation.NavigationPath
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.header.TitleGroupMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
+import ua.gov.diia.ui_base.navigation.BaseNavigation
 import javax.inject.Inject
 
 @HiltViewModel
 class PublicServicesCategoriesComposeVM @Inject constructor(
     @DataRepositoryPublicServiceCategories private val repository: DataRepository<PublicServicesCategories?>,
+    @AuthorizedClient private val apiPublicServices: ApiPublicServices,
     private val helper: PublicServiceHelper,
     private val dispatcherProvider: DispatcherProvider,
+    private val withCrashlytics: WithCrashlytics,
     private val retryLastAction: WithRetryLastAction,
     private val errorHandling: WithErrorHandlingOnFlow,
     private val composeMapper: PublicServicesCategoriesTabMapper,
@@ -83,7 +88,11 @@ class PublicServicesCategoriesComposeVM @Inject constructor(
     private val _contentLoaded = MutableStateFlow(false)
     val contentLoaded: Flow<Pair<String, Boolean>> =
         _contentLoaded.combine(_contentLoadedKey) { value, key ->
-            key to (value || bodyData.isNotEmpty())
+            if (key == UIActionKeysCompose.PAGE_LOADING_TRIDENT_WITH_UI_BLOCKING) {
+                key to value
+            } else {
+                key to (value || bodyData.isNotEmpty())
+            }
         }
 
     fun doInit(categoryToOpen: String?) {
@@ -197,6 +206,13 @@ class PublicServicesCategoriesComposeVM @Inject constructor(
     }
 
     private fun doOnCategorySelected(category: PublicServiceCategory) {
+        when (category.code) {
+            PS_ENEMY -> {
+                openEnemyShareLink()
+                return
+            }
+        }
+
         if (category.hasServices && category.status.enabled) {
             if (category.isSingleServiceCategory) {
                 val service = category.singleService ?: return
@@ -224,6 +240,28 @@ class PublicServicesCategoriesComposeVM @Inject constructor(
             it.code == code
         }
     }
+
+    private fun openEnemyShareLink() {
+        _contentLoadedKey.value = UIActionKeysCompose.PAGE_LOADING_TRIDENT_WITH_UI_BLOCKING
+        executeActionOnFlow {
+            _contentLoaded.emit(false)
+            val response = try {
+                apiPublicServices.getFindEnemyShareLink()
+            } finally {
+                _contentLoaded.emit(true)
+            }
+
+            response.template?.let {
+                showTemplateDialog(it)
+            } ?: kotlin.run {
+                _navigation.tryEmit(
+                    PublicServicesCategoriesNavigation.OpenEnemyTrackLink(
+                        response.link ?: return@executeActionOnFlow, withCrashlytics
+                    )
+                )
+            }
+        }
+    }
 }
 
 sealed class PublicServicesCategoriesNavigation : NavigationPath {
@@ -234,4 +272,9 @@ sealed class PublicServicesCategoriesNavigation : NavigationPath {
 
     data class NavigateToServiceSearch(val data: Array<PublicServiceCategory>) :
         PublicServicesCategoriesNavigation()
+
+    data class OpenEnemyTrackLink(val link: String, val crashlytics: WithCrashlytics) :
+        PublicServicesCategoriesNavigation()
 }
+
+private const val PS_ENEMY = "enemy"

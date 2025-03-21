@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsFVM @Inject constructor(
     private val diiaStorage: DiiaStorage,
-    notificationEnabledChecker: NotificationEnabledChecker,
+    private val notificationEnabledChecker: NotificationEnabledChecker,
     biometric: Biometric
 ) : ViewModel() {
 

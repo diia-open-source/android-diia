@@ -25,10 +25,10 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStringOrNull
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.WhiteAlpha50
-import ua.gov.diia.ui_base.mappers.toComposeTextWithParameters
 
 @Composable
 fun StatusMessageMlc(
@@ -84,13 +84,30 @@ data class StatusMessageMlcData(
 ): UIElementData
 
 fun StatusMessage?.toUIModel(actionKey: String = UIActionKeysCompose.TEXT_WITH_PARAMETERS): StatusMessageMlcData? {
-    if (this == null) return null
+    val entity: StatusMessage = this ?: return null
     return StatusMessageMlcData(
-        icon = this.icon,
-        title = this.title ?: "",
-        description = this.textWithParameters?.let {
-            it.toComposeTextWithParameters(actionKey = actionKey)
-        } ?: this.text.toComposeTextWithParameters(),
+        icon = entity.icon,
+        title = entity.title ?: "",
+        description = TextWithParametersData(
+            text = UiText.DynamicString(entity.text ?: ""),
+            parameters = if (this.parameters != null) {
+                mutableListOf<TextParameter>().apply {
+                    entity.parameters?.forEach {
+                        add(
+                            TextParameter(
+                                data = TextParameter.Data(
+                                    name = it.data?.name.toDynamicStringOrNull(),
+                                    resource = it.data?.resource.toDynamicStringOrNull(),
+                                    alt = it.data?.alt.toDynamicStringOrNull()
+                                ),
+                                type = it.type
+                            )
+                        )
+                    }
+                }
+
+            } else emptyList()
+        ),
         componentId = this.componentId?.let { UiText.DynamicString(it) }
     )
 }
@@ -103,10 +120,8 @@ fun String?.toUIModelTextWithParameters(): TextWithParametersData? {
     )
 }
 
-@Composable
-@Preview
-fun StatusMessageMlcPreview() {
-    val state = StatusMessageMlcData(
+fun generateStatusMessageMlcMockData(): StatusMessageMlcData{
+    return StatusMessageMlcData(
         icon = "☝",
         title = "Завершіть заповнення заяви",
         description = TextWithParametersData(
@@ -114,9 +129,13 @@ fun StatusMessageMlcPreview() {
             parameters = emptyList()
         )
     )
+}
 
+@Composable
+@Preview
+fun StatusMessageMlcPreview() {
     StatusMessageMlc(
-        data = state
+        data = generateStatusMessageMlcMockData()
     ) { annotationContent ->
     }
 

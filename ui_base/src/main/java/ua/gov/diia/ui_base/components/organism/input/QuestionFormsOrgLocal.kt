@@ -3,6 +3,7 @@ package ua.gov.diia.ui_base.components.organism.input
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,8 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
@@ -23,11 +25,12 @@ import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.clearFocusOnKeyboardDismiss
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxSquareMlc
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxSquareMlcData
-import ua.gov.diia.ui_base.components.molecule.input.DateInputMolecule
-import ua.gov.diia.ui_base.components.molecule.input.DateInputMoleculeData
+import ua.gov.diia.ui_base.components.molecule.input.InputDateMlc
+import ua.gov.diia.ui_base.components.molecule.input.InputDateMlcData
 import ua.gov.diia.ui_base.components.molecule.input.InputGroupMolecule
 import ua.gov.diia.ui_base.components.molecule.input.InputGroupMoleculeData
 import ua.gov.diia.ui_base.components.molecule.input.SelectorOrg
@@ -38,7 +41,6 @@ import ua.gov.diia.ui_base.components.theme.ColumbiaBlue
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.White
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun QuestionFormsOrgLocal(
     modifier: Modifier = Modifier,
@@ -63,11 +65,13 @@ fun QuestionFormsOrgLocal(
                 text = data.title,
                 style = DiiaTextStyle.t3TextBody
             )
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp), thickness = 1.dp, color = ColumbiaBlue
-            )
+            if (data.showTitleDivider) {
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp), thickness = 1.dp, color = ColumbiaBlue
+                )
+            }
         } ?: Spacer(modifier = Modifier.height(8.dp))
         val listItemsModifier = Modifier
             .padding(horizontal = 16.dp)
@@ -84,7 +88,7 @@ fun QuestionFormsOrgLocal(
                 )
 
                 is TextInputMoleculeData -> TextInputMolecule(
-                    modifier = listItemsModifier,
+                    modifier = listItemsModifier.clearFocusOnKeyboardDismiss(),
                     localFocusManager = localFocusManager,
                     imeAction = if (index == data.items.size - 1) {
                         ImeAction.Done
@@ -101,13 +105,11 @@ fun QuestionFormsOrgLocal(
                     onUIAction = onUIAction
                 )
 
-                is DateInputMoleculeData -> {
-                    DateInputMolecule(
-                        modifier = listItemsModifier,
-                        data = item,
-                        onUIAction = onUIAction
-                    )
-                }
+                is InputDateMlcData -> InputDateMlc(
+                    modifier = listItemsModifier,
+                    data = item,
+                    onUIAction = onUIAction
+                )
 
                 is CheckboxSquareMlcData -> {
                     Divider(
@@ -133,11 +135,13 @@ fun QuestionFormsOrgLocal(
 }
 
 data class QuestionFormsOrgDataLocal(
-    val id : String?,
+    val id: String?,
     val actionKey: String = UIActionKeysCompose.INPUT_FORM,
     val title: String? = null,
-    val items: SnapshotStateList<UIElementData>
+    val items: SnapshotStateList<UIElementData>,
+    val showTitleDivider: Boolean = true
 ) : UIElementData {
+
     fun onInputChanged(id: String?, newValue: String?): QuestionFormsOrgDataLocal {
         val data = this
         if (newValue == null || id == null) return this
@@ -177,7 +181,7 @@ data class QuestionFormsOrgDataLocal(
                         }
                     }
 
-                    is DateInputMoleculeData -> {
+                    is InputDateMlcData -> {
                         if (item.id == id) {
                             add(item.onInputChanged(newValue))
                         } else {
@@ -213,9 +217,26 @@ data class QuestionFormsOrgDataLocal(
                     }
                 }
 
+                is InputDateMlcData -> {
+                    if (it.value.isNullOrBlank() && it.mandatory != null && it.mandatory) {
+                        result = false
+                    }
+                }
+            }
+        }
+        return result
+    }
 
-                is DateInputMoleculeData -> {
-                    if (it.validationState != UIState.Validation.Passed || it.inputValue.isNullOrBlank()) {
+    fun isFormValidOrBlank(): Boolean {
+        var result = true
+        this.items.forEach {
+            when (it) {
+                is TextInputMoleculeData -> {
+                    if (it.isEnabled && it.validation !in listOf(
+                            UIState.Validation.Passed,
+                            UIState.Validation.NeverBeenPerformed
+                        )
+                    ) {
                         result = false
                     }
                 }
@@ -228,10 +249,8 @@ data class QuestionFormsOrgDataLocal(
 @Composable
 @Preview
 fun InputFormMoleculePreviewLocal() {
-    val PHONE_NUMBER_VALIDATION_PATTERN =
-        "^38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
     val data = QuestionFormsOrgDataLocal(
-        id ="",
+        id = "",
         title = "Heading",
         items = SnapshotStateList<UIElementData>().apply {
             add(
@@ -301,14 +320,22 @@ fun InputFormMoleculePreviewLocal() {
                 )
             )
         })
-    QuestionFormsOrgLocal(data = data, onUIAction = {})
-    Spacer(modifier = Modifier.height(15.dp))
-    QuestionFormsOrgLocal(data = QuestionFormsOrgDataLocal(
-        id ="",
-        title = "Heading",
-        items = SnapshotStateList<UIElementData>().apply {
-            DateInputMolecule(data = DateInputMoleculeData(), onUIAction = {})
-        },
-    ),
-        onUIAction = {})
+    val dateBlockData = InputDateMlcData(id = "123")
+    val dateBlockDataState = remember { mutableStateOf(dateBlockData) }
+    Column(modifier = Modifier.fillMaxSize()) {
+        QuestionFormsOrgLocal(data = data, onUIAction = {})
+        Spacer(modifier = Modifier.height(15.dp))
+        QuestionFormsOrgLocal(data = QuestionFormsOrgDataLocal(
+            id = "",
+            title = "Heading",
+            items = SnapshotStateList<UIElementData>().apply {
+                add(dateBlockDataState.value)
+            },
+        ),
+            onUIAction = {
+                if (it.optionalId == "123") {
+                    dateBlockDataState.value = dateBlockDataState.value.onInputChanged(it.data)
+                }
+            })
+    }
 }

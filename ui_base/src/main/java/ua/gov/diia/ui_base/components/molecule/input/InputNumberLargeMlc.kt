@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -38,6 +37,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -50,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ua.gov.diia.core.models.common_compose.atm.input.InputNumberLargeAtm
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.infrastructure.ComposeConst.INPUT_NUMBER_LARGE_MLC_MASK
 import ua.gov.diia.ui_base.components.infrastructure.ComposeConst.INPUT_NUMBER_LARGE_MLC_MASK_SYMBOL
@@ -71,7 +73,8 @@ private const val LAST_INDEX: Int = COUNT_OF_INPUTS - 1
 @Composable
 fun InputNumberLargeMlc(
     modifier: Modifier = Modifier,
-    data: InputNumberLargeMlcData, onUIAction: (UIAction) -> Unit
+    data: InputNumberLargeMlcData,
+    onUIAction: (UIAction) -> Unit
 ) {
     val localFocusManager: FocusManager = LocalFocusManager.current
     val keyboardController: SoftwareKeyboardController? = LocalSoftwareKeyboardController.current
@@ -100,7 +103,10 @@ fun InputNumberLargeMlc(
                         }
                         false
                     }
-                    .clearFocusOnKeyboardDismiss(),
+                    .clearFocusOnKeyboardDismiss()
+                    .semantics {
+                        testTag = data.componentId.orEmpty()
+                    },
                 value = getSymbolToDisplayByIndex(data, index),
                 type = data.type,
                 hint = getHintByInputType(index = index, type = data.type),
@@ -110,7 +116,7 @@ fun InputNumberLargeMlc(
             ) {
                 if (!it.data.isNullOrEmpty()) {
                     if (index != LAST_INDEX) {
-                        localFocusManager.moveFocus(FocusDirection.Next)
+//                        localFocusManager.moveFocus(FocusDirection.Next) //TODO Need return back and fix the error
                     } else {
                         keyboardController?.hide()
                     }
@@ -185,7 +191,7 @@ private fun formatUIActionData(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun RowScope.InputNumberLargeAtm(
+private fun InputNumberLargeAtm(
     modifier: Modifier,
     value: String,
     type: CodeInputType,
@@ -253,7 +259,12 @@ private fun RowScope.InputNumberLargeAtm(
                 localFocusManager.clearFocus()
             }),
         onValueChange = {
-            onUIAction(UIAction(actionKey = UIActionKeysCompose.INPUT_NUMBER_LARGE_MLC, data = it.text))
+            onUIAction(
+                UIAction(
+                    actionKey = UIActionKeysCompose.INPUT_NUMBER_LARGE_MLC,
+                    data = it.text
+                )
+            )
         },
         textStyle = TextStyle(
             fontFamily = FontFamily(Font(R.font.e_ukraine_regular)),
@@ -298,7 +309,10 @@ enum class CodeInputType {
 data class InputNumberLargeMlcData(
     val actionKey: String = UIActionKeysCompose.INPUT_NUMBER_LARGE_MLC,
     val type: CodeInputType,
-    var value: String
+    var value: String,
+    var placeholder: String? = null,
+    var componentId: String? = null,
+    var state: UIState.Interaction = UIState.Interaction.Enabled,
 ) : UIElementData {
 
 
@@ -307,17 +321,38 @@ data class InputNumberLargeMlcData(
     }
 }
 
+fun InputNumberLargeAtm?.toUIModel(): InputNumberLargeMlcData? {
+    if (this == null) return null
+    return InputNumberLargeMlcData(
+        type = CodeInputType.NUMBER,
+        value = this.value.orEmpty(),
+        placeholder = this.placeholder,
+        componentId = this.componentId,
+        state = if (this.state == "disabled") UIState.Interaction.Disabled else UIState.Interaction.Enabled
+    )
+}
+
+fun generateInputNumberLargeAtmMockData(codeInputType: CodeInputType): InputNumberLargeMlcData {
+    return when (codeInputType) {
+        CodeInputType.NUMBER -> InputNumberLargeMlcData(
+            actionKey = UIActionKeysCompose.INPUT_NUMBER_LARGE_MLC,
+            type = CodeInputType.NUMBER,
+            value = INPUT_NUMBER_LARGE_MLC_MASK
+        )
+
+        CodeInputType.TEXT -> InputNumberLargeMlcData(
+            actionKey = UIActionKeysCompose.INPUT_NUMBER_LARGE_MLC,
+            type = CodeInputType.TEXT,
+            value = INPUT_NUMBER_LARGE_MLC_MASK
+        )
+    }
+}
+
 @Composable
 @Preview
 fun InputNumberLargeMlcPreview_Number() {
-    val data = InputNumberLargeMlcData(
-        actionKey = UIActionKeysCompose.INPUT_NUMBER_LARGE_MLC,
-        type = CodeInputType.NUMBER,
-        value = INPUT_NUMBER_LARGE_MLC_MASK
-    )
-
     var state by remember {
-        mutableStateOf(data)
+        mutableStateOf(generateInputNumberLargeAtmMockData(CodeInputType.NUMBER))
     }
 
     Column(
@@ -335,14 +370,8 @@ fun InputNumberLargeMlcPreview_Number() {
 @Composable
 @Preview
 fun InputNumberLargeMlcPreview_Text() {
-    val data = InputNumberLargeMlcData(
-        actionKey = UIActionKeysCompose.INPUT_NUMBER_LARGE_MLC,
-        type = CodeInputType.TEXT,
-        value = INPUT_NUMBER_LARGE_MLC_MASK
-    )
-
     var state by remember {
-        mutableStateOf(data)
+        mutableStateOf(generateInputNumberLargeAtmMockData(CodeInputType.TEXT))
     }
 
     Column(

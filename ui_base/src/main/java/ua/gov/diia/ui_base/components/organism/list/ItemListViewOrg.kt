@@ -22,12 +22,13 @@ fun ItemListViewOrg(
     modifier: Modifier = Modifier,
     data: ItemListViewOrgData,
     onUIAction: (UIAction) -> Unit
-
 ) {
-    Column(modifier = modifier
-        .padding(horizontal = 24.dp)
-        .padding(top = 24.dp)
-        .background(color = White, shape = RoundedCornerShape(8.dp))) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 24.dp)
+            .padding(top = 24.dp)
+            .background(color = White, shape = RoundedCornerShape(8.dp))
+    ) {
         data.itemsList.forEachIndexed { index, item ->
             ListItemsMlcV1(data = item, onUIAction = onUIAction)
             if (index != data.itemsList.size - 1) {
@@ -37,7 +38,7 @@ fun ItemListViewOrg(
     }
 }
 
-data class ItemListViewOrgData(val itemsList: SnapshotStateList<ListItemsMlcV1Data>): UIElementData
+data class ItemListViewOrgData(val itemsList: SnapshotStateList<ListItemsMlcV1Data>) : UIElementData
 
 @Composable
 @Preview

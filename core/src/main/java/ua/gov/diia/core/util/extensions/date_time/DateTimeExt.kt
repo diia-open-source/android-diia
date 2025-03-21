@@ -3,6 +3,7 @@ package ua.gov.diia.core.util.extensions.date_time
 import ua.gov.diia.core.util.DateFormats
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -128,6 +129,19 @@ fun toServerSendFormat(dateInMillis: Long): String? {
     }
 }
 
+fun fromServerSendFormat(date: String?): Long? {
+    if (date == null) return null
+    return try {
+        DateFormats.iso8601.parse(date)?.time
+    } catch (e: Exception) {
+        null
+    }
+}
+
+fun toLocalTime(hour: Int, minute: Int): LocalTime {
+    return LocalTime.of(hour, minute)
+}
+
 fun LocalDate.toDisplayTimeFormat(): String = try {
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
     this.format(formatter)
@@ -149,7 +163,7 @@ fun getCurrentDate(): String {
     return sdf.format(Date())
 }
 
-fun getLocalDateTime(): LocalDateTime{
+fun getLocalDateTime(): LocalDateTime {
     val c = Calendar.getInstance()
 
     val year = c.get(Calendar.YEAR)
@@ -159,16 +173,45 @@ fun getLocalDateTime(): LocalDateTime{
     val hour = c.get(Calendar.HOUR_OF_DAY)
     val minute = c.get(Calendar.MINUTE)
 
-    return LocalDateTime.of(year, month+1, day, hour, minute)
+    return LocalDateTime.of(year, month + 1, day, hour, minute)
 }
 
-fun getLocalDate(): LocalDate{
+fun getLocalDate(): LocalDate {
     val c = Calendar.getInstance()
 
     val year = c.get(Calendar.YEAR)
     val month = c.get(Calendar.MONTH)
     val day = c.get(Calendar.DAY_OF_MONTH)
 
-    return LocalDate.of(year, month+1, day)
+    return LocalDate.of(year, month + 1, day)
 }
 
+fun getLocalTime(): LocalTime {
+    return LocalTime.now()
+}
+
+fun getLocalDate(millis: Long) : LocalDate {
+    return Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+}
+
+fun parseToISO8601(date: LocalDate, time: LocalTime): String = try {
+    val time1 = LocalTime.of(0, 0)
+    val dateTime = ZonedDateTime.of(date, time1, ZoneId.systemDefault())
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    dateTime.format(formatter)
+} catch (e: Exception) {
+    ""
+}
+
+fun parseFromISO8601ToCalendar(source: String?): Calendar {
+    val calendar = Calendar.getInstance()
+    if (source.isNullOrBlank()) return calendar
+    try {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+        val date = dateFormat.parse(source.replace("Z", "+0000"))
+        calendar.time = date
+    } catch (_: Exception) {
+        // failed to parse source date
+    }
+    return calendar
+}

@@ -23,5 +23,6 @@ enum class Type(val id: String) {
     SUCCESS("success"),
     PENDING("pending"),
     FAIL("fail"),
+    WHITE("white"),
     NEUTRAL("neutral");
 }

@@ -7,9 +7,9 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
 import ua.gov.diia.doc_driver_license.utils.DriverLicenceLocalizationChecker
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.models.docgroups.v2.FrontCard
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.docgroups.v2.FrontCard
 
 class DriverLicenseLocalizationCheckerTest {
     private lateinit var driverLicenceLocalizationChecker: DriverLicenceLocalizationChecker

@@ -1,6 +1,6 @@
 package ua.gov.diia.documents.util
 
-import ua.gov.diia.documents.models.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocument
 
 interface DocNameProvider {
     /**

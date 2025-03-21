@@ -1,5 +1,8 @@
 package ua.gov.diia.core.controller
 
+import androidx.navigation.NavDirections
+import ua.gov.diia.core.models.notification.pull.PullNotificationItemSelection
+
 interface NotificationController {
 
     /**
@@ -41,4 +44,8 @@ interface NotificationController {
      * @return true if notification is allowed
      */
     suspend fun checkNotificationsRequested(): Boolean?
+
+    suspend fun getNavDirectionForNotification(pullNotificationItemSelection: PullNotificationItemSelection): NavDirections?
+
+    fun isMessageNotification(resourceType: String): Boolean
 }

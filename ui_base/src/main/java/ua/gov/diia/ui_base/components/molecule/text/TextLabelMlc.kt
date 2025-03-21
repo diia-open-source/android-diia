@@ -54,7 +54,7 @@ fun TextLabelMlc?.toUIModel(): TextLabelMlcData? {
     if (entity?.text == null) return null
     return TextLabelMlcData(
         componentId = UiText.DynamicString(this?.componentId.orEmpty()),
-        text = UiText.DynamicString(entity.text),
+        text = UiText.DynamicString(entity.text ?: ""),
         parameters = if (entity.parameters != null) {
             mutableListOf<TextParameter>().apply {
                 entity.parameters?.forEach {

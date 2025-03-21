@@ -11,9 +11,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.org.chip.MapChipTabsOrg
 import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
+import ua.gov.diia.ui_base.components.atom.button.BtnWhiteAdditionalIconAtm
+import ua.gov.diia.ui_base.components.atom.button.BtnWhiteAdditionalIconAtmData
+import ua.gov.diia.ui_base.components.atom.icon.BadgeCounterAtmData
+import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.chip.MapChipMolecule
 import ua.gov.diia.ui_base.components.molecule.chip.MapChipMoleculeData
@@ -38,6 +45,11 @@ fun MapChipTabsOrganism(
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         itemsIndexed(items = data.chips) { index, item ->
+            if (index == 0 &&  data.btn != null) {
+                BtnWhiteAdditionalIconAtm(data = data.btn, onUIAction = onUIAction)
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+
             MapChipMolecule(data = item, onUIAction = onUIAction)
             if (index < data.chips.size - 1) {
                 Spacer(modifier = Modifier.width(8.dp))
@@ -46,14 +58,39 @@ fun MapChipTabsOrganism(
     }
 }
 
-data class MapChipTabsOrganismData(val chips: List<MapChipMoleculeData>) {
+data class MapChipTabsOrganismData(
+    val chips: List<MapChipMoleculeData>,
+    val btn: BtnWhiteAdditionalIconAtmData?
+) : UIElementData {
 
     fun onChipSelected(id: String): MapChipTabsOrganismData {
         val chips = chips.map {
             it.copy(selection = if (it.id == id) UIState.Selection.Selected else UIState.Selection.Unselected)
         }
-        return MapChipTabsOrganismData(chips)
+        return MapChipTabsOrganismData(chips, btn)
     }
+}
+
+fun MapChipTabsOrg.toUiModel(): MapChipTabsOrganismData {
+    val chips = mutableListOf<MapChipMoleculeData>()
+    this.items.mapNotNull { it.chipMlc }.forEach { e ->
+        val selected = if (this.preselectedCode == e.code)
+            UIState.Selection.Selected
+        else
+            UIState.Selection.Unselected
+
+        chips.add(
+            MapChipMoleculeData(
+                id = e.code,
+                actionKey = e.code,
+                iconsRes = DiiaResourceIcon.getResourceId(e.icon),
+                title = UiText.DynamicString(e.label),
+                selection = selected
+            )
+        )
+    }
+
+    return MapChipTabsOrganismData(chips, null)
 }
 
 @Preview
@@ -81,5 +118,10 @@ fun MapChipTabsOrganismPreview() {
         selection = UIState.Selection.Selected
     )
 
-    MapChipTabsOrganism(data = MapChipTabsOrganismData(listOf(dataP, dataS, dataAll))) {}
+    val btn = BtnWhiteAdditionalIconAtmData(
+        icon = UiIcon.DrawableResource(DiiaResourceIcon.FILTER.code),
+        badge = BadgeCounterAtmData(1),
+        interactionState = UIState.Interaction.Enabled
+    )
+    MapChipTabsOrganism(data = MapChipTabsOrganismData(listOf(dataP, dataS, dataAll), btn)) {}
 }

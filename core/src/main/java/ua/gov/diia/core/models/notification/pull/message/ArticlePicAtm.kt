@@ -7,5 +7,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ArticlePicAtm(
     @Json(name = "image")
-    val image: String?
+    val image: String?,
+    @Json(name = "componentId")
+    val componentId: String?
 )

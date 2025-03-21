@@ -7,12 +7,16 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
+import ua.gov.diia.core.models.ConsumableItem
+import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.extensions.activity.setWindowBrightness
 import ua.gov.diia.documents.ui.BottomDoc
 import ua.gov.diia.documents.ui.fullinfo.compose.FullInfoBottomSheet
 import ua.gov.diia.documents.util.view.showCopyDocIdClipedSnackBar
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 
 @AndroidEntryPoint
@@ -79,13 +83,21 @@ class FullInfoFCompose : BottomDoc() {
                         is FullInfoFComposeVM.DocActions.DefaultBrightness -> {
                             activity?.setWindowBrightness(true)
                         }
+
+                        is FullInfoFComposeVM.DocActions.FullInfoAction -> {
+                            saveBottomSheetResult(docAction.action)
+                            dismiss()
+                        }
                     }
                 }
             }
 
-            FullInfoBottomSheet(progressIndicator = progressIndicator.value, data = body, onUIAction = {
-                viewModel.onUIAction(it)
-            })
+            FullInfoBottomSheet(
+                progressIndicator = progressIndicator.value,
+                data = body,
+                onUIAction = {
+                    viewModel.onUIAction(it)
+                })
         }
     }
 
@@ -97,5 +109,13 @@ class FullInfoFCompose : BottomDoc() {
     override fun onDestroyView() {
         super.onDestroyView()
         composeView = null
+    }
+
+    private fun saveBottomSheetResult(action: DataActionWrapper) {
+        val resultKey = ActionsConst.BOTTOM_SHEET_RESULT_KEY
+        findNavController().currentBackStackEntry?.savedStateHandle?.set(
+            key = resultKey,
+            ConsumableItem(action)
+        )
     }
 }

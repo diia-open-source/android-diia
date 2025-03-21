@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,20 +32,28 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideSubcomposition
 import com.bumptech.glide.integration.compose.RequestState
+import ua.gov.diia.core.models.common_compose.mlc.card.ImageCardMlc
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
+import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDrawableResourceOrNull
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
+import ua.gov.diia.ui_base.components.molecule.list.toUiModel
 import ua.gov.diia.ui_base.components.noRippleClickable
+import ua.gov.diia.ui_base.components.organism.carousel.SimpleCarouselCard
+import ua.gov.diia.ui_base.components.organism.list.pagination.SimplePagination
 import ua.gov.diia.ui_base.components.subatomic.icon.UiIconWrapperSubatomic
 import ua.gov.diia.ui_base.components.theme.BlackAlpha50
 import ua.gov.diia.ui_base.components.theme.CodGray
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.Transparent
+import ua.gov.diia.ui_base.util.toDataActionWrapper
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -52,12 +61,16 @@ import ua.gov.diia.ui_base.components.theme.Transparent
 fun ImageCardMlc(
     modifier: Modifier = Modifier,
     data: ImageCardMlcData,
+    clickable: Boolean = true,
+    inCarousel: Boolean = false,
     onUIAction: (UIAction) -> Unit
 ) {
     Box(
         modifier = modifier
-            .padding(start = 24.dp, end = 24.dp, top = 16.dp)
-            .height(200.dp)
+            .conditional(!inCarousel) {
+                padding(horizontal = 24.dp)
+                    .padding(top = 24.dp)
+            }            .height(200.dp)
             .background(color = Transparent, shape = RoundedCornerShape(16.dp))
             .noRippleClickable {
                 onUIAction(
@@ -68,6 +81,7 @@ fun ImageCardMlc(
                     )
                 )
             }
+            .testTag(data.componentId?.asString() ?: "")
     ) {
         GlideSubcomposition(
             modifier = Modifier
@@ -156,18 +170,35 @@ private fun ImageCardPlaceholder() {
 
 data class ImageCardMlcData(
     val actionKey: String = UIActionKeysCompose.IMAGE_CARD_MLC,
-    val id: String? = "",
+    override val id: String,
     val title: UiText,
     val iconEnd: UiIcon? = null,
     val image: String,
     val contentDescription: UiText? = null,
-    val action: DataActionWrapper? = null
-) : UIElementData
+    val action: DataActionWrapper? = null,
+    val componentId: UiText? = null
+) : SimpleCarouselCard, SimplePagination
+
+fun ImageCardMlc.toUiModel(
+    id: String? = null,
+    contentDescription: UiText? = null
+): ImageCardMlcData {
+    return ImageCardMlcData(
+        id = id ?: componentId?: UIActionKeysCompose.IMAGE_CARD_MLC,
+        componentId = componentId?.let { UiText.DynamicString(it) },
+        title = label.toDynamicString(),
+        iconEnd = iconRight.toDrawableResourceOrNull(),
+        image = image,
+        contentDescription = contentDescription,
+        action = action?.toDataActionWrapper()
+    )
+}
 
 @Composable
 @Preview
 fun ImageCardMlcPreview() {
     val data = ImageCardMlcData(
+        id = "",
         title = UiText.DynamicString("label"),
         image = "https://business.diia.gov.ua/uploads/4/22881-main.jpg",
     )
@@ -181,6 +212,7 @@ fun ImageCardMlcPreview() {
 @Preview
 fun ImageCardMlcPreview_WithIcon() {
     val data = ImageCardMlcData(
+        id = "",
         title = UiText.DynamicString("label label label label label label label"),
         image = "https://business.diia.gov.ua/uploads/4/22881-main.jpg",
         iconEnd = UiIcon.DrawableResource(DiiaResourceIcon.ELLIPSE_WHITE_ARROW_RIGHT.code),

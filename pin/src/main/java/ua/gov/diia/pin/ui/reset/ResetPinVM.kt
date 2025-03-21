@@ -21,6 +21,8 @@ import ua.gov.diia.core.util.event.UiEvent
 import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
 import ua.gov.diia.pin.R
 import ua.gov.diia.pin.repository.LoginPinRepository
+import ua.gov.diia.pin.util.AndroidClientAlertDialogsFactory
+import ua.gov.diia.pin.util.AndroidClientAlertDialogsFactory.Companion.INVALID_PIN
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -39,7 +41,7 @@ import javax.inject.Inject
 class ResetPinVM @Inject constructor(
     @GlobalActionLogout private val actionLogout: MutableLiveData<UiEvent>,
     private val loginPinRepository: LoginPinRepository,
-    private val clientAlertDialogsFactory: ClientAlertDialogsFactory,
+    private val clientAlertDialogsFactory: AndroidClientAlertDialogsFactory,
     private val errorHandling: WithErrorHandlingOnFlow,
     private val retryLastAction: WithRetryLastAction
 ) : ViewModel(),
@@ -97,7 +99,7 @@ class ResetPinVM @Inject constructor(
             } else {
                 val incrementedPinTryCount = loginPinRepository.getPinTryCount().inc()
                 if (incrementedPinTryCount >= PIN_TRY_COUNT) {
-                    showTemplateDialog(clientAlertDialogsFactory.showAlertAfterInvalidPin())
+                    showTemplateDialog(clientAlertDialogsFactory.showCustomAlert(INVALID_PIN))
                     loginPinRepository.setPinTryCount(incrementedPinTryCount)
                 } else {
                     clearPinWithShake()

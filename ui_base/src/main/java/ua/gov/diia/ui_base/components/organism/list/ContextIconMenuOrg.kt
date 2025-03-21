@@ -18,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.UiBaseConst
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.button.ButtonIconCircledLargeAtm
 import ua.gov.diia.ui_base.components.atom.button.ButtonIconCircledLargeAtmData
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
+import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
@@ -30,8 +32,6 @@ import ua.gov.diia.ui_base.components.molecule.list.ListItemMlc
 import ua.gov.diia.ui_base.components.molecule.list.ListItemMlcData
 import ua.gov.diia.ui_base.components.theme.BlackAlpha7
 import ua.gov.diia.ui_base.components.theme.White
-
-const val FULL_DOC_MENU_ITEM = "FULL_DOC"
 
 @Composable
 fun ColumnScope.ContextIconMenuOrg(
@@ -43,20 +43,28 @@ fun ColumnScope.ContextIconMenuOrg(
     Column(
         modifier = modifier
             .background(color = White, shape = RoundedCornerShape(24.dp))
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp)
+            .conditional(data.displayItems == null) {
+                padding(start = 16.dp, end = 16.dp, top = 8.dp)
+            }
             .verticalScroll(rememberScrollState())
             .weight(weight = 1f, fill = false)
     ) {
+        data.displayItems?.forEachIndexed { index, item ->
+            ListItemMlc(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                data = item,
+                onUIAction = onUIAction,
+            )
 
+            if (index != data.displayItems.size - 1) {
+                DividerSlimAtom(color = BlackAlpha7, modifier = Modifier.padding(horizontal = 16.dp))
+            }
+        }
         data.docActions?.forEachIndexed { index, item ->
             ListItemMlc(
                 data = item,
                 onUIAction = onUIAction,
             )
-
-            if (data.docActions.size > 1 && item.id == FULL_DOC_MENU_ITEM) {
-                DividerSlimAtom(color = BlackAlpha7)
-            }
 
             if (index == data.docActions.size - 1) {
                 DividerSlimAtom(color = BlackAlpha7)
@@ -67,14 +75,14 @@ fun ColumnScope.ContextIconMenuOrg(
                 data = item,
                 onUIAction = onUIAction,
             )
-                if (data.manualActions.size == 1) {
-                    DividerSlimAtom(color = BlackAlpha7)
-                } else {
-                    if (index == data.manualActions.size - 1) {
-                        DividerSlimAtom(color = BlackAlpha7)
-                    }
-                }
+            if (data.showDividerForManualActions && index < data.manualActions.size - 1) {
+                DividerSlimAtom(color = BlackAlpha7)
             }
+            if (index == data.manualActions.size - 1) {
+                DividerSlimAtom(color = BlackAlpha7)
+            }
+        }
+
         data.generalActions?.forEachIndexed { index, item ->
             ListItemMlc(
                 data = item,
@@ -91,29 +99,35 @@ fun ColumnScope.ContextIconMenuOrg(
                     .padding(top = 16.dp, bottom = 24.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                ButtonIconCircledLargeAtm(
-                    modifier = Modifier.weight(1f),
-                    data = data.qr,
-                    onUIAction = onUIAction
-                )
+                data.qr?.let {
+                    ButtonIconCircledLargeAtm(
+                        modifier = Modifier.weight(1f),
+                        data = it,
+                        onUIAction = onUIAction
+                    )
+                }
 
-                ButtonIconCircledLargeAtm(
-                    modifier = Modifier.weight(1f),
-                    data = data.ean13,
-                    onUIAction = onUIAction
-                )
+                data.ean13?.let {
+                    ButtonIconCircledLargeAtm(
+                        modifier = Modifier.weight(1f),
+                        data = it,
+                        onUIAction = onUIAction
+                    )
+                }
             }
         }
     }
 }
 
 data class ContextIconMenuOrgData(
+    val displayItems: List<ListItemMlcData>? = null,
     val docActions: List<ListItemMlcData>? = null,
     val generalActions: List<ListItemMlcData>? = null,
     val manualActions: List<ListItemMlcData>? = null,
-    val qr: ButtonIconCircledLargeAtmData,
-    val ean13: ButtonIconCircledLargeAtmData,
-    val showButtons: Boolean
+    val qr: ButtonIconCircledLargeAtmData?,
+    val ean13: ButtonIconCircledLargeAtmData?,
+    val showButtons: Boolean,
+    val showDividerForManualActions: Boolean = false
 ) : UIElementData
 
 @Preview
@@ -122,7 +136,7 @@ fun ContextMenuOrgPreview() {
     val itemsList = SnapshotStateList<ListItemMlcData>().apply {
         add(
             ListItemMlcData(
-                id = FULL_DOC_MENU_ITEM,
+                id = UiBaseConst.FULL_DOC_MENU_ITEM,
                 label = UiText.DynamicString("Label"),
                 iconLeft = UiIcon.DrawableResource(DiiaResourceIcon.DOC_INFO.code)
             )
@@ -151,7 +165,7 @@ fun ContextMenuOrgPreview() {
         icon = UiText.StringResource(R.drawable.ic_doc_ean13_selected),
     )
 
-    val data = ContextIconMenuOrgData(itemsList, itemsList, null, qr, ean13, true)
+    val data = ContextIconMenuOrgData(null, itemsList, itemsList, itemsList, qr, ean13, true, true)
     val state = remember {
         mutableStateOf(data)
     }

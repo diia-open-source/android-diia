@@ -22,6 +22,7 @@ import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
 import ua.gov.diia.core.util.extensions.vm.executeAction
+import ua.gov.diia.core.util.inputs.isCountryOrCityNameValid
 import ua.gov.diia.ps_criminal_cert.network.ApiCriminalCert
 import ua.gov.diia.publicservice.helper.PSNavigationHelper
 
@@ -73,8 +74,9 @@ class CriminalCertStepBirthVM @Inject constructor(
         val isOtherCountryChecked = data[3] as? Boolean
         if (isOtherCountryChecked == true) {
             !otherCountry.isNullOrBlank() && !city.isNullOrBlank()
+                    && isCountryOrCityNameValid(otherCountry) && isCountryOrCityNameValid(city)
         } else {
-            !country.isNullOrBlank() && !city.isNullOrBlank()
+            !country.isNullOrBlank() && !city.isNullOrBlank() && isCountryOrCityNameValid(city)
         }
     }
 

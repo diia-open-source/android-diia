@@ -4,6 +4,7 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -22,13 +23,14 @@ import java.io.Serializable
 
 inline fun <T : Any> Fragment.registerForNavigationResult(
     key: String,
+    lifecycleOwner: LifecycleOwner = viewLifecycleOwner,
     crossinline resultEvent: (T) -> Unit
 ) {
     findNavController()
         .currentBackStackEntry
         ?.savedStateHandle
         ?.getLiveData<T>(key)
-        ?.observe(viewLifecycleOwner) {
+        ?.observe(lifecycleOwner) {
             validateClassType(it)
             resultEvent.invoke(it)
         }
@@ -64,9 +66,10 @@ fun <T : Any> Fragment.clearResultCallback(key: String) {
 
 inline fun Fragment.registerForTemplateDialogNavResult(
     key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY,
+    lifecycleOwner: LifecycleOwner = viewLifecycleOwner,
     crossinline resultEvent: (String) -> Unit
 ) {
-    registerForNavigationResult<ConsumableString>(key) { event ->
+    registerForNavigationResult<ConsumableString>(key, lifecycleOwner) { event ->
         event.consumeEvent { action -> resultEvent.invoke(action) }
     }
 }
@@ -152,7 +155,7 @@ fun <T> Fragment.setNavigationResult(
 
 fun validateClassType(it: Any) {
     if (it is Serializable) {
-        if (it is java.lang.String || it is java.lang.Boolean) {
+        if (it is java.lang.String || it is java.lang.Boolean || it is java.lang.Integer) {
             //in some cases we receive java String here. Ignore this case
             return
         }

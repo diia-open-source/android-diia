@@ -17,7 +17,7 @@ data class IconAtm(
     @Json(name = "action")
     val action: Action?,
     @Json(name = "code")
-    val code: String
-) : Parcelable {
-
-}
+    val code: String,
+    @Json(name = "isEnable")
+    val isEnable: Boolean? = null
+) : Parcelable

@@ -8,11 +8,11 @@ functionality for the Google Play and Hauwei platforms.
 1. Copy module folder to your project and add module to gradle dependency like this:
 
 ```groovy
-implementation project(':analytics')
+implementation project(':libs:analytics')
 ```
 
 2. Module requires next modules to work
 
 ```groovy
-implementation project(':core')
+implementation project(':libs:core')
 ```

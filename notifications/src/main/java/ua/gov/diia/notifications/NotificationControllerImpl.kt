@@ -1,22 +1,25 @@
 package ua.gov.diia.notifications
 
 import android.os.Build
+import androidx.navigation.NavDirections
 import androidx.work.WorkManager
 import ua.gov.diia.core.controller.NotificationController
+import ua.gov.diia.core.models.notification.pull.PullNotificationItemSelection
 import ua.gov.diia.diia_storage.store.Preferences
+import ua.gov.diia.notifications.helper.NotificationHelper
 import ua.gov.diia.notifications.store.datasource.notifications.KeyValueNotificationDataSource
 import ua.gov.diia.notifications.store.datasource.notifications.NotificationDataRepository
 import ua.gov.diia.notifications.util.notification.manager.DiiaNotificationManager
 import ua.gov.diia.notifications.util.notification.push.PushTokenProvider
 import ua.gov.diia.notifications.work.SendPushTokenWork
-
 class NotificationControllerImpl(
     private val workManager: WorkManager,
     private val notificationsDataSource: NotificationDataRepository,
     private val notificationManager: DiiaNotificationManager,
     private val pushTokenProvider: PushTokenProvider,
     private val keyValueSource: KeyValueNotificationDataSource,
-): NotificationController {
+    private val notificationHelper: NotificationHelper
+) : NotificationController {
 
     override suspend fun markAsRead(resId: String?) {
         if (resId != null && resId != Preferences.DEF) {
@@ -66,5 +69,16 @@ class NotificationControllerImpl(
             allowNotifications()
         }
         return null
+    }
+
+    override suspend fun getNavDirectionForNotification(pullNotificationItemSelection: PullNotificationItemSelection): NavDirections? {
+        return notificationHelper.navigateToDocument(
+            item = pullNotificationItemSelection,
+            shouldPop = false
+        )
+    }
+
+    override fun isMessageNotification(resourceType: String) : Boolean {
+        return notificationHelper.isMessageNotification(resourceType)
     }
 }

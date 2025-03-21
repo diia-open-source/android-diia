@@ -21,7 +21,6 @@ import ua.gov.diia.core.models.common_compose.atm.SpacerAtmType
 import ua.gov.diia.core.network.apis.ApiAuth
 import ua.gov.diia.core.util.CommonConst.BUILD_TYPE_DEBUG
 import ua.gov.diia.core.util.CommonConst.BUILD_TYPE_STAGE
-import ua.gov.diia.core.util.alert.ClientAlertDialogsFactory
 import ua.gov.diia.core.util.delegation.WithBuildConfig
 import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
@@ -62,6 +61,7 @@ import ua.gov.diia.verification.ui.VerificationSchema
 import ua.gov.diia.verification.ui.controller.VerificationControllerConst
 import ua.gov.diia.verification.ui.controller.VerificationControllerOnFlowVM
 import ua.gov.diia.verification.ui.methods.VerificationMethod
+import ua.gov.diia.verification.util.AndroidClientAlertDialogsFactory
 import javax.inject.Inject
 
 @HiltViewModel
@@ -73,7 +73,7 @@ class LoginVM @Inject constructor(
     private val loginPinRepository: LoginPinRepository,
     private val authorizationRepository: AuthorizationRepository,
     private val postLoginActions: Set<@JvmSuppressWildcards PostLoginAction>,
-    clientAlertDialogsFactory: ClientAlertDialogsFactory,
+    clientAlertDialogsFactory: AndroidClientAlertDialogsFactory,
     retryErrorBehavior: WithRetryLastAction,
     errorHandlingBehaviour: WithErrorHandlingOnFlow,
     applicationInfoProvider: InstalledApplicationInfoProvider,

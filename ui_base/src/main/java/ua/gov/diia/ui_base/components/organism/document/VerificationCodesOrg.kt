@@ -1,6 +1,7 @@
 package ua.gov.diia.ui_base.components.organism.document
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,8 +32,10 @@ import ua.gov.diia.core.models.common_compose.org.verification.VerificationCodes
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst.DIALOG_ACTION_REFRESH
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
+import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
+import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
@@ -49,12 +52,12 @@ import ua.gov.diia.ui_base.components.molecule.code.toUIModel
 import ua.gov.diia.ui_base.components.molecule.message.StubMessageMlc
 import ua.gov.diia.ui_base.components.molecule.message.StubMessageMlcData
 import ua.gov.diia.ui_base.components.molecule.message.toUIModel
-import ua.gov.diia.ui_base.components.subatomic.loader.TridentLoaderAtm
-import ua.gov.diia.ui_base.components.theme.White
 import ua.gov.diia.ui_base.components.organism.group.ToggleButtonGroupOrg
 import ua.gov.diia.ui_base.components.organism.group.ToggleButtonGroupOrgData
 import ua.gov.diia.ui_base.components.organism.group.toUIModel
+import ua.gov.diia.ui_base.components.subatomic.loader.TridentLoaderAtm
 import ua.gov.diia.ui_base.components.subatomic.timer.ExpireLabel
+import ua.gov.diia.ui_base.components.theme.White
 
 @Composable
 fun VerificationCodesOrg(
@@ -65,7 +68,7 @@ fun VerificationCodesOrg(
 ) {
     var expired by remember { mutableStateOf<Boolean?>(false) }
 
-    LaunchedEffect(key1 = data.qrCode.qrLink.asString()) {
+    LaunchedEffect(key1 = data.qrCode?.qrLink?.asString()) {
         expired = false
     }
     Box(
@@ -95,14 +98,21 @@ fun VerificationCodesOrg(
                         .alpha(0.98f),
                     contentAlignment = Alignment.Center
                 ) {
-                    data.stubMessageMlc?.let {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         StubMessageMlc(
-                            modifier = Modifier.padding(bottom = 24.dp),
                             data = data.errorStubMessageMlc,
                             onUIAction = {
                                 expired = null
-                                onUIAction(it)
+                                onUIAction(it.copy(actionKey = data.actionKey))
                             }
+                        )
+                        Spacer(
+                            modifier = Modifier
+                                .height(64.dp)
+                                .fillMaxWidth()
                         )
                     }
                 }
@@ -116,15 +126,22 @@ fun VerificationCodesOrg(
                         contentAlignment = Alignment.Center
                     ) {
                         data.stubMessageMlc?.let {
-                            Column(modifier = Modifier.fillMaxWidth()) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
                                 StubMessageMlc(
                                     data = data.stubMessageMlc,
                                     onUIAction = {
                                         expired = null
-                                        onUIAction(it)
+                                        onUIAction(it.copy(actionKey = data.actionKey))
                                     }
                                 )
-                                Spacer(modifier = Modifier.height(64.dp).fillMaxWidth())
+                                Spacer(
+                                    modifier = Modifier
+                                        .height(64.dp)
+                                        .fillMaxWidth()
+                                )
                             }
                         }
                     }
@@ -138,18 +155,22 @@ fun VerificationCodesOrg(
                                 .background(White),
                             contentAlignment = Alignment.Center
                         ) {
-                            QrCodeMlc(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .aspectRatio(1f),
-                                data = data.qrCode
-                            )
+                            data.qrCode?.run {
+                                QrCodeMlc(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .aspectRatio(1f),
+                                    data = data.qrCode
+                                )
+                            }
                         }
-                    } else {
+                    }
+                    else {
                         Column(
                             modifier = Modifier
                                 .fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = if(data.toggleButtonGroup == null) Arrangement.Center else Arrangement.Top
                         ) {
                             Box(
                                 modifier = Modifier
@@ -175,21 +196,23 @@ fun VerificationCodesOrg(
                                         .padding(horizontal = 40.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    QrCodeMlc(
-                                        modifier = Modifier
-                                            .conditional(data.toggleButtonGroup.items.firstOrNull { it.id == VerificationCodesOrgToggleButtonCodes.qr.name }?.selectionState == UIState.Selection.Unselected) {
-                                                alpha(0f)
-                                                    .height(0.dp)
-                                            }
-                                            .conditional(data.toggleButtonGroup.items.firstOrNull { it.id == VerificationCodesOrgToggleButtonCodes.qr.name }?.selectionState == UIState.Selection.Selected) {
-                                                fillMaxWidth()
-                                                    .aspectRatio(1f)
-                                            },
-                                        data = data.qrCode
-                                    )
+                                    data.qrCode?.let {
+                                        QrCodeMlc(
+                                            modifier = Modifier
+                                                .conditional(data.toggleButtonGroup.items.firstOrNull { it.id == VerificationCodesOrgToggleButtonCodes.qr.name }?.selectionState == UIState.Selection.Unselected) {
+                                                    alpha(0f)
+                                                        .height(0.dp)
+                                                }
+                                                .conditional(data.toggleButtonGroup.items.firstOrNull { it.id == VerificationCodesOrgToggleButtonCodes.qr.name }?.selectionState == UIState.Selection.Selected) {
+                                                    fillMaxWidth()
+                                                        .aspectRatio(1f)
+                                                },
+                                            data = it
+                                        )
+                                    }
                                     data.barCode?.let {
                                         BarCodeMlc(
-                                            modifier = Modifier.conditional(data.toggleButtonGroup.items.firstOrNull { it.id == VerificationCodesOrgToggleButtonCodes.ean.name }?.selectionState == UIState.Selection.Unselected) {
+                                            modifier = Modifier.conditional(data.toggleButtonGroup.items.firstOrNull { it.id == VerificationCodesOrgToggleButtonCodes.barcode.name }?.selectionState == UIState.Selection.Unselected) {
                                                 alpha(0f)
                                                     .height(0.dp)
                                             }, data = data.barCode
@@ -204,16 +227,28 @@ fun VerificationCodesOrg(
                                 ToggleButtonGroupOrg(
                                     modifier = Modifier.fillMaxWidth(),
                                     data = data.toggleButtonGroup,
-                                    onUIAction = onUIAction
+                                    onUIAction = {
+                                        onUIAction(it.copy(actionKey = data.actionKey))
+                                    }
                                 )
                             } else {
-                                QrCodeMlc(
+                                Box(
                                     modifier = Modifier
+                                        .padding(top = 16.dp)
                                         .padding(horizontal = 40.dp)
-                                        .fillMaxWidth()
-                                        .aspectRatio(1f),
-                                    data = data.qrCode
-                                )
+                                        .fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    data.qrCode?.let {
+                                        QrCodeMlc(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .aspectRatio(1f),
+                                            data = data.qrCode
+                                        )
+                                    }
+                               }
+
                             }
                         }
                     }
@@ -233,15 +268,15 @@ data class VerificationCodesOrgData(
     val expireLabelFirst: UiText? = null,
     val expireLabelLast: UiText? = null,
     val timer: Int? = null,
-    val qrCode: QrCodeMlcData,
+    val qrCode: QrCodeMlcData? = null,
     val barCode: BarCodeMlcData? = null,
     val toggleButtonGroup: ToggleButtonGroupOrgData? = null,
     val stubMessageMlc: StubMessageMlcData? = null,
     val errorStubMessageMlc: StubMessageMlcData? = null,
     val idle: Boolean = false
-) {
+) : UIElementData {
     fun onToggleClicked(id: String): VerificationCodesOrgData {
-        return if (id == VerificationCodesOrgToggleButtonCodes.qr.name || id == VerificationCodesOrgToggleButtonCodes.ean.name) {
+        return if (id == VerificationCodesOrgToggleButtonCodes.qr.name || id == VerificationCodesOrgToggleButtonCodes.barcode.name) {
             this.copy(
                 toggleButtonGroup = this.toggleButtonGroup?.onToggleClicked(toggleCode = id)
             )
@@ -257,23 +292,55 @@ data class VerificationCodesOrgData(
     }
 }
 
-fun VerificationCodesOrg.toUIModel(idle: Boolean = false): VerificationCodesOrgData {
-    return VerificationCodesOrgData(
-        componentId = UiText.DynamicString(this.componentId.orEmpty()),
-        qrCode = this.ua.qrCodeMlc.toUIModel(),
-        barCode = this.ua.barCodeMlc?.toUIModel(),
-        expireLabelFirst = this.ua.expireLabel?.expireLabelFirst.toDynamicStringOrNull(),
-        expireLabelLast = this.ua.expireLabel?.expireLabelLast.toDynamicStringOrNull(),
-        timer = this.ua.expireLabel?.timer,
-        toggleButtonGroup = this.ua.toggleButtonGroupOrg?.toUIModel(),
-        stubMessageMlc = this.ua.stubMessageMlc.toUIModel(),
-        idle = idle
-    )
+fun VerificationCodesOrg.toUIModel(
+    idle: Boolean = false,
+    localization: Localization
+): VerificationCodesOrgData? {
+    if (this.ua == null && this.en == null) {
+        return VerificationCodesOrgData(
+            componentId = UiText.DynamicString(this.componentId.orEmpty()),
+            idle = true
+        )
+    }
+    when (localization) {
+        Localization.ua -> {
+            this.ua?.let {
+                return VerificationCodesOrgData(
+                    componentId = UiText.DynamicString(this.componentId.orEmpty()),
+                    qrCode = it.qrCodeMlc.toUIModel(),
+                    barCode = it.barCodeMlc?.toUIModel(),
+                    expireLabelFirst = it.expireLabel?.expireLabelFirst.toDynamicStringOrNull(),
+                    expireLabelLast = it.expireLabel?.expireLabelLast.toDynamicStringOrNull(),
+                    timer = it.expireLabel?.timer,
+                    toggleButtonGroup = it.toggleButtonGroupOrg?.toUIModel(),
+                    stubMessageMlc = it.stubMessageMlc.toUIModel(),
+                    idle = idle
+                )
+            }
+        }
+
+        Localization.eng -> {
+            this.en?.let {
+                return VerificationCodesOrgData(
+                    componentId = UiText.DynamicString(this.componentId.orEmpty()),
+                    qrCode = it.qrCodeMlc.toUIModel(),
+                    barCode = it.barCodeMlc?.toUIModel(),
+                    expireLabelFirst = it.expireLabel?.expireLabelFirst.toDynamicStringOrNull(),
+                    expireLabelLast = it.expireLabel?.expireLabelLast.toDynamicStringOrNull(),
+                    timer = it.expireLabel?.timer,
+                    toggleButtonGroup = it.toggleButtonGroupOrg?.toUIModel(),
+                    stubMessageMlc = it.stubMessageMlc.toUIModel(),
+                    idle = idle
+                )
+            }
+        }
+    }
+    return null
 }
 
 
 enum class VerificationCodesOrgToggleButtonCodes {
-    qr, ean
+    qr, barcode
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFF0080FF)
@@ -281,7 +348,7 @@ enum class VerificationCodesOrgToggleButtonCodes {
 fun VerificationCodesOrgPreview() {
 
     val coroutineScope = rememberCoroutineScope()
-    var progressIndicator by remember { mutableStateOf(UIActionKeysCompose.VERIFICATION_CODES_ORG to false) }
+    val progressIndicator by remember { mutableStateOf(UIActionKeysCompose.VERIFICATION_CODES_ORG to false) }
 
     val data = VerificationCodesOrgData(
         qrCode = getQrCodeMlc(),
@@ -304,7 +371,7 @@ fun VerificationCodesOrgPreview() {
         it.action?.type?.let { action ->
             when (action) {
                 VerificationCodesOrgToggleButtonCodes.qr.name,
-                VerificationCodesOrgToggleButtonCodes.ean.name -> {
+                VerificationCodesOrgToggleButtonCodes.barcode.name -> {
                     state.value = state.value.onToggleClicked(action)
                 }
 
@@ -322,12 +389,14 @@ fun VerificationCodesOrgPreview() {
 }
 
 private fun updateVerificationCodesOrgFromRemote(state: MutableState<VerificationCodesOrgData>) {
-    state.value = state.value.copy(
-        qrCode = state.value.qrCode.copy(
-            qrLink = "${(state.value.qrCode.qrLink as UiText.DynamicString).value}1".toDynamicString()
-        ),
-        idle = false
-    )
+    state.value.qrCode?.let {
+        state.value = state.value.copy(
+            qrCode = it.copy(
+                qrLink = "${(it.qrLink as UiText.DynamicString).value}_new".toDynamicString()
+            ),
+            idle = false
+        )
+    }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFF0080FF)
@@ -335,6 +404,7 @@ private fun updateVerificationCodesOrgFromRemote(state: MutableState<Verificatio
 fun VerificationCodesOrgPreview_OnlyQR() {
     val data = VerificationCodesOrgData(
         qrCode = getQrCodeMlc(),
+        timer = 35,
         stubMessageMlc = getStubMessageMlc()
     )
     val state = remember { mutableStateOf(data) }
@@ -352,7 +422,7 @@ fun VerificationCodesOrgPreview_OnlyQR() {
 fun VerificationCodesOrgPreview_With_Error() {
 
     val coroutineScope = rememberCoroutineScope()
-    var progressIndicator by remember { mutableStateOf(UIActionKeysCompose.VERIFICATION_CODES_ORG to false) }
+    val progressIndicator by remember { mutableStateOf(UIActionKeysCompose.VERIFICATION_CODES_ORG to false) }
 
     val data = VerificationCodesOrgData(
         qrCode = getQrCodeMlc(),
@@ -375,7 +445,7 @@ fun VerificationCodesOrgPreview_With_Error() {
         it.action?.type?.let { action ->
             when (action) {
                 VerificationCodesOrgToggleButtonCodes.qr.name,
-                VerificationCodesOrgToggleButtonCodes.ean.name -> {
+                VerificationCodesOrgToggleButtonCodes.barcode.name -> {
                     state.value = state.value.onToggleClicked(action)
                 }
 
@@ -415,7 +485,7 @@ private fun updateVerificationCodesOrgFromRemoteWithError(state: MutableState<Ve
 fun VerificationCodesOrgPreview_From_Initial_To_Error() {
 
     val coroutineScope = rememberCoroutineScope()
-    var progressIndicator by remember { mutableStateOf(UIActionKeysCompose.VERIFICATION_CODES_ORG to false) }
+    val progressIndicator by remember { mutableStateOf(UIActionKeysCompose.VERIFICATION_CODES_ORG to false) }
 
     val data = VerificationCodesOrgData(
         qrCode = getQrCodeMlc(),
@@ -444,7 +514,7 @@ fun VerificationCodesOrgPreview_From_Initial_To_Error() {
         it.action?.type?.let { action ->
             when (action) {
                 VerificationCodesOrgToggleButtonCodes.qr.name,
-                VerificationCodesOrgToggleButtonCodes.ean.name -> {
+                VerificationCodesOrgToggleButtonCodes.barcode.name -> {
                     state.value = state.value.onToggleClicked(action)
                 }
 
@@ -488,12 +558,12 @@ private fun getToggleGroup(): ToggleButtonGroupOrgData {
     )
 
     val ean13 = BtnToggleMlcData(
-        id = VerificationCodesOrgToggleButtonCodes.ean.name,
+        id = VerificationCodesOrgToggleButtonCodes.barcode.name,
         label = "Штрих-код".toDynamicString(),
         iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE_WHITE.code),
         iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE.code),
         action = DataActionWrapper(
-            type = VerificationCodesOrgToggleButtonCodes.ean.name
+            type = VerificationCodesOrgToggleButtonCodes.barcode.name
         ),
         selectionState = UIState.Selection.Unselected
     )
@@ -508,7 +578,9 @@ private fun getStubMessageMlc(): StubMessageMlcData {
     return StubMessageMlcData(
         icon = UiText.DynamicString("\uD83D\uDD90"),
         title = UiText.DynamicString("На жаль, сталася помилка"),
-        description = UiText.DynamicString("Термін перевірки документу вичерпано. Будь ласка, оновіть код для перевірки."),
+        description = TextWithParametersData(
+            text = UiText.DynamicString("Термін перевірки документу вичерпано. Будь ласка, оновіть код для перевірки.")
+        ),
         button = ButtonStrokeAdditionalAtomData(
             id = "",
             title = UiText.DynamicString("Оновити"),

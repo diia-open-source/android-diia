@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.mlc.doc.DocNumberCopyMlc
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.icon.IconAtm
 import ua.gov.diia.ui_base.components.atom.icon.IconAtmData
@@ -21,9 +22,11 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.AutoSizeLimitedText
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStringOrNull
 import ua.gov.diia.ui_base.components.noRippleClickable
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.White
+import ua.gov.diia.ui_base.util.toUiModel
 
 @Composable
 fun DocNumberCopyWhiteMlc(
@@ -85,9 +88,19 @@ fun DocNumberCopyWhiteMlc(
 data class DocNumberCopyWhiteMlcData(
     val actionKey: String = UIActionKeysCompose.DOC_NUMBER_COPY_WHITE,
     val id: String? = null,
+    val componentId: UiText? = null,
     val value: UiText? = null,
     val icon: IconAtmData? = null
 )
+
+fun DocNumberCopyMlc.toUIModel(id: String? = null): DocNumberCopyWhiteMlcData {
+    return DocNumberCopyWhiteMlcData(
+        componentId = this.componentId.toDynamicStringOrNull(),
+        id = id,
+        value = this.value.toDynamicString(),
+        icon = this.icon?.toUiModel()
+    )
+}
 
 @Composable
 @Preview

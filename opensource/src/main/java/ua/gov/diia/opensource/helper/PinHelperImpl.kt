@@ -2,10 +2,10 @@ package ua.gov.diia.opensource.helper
 
 import androidx.fragment.app.Fragment
 import ua.gov.diia.biometric.Biometric
+import ua.gov.diia.biometric.store.BiometricRepository
 import ua.gov.diia.biometric.ui.showBiometricAuthPrompt
 import ua.gov.diia.core.util.extensions.fragment.navigate
-import ua.gov.diia.opensource.NavMainXmlDirections
-import ua.gov.diia.opensource.repository.settings.AppSettingsRepository
+import ua.gov.diia.opensource.NavMainDirections
 import ua.gov.diia.pin.helper.PinHelper
 import ua.gov.diia.pin.ui.input.AlternativeAuthCallback
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class PinHelperImpl @Inject constructor(
     private val biometric: Biometric,
-    private val settingsRepository: AppSettingsRepository,
+    private val biometricRepository: BiometricRepository
 ) : PinHelper {
 
     override fun isAlternativeAuthAvailable(): Boolean {
@@ -22,7 +22,7 @@ class PinHelperImpl @Inject constructor(
     }
 
     override suspend fun isAlternativeAuthEnabled(): Boolean {
-        return biometric.isBiometricAuthAvailable() && settingsRepository.isBiometricAuthEnabled()
+        return biometric.isBiometricAuthAvailable() && biometricRepository.isBiometricAuthEnabled()
     }
 
     override fun openAlternativeAuth(host: Fragment, callback: AlternativeAuthCallback) {
@@ -42,7 +42,7 @@ class PinHelperImpl @Inject constructor(
         pin: String,
     ) {
         host.navigate(
-            NavMainXmlDirections.actionGlobalToSetupBiometric(
+            NavMainDirections.actionGlobalToSetupBiometric(
                 resultDestinationId = resultDestinationId,
                 resultKey = resultKey,
                 pin = pin,

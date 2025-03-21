@@ -3,11 +3,13 @@ package ua.gov.diia.ui_base.fragments.dynamicdialog
 import android.app.Dialog
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowManager
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
@@ -15,16 +17,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import ua.gov.diia.ui_base.R
 import ua.gov.diia.core.models.ConsumableString
 import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.extensions.fragment.navigate
 import ua.gov.diia.core.util.extensions.fragment.setNavigationResult
+import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.UiBaseConst
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.screen.TemplateDialogScreen
 import kotlin.math.roundToInt
-
 
 @AndroidEntryPoint
 class TemplateDialogF : DialogFragment() {
@@ -33,13 +34,21 @@ class TemplateDialogF : DialogFragment() {
     private val navArgs: TemplateDialogFArgs by navArgs()
     private var composeView: ComposeView? = null
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        Dialog(requireContext(), R.style.TemplateDialogTheme).apply {
-            window?.apply {
-                fillParent()
-                setTransparentBackground()
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.window?.apply {
+            setTransparentBackground()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+
+                // Blur radius in DP
+                attributes = attributes.apply { blurBehindRadius = 16 }
             }
         }
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        return dialog
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +64,6 @@ class TemplateDialogF : DialogFragment() {
         isCancelable = false
         return composeView
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         composeView?.setContent {
@@ -75,6 +83,16 @@ class TemplateDialogF : DialogFragment() {
                 onUIAction = { viewModel.onUIAction(it) }
             )
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        configureStyle()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        composeView = null
     }
 
     private fun processDialogAction(action: String) {
@@ -115,18 +133,14 @@ class TemplateDialogF : DialogFragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        composeView = null
-    }
-
     private fun resultKey() = navArgs.dialog.key ?: ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY
 
-    private fun Window.fillParent() {
-        setLayout(
+    private fun configureStyle() {
+        dialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+        setStyle(STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar)
     }
 
     private fun Window.setTransparentBackground() {
@@ -140,7 +154,10 @@ class TemplateDialogF : DialogFragment() {
                         android.R.color.transparent
                     )
                 ),
-                insetHorizontal, 0, insetHorizontal, 0
+                insetHorizontal,
+                0,
+                insetHorizontal,
+                0
             )
         )
     }

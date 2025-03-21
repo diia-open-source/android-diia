@@ -17,12 +17,12 @@ import ua.gov.diia.bankid.model.BankAuthRequest
 import ua.gov.diia.bankid.model.BankSelectionRequest
 import ua.gov.diia.bankid.network.ApiBankId
 import ua.gov.diia.core.models.common_compose.atm.SpacerAtmType
-import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.space.SpacerAtmData
+import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -40,6 +40,7 @@ import ua.gov.diia.ui_base.components.molecule.text.TextLabelMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 import ua.gov.diia.ui_base.components.organism.list.ListItemGroupOrgData
 import ua.gov.diia.ui_base.components.organism.list.PlainListWithSearchOrganismData
+import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.verification.di.ProviderVerifiedClient
 import ua.gov.diia.verification.network.ApiVerification
 import javax.inject.Inject
@@ -104,7 +105,9 @@ class BankSelectionVM @Inject constructor(
                 emptyListData = StubMessageMlcData(
                     icon = UiText.StringResource(R.string.bank_selection_empty_icon),
                     title = UiText.StringResource(R.string.bank_selection_empty_title),
-                    description = UiText.StringResource(R.string.bank_selection_empty_description),
+                    description = TextWithParametersData(
+                        text = UiText.StringResource(R.string.bank_selection_empty_description)
+                    ),
                     componentId = UiText.StringResource(R.string.bank_selection_stub_message_bank_test_tag)
                 )
             )
@@ -204,7 +207,7 @@ class BankSelectionVM @Inject constructor(
     private fun AuthBank.toAtomData(): ListItemMlcData {
         val bankName = this.name ?: ""
         return ListItemMlcData(
-            id = id,
+            id = id ?: bankName,
             label = UiText.DynamicString(bankName),
             iconRight = UiIcon.DrawableResource(DiiaResourceIcon.OUT_LINK.code),
             iconRightContentDescription = UiText.StringResource(

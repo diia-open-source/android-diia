@@ -3,10 +3,10 @@ package ua.gov.diia.documents
 import kotlinx.parcelize.Parcelize
 import ua.gov.diia.core.network.Http
 import ua.gov.diia.diia_storage.store.Preferences
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.models.LocalizationType
-import ua.gov.diia.documents.models.SourceType
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.LocalizationType
+import ua.gov.diia.core.models.document.SourceType
 import java.util.UUID
 
 @Parcelize

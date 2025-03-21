@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
@@ -44,20 +45,20 @@ fun ChipTimeMlc(
                 onUIAction(
                     UIAction(
                         data.actionKey,
-                        data.code,
-                        optionalId = data.date,
-                        optionalType = data.resourceId
+                        data.id,
+                        optionalId = data.dayOfMonth,
                     )
                 )
             }
-            .testTag(data.componentId?.asString() ?: "")
+            .testTag(data.componentId?.asString() ?: ""),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = data.title.asString(),
             color = colorText,
             style = DiiaTextStyle.t2TextDescription,
             textAlign = TextAlign.Center,
-            modifier = modifier.padding(horizontal = 24.dp, vertical = 8.dp)
+            modifier = modifier.padding(horizontal = 24.dp, vertical = 11.dp)
         )
     }
 }
@@ -65,10 +66,9 @@ fun ChipTimeMlc(
 data class ChipTimeMlcData(
     val actionKey: String = UIActionKeysCompose.CHIP_TIME_MLC,
     val title: UiText,
-    val date: String,
+    val dayOfMonth: String,
     val id: String? = null,
-    val code: String? = null,
-    val resourceId: String? = null,
+    val dataJson: String? = null,
     val componentId: UiText? = null,
     val selection: UIState.Selection = UIState.Selection.Unselected,
 )
@@ -77,9 +77,8 @@ fun ChipTimeMlc.toUIModel(): ChipTimeMlcData {
     return ChipTimeMlcData(
         title = UiText.DynamicString(label.orEmpty()),
         id = this.id,
-        date = "",
-        code = this.data?.code,
-        resourceId = this.data?.resourceId,
+        dayOfMonth = "",
+        dataJson = this.data,
         componentId = UiText.DynamicString(componentId.orEmpty()),
         selection = if (this.active == true) UIState.Selection.Selected else UIState.Selection.Unselected,
     )
@@ -91,7 +90,7 @@ fun ChipTimeMlcPreview() {
     val data = ChipTimeMlcData(
         title = UiText.DynamicString("label"),
         selection = UIState.Selection.Selected,
-        date = "",
+        dayOfMonth = "",
     )
     ChipTimeMlc(Modifier, data, {})
 }
@@ -102,7 +101,7 @@ fun ChipTimeMlcPreview_Unselected() {
     val data = ChipTimeMlcData(
         title = UiText.DynamicString("label"),
         selection = UIState.Selection.Unselected,
-        date = "",
+        dayOfMonth = "",
     )
     ChipTimeMlc(Modifier, data, {})
 }

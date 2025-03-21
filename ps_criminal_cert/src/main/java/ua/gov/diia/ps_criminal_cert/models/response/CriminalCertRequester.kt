@@ -47,5 +47,6 @@ data class CriminalCertRequester(
         val list: List<NameModel> = emptyList()
     ) {
         val canAdd: Boolean = list.size < 10 && list.all { it.name.isNotBlank() }
+        val allValid: Boolean = list.all { it.isValid }
     }
 }

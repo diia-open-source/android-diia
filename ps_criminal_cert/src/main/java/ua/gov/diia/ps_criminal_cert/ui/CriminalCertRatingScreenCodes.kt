@@ -1,7 +1,7 @@
 package ua.gov.diia.ps_criminal_cert.ui
 
 object CriminalCertRatingScreenCodes {
-    const val SC_STATUS = ""
+    const val SC_STATUS = "status"
     const val SC_HOME = ""
     const val SC_REGISTRATION_PLACE_SELECTION = ""
     const val SC_BIRTH_PLACE = ""

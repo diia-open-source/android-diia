@@ -7,6 +7,8 @@ import com.squareup.moshi.JsonClass
 data class CheckboxRoundMlc(
     @Json(name = "id")
     val id: String?,
+    @Json(name = "componentId")
+    val componentId: String?,
     @Json(name = "label")
     val label: String,
     @Json(name = "description")
@@ -14,12 +16,5 @@ data class CheckboxRoundMlc(
     @Json(name = "status")
     val status: String?,
     @Json(name = "state")
-    val state: CbState?
-) {
-    enum class CbState(val type: String) {
-        REST("rest"),
-        SELECTED("selected"),
-        DISABLE("disable"),
-        DISABLE_SELECTED("disableSelected")
-    }
-}
+    val state: String?
+)

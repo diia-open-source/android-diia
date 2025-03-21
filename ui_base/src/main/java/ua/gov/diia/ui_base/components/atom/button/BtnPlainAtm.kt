@@ -1,6 +1,7 @@
 package ua.gov.diia.ui_base.components.atom.button
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import ua.gov.diia.core.models.common_compose.atm.button.BtnPlainAtm
 import ua.gov.diia.core.models.common_compose.general.ButtonStates
 import ua.gov.diia.ui_base.R
@@ -41,7 +43,7 @@ fun BtnPlainAtm(
     progressIndicator: Pair<String, Boolean> = Pair("", false),
     onUIAction: (UIAction) -> Unit
 ) {
-    Row(
+    ConstraintLayout(
         modifier = modifier
             .padding(
                 top = 24.dp,
@@ -50,7 +52,7 @@ fun BtnPlainAtm(
                 end = 40.dp
             )
             .noRippleClickable(debounce = true) {
-                if (data.interactionState == UIState.Interaction.Enabled && !(data.id == progressIndicator.first && progressIndicator.second))
+                if (data.interactionState == UIState.Interaction.Enabled && !(data.id == progressIndicator.first && progressIndicator.second)) {
                     onUIAction(
                         UIAction(
                             actionKey = data.actionKey,
@@ -58,15 +60,11 @@ fun BtnPlainAtm(
                             action = data.action
                         )
                     )
+                }
             }
-            .testTag(data.componentId?.asString() ?: ""),
+            .testTag(data.componentId?.asString() ?: "")
     ) {
-        AnimatedVisibility(visible = data.id == progressIndicator.first && progressIndicator.second) {
-            Row {
-                LoaderCircularEclipse23Subatomic()
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-        }
+        val (text, loader) = createRefs()
 
         Text(
             text = AnnotatedString(data.title.asString()),
@@ -80,11 +78,35 @@ fun BtnPlainAtm(
                 textAlign = TextAlign.Center,
                 fontSize = 14.sp,
                 lineHeight = 16.sp
-            )
+            ),
+            modifier = Modifier.constrainAs(text) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
         )
+        AnimatedVisibility(visible = data.id == progressIndicator.first && progressIndicator.second) {
+            Row {
+                LoaderCircularEclipse23Subatomic()
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .constrainAs(loader) {
+                    end.linkTo(text.start)
+                }
+        ) {
+            AnimatedVisibility(visible = data.id == progressIndicator.first && progressIndicator.second) {
+                LoaderCircularEclipse23Subatomic()
+                Spacer(modifier = Modifier.width(8.dp))
+
+            }
+        }
+
     }
 }
-
 
 data class BtnPlainAtmData(
     val actionKey: String = UIActionKeysCompose.BTN_PLAIN_ATM,
@@ -96,12 +118,12 @@ data class BtnPlainAtmData(
 ) : UIElementData
 
 fun BtnPlainAtm.toUIModel(
-    id: String = "",
+    id: String = if (componentId.isNullOrBlank()) UIActionKeysCompose.BTN_PLAIN_ATM else componentId.orEmpty(),
     componentIdExternal: UiText? = null
 ): BtnPlainAtmData {
     return BtnPlainAtmData(
         componentId = componentIdExternal ?: componentId.orEmpty().toDynamicString(),
-        id = this.componentId ?: id,
+        id = id,
         title = UiText.DynamicString(this.label),
         action = action?.toDataActionWrapper(),
         interactionState = state?.let {
@@ -115,6 +137,20 @@ fun BtnPlainAtm.toUIModel(
     )
 }
 
+fun String?.toComposeBtnPlainAtm(
+    actionKey: String = UIActionKeysCompose.BTN_PLAIN_ATM,
+    id: String = "",
+    interactionState: UIState.Interaction = UIState.Interaction.Enabled
+): BtnPlainAtmData? {
+    if (this == null) return null
+    return BtnPlainAtmData(
+        actionKey = actionKey,
+        id = id,
+        title = UiText.DynamicString(this),
+        interactionState = interactionState
+    )
+}
+
 @Composable
 @Preview
 fun BtnPlainAtmPreview_EnabledState() {
@@ -122,8 +158,7 @@ fun BtnPlainAtmPreview_EnabledState() {
         title = UiText.DynamicString("Label"),
         interactionState = UIState.Interaction.Enabled
     )
-    BtnPlainAtm(data = buttonStateEnabled) {
-    }
+    BtnPlainAtm(data = buttonStateEnabled) {}
 }
 
 @Composable
@@ -133,8 +168,7 @@ fun BtnPlainAtmPreview_LongLabel() {
         title = UiText.DynamicString("Label very long label still long label should be centered"),
         interactionState = UIState.Interaction.Enabled
     )
-    BtnPlainAtm(data = buttonStateEnabled) {
-    }
+    BtnPlainAtm(data = buttonStateEnabled) {}
 }
 
 @Composable

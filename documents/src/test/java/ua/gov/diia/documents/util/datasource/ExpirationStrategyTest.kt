@@ -8,8 +8,8 @@ import org.junit.Assert
 import org.junit.Test
 import ua.gov.diia.core.util.date.CurrentDateProvider
 import ua.gov.diia.core.util.extensions.date_time.getUTCDate
-import ua.gov.diia.documents.models.Expiring
-import ua.gov.diia.documents.models.Preferences
+import ua.gov.diia.core.models.document.Expiring
+import ua.gov.diia.core.models.document.Preferences
 import java.util.Date
 
 class ExpirationStrategyTest {

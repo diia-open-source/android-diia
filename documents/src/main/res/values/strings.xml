@@ -7,37 +7,14 @@
 
     <string name="url_driver_e_queue">https://eq.hsc.gov.ua/</string>
     <string name="url_driver_e_find_address">https://hsc.gov.ua/kontakti/kontakti-gsts-pidrozdiliv/</string>
-    <string name="phone_number_veteran_registry">0-800-505-217</string>
 
 
-    <!--    Stack     -->
-    <string name="stack_order_title">Змінити порядок</string>
-    <string name="stack_order_text">Перетягніть документи, щоб\nзмінити порядок їх відображення </string>
-    <string name="stack_all_same_doc_type">Усі документи цього типу</string>
-    <string name="stack_change_doc_type_ordering">Змінити порядок документів</string>
-
-    <string name="change_doc_ordering">Змінити порядок документів</string>
-    <string name="remove_doc_action">Видалити документ</string>
-    <string name="full_info">Повна інформація</string>
-    <string name="doc_id_copied"><b>Номер скопійовано</b></string>
-
-    <string name="download_certificate_pdf">Завантажити сертифікат (PDF)</string>
-    <string name="download_document_pdf">Завантажити документ (pdf)</string>
-    <string name="award_context_menu_rate_doc">Оцінити документ</string>
-    <string name="faq">Питання та відповіді</string>
-    <string name="translate_to_ua">Перекласти українською</string>
-    <string name="translate_to_eng">Перекласти англійською</string>
-
-    <string name="military_bonds_menu_go_to_mb">Перейти в облігації</string>
-    <string name="military_bonds_remove_from_docs">Видалити з галереї</string>
-    <string name="residence_cert">Витяг про місце проживання</string>
-    <string name="idp_edit_person_address">Змінити адресу фактичного проживання</string>
-    <string name="idp_action_button_cancel">Скасувати статус ВПО</string>
-    <string name="idp_share_car">Поділитися транспортним засобом</string>
-    <string name="idp_share_car_owner_cancel">Скасувати шеринг</string>
-    <string name="idp_share_car_proper_cancel">Відмовитися від користування авто</string>
-
-    <string name="rate_document">Оцінити документ</string>
-    <string name="settings_share_with_friends">Розповісти друзям</string>
-    <string name="update_document">Оновити документ</string>
+    <!--FullInfo verification refresh error-->
+    <string name="verification_code_download_fail_ua">Коди для перевірки не завантажено</string>
+    <string name="verification_code_download_fail_en">Verification codes failed to upload</string>
+    <string name="verification_code_refresh_try_again_btn_label_ua">Спробувати ще</string>
+    <string name="verification_code_refresh_try_again_btn_label_en">Try again</string>
+    <string name="loading_stub">Loading</string>
+    <string name="error_stub_emoji">🖐</string>
+    <string name="warning_stub_emoji">☝️</string>
 </resources>

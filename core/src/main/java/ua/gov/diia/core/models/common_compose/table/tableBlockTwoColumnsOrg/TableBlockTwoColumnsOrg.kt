@@ -11,6 +11,8 @@ import ua.gov.diia.core.models.common_compose.table.Item
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class TableBlockTwoColumnsOrg(
+    @Json(name = "componentId")
+    val componentId: String?,
     @Json(name = "headingWithSubtitlesMlc")
     val headingWithSubtitlesMlc: HeadingWithSubtitlesMlc?,
     @Json(name = "items")

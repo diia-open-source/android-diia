@@ -27,16 +27,18 @@ import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerAtm
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerType
+import ua.gov.diia.ui_base.components.atom.text.TickerUsage
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.doc.DocCoverMlc
 import ua.gov.diia.ui_base.components.molecule.doc.DocCoverMlcData
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMoleculeData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toTableMainHeadingMlcData
 import ua.gov.diia.ui_base.components.molecule.loading.TridentLoaderMolecule
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesMlcData
 import ua.gov.diia.ui_base.components.molecule.text.SubtitleLabelMlc
@@ -159,7 +161,7 @@ fun DocPhotoOrg(
                                 start.linkTo(v1.start, margin = 16.dp)
                                 end.linkTo(parent.end, margin = 16.dp)
                             }
-                            //.padding(10.dp)
+                            .padding(horizontal = 10.dp)
                             .background(WhiteAlpha50, shape = RoundedCornerShape(16.dp))
                             .padding(16.dp),
                         data = it,
@@ -203,7 +205,7 @@ fun DocPhotoOrg(
                         onUIAction = onUIAction
                     )
                 }
-                if (data.docButtonHeading?.isStack == true) {
+                if (data.docButtonHeading?.isStack == true || data.docCover?.isStack == true) {
                     Column(
                         modifier = Modifier
                             .constrainAs(v9) {
@@ -239,13 +241,12 @@ data class DocPhotoOrgData(
     val smallEmojiPanelMlcData: SmallEmojiPanelMlcData? = null
 ) : UIElementData
 
-@Preview(
-
-)
+@Preview
 @Composable
 fun DocPhotoOrgPreview() {
     val tickerAtomData = TickerAtomData(
-        type = TickerType.BIG_POSITIVE,
+        type = TickerType.INFORMATIVE,
+        usage = TickerUsage.GRAND,
         title = "Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • "
     )
     val docButtonHeading = DocButtonHeadingOrgData(
@@ -266,12 +267,12 @@ fun DocPhotoOrgPreview() {
             TableItemVerticalMlcData(
                 id = "01",
                 title = UiText.DynamicString("Дата\nнародження:"),
-                value = "24.08.1991"
+                value = UiText.DynamicString("24.08.1991")
             ),
             TableItemVerticalMlcData(
                 id = "02",
                 title = UiText.DynamicString("Номер:"),
-                value = "XX000000"
+                value = UiText.DynamicString("XX000000")
             ),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
@@ -305,7 +306,8 @@ fun DocPhotoOrgPreview() {
 @Composable
 fun DocPhotoOrgWithStackPreview() {
     val tickerAtomData = TickerAtomData(
-        type = TickerType.BIG_POSITIVE,
+        type = TickerType.INFORMATIVE,
+        usage = TickerUsage.GRAND,
         title = "Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • "
     )
     val docButtonHeading = DocButtonHeadingOrgData(
@@ -327,12 +329,12 @@ fun DocPhotoOrgWithStackPreview() {
             TableItemVerticalMlcData(
                 id = "01",
                 title = UiText.DynamicString("Дата\nнародження:"),
-                value = "24.08.1991"
+                value = UiText.DynamicString("24.08.1991")
             ),
             TableItemVerticalMlcData(
                 id = "02",
                 title = UiText.DynamicString("Номер:"),
-                value = "XX000000"
+                value = UiText.DynamicString("XX000000")
             ),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
@@ -357,7 +359,8 @@ fun DocPhotoOrgWithStackPreview() {
 @Composable
 fun DocPhotoOrgWithCoverPreview() {
     val tickerAtomData = TickerAtomData(
-        type = TickerType.BIG_POSITIVE,
+        type = TickerType.INFORMATIVE,
+        usage = TickerUsage.GRAND,
         title = "Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • "
     )
     val docButtonHeading = DocButtonHeadingOrgData(
@@ -378,12 +381,12 @@ fun DocPhotoOrgWithCoverPreview() {
             TableItemVerticalMlcData(
                 id = "01",
                 title = UiText.DynamicString("Дата\nнародження:"),
-                value = "24.08.1991"
+                value = UiText.DynamicString("24.08.1991")
             ),
             TableItemVerticalMlcData(
                 id = "02",
                 title = UiText.DynamicString("Номер:"),
-                value = "XX000000"
+                value = UiText.DynamicString("XX000000")
             ),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
@@ -396,7 +399,7 @@ fun DocPhotoOrgWithCoverPreview() {
     )
     val docCover = DocCoverMlcData(
         title = UiText.DynamicString("Документ не знайдено \uD83D\uDE14"),
-        description = UiText.DynamicString("Він відсутній у реєстрі або вже недійсний. Ви не можете користуватися документом у Дії."),
+        text = UiText.DynamicString("Він відсутній у реєстрі або вже недійсний. Ви не можете користуватися документом у Дії."),
         button = button
     )
 
@@ -428,7 +431,8 @@ fun DocPhotoOrgWithCoverPreview() {
 @Composable
 fun DocNoPhotoOrgPreview() {
     val tickerAtomData = TickerAtomData(
-        type = TickerType.BIG_POSITIVE,
+        type = TickerType.INFORMATIVE,
+        usage = TickerUsage.GRAND,
         title = "Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • "
     )
     val docButtonHeading = DocButtonHeadingOrgData(
@@ -440,19 +444,17 @@ fun DocNoPhotoOrgPreview() {
     )
 
     val tableBlockOrgData = TableBlockPlaneOrgData(
-        headerMain = TableHeadingMoleculeData(
-            title = "Header".let { UiText.DynamicString(it) }
-        ),
+        headerMain = "Header".toDynamicString().toTableMainHeadingMlcData(),
         items = listOf(
             TableItemVerticalMlcData(
                 id = "01",
                 title = UiText.DynamicString("Дата\nнародження:"),
-                value = "24.08.1991"
+                value = UiText.DynamicString("24.08.1991")
             ),
             TableItemVerticalMlcData(
                 id = "02",
                 title = UiText.DynamicString("Номер:"),
-                value = "XX000000"
+                value = UiText.DynamicString("XX000000")
             ),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )

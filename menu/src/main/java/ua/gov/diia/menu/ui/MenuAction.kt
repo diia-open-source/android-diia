@@ -1,8 +1,10 @@
 package ua.gov.diia.menu.ui
 
+import ua.gov.diia.core.util.delegation.WithCrashlytics
+
 
 sealed class MenuAction {
-    object OpenPlayMarketAction : MenuAction()
+    data class OpenPlayMarketAction(val crashlytics: WithCrashlytics) : MenuAction()
     object OpenHelpAction : MenuAction()
     object OpenDiiaId : MenuAction()
     object OpenSignHistory : MenuAction()

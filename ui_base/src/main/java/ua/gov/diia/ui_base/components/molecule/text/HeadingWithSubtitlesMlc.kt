@@ -44,7 +44,7 @@ fun HeadingWithSubtitlesMlc(
         if (!data.subtitles.isNullOrEmpty()) {
             data.subtitles.forEach {
                 Text(
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = Modifier.padding(top = 16.dp),
                     text = it,
                     style = DiiaTextStyle.t1BigText,
                     color = Black

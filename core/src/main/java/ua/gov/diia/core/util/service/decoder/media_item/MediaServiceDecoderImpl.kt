@@ -4,13 +4,11 @@ import android.net.Uri
 import ua.gov.diia.core.models.media.MediaFileType
 import ua.gov.diia.core.models.media.MediaItem
 import ua.gov.diia.core.util.service.decoder.image.ImageCompressorService
-import ua.gov.diia.core.util.service.decoder.image.ImageDecoderService
 import ua.gov.diia.core.util.service.decoder.video.VideoDecoderService
 import javax.inject.Inject
 
 class MediaServiceDecoderImpl @Inject constructor(
     private val imageCompressor: ImageCompressorService,
-    private val imageDecoder: ImageDecoderService,
     private val videoDecoder: VideoDecoderService
 ) : MediaServiceDecoder {
 

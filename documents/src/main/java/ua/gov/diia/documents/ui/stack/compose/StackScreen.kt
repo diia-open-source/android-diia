@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -18,11 +19,12 @@ import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
-import ua.gov.diia.ui_base.components.infrastructure.screen.BodyRootContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.BottomBarRootContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.ComposeRootScreen
 import ua.gov.diia.ui_base.components.infrastructure.screen.ToolbarRootContainer
 import ua.gov.diia.ui_base.components.molecule.header.NavigationPanelMlcData
+import ua.gov.diia.ui_base.components.organism.pager.DocCarouselOrg
+import ua.gov.diia.ui_base.components.organism.pager.DocCarouselOrgData
 import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 
 @Composable
@@ -31,8 +33,7 @@ fun StackScreen(
     contentLoaded: Pair<String, Boolean> = Pair("", true),
     progressIndicator: Pair<String, Boolean> = Pair("", true),
     toolbar: SnapshotStateList<UIElementData>,
-    connectivityState: Boolean = true,
-    body: SnapshotStateList<UIElementData>,
+    body: State<DocCarouselOrgData?>,
     bottom: SnapshotStateList<UIElementData>? = null,
     onEvent: (UIAction) -> Unit
 ) {
@@ -73,13 +74,18 @@ fun StackScreen(
                 )
             },
             body = {
-                BodyRootContainer(
-                    bodyViews = body,
-                    progressIndicator = progressIndicator,
-                    contentLoaded = contentLoaded,
-                    onUIAction = onEvent,
-                    connectivityState = connectivityState
-                )
+                body.value?.let {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        DocCarouselOrg(
+                            data = it,
+                            progressIndicator = progressIndicator,
+                            onUIAction = onEvent
+                        )
+                    }
+                }
             },
             bottom = {
                 if (bottom != null) {

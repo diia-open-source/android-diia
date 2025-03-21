@@ -27,7 +27,6 @@ class KeepStateNavigator(
         navOptions: NavOptions?,
         navigatorExtras: Navigator.Extras?
     ): NavDestination? {
-
         val tag = destination.id.toString()
         val transaction = manager.beginTransaction()
 

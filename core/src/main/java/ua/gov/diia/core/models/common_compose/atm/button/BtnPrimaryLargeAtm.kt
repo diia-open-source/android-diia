@@ -19,5 +19,5 @@ data class BtnPrimaryLargeAtm(
     @Json(name = "action")
     val action: Action?,
     @Json(name = "items")
-    val items: List<BtnPlainIconAtm>,
+    val items: List<BtnPlainIconAtm>?,
 ): Parcelable

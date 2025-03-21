@@ -1,6 +1,8 @@
 package ua.gov.diia.ui_base.components.atom.button
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -67,16 +68,18 @@ fun BtnLoadPlainIconAtm(
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AnimatedVisibility(visible = progressIndicator.first == data.id && data.id.isNotEmpty() && progressIndicator.second) {
-            Box(modifier = Modifier.size(24.dp)) {
-                LoaderCircularEclipse23Subatomic()
+        if (progressIndicator.first == data.id && data.id.isNotEmpty() && progressIndicator.second) {
+            AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
+                LoaderCircularEclipse23Subatomic(modifier = Modifier.size(24.dp))
+
             }
-        }
-        AnimatedVisibility(visible = progressIndicator.first != data.id || !progressIndicator.second || data.id.isEmpty()) {
-            UiIconWrapperSubatomic(
-                modifier = Modifier.size(24.dp),
-                icon = data.icon
-            )
+        } else if (progressIndicator.first != data.id || !progressIndicator.second || data.id.isEmpty()) {
+            AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
+                UiIconWrapperSubatomic(
+                    modifier = Modifier.size(24.dp),
+                    icon = data.icon
+                )
+            }
         }
         Spacer(modifier = Modifier.width(8.dp))
         Text(
@@ -174,7 +177,9 @@ fun BtnLoadPlainIconAtm_Enabled_Long_Label() {
 @Composable
 @Preview
 fun BtnLoadPlainIconAtm_Enabled_Long_Label_Loading() {
-    val loadingState by remember { mutableStateOf("id" to false) }
+    val loadingState = remember {
+        mutableStateOf("id" to true)
+    }
 
     val data = BtnLoadPlainIconAtmData(
         componentId = "component_id".toDynamicString(),
@@ -189,8 +194,8 @@ fun BtnLoadPlainIconAtm_Enabled_Long_Label_Loading() {
     )
     BtnLoadPlainIconAtm(
         data = data,
-        progressIndicator = loadingState
+        progressIndicator = loadingState.value,
     ) {
-
+        loadingState.value = Pair("id", true)
     }
 }

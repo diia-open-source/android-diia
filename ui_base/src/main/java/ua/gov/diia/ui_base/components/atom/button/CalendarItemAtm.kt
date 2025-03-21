@@ -3,7 +3,7 @@ package ua.gov.diia.ui_base.components.atom.button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,33 +41,35 @@ fun CalendarItemAtm(
         else -> Black
     }
 
-    Box(
-        modifier = modifier
-            .size(40.dp)
-            .noRippleClickable {
-                if (!isDisabled && !isSelected) {
-                    onUIAction(UIAction(data.actionKey, data = data.title))
+    Box {
+        Box(
+            modifier = modifier
+                .requiredSize(40.dp)
+                .noRippleClickable {
+                    if (!isDisabled && !isSelected) {
+                        onUIAction(UIAction(data.actionKey, data = data.title))
+                    }
                 }
-            }
-            .composed {
-                if (data.isToday && data.selection != UIState.Selection.Selected) {
-                    border(
-                        width = 1.dp,
-                        color = if (isDisabled) BlackAlpha30 else Black,
-                        shape = CircleShape
-                    )
-                } else {
-                    background(colorBg, shape = CircleShape)
-                }
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = data.title,
-            color = colorText,
-            style = DiiaTextStyle.t2TextDescription,
-            textAlign = TextAlign.Center,
-        )
+                .composed {
+                    if (data.isToday && data.selection != UIState.Selection.Selected) {
+                        border(
+                            width = 1.dp,
+                            color = if (isDisabled) BlackAlpha30 else Black,
+                            shape = CircleShape
+                        )
+                    } else {
+                        background(colorBg, shape = CircleShape)
+                    }
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = data.title,
+                color = colorText,
+                style = DiiaTextStyle.t1BigText,
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }
 
@@ -113,7 +115,8 @@ fun CalendarItemAtmPreview_disabled() {
 fun CalendarItemAtmPreview_isToday() {
     val data = CalendarItemAtmData(
         title = "2",
-        isToday = true
+        isToday = true,
+        selection = UIState.Selection.Unselected
     )
     CalendarItemAtm(Modifier, data) {}
 }

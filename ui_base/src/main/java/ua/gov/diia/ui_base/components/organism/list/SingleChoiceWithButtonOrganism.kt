@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
@@ -28,7 +29,9 @@ fun SingleChoiceWithButtonOrganism(
     data: SingleChoiceWithButtonOrganismData,
     onUIAction: (UIAction) -> Unit
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier.padding(horizontal = 24.dp)
+    ) {
         CheckboxMolecule(
             data = data.radioData,
             onUIAction = onUIAction
@@ -50,14 +53,25 @@ data class SingleChoiceWithButtonOrganismData(
     val buttonData: ButtonIconAtomData?,
 ) : UIElementData {
 
-    fun mapSelected(selectedId: String): SingleChoiceWithButtonOrganismData {
+    fun mapSingleChoiceSelected(selectedId: String): SingleChoiceWithButtonOrganismData {
         return copy(radioData = radioData.mapSelected(CheckboxMode.SINGLE_CHOICE, selectedId))
     }
+    fun mapMultiChoiceSelected(selectedId: String): SingleChoiceWithButtonOrganismData {
+        return copy(radioData = radioData.mapSelected(CheckboxMode.MULTI_CHOICE, selectedId))
+    }
 
-    fun findSelectedItemId(): String? {
+    fun findSingleSelectedItemId(): String? {
         return radioData.options.find {
             it.selectionState == UIState.Selection.Selected && it.interactionState == UIState.Interaction.Enabled
         }?.id
+    }
+
+    fun findMultiSelectedItemsIds() : List<String> {
+        return radioData.options.filter {
+            it.selectionState == UIState.Selection.Selected && it.interactionState == UIState.Interaction.Enabled
+        }.map {
+            it.id
+        }
     }
 }
 

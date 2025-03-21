@@ -35,7 +35,7 @@
         app:layout_goneMarginTop="0dp"
         tools:hint="Write some text"
         tools:ignore="LabelFor,TextFields"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <ua.gov.diia.ui_base.views.common.MaskedEditText
         android:id="@+id/inputFieldPhone"
@@ -58,6 +58,29 @@
         mask:allowed_chars="1234567890"
         mask:mask="+38 (0##) ### ## ##"
         mask:maskHint="001234567"
+        tools:ignore="LabelFor,TextFields"
+        tools:visibility="gone" />
+
+    <ua.gov.diia.ui_base.views.common.MaskedInputField
+        android:id="@+id/ifMasked"
+        style="@style/InputViewText.Edit"
+        android:layout_width="0dp"
+        android:layout_height="17dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        android:hint="1234567890"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black_alpha_30"
+        android:visibility="gone"
+        app:keep_hint="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_goneMarginTop="0dp"
+        mask:addressMask="###############"
+        mask:addressMaskHint="1234567890"
         tools:ignore="LabelFor,TextFields"
         tools:visibility="visible" />
 
@@ -96,13 +119,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="title,text,inputField,inputFieldPhone" />
+        app:constraint_referenced_ids="title,text,inputField,inputFieldPhone,ifMasked" />
 
     <View
         android:id="@+id/delimiter"
         android:layout_width="match_parent"
         android:layout_height="@dimen/diia_delimiter_height"
         android:layout_marginTop="@dimen/middle"
+        android:background="@color/black"
         app:layout_constraintTop_toBottomOf="@id/contentBarrier" />
 
     <TextView

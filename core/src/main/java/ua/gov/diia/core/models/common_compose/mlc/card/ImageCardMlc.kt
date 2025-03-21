@@ -14,5 +14,7 @@ data class ImageCardMlc(
     @Json(name = "image")
     val image: String,
     @Json(name = "label")
-    val label: String
+    val label: String,
+    @Json(name = "componentId")
+    val componentId: String? = null
 )

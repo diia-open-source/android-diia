@@ -112,8 +112,8 @@ fun TableBlockTwoColumnsPlainOrgDataPreview() {
         heading = heading,
         photo = base64String,
         items = listOf(
-            TableItemVerticalMlcData(id = "01", title = UiText.DynamicString("Дата\nнародження:"), value = "24.08.1991"),
-            TableItemVerticalMlcData(id = "02", title = UiText.DynamicString("Номер:"), value = "XX000000"),
+            TableItemVerticalMlcData(id = "01", title = UiText.DynamicString("Дата\nнародження:"), value = UiText.DynamicString("24.08.1991")),
+            TableItemVerticalMlcData(id = "02", title = UiText.DynamicString("Номер:"), value = UiText.DynamicString("XX000000")),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )
@@ -137,8 +137,8 @@ fun TableBlockTwoColumnsPlainOrgDataPreview_NoPhoto() {
         heading = heading,
         photo = null,
         items = listOf(
-            TableItemVerticalMlcData(id = "01", title = UiText.DynamicString("Дата\nнародження:"), value = "24.08.1991"),
-            TableItemVerticalMlcData(id = "02", title = UiText.DynamicString("Номер:"), value = "XX000000"),
+            TableItemVerticalMlcData(id = "01", title = UiText.DynamicString("Дата\nнародження:"), value = UiText.DynamicString("24.08.1991")),
+            TableItemVerticalMlcData(id = "02", title = UiText.DynamicString("Номер:"), value = UiText.DynamicString("XX000000")),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )

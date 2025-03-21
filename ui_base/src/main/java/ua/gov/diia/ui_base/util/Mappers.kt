@@ -1,19 +1,14 @@
 package ua.gov.diia.ui_base.util
 
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import ua.gov.diia.core.models.common_compose.atm.button.BtnPlainIconAtm
-import ua.gov.diia.core.models.common_compose.atm.chip.ChipStatusAtm
-import ua.gov.diia.core.models.common_compose.atm.chip.Type
+import androidx.compose.ui.graphics.ImageBitmap
 import ua.gov.diia.core.models.common_compose.atm.icon.BadgeCounterAtm
 import ua.gov.diia.core.models.common_compose.atm.icon.DoubleIconAtm
 import ua.gov.diia.core.models.common_compose.atm.icon.IconAtm
-import ua.gov.diia.core.models.common_compose.atm.icon.SmallIconAtm
 import ua.gov.diia.core.models.common_compose.atm.icon.UserPictureAtm
 import ua.gov.diia.core.models.common_compose.atm.media.ArticlePicAtm
 import ua.gov.diia.core.models.common_compose.atm.text.SectionTitleAtm
 import ua.gov.diia.core.models.common_compose.atm.text.TickerAtm
 import ua.gov.diia.core.models.common_compose.general.Action
-import ua.gov.diia.core.models.common_compose.general.ButtonStates
 import ua.gov.diia.core.models.common_compose.mlc.button.BtnIconRoundedMlc
 import ua.gov.diia.core.models.common_compose.mlc.card.BlackCardMlc
 import ua.gov.diia.core.models.common_compose.mlc.card.HalvedCardMlc
@@ -23,34 +18,32 @@ import ua.gov.diia.core.models.common_compose.mlc.card.SmallNotificationMlc
 import ua.gov.diia.core.models.common_compose.mlc.card.UserCardMlc
 import ua.gov.diia.core.models.common_compose.mlc.card.VerticalCardMlc
 import ua.gov.diia.core.models.common_compose.mlc.card.WhiteCardMlc
+import ua.gov.diia.core.models.common_compose.mlc.header.NavigationPanelMlc
 import ua.gov.diia.core.models.common_compose.mlc.header.TitleGroupMlc
-import ua.gov.diia.core.models.common_compose.mlc.list.ListItemMlc
-import ua.gov.diia.core.models.common_compose.mlc.media.ArticleVideoMlc
 import ua.gov.diia.core.models.common_compose.mlc.text.TextLabelContainerMlc
 import ua.gov.diia.core.models.common_compose.org.button.BtnIconRoundedGroupOrg
 import ua.gov.diia.core.models.common_compose.org.carousel.ArticlePicCarouselOrg
 import ua.gov.diia.core.models.common_compose.org.carousel.HalvedCardCarouselOrg
 import ua.gov.diia.core.models.common_compose.org.carousel.SmallNotificationCarouselOrg
 import ua.gov.diia.core.models.common_compose.org.carousel.VerticalCardCarouselOrg
-import ua.gov.diia.core.models.common_compose.org.header.ChipTabsOrg
 import ua.gov.diia.core.models.common_compose.org.header.MediaTitleOrg
-import ua.gov.diia.core.models.common_compose.mlc.header.NavigationPanelMlc
 import ua.gov.diia.core.models.common_compose.org.header.TopGroupOrg
 import ua.gov.diia.core.models.common_compose.org.list.ListItemGroupOrg
 import ua.gov.diia.core.models.common_compose.table.HeadingWithSubtitlesMlc
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
-import ua.gov.diia.ui_base.components.atom.button.BtnPlainIconAtmData
 import ua.gov.diia.ui_base.components.atom.button.toUiModel
 import ua.gov.diia.ui_base.components.atom.icon.BadgeCounterAtmData
 import ua.gov.diia.ui_base.components.atom.icon.DoubleIconAtmData
 import ua.gov.diia.ui_base.components.atom.icon.IconAtmData
-import ua.gov.diia.ui_base.components.atom.icon.SmallIconAtmData
 import ua.gov.diia.ui_base.components.atom.icon.UserPictureAtmData
+import ua.gov.diia.ui_base.components.atom.icon.toUiModel
 import ua.gov.diia.ui_base.components.atom.media.ArticlePicAtmData
 import ua.gov.diia.ui_base.components.atom.status.ChipStatusAtmData
 import ua.gov.diia.ui_base.components.atom.status.StatusChipType
 import ua.gov.diia.ui_base.components.atom.text.SectionTitleAtmData
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
+import ua.gov.diia.ui_base.components.atom.text.TickerType
+import ua.gov.diia.ui_base.components.atom.text.TickerUsage
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextParameter
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
@@ -73,11 +66,10 @@ import ua.gov.diia.ui_base.components.molecule.card.VerticalCardMlcData
 import ua.gov.diia.ui_base.components.molecule.card.WhiteCardMlcData
 import ua.gov.diia.ui_base.components.molecule.header.NavigationPanelMlcData
 import ua.gov.diia.ui_base.components.molecule.header.TitleGroupMlcData
-import ua.gov.diia.ui_base.components.molecule.header.chiptabbar.ChipTabMoleculeDataV2
-import ua.gov.diia.ui_base.components.molecule.header.chiptabbar.ChipTabsOrgData
 import ua.gov.diia.ui_base.components.molecule.header.toUiModel
 import ua.gov.diia.ui_base.components.molecule.list.ListItemMlcData
-import ua.gov.diia.ui_base.components.molecule.media.ArticleVideoMlcData
+import ua.gov.diia.ui_base.components.molecule.list.toUiModel
+import ua.gov.diia.ui_base.components.molecule.media.toUiModel
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesMlcData
 import ua.gov.diia.ui_base.components.molecule.text.TextLabelContainerMlcData
 import ua.gov.diia.ui_base.components.organism.bottom.BtnIconRoundedGroupOrgData
@@ -86,6 +78,7 @@ import ua.gov.diia.ui_base.components.organism.carousel.HalvedCardCarouselOrgDat
 import ua.gov.diia.ui_base.components.organism.carousel.SimpleCarouselCard
 import ua.gov.diia.ui_base.components.organism.carousel.SmallNotificationCarouselOrgData
 import ua.gov.diia.ui_base.components.organism.carousel.VerticalCardCarouselOrgData
+import ua.gov.diia.ui_base.components.organism.chip.toUiModel
 import ua.gov.diia.ui_base.components.organism.header.MediaTitleOrgData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 import ua.gov.diia.ui_base.components.organism.list.ListItemGroupOrgData
@@ -94,39 +87,6 @@ import ua.gov.diia.ui_base.components.atom.text.TickerType as TickerTypeCompose
 /**
  *  Atoms
  */
-
-fun BtnPlainIconAtm.toUiModel(
-    id: String? = null
-): BtnPlainIconAtmData {
-    return BtnPlainIconAtmData(
-        id = id ?: UIActionKeysCompose.BTN_PLAIN_ICON_ATM,
-        label = label.toDynamicString(),
-        icon = icon.toDrawableResource(),
-        action = action?.toDataActionWrapper(),
-        interactionState = when (state) {
-            ButtonStates.enabled.name -> UIState.Interaction.Enabled
-            ButtonStates.disabled.name -> UIState.Interaction.Disabled
-            else -> UIState.Interaction.Enabled
-        },
-        componentId = this.componentId?.let { UiText.DynamicString(it) }
-    )
-}
-
-fun ChipStatusAtm.toUiModel(id: String? = null): ChipStatusAtmData {
-    return ChipStatusAtmData(
-        title = name,
-        type = when (type) {
-            Type.SUCCESS.id -> StatusChipType.POSITIVE
-            Type.PENDING.id -> StatusChipType.PENDING
-            Type.FAIL.id -> StatusChipType.NEGATIVE
-            Type.NEUTRAL.id -> StatusChipType.NEUTRAL
-            else -> {
-                StatusChipType.NEUTRAL
-            }
-        }
-    )
-}
-
 fun BadgeCounterAtm.toUiModel(): BadgeCounterAtmData {
     return BadgeCounterAtmData(
         count = count
@@ -142,22 +102,15 @@ fun DoubleIconAtm.toUiModel(id: String? = null): DoubleIconAtmData {
     )
 }
 
-fun IconAtm.toUiModel(id: String? = null): IconAtmData {
+fun IconAtm.toUiModel(id: String? = null, actionKey: String? = null): IconAtmData {
     return IconAtmData(
+        actionKey = actionKey ?: UIActionKeysCompose.ICON_ATM_DATA,
         id = id,
         componentId = componentId.orEmpty(),
         code = code,
         accessibilityDescription = accessibilityDescription,
-        action = action?.toDataActionWrapper()
-    )
-}
-
-fun SmallIconAtm.toUiModel(id: String? = null): SmallIconAtmData {
-    return SmallIconAtmData(
-        id = id,
-        code = code,
-        accessibilityDescription = accessibilityDescription,
-        action = action?.toDataActionWrapper()
+        action = action?.toDataActionWrapper(),
+        interactionState = if (isEnable == false) UIState.Interaction.Disabled else UIState.Interaction.Enabled
     )
 }
 
@@ -168,19 +121,22 @@ fun ArticlePicAtm.toUiModel(id: String? = null): ArticlePicAtmData {
     )
 }
 
-fun SectionTitleAtm.toUiModel(): SectionTitleAtmData {
-    return SectionTitleAtmData(
-        label = UiText.DynamicString(label)
-    )
-}
-
 fun Action.toDataActionWrapper(): DataActionWrapper {
     return DataActionWrapper(
         type = type,
         subtype = subtype,
         resource = resource,
-        subresource = subresource
+        subresource = subresource,
+        condition = condition
     )
+}
+
+fun List<Action>.toDataActionsWrapper(): List<DataActionWrapper> {
+    val list = mutableListOf<DataActionWrapper>()
+    this.forEach { item ->
+        list.add(item.toDataActionWrapper())
+    }
+    return list
 }
 
 
@@ -190,10 +146,20 @@ fun TickerAtm.toUiModel(): TickerAtomData {
         componentId = componentId.orEmpty(),
         title = value,
         type = when (type) {
-            TickerAtm.TickerType.warning -> TickerTypeCompose.SMALL_WARNING
-            TickerAtm.TickerType.positive -> TickerTypeCompose.SMALL_POSITIVE
-            TickerAtm.TickerType.neutral -> TickerTypeCompose.SMALL_NEUTRAL
-            TickerAtm.TickerType.informative -> TickerTypeCompose.SMALL_INFORMATIVE
+            TickerAtm.TickerType.warning -> TickerTypeCompose.WARNING
+            TickerAtm.TickerType.positive -> TickerTypeCompose.POSITIVE
+            TickerAtm.TickerType.neutral -> TickerTypeCompose.NEUTRAL
+            TickerAtm.TickerType.informative -> TickerTypeCompose.INFORMATIVE
+            TickerAtm.TickerType.negative -> TickerTypeCompose.NEGATIVE
+            TickerAtm.TickerType.pink -> TickerType.PINK
+            TickerAtm.TickerType.rainbow -> TickerType.RAINBOW
+            TickerAtm.TickerType.blue -> TickerType.BLUE
+        },
+        usage = when(usage){
+            TickerAtm.UsageType.grand -> TickerUsage.GRAND
+            TickerAtm.UsageType.base -> TickerUsage.BASE
+            TickerAtm.UsageType.stackedCard -> TickerUsage.STACKED_CARD
+            else -> TickerUsage.DOCUMENT
         },
         action = action?.toDataActionWrapper()
     )
@@ -251,20 +217,6 @@ fun IconCardMlc.toUiModel(id: String? = null): IconCardMlcData {
     )
 }
 
-fun ImageCardMlc.toUiModel(
-    id: String? = null,
-    contentDescription: UiText? = null
-): ImageCardMlcData {
-    return ImageCardMlcData(
-        id = id ?: UIActionKeysCompose.IMAGE_CARD_MLC,
-        title = label.toDynamicString(),
-        iconEnd = iconRight.toDrawableResourceOrNull(),
-        image = image,
-        contentDescription = contentDescription,
-        action = action?.toDataActionWrapper()
-    )
-}
-
 fun SmallNotificationMlc.toUiModel(): SmallNotificationMlcData {
     return SmallNotificationMlcData(
         id = this.id,
@@ -294,9 +246,10 @@ fun WhiteCardMlc.toUiModel(id: String? = null): WhiteCardMlcData {
         smallIcon = smallIconAtm?.toUiModel(),
         iconAtm = iconAtm?.toUiModel(),
         doubleIconAtm = doubleIconAtm?.toUiModel(),
-        title = title.toDynamicStringOrNull() as UiText,
+        title = title?.toDynamicStringOrNull(),
         label = label.toDynamicString(),
-        action = action?.toDataActionWrapper()
+        action = action?.toDataActionWrapper(),
+        largeIconAtm = largeIconAtm?.toUiModel()
     )
 }
 
@@ -321,41 +274,9 @@ fun TitleGroupMlc.toUiModel(): TitleGroupMlcData {
     )
 }
 
-fun ListItemMlc.toUiModel(id: String? = null): ListItemMlcData {
-    return ListItemMlcData(
-        componentId = this.componentId?.let { UiText.DynamicString(it) },
-        id = this.id ?: id ?: UIActionKeysCompose.LIST_ITEM_MLC,
-        label = label.toDynamicString(),
-        description = description?.toDynamicStringOrNull(),
-        iconLeft = iconLeft?.code?.let {
-            UiIcon.DrawableResource(it)
-        },
-        iconRight = iconRight?.code?.let {
-            UiIcon.DrawableResource(it)
-        },
-        logoLeft = logoLeft?.let {
-            UiIcon.DynamicIconBase64(it)
-        },
-        action = action?.toDataActionWrapper(),
-        interactionState = when (state) {
-            ButtonStates.enabled.name -> UIState.Interaction.Enabled
-            ButtonStates.disabled.name -> UIState.Interaction.Disabled
-            ButtonStates.invisible.name -> UIState.Interaction.Disabled
-            else -> UIState.Interaction.Enabled
-        }
-    )
-}
-
-fun ArticleVideoMlc.toUiModel(
-    id: String? = null
-): ArticleVideoMlcData {
-    return ArticleVideoMlcData(
-        url = source,
-    )
-}
-
 fun TextLabelContainerMlc.toUiModel(): TextLabelContainerMlcData {
     return TextLabelContainerMlcData(
+        componentId = UiText.DynamicString(componentId.orEmpty()),
         data = TextWithParametersData(
             actionKey = UIActionKeysCompose.TEXT_LABEL_CONTAINER_MLC,
             text = text.toDynamicString(),
@@ -456,25 +377,25 @@ fun VerticalCardCarouselOrg.toUiModel(id: String? = null): VerticalCardCarouselO
 }
 
 //TODO ChipTabsOrg model should be redesigned with ChipTabsMlc usage
-fun ChipTabsOrg.toUiModel(): ChipTabsOrgData {
-    return ChipTabsOrgData(
-        tabs = SnapshotStateList<ChipTabMoleculeDataV2>().apply {
-            items.forEach {
-                this.add(
-                    ChipTabMoleculeDataV2(
-                        id = it.code ?: "",
-                        title = it.label,
-                        selectionState = if (it.code == preselectedCode) {
-                            UIState.Selection.Selected
-                        } else {
-                            UIState.Selection.Unselected
-                        }
-                    )
-                )
-            }
-        }
-    )
-}
+//fun ChipTabsOrg.toUiModel(): ChipTabsOrgData {
+//    return ChipTabsOrgData(
+//        tabs = SnapshotStateList<ChipTabMoleculeDataV2>().apply {
+//            items.forEach {
+//                this.add(
+//                    ChipTabMoleculeDataV2(
+//                        id = it.code ?: "",
+//                        title = it.label,
+//                        selectionState = if (it.code == preselectedCode) {
+//                            UIState.Selection.Selected
+//                        } else {
+//                            UIState.Selection.Unselected
+//                        }
+//                    )
+//                )
+//            }
+//        }
+//    )
+//}
 
 fun MediaTitleOrg.toUiModel(): MediaTitleOrgData {
     return MediaTitleOrgData(
@@ -488,7 +409,8 @@ fun NavigationPanelMlc.toUiModel(): NavigationPanelMlcData {
     return NavigationPanelMlcData(
         title = label.toDynamicStringOrNull(),
         isContextMenuExist = ellipseMenu?.isNotEmpty() ?: false,
-        componentId = componentId.toDynamicStringOrNull()
+        componentId = componentId.toDynamicStringOrNull(),
+        iconAtm = iconAtm?.toUiModel()
     )
 }
 
@@ -511,7 +433,7 @@ fun ListItemGroupOrg.toUiModellistItemGroupOrg(id: String? = null): ListItemGrou
     )
 }
 
-fun UserPictureAtm.toUiModel(docPhoto: String? = null): UserPictureAtmData {
+fun UserPictureAtm.toUiModel(docPhoto: ImageBitmap? = null): UserPictureAtmData {
     return UserPictureAtmData(
         componentId = this.componentId.orEmpty(),
         defaultImageCode = this.defaultImageCode?.let {
@@ -525,7 +447,7 @@ fun UserPictureAtm.toUiModel(docPhoto: String? = null): UserPictureAtmData {
             }
         },
         docPhoto = this.useDocPhoto?.let {
-            if (!it) {
+            if (it) {
                 docPhoto
             } else null
         },
@@ -533,7 +455,7 @@ fun UserPictureAtm.toUiModel(docPhoto: String? = null): UserPictureAtmData {
     )
 }
 
-fun UserCardMlc.toUiModel(docPhoto: String? = null): UserCardMlcData {
+fun UserCardMlc.toUiModel(docPhoto: ImageBitmap? = null): UserCardMlcData {
     return UserCardMlcData(
         componentId = this.componentId.orEmpty(),
         userPicture = this.userPictureAtm.toUiModel(docPhoto),

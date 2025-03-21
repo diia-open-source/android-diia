@@ -1,23 +1,15 @@
 package ua.gov.diia.ui_base.components.molecule.media
 
-import android.media.metrics.PlaybackStateEvent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,241 +17,143 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.google.android.exoplayer2.util.MimeTypes
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import ua.gov.diia.core.models.common_compose.mlc.media.ArticleVideoMlc
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.conditional
+import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
+import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStringOrNull
 import ua.gov.diia.ui_base.components.molecule.loading.FullScreenLoadingMolecule
+import ua.gov.diia.ui_base.components.molecule.media.player.ExoPlayerPortraitComposeView
+import ua.gov.diia.ui_base.components.noRippleClickable
+import ua.gov.diia.ui_base.components.organism.FullScreenVideoOrgData
 import ua.gov.diia.ui_base.components.organism.carousel.SimpleCarouselCard
-import ua.gov.diia.ui_base.components.theme.BlueAlpha37
+import ua.gov.diia.ui_base.components.organism.toUIModel
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ArticleVideoMlc(
     modifier: Modifier = Modifier,
     data: ArticleVideoMlcData,
     inCarousel: Boolean = false,
     clickable: Boolean = true,
-    connectivityState: Boolean
+    connectivityState: Boolean,
+    onUIAction: (UIAction) -> Unit
 ) {
-
-    val context = LocalContext.current
-    val exoPlayer = remember {
-        ExoPlayer.Builder(context).build()
-    }
-
-    val mediaItem = MediaItem.Builder()
-        .setUri(data.url)
-        .setMimeType(MimeTypes.VIDEO_MP4)
-        .build()
-    exoPlayer.setMediaItem(mediaItem)
-    exoPlayer.prepare()
-
-    var lifecycle by remember {
-        mutableStateOf(Lifecycle.Event.ON_CREATE)
-    }
-
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            lifecycle = event
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            exoPlayer.release()
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-
-    var shouldShowControls by remember { mutableStateOf(true) }
-
-    var isPlaying by remember { mutableStateOf(exoPlayer.isPlaying) }
-
-    var playbackState by remember { mutableStateOf(exoPlayer.playbackState) }
-
-    Box(
-        modifier = modifier
-            .conditional(!inCarousel) {
-                padding(horizontal = 24.dp)
-                    .padding(top = 24.dp)
-            }
-            .fillMaxWidth()
-            .aspectRatio(16f / 9f)
-            .clip(RoundedCornerShape(16.dp))
-    ) {
-        DisposableEffect(key1 = Unit) {
-            val listener =
-                object : Player.Listener {
-                    override fun onEvents(
-                        player: Player,
-                        events: Player.Events
-                    ) {
-                        super.onEvents(player, events)
-                        isPlaying = player.isPlaying
-                        playbackState = player.playbackState
-                    }
-                }
-
-            exoPlayer.addListener(listener)
-
-            onDispose {
-                exoPlayer.removeListener(listener)
-                exoPlayer.release()
-            }
-        }
-
-        AndroidView(
-            modifier =
-            Modifier.conditional(clickable) {
-                clickable {
-                    shouldShowControls = shouldShowControls.not()
-                }
-            },
-            factory = {
-                StyledPlayerView(context).apply {
-                    player = exoPlayer
-                    useController = false
-                }
-            },
-            update = {
-                when (lifecycle) {
-                    Lifecycle.Event.ON_STOP -> {
-                        it.onPause()
-                        it.player?.pause()
-                    }
-
-                    Lifecycle.Event.ON_RESUME -> {
-                        it.onResume()
-                    }
-
-                    else -> Unit
-                }
-            }
-        )
-
-        PlayerControls(
-            modifier = Modifier.fillMaxSize(),
-            isVisible = { shouldShowControls },
-            isPlaying = { isPlaying },
-            playbackState = { playbackState },
-            onReplayClick = { exoPlayer.seekTo(0) },
-            onPauseToggle = {
-                when {
-                    exoPlayer.isPlaying -> {
-                        exoPlayer.pause()
-                    }
-
-                    playbackState == PlaybackStateEvent.STATE_ENDED -> {
-                        exoPlayer.seekTo(0)
-                        exoPlayer.play()
-                    }
-
-                    else -> {
-                        exoPlayer.play()
-                    }
-                }
-                isPlaying = isPlaying.not()
-            }
-        )
-        if (!connectivityState) {
-            FullScreenLoadingMolecule()
-        }
-    }
-}
-
-@Composable
-private fun PlayerControls(
-    modifier: Modifier = Modifier,
-    isVisible: () -> Boolean,
-    isPlaying: () -> Boolean,
-    onPauseToggle: () -> Unit,
-    onReplayClick: () -> Unit,
-    playbackState: () -> Int,
-) {
-
-    val visible = remember(isVisible()) { isVisible() }
-
-    AnimatedVisibility(
-        modifier = modifier,
-        visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Box(modifier = Modifier.background(BlueAlpha37)) {
-            CenterControls(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxWidth(),
-                isPlaying = isPlaying,
-                onPauseToggle = onPauseToggle,
-                playbackState = playbackState,
-                onReplayClick = onReplayClick
-            )
-        }
-    }
-}
-
-@Composable
-private fun CenterControls(
-    modifier: Modifier = Modifier,
-    isPlaying: () -> Boolean,
-    playbackState: () -> Int,
-    onReplayClick: () -> Unit,
-    onPauseToggle: () -> Unit,
-) {
-    val isVideoPlaying = remember(isPlaying()) { isPlaying() }
-    val playerState = remember(playbackState()) { playbackState() }
-
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-
+    if (data.fullScreenVideoOrg != null) {
+        var isLoading by remember { mutableStateOf(true) }
         Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clickable { if (playerState == PlaybackStateEvent.STATE_ENDED) onReplayClick() else onPauseToggle() },
+            modifier = modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .testTag(data.componentId?.asString() ?: "")
+                .noRippleClickable { onUIAction(UIAction(actionKey = data.actionKey)) }
+                .conditional(!inCarousel) {
+                    padding(horizontal = 24.dp).padding(top = 24.dp)
+                },
             contentAlignment = Alignment.Center
         ) {
+            GlideImage(
+                model = data.thumbnail.orEmpty(),
+                contentDescription = "",
+                modifier = Modifier
+                    .wrapContentSize()
+                    .clip(RoundedCornerShape(16.dp)),
+                contentScale = ContentScale.FillBounds,
+                loading = placeholder(R.drawable.diia_article_placeholder),
+                failure = placeholder(R.drawable.diia_article_placeholder),
+                requestBuilderTransform = { requestBuilder ->
+                    requestBuilder.load(data.thumbnail.orEmpty())
+                    requestBuilder.listener(object : RequestListener<Drawable> {
+
+                        override fun onResourceReady(
+                            resource: Drawable,
+                            model: Any,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            isLoading = false
+                            return false
+                        }
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            isLoading = false
+                            return false
+                        }
+                    })
+                }
+            )
+            if (isLoading) {
+                FullScreenLoadingMolecule()
+            }
+
             Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = when {
-                    isVideoPlaying -> {
-                        painterResource(id = R.drawable.ic_player_pause)
-                    }
-
-                    isVideoPlaying.not() && playerState == PlaybackStateEvent.STATE_ENDED -> {
-                        // Hide the play button when the playback state is ENDED
-                        painterResource(id = R.drawable.ic_player_play)
-                    }
-
-                    else -> {
-                        painterResource(id = R.drawable.ic_player_play)
-                    }
-                },
-                contentDescription = "Play/Pause"
+                modifier = modifier.size(64.dp),
+                painter = painterResource(id = R.drawable.ic_player_btn_atm_play),
+                contentDescription = null
             )
         }
+    } else {
+        ExoPlayerPortraitComposeView(
+            modifier = modifier.testTag(data.componentId?.asString() ?: ""),
+            url = data.url,
+            inCarousel = inCarousel,
+            clickable = clickable,
+            connectivityState = connectivityState
+        )
     }
-
 }
 
 
 data class ArticleVideoMlcData(
-    val url: String? = null
+    val actionKey: String = UIActionKeysCompose.ARTICLE_VIDEO_MLC,
+    val url: String? = null,
+    val thumbnail: String? = null,
+    val componentId: UiText? = null,
+    val fullScreenVideoOrg: FullScreenVideoOrgData? = null
 ) : SimpleCarouselCard
+
+fun ArticleVideoMlc.toUiModel(): ArticleVideoMlcData {
+    return ArticleVideoMlcData(
+        url = source,
+        thumbnail = thumbnail,
+        componentId = this.componentId.toDynamicStringOrNull(),
+        fullScreenVideoOrg = this.fullScreenVideoOrg?.toUIModel()
+    )
+}
+
+fun generateArticleVideoMlcMockData(): ArticleVideoMlcData {
+    return ArticleVideoMlcData(url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4")
+}
+
+fun generateArticleVideoMlcFullScreenMockData(): ArticleVideoMlcData {
+    return ArticleVideoMlcData(
+        url = null,
+        thumbnail = "https://picsum.photos/id/1/400/200",
+        fullScreenVideoOrg = FullScreenVideoOrgData(
+            source = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+        )
+    )
+}
 
 @Preview
 @Composable
@@ -267,7 +161,19 @@ fun ArticleVideoAtmPreview() {
     val state = remember { mutableStateOf(true) }
     ArticleVideoMlc(
         modifier = Modifier,
-        data = ArticleVideoMlcData(url = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"),
+        data = generateArticleVideoMlcMockData(),
         connectivityState = state.value
-    )
+    ) {}
+}
+
+
+@Preview
+@Composable
+fun ArticleVideoAtmPreview_full_screen() {
+    val state = remember { mutableStateOf(true) }
+    ArticleVideoMlc(
+        modifier = Modifier,
+        data = generateArticleVideoMlcFullScreenMockData(),
+        connectivityState = state.value
+    ) {}
 }

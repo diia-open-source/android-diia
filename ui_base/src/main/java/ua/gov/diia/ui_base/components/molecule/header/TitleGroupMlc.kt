@@ -29,6 +29,7 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
+import ua.gov.diia.ui_base.components.noRippleClickable
 import ua.gov.diia.ui_base.components.theme.BlackAlpha50
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 
@@ -76,6 +77,13 @@ fun TitleGroupMlc(
             if (title != null) {
                 Text(
                     modifier = Modifier
+                        .noRippleClickable {
+                            onUIAction(
+                                UIAction(
+                                    actionKey = data.actionKey
+                                )
+                            )
+                        }
                         .weight(1f),
                     text = title,
                     style = DiiaTextStyle.hero2Text

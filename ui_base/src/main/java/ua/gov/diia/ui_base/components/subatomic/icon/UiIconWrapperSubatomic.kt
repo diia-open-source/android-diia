@@ -92,7 +92,11 @@ fun UiIconWrapperSubatomic(
             }
         }
         is UiIcon.DrawableResInt ->{
-
+            Image(
+                modifier = modifier,
+                painter = painterResource(id = icon.res),
+                contentDescription = ""
+            )
         }
     }
 }

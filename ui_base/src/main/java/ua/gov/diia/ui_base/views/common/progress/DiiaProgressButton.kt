@@ -11,19 +11,20 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.databinding.BindingAdapter
+import ua.gov.diia.core.util.extensions.validateResource
 import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.adapters.binding.setTextColorCompat
 import ua.gov.diia.ui_base.adapters.binding.setImageDrawableEndCompat
 import ua.gov.diia.ui_base.adapters.binding.setImageDrawableStartCompat
-import ua.gov.diia.core.util.extensions.validateResource
+import ua.gov.diia.ui_base.adapters.binding.setTextColorCompat
 
 class DiiaProgressButton @JvmOverloads constructor(
     context: Context,
     attr: AttributeSet? = null,
     defAttrStyle: Int = 0
 ) : ConstraintLayout(context, attr, defAttrStyle) {
-
 
     private enum class ButtonMode(val code: Int) {
         SOLID(0),
@@ -39,8 +40,10 @@ class DiiaProgressButton @JvmOverloads constructor(
     private val doneButtonTitle: TextView
 
     private var currentButtonMode: Int? = 0
+
     @DrawableRes
     private var successDrawableStart: Int? = null
+
     @DrawableRes
     private var successDrawableEnd: Int? = null
 
@@ -78,14 +81,14 @@ class DiiaProgressButton @JvmOverloads constructor(
         }
     }
 
-    fun setSuccessModeDrawableEnd(@DrawableRes drawableRes: Int?){
+    fun setSuccessModeDrawableEnd(@DrawableRes drawableRes: Int?) {
         drawableRes?.validateResource { res ->
             successDrawableEnd = res
             setButtonMode(currentButtonMode)
         }
     }
 
-    fun setSuccessModeDrawableStart(@DrawableRes drawableRes: Int?){
+    fun setSuccessModeDrawableStart(@DrawableRes drawableRes: Int?) {
         drawableRes?.validateResource { res ->
             successDrawableStart = res
             setButtonMode(currentButtonMode)
@@ -99,24 +102,28 @@ class DiiaProgressButton @JvmOverloads constructor(
         }
     }
 
-
     fun setButtonMode(mode: Int?) {
         when (mode) {
             ButtonMode.SOLID.code -> {
                 textButton.apply {
-                    background = ContextCompat.getDrawable(context, R.drawable.line_button_black_select)
+                    background =
+                        ContextCompat.getDrawable(context, R.drawable.line_button_black_select)
                     enableSuccessDrawables(false)
                     setTextColorCompat(R.color.white)
                 }
 
-                progressButtonContainer.background = ContextCompat.getDrawable(context, R.drawable.black_enable_button)
+                progressButtonContainer.background =
+                    ContextCompat.getDrawable(context, R.drawable.black_enable_button)
                 progressButtonTitle.setTextColorCompat(R.color.white)
             }
+
             ButtonMode.OUTLINED.code -> {
                 textButton.apply {
-                    background = ContextCompat.getDrawable(context, R.drawable.outlined_button_black_selector)
+                    background =
+                        ContextCompat.getDrawable(context, R.drawable.outlined_button_black_selector)
                     enableSuccessDrawables(false)
-                    val colorList = ContextCompat.getColorStateList(context, R.color.outlined_button_text)
+                    val colorList =
+                        ContextCompat.getColorStateList(context, R.color.outlined_button_text)
                     setTextColor(colorList)
                 }
 
@@ -124,19 +131,23 @@ class DiiaProgressButton @JvmOverloads constructor(
                     ContextCompat.getDrawable(context, R.drawable.outlined_button_black)
                 progressButtonTitle.setTextColorCompat(R.color.black)
             }
+
             ButtonMode.TEXT.code -> {
                 textButton.apply {
                     background = null
                     enableSuccessDrawables(false)
-                    val colorList = ContextCompat.getColorStateList(context, R.color.outlined_button_text)
+                    val colorList =
+                        ContextCompat.getColorStateList(context, R.color.outlined_button_text)
                     setTextColor(colorList)
                 }
                 progressButtonContainer.background = null
                 progressButtonTitle.setTextColorCompat(R.color.black)
             }
+
             ButtonMode.SUCCESS.code -> {
                 textButton.apply {
-                    background = ContextCompat.getDrawable(context, R.drawable.line_button_green_select)
+                    background =
+                        ContextCompat.getDrawable(context, R.drawable.line_button_green_select)
                     setTextColorCompat(R.color.white)
                     enableSuccessDrawables(true)
                 }
@@ -147,7 +158,9 @@ class DiiaProgressButton @JvmOverloads constructor(
 
     private fun enableSuccessDrawables(enable: Boolean) {
         if (enable) {
-            successDrawableStart.validateResource { res -> textButton.setImageDrawableStartCompat(res) }
+            successDrawableStart.validateResource { res ->
+                textButton.setImageDrawableStartCompat(res)
+            }
             successDrawableEnd.validateResource { res -> textButton.setImageDrawableEndCompat(res) }
         } else {
             textButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
@@ -170,6 +183,12 @@ class DiiaProgressButton @JvmOverloads constructor(
         }
     }
 
+    fun setButtonTitle(title: String?) =
+        title?.let { text -> textButton.text = text }
+
+    fun setProgressTitle(title: String?) =
+        title?.let { text -> progressButtonTitle.text = text }
+
     fun setIsLoading(loading: Boolean?) {
         if (loading == true) {
             textButton.visibility = View.GONE
@@ -178,6 +197,10 @@ class DiiaProgressButton @JvmOverloads constructor(
             textButton.visibility = View.VISIBLE
             progressButtonContainer.visibility = View.GONE
         }
+    }
+
+    fun setIsLoading(isLoading: Boolean) {
+        progressButtonContainer.isVisible = isLoading
     }
 
     fun setIsEnabled(enabled: Boolean?) {
@@ -199,6 +222,15 @@ class DiiaProgressButton @JvmOverloads constructor(
     fun setIsDone(done: Boolean) {
         if (done) doneIndicator.visibility = VISIBLE
         else doneIndicator.visibility = GONE
+    }
+
+    fun setProgressContainerToMatchButtonSize() {
+        progressButtonContainer.updateLayoutParams<LayoutParams> {
+            width = 0
+            height = 0
+            bottomToBottom = LayoutParams.PARENT_ID
+            matchConstraintDefaultWidth = LayoutParams.MATCH_CONSTRAINT_SPREAD
+        }
     }
 }
 

@@ -6,6 +6,8 @@ import ua.gov.diia.core.models.common_compose.atm.button.BtnPlainIconAtm
 
 @JsonClass(generateAdapter = true)
 data class MediaUploadGroupOrg(
+    @Json(name = "componentId")
+    val componentId: String?,
     @Json(name = "title")
     val title: String?,
     @Json(name = "description")

@@ -1,12 +1,12 @@
 package ua.gov.diia.ui_base.components.atom.button
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -14,13 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.core.models.common_compose.atm.button.BtnPrimaryDefaultAtm
 import ua.gov.diia.core.models.common_compose.general.ButtonStates
-import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -34,6 +35,7 @@ import ua.gov.diia.ui_base.components.theme.BlackAlpha10
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.White
 import ua.gov.diia.ui_base.util.toDataActionWrapper
+import ua.gov.diia.ui_base.util.toDataActionsWrapper
 
 @Composable
 fun BtnPrimaryDefaultAtm(
@@ -65,28 +67,36 @@ fun BtnPrimaryDefaultAtm(
                     UIAction(
                         actionKey = data.actionKey,
                         data = data.id,
-                        action = data.action
+                        action = data.action,
+                        actions = data.actions
                     )
                 )
             }
         }
     ) {
-        AnimatedVisibility(visible = isLoading.value) {
-            Row(modifier = Modifier.padding(start = 16.dp)) {
-                LoaderCircularEclipse23Subatomic(modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.width(8.dp))
+        Box {
+            this@Button.AnimatedVisibility(
+                modifier = Modifier.align(Alignment.Center),
+                visible = isLoading.value,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                LoaderCircularEclipse23Subatomic(
+                    modifier = Modifier
+                        .padding(vertical = 7.dp)
+                        .size(18.dp)
+                )
             }
+            Text(
+                modifier = Modifier
+                    .padding(top = 8.dp, bottom = 8.dp)
+                    .alpha(if (isLoading.value) 0.0f else 1f),
+                text = data.title.asString(),
+                color = White,
+                style = DiiaTextStyle.t1BigText
+            )
         }
-        Text(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp, end = 16.dp)
-                .conditional(!isLoading.value) {
-                    padding(start = 16.dp)
-                },
-            text = data.title.asString(),
-            color = White,
-            style = DiiaTextStyle.t1BigText
-        )
+
     }
 }
 
@@ -97,6 +107,7 @@ data class BtnPrimaryDefaultAtmData(
     val title: UiText,
     val interactionState: UIState.Interaction = UIState.Interaction.Enabled,
     val action: DataActionWrapper? = null,
+    val actions: List<DataActionWrapper>? = null
 ) : UIElementData {
 
     fun changeStateByValidation(state: UIState.Interaction): BtnPrimaryDefaultAtmData {
@@ -107,13 +118,13 @@ data class BtnPrimaryDefaultAtmData(
 }
 
 fun BtnPrimaryDefaultAtm.toUIModel(
-    id: String = "",
+    id: String = if (componentId.isNullOrBlank()) UIActionKeysCompose.BUTTON_REGULAR else componentId.orEmpty(),
     componentIdExternal: UiText? = null
 ): BtnPrimaryDefaultAtmData {
     return BtnPrimaryDefaultAtmData(
         componentId = componentIdExternal ?: componentId.orEmpty().toDynamicString(),
         title = label.toDynamicString(),
-        id = this.componentId ?: id,
+        id = id,
         interactionState = state?.let {
             when (state) {
                 ButtonStates.enabled -> UIState.Interaction.Enabled
@@ -122,10 +133,24 @@ fun BtnPrimaryDefaultAtm.toUIModel(
                 else -> UIState.Interaction.Enabled
             }
         } ?: UIState.Interaction.Enabled,
-        action = action?.toDataActionWrapper()
+        action = action?.toDataActionWrapper(),
+        actions = actions?.toDataActionsWrapper()
     )
 }
 
+fun String?.toComposeBtnPrimaryDefaultAtm(
+    actionKey: String = UIActionKeysCompose.BUTTON_REGULAR,
+    id: String = "",
+    interactionState: UIState.Interaction = UIState.Interaction.Enabled
+): BtnPrimaryDefaultAtmData? {
+    if (this == null) return null
+    return BtnPrimaryDefaultAtmData(
+        actionKey = actionKey,
+        id = id,
+        title = UiText.DynamicString(this),
+        interactionState = interactionState
+    )
+}
 
 @Composable
 @Preview
@@ -168,4 +193,3 @@ fun BtnPrimaryDefaultAtmPreview_LoadingState() {
     ) {
     }
 }
-

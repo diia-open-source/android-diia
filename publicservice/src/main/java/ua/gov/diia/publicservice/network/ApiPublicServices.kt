@@ -5,6 +5,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import ua.gov.diia.core.models.SuccessResponse
 import ua.gov.diia.core.models.dialogs.TemplateDialogModelWithProcessCode
+import ua.gov.diia.core.models.share.ShareDataResponse
 import ua.gov.diia.core.network.annotation.Analytics
 import ua.gov.diia.publicservice.models.PublicServicesCategories
 
@@ -24,4 +25,7 @@ interface ApiPublicServices {
         @Query("segmentId") segmentId: Int?
     ): SuccessResponse
 
+    @Analytics("getFindEnemyShareLink")
+    @GET("api/v1/public-service/enemy-track/link")
+    suspend fun getFindEnemyShareLink(): ShareDataResponse
 }

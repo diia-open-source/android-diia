@@ -44,4 +44,9 @@ interface PSNavigationHelper {
      * Runs send zip file flow
      */
     fun sendZip(fragment: Fragment, file: String, name: String)
+
+    /**
+     * performs navigation to ps by key
+     */
+    fun navigateToGlobalDestinationPS(fragment: Fragment, currentDestinationId: Int, resultKey: String, psKey: String)
 }

@@ -10,12 +10,15 @@ import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
+import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesMlcData
 import ua.gov.diia.ui_base.components.molecule.tile.SmallEmojiPanelMlcData
+import ua.gov.diia.ui_base.components.organism.table.TableBlockAccordionOrg
+import ua.gov.diia.ui_base.components.organism.table.TableBlockAccordionOrgData
 import ua.gov.diia.ui_base.components.subatomic.preview.PreviewBase64Images
 
 @Composable
@@ -39,8 +42,18 @@ fun ContentTableOrg(
         }
 
         data.tableBlockOrgData?.let {
-            it.forEachIndexed {  index,data ->
+            it.forEachIndexed { index, data ->
                 TableBlockOrg(
+                    modifier = Modifier,
+                    data = data,
+                    onUIAction = onUIAction
+                )
+            }
+        }
+
+        data.tableBlockAccordionOrgData?.let {
+            it.forEachIndexed { index, data ->
+                TableBlockAccordionOrg(
                     modifier = Modifier,
                     data = data,
                     onUIAction = onUIAction
@@ -54,7 +67,8 @@ fun ContentTableOrg(
 
 data class ContentTableOrgData(
     val tableBlockTwoColumnsOrgData: List<TableBlockTwoColumnsOrgData>? = null,
-    val tableBlockOrgData: List<TableBlockOrgData>? = null
+    val tableBlockOrgData: List<TableBlockOrgData>? = null,
+    val tableBlockAccordionOrgData: List<TableBlockAccordionOrgData>? = null
 ) : UIElementData
 
 @Preview
@@ -75,9 +89,13 @@ fun ContentTableOrgPreview() {
             TableItemVerticalMlcData(
                 id = "01",
                 title = UiText.DynamicString("Дата\nнародження:"),
-                value = "24.08.1991"
+                value = UiText.DynamicString("24.08.1991")
             ),
-            TableItemVerticalMlcData(id = "02", title = UiText.DynamicString("Номер:"), value = "XX000000"),
+            TableItemVerticalMlcData(
+                id = "02",
+                title = UiText.DynamicString("Номер:"),
+                value = UiText.DynamicString("XX000000")
+            ),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
     )
@@ -87,11 +105,15 @@ fun ContentTableOrgPreview() {
             title = UiText.DynamicString("Тип нерухомого майна:"),
             value = "Будинок"
         ),
-        TableItemHorizontalMlcData(id = "2", title = UiText.DynamicString("Частка власності:"), value = "1/5"),
+        TableItemHorizontalMlcData(
+            id = "2",
+            title = UiText.DynamicString("Частка власності:"),
+            value = "1/5"
+        ),
         TableItemVerticalMlcData(
             id = "3",
             title = UiText.DynamicString("Адреса:"),
-            value = "м. Київ, Голосіївський район, вул. Генерала Тупікова,  буд. 12/а, кв. 16"
+            value = UiText.DynamicString("м. Київ, Голосіївський район, вул. Генерала Тупікова,  буд. 12/а, кв. 16")
         ),
         TableItemHorizontalMlcData(
             id = "123",
@@ -102,17 +124,25 @@ fun ContentTableOrgPreview() {
     )
     val tableBlockOrgData = TableBlockOrgData(items = items)
 
-    val itemsEmoji = listOf(SmallEmojiPanelMlcData(
-        text = UiText.DynamicString("Booster vaccine dose"),
-        icon = UiIcon.DrawableResource(
-            code = DiiaResourceIcon.TRIDENT.code
+    val itemsEmoji = listOf(
+        SmallEmojiPanelMlcData(
+            text = UiText.DynamicString("Booster vaccine dose"),
+            icon = UiIcon.DrawableResource(
+                code = DiiaResourceIcon.TRIDENT.code
+            )
         )
-    ))
+    )
     val tableBlockOrgDataEmoji = TableBlockOrgData(items = itemsEmoji)
 
+    val tableBlockAccordionOrgData = TableBlockAccordionOrgData(
+        heading = "Майно",
+        items = items,
+        expandState = UIState.Expand.Collapsed
+    )
     val contentTableOrg = ContentTableOrgData(
         listOf(tableBlockTwoColumnsOrgData),
-        listOf(tableBlockOrgDataEmoji , tableBlockOrgData, tableBlockOrgData, tableBlockOrgData),
+        listOf(tableBlockOrgDataEmoji, tableBlockOrgData, tableBlockOrgData, tableBlockOrgData),
+        listOf(tableBlockAccordionOrgData)
     )
 
     ContentTableOrg(modifier = Modifier, data = contentTableOrg) {}

@@ -75,8 +75,8 @@ fun AttentionMessageMlc(
                         style = DiiaTextStyle.t1BigText,
                         color = Color.Black
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
-                Spacer(modifier = Modifier.height(8.dp))
                 TextWithParametersAtom(
                     data = data.description,
                     style = DiiaTextStyle.t3TextBody,
@@ -100,7 +100,7 @@ fun AttentionMessageMlc?.toUIModel(): AttentionMessageMlcData? {
     return AttentionMessageMlcData(
         icon = this.icon ?: "",
         title = entity.title,
-        componentId = this.componentId.toDynamicStringOrNull(),
+        componentId = this.componentId?.toDynamicStringOrNull(),
         description = TextWithParametersData(
             text = UiText.DynamicString(entity.text ?: ""),
             parameters = if (this.parameters != null) {
@@ -124,20 +124,46 @@ fun AttentionMessageMlc?.toUIModel(): AttentionMessageMlcData? {
     )
 }
 
+enum class MockType {
+    titled, withoutitle, moretext;
+}
+
+fun generateMockData(mockType: MockType): AttentionMessageMlcData {
+    return when (mockType) {
+        MockType.titled -> AttentionMessageMlcData(
+            icon = "☝",
+            title = "Завершіть заповнення заяви",
+            description = TextWithParametersData(
+                text = UiText.DynamicString("Щоб надіслати заяву, потрібно вказати всі дані."),
+                parameters = emptyList()
+            )
+        )
+
+        MockType.withoutitle -> AttentionMessageMlcData(
+            icon = "\uD83D\uDC4D",
+            description = TextWithParametersData(
+                text = UiText.DynamicString("Щоб надіслати заяву, потрібно вказати всі дані."),
+                parameters = emptyList()
+            )
+        )
+
+        MockType.moretext -> AttentionMessageMlcData(
+            icon = "\uD83D\uDC4D",
+            description = TextWithParametersData(
+                text = UiText.DynamicString("Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані."),
+                parameters = emptyList()
+            )
+        )
+    }
+
+}
+
 @Composable
 @Preview
 fun AttentionMessageMlcPreview_Negative_Titled() {
-    val state = AttentionMessageMlcData(
-        icon = "☝",
-        title = "Завершіть заповнення заяви",
-        description = TextWithParametersData(
-            text = UiText.DynamicString("Щоб надіслати заяву, потрібно вказати всі дані."),
-            parameters = emptyList()
-        )
-    )
     Box {
         AttentionMessageMlc(
-            data = state
+            data = generateMockData(MockType.titled)
         ) {
         }
     }
@@ -146,17 +172,9 @@ fun AttentionMessageMlcPreview_Negative_Titled() {
 @Composable
 @Preview
 fun AttentionMessageMlcPreview_Attention_Without_title() {
-    val state = AttentionMessageMlcData(
-        icon = "\uD83D\uDC4D",
-        description = TextWithParametersData(
-            text = UiText.DynamicString("Щоб надіслати заяву, потрібно вказати всі дані."),
-            parameters = emptyList()
-        )
-    )
-
     Box {
         AttentionMessageMlc(
-            data = state
+            data = generateMockData(MockType.withoutitle)
         ) {
         }
     }
@@ -165,17 +183,9 @@ fun AttentionMessageMlcPreview_Attention_Without_title() {
 @Composable
 @Preview
 fun AttentionMessageMlcPreview_Attention_More_Text() {
-    val state = AttentionMessageMlcData(
-        icon = "\uD83D\uDC4D",
-        description = TextWithParametersData(
-            text = UiText.DynamicString("Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані. Щоб надіслати заяву, потрібно вказати всі дані."),
-            parameters = emptyList()
-        )
-    )
-
     Box {
         AttentionMessageMlc(
-            data = state
+            data = generateMockData(MockType.moretext)
         ) {
         }
     }

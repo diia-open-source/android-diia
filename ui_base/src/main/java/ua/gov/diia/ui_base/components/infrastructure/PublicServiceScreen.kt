@@ -5,9 +5,13 @@ import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
-import ua.gov.diia.ui_base.components.infrastructure.screen.BodyRootContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.BodyRootLazyContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.BottomBarRootContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.ComposeRootScreen
@@ -24,7 +28,7 @@ fun PublicServiceScreen(
     toolbar: SnapshotStateList<UIElementData>,
     body: SnapshotStateList<UIElementData>,
     bottom: SnapshotStateList<UIElementData>,
-    useNestedScrollBody: Boolean = false,
+    useGradientBg: Boolean = false,
     onEvent: (UIAction) -> Unit
 ) {
     BackHandler {
@@ -36,9 +40,18 @@ fun PublicServiceScreen(
     }
     ComposeRootScreen(
         modifier = modifier
-            .background(BlackSqueeze)
+            .conditional(!useGradientBg) {
+                background(BlackSqueeze)
+            }
+            .conditional(useGradientBg) {
+                paint(
+                    painterResource(id = R.drawable.bg_blue_yellow_gradient),
+                    contentScale = ContentScale.FillBounds
+                )
+            }
             .provideTestTagsAsResourceId(),
         contentLoaded = contentLoaded,
+        progressIndicator = progressIndicator,
         toolbar = {
             ToolbarRootContainer(
                 toolbarViews = toolbar,
@@ -46,23 +59,14 @@ fun PublicServiceScreen(
             )
         },
         body = {
-            if (useNestedScrollBody){
-                BodyRootLazyContainer(
-                    bodyViews = body,
-                    displayBlockDivider = bottom.isNotEmpty(),
-                    progressIndicator = progressIndicator,
-                    contentLoaded = contentLoaded,
-                    onUIAction = onEvent
-                )
-            } else {
-                BodyRootContainer(
-                    bodyViews = body,
-                    displayBlockDivider = bottom.isNotEmpty(),
-                    progressIndicator = progressIndicator,
-                    contentLoaded = contentLoaded,
-                    onUIAction = onEvent
-                )
-            }
+            BodyRootLazyContainer(
+                bodyViews = body,
+                displayBlockDivider = bottom.isNotEmpty(),
+                progressIndicator = progressIndicator,
+                contentLoaded = contentLoaded,
+                useGradientBg = useGradientBg,
+                onUIAction = onEvent
+            )
         },
         bottom = {
             BottomBarRootContainer(

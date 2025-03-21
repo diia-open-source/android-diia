@@ -22,8 +22,8 @@ fun QrCodeMlc(
         modifier = modifier,
         value = data.qrLink.asString(),
         type = BarcodeType.QR_CODE,
-        width = 231.dp,
-        height = 231.dp,
+        width = 250.dp,
+        height = 250.dp,
         blur = data.blured
     )
 }

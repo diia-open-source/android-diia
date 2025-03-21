@@ -1,7 +1,7 @@
 package ua.gov.diia.documents.ui
 
 import ua.gov.diia.core.models.dialogs.TemplateDialogModel
-import ua.gov.diia.documents.models.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocument
 
 interface WithRemoveDocument {
 
@@ -10,6 +10,7 @@ interface WithRemoveDocument {
      */
     suspend fun removeDocument(
         diiaDocument: DiiaDocument,
+        showTemplateDialogCallback: (TemplateDialogModel) -> Unit,
         removeDocumentCallback: (DiiaDocument) -> Unit
     )
     /**
@@ -19,5 +20,13 @@ interface WithRemoveDocument {
         currentDoc: DiiaDocument?,
         showTemplateDialogCallback: (TemplateDialogModel) -> Unit,
         removeDocumentCallback: (DiiaDocument) -> Unit
+    )
+
+    /**
+     * Load confirmation template to delete document
+     */
+    suspend fun loadConfirmRemoveDocumentTemplate(
+        currentDoc: DiiaDocument?,
+        showTemplateDialogCallback: (TemplateDialogModel) -> Unit
     )
 }

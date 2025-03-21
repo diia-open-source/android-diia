@@ -11,9 +11,9 @@ import ua.gov.diia.core.models.common_compose.general.Action
 @JsonClass(generateAdapter = true)
 data class BtnPlainIconAtm(
     @Json(name = "icon")
-    val icon: String,
+    val icon: String?,
     @Json(name = "label")
-    val label: String,
+    val label: String?,
     @Json(name = "state")
     val state: String?,
     @Json(name = "action")

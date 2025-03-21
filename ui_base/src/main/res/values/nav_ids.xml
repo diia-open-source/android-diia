@@ -2,4 +2,5 @@
 <resources>
     <item name="destination_prolong" type="id"/>
     <item name="destination_systemDialog" type="id"/>
+    <item name="nav_host" type="id"/>
 </resources>

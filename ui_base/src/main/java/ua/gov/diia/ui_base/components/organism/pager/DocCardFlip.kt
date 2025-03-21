@@ -9,6 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerType
+import ua.gov.diia.ui_base.components.atom.text.TickerUsage
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -20,6 +21,7 @@ import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStr
 import ua.gov.diia.ui_base.components.molecule.button.BtnToggleMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesMlcData
+import ua.gov.diia.ui_base.components.molecule.tile.SmallEmojiPanelMlcData
 import ua.gov.diia.ui_base.components.organism.document.DocButtonHeadingOrgData
 import ua.gov.diia.ui_base.components.organism.document.DocCodeOrg
 import ua.gov.diia.ui_base.components.organism.document.DocCodeOrgData
@@ -51,7 +53,8 @@ fun DocCardFlip(
                             UIAction(
                                 actionKey = it.actionKey,
                                 data = if (it.actionKey == UIActionKeysCompose.DOC_NUMBER_COPY) it.data else data.docType,
-                                optionalId = data.position.toString()
+                                optionalId = data.position.toString(),
+                                action = it.action
                             )
                         )
                     },
@@ -141,7 +144,8 @@ data class DocCardFlipData(
 @Composable
 fun DocCardFlipPreview() {
     val tickerAtomData = TickerAtomData(
-        type = TickerType.BIG_POSITIVE,
+        type = TickerType.INFORMATIVE,
+        usage = TickerUsage.GRAND,
         title = "Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • Документ оновлено о 12:06 | 22.06.2023 • "
     )
     val docButtonHeading = DocButtonHeadingOrgData(
@@ -163,12 +167,12 @@ fun DocCardFlipPreview() {
             TableItemVerticalMlcData(
                 id = "01",
                 title = UiText.DynamicString("Дата\nнародження:"),
-                value = "24.08.1991"
+                value = UiText.DynamicString("24.08.1991")
             ),
             TableItemVerticalMlcData(
                 id = "02",
                 title = UiText.DynamicString("Номер:"),
-                value = "XX000000"
+                value = UiText.DynamicString("XX000000")
             ),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
@@ -183,7 +187,13 @@ fun DocCardFlipPreview() {
         ),
         docButtonHeading = docButtonHeading,
         tickerAtomData = tickerAtomData,
-        tableBlockTwoColumns = listOf(tableBlockTwoColumns)
+        tableBlockTwoColumns = listOf(tableBlockTwoColumns),
+        smallEmojiPanelMlcData = SmallEmojiPanelMlcData(
+            text = UiText.DynamicString("Booster vaccine dose"),
+            icon = UiIcon.DrawableResource(
+                code = DiiaResourceIcon.SYRINGE.code
+            )
+        )
     )
     val toggle = ToggleButtonGroupData(
         qr = BtnToggleMlcData(

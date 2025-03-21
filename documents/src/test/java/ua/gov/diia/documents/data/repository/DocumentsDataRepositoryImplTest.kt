@@ -22,8 +22,8 @@ import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.diia_storage.store.datasource.DataSourceDataResult
 import ua.gov.diia.documents.data.datasource.local.KeyValueDocumentsDataSource
 import ua.gov.diia.documents.data.datasource.remote.NetworkDocumentsDataSource
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 import ua.gov.diia.documents.models.DocOrder
 import ua.gov.diia.documents.models.FetchDocumentsResult
 import ua.gov.diia.documents.models.TypeDefinedDocOrder

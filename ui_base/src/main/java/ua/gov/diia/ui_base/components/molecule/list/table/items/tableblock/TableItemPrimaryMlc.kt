@@ -149,6 +149,21 @@ fun PrimaryTableItemMoleculePreview_ValueAsImage() {
 
 @Composable
 @Preview
+fun PrimaryTableItemMoleculePreview_no_title() {
+    val data = TableItemPrimaryMlcData(
+        id = "123",
+        value = "1234567890".toDynamicString()
+    )
+    TableItemPrimaryMlc(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        data = data
+    )
+}
+
+@Composable
+@Preview
 fun PrimaryTableItemMoleculePreview_ValueAsImage_disabled() {
     val data = TableItemPrimaryMlcData(
         id = "123",

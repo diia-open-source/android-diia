@@ -25,7 +25,7 @@
         <argument
             android:name="manualDocs"
             android:defaultValue="@null"
-            app:argType="ua.gov.diia.documents.models.ManualDocs"
+            app:argType="ua.gov.diia.core.models.document.ManualDocs"
             app:nullable="true" />
         <argument
             android:name="resultDestinationId"
@@ -52,7 +52,7 @@
         <argument
             android:name="manualDocs"
             android:defaultValue="@null"
-            app:argType="ua.gov.diia.documents.models.ManualDocs"
+            app:argType="ua.gov.diia.core.models.document.ManualDocs"
             app:nullable="true" />
         <argument
             android:name="resultDestinationId"

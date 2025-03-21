@@ -3,7 +3,7 @@ package ua.gov.diia.documents.data.datasource.remote
 import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.diia_storage.store.datasource.DataSourceDataResult
 import ua.gov.diia.documents.data.api.ApiDocuments
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 import ua.gov.diia.documents.models.DocumentsOrder
 import ua.gov.diia.documents.models.FetchDocumentsResult
 import ua.gov.diia.documents.models.TypeDefinedDocumentsOrder

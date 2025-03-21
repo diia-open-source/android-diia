@@ -1,7 +1,7 @@
 package ua.gov.diia.documents.data.datasource.local
 
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 import javax.inject.Inject
 
 class BrokenDocFilterImpl @Inject constructor(val documentsHelper: DocumentsHelper) : BrokenDocFilter {

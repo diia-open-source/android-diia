@@ -41,6 +41,7 @@
 
     <attr name="fieldText" format="string" />
     <attr name="fieldHint" format="string" />
+    <attr name="fieldMask" format="string" />
     <attr name="fieldTextSize" format="reference" />
     <attr name="fieldTextColor" format="reference" />
     <attr name="fieldTitle" format="string" />
@@ -68,6 +69,15 @@
             <enum name="fill" value="3" />
             <enum name="zoom" value="4" />
         </attr>
+    </declare-styleable>
+
+    <declare-styleable name="MaskedInputField">
+        <attr name="addressMaskHint" format="string" />
+        <attr name="addressMask" format="string" />
+        <attr name="address_allowed_chars" format="string" />
+        <attr name="address_denied_chars" format="string" />
+        <attr name="address_char_representation" format="string" />
+        <attr name="address_keep_hint" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="MaskedEditText">
@@ -348,6 +358,7 @@
         <attr name="fieldTitleSize" />
         <attr name="fieldText" />
         <attr name="fieldHint" />
+        <attr name="fieldMask" />
         <attr name="fieldErrorText" />
         <attr name="fieldError" format="boolean" />
         <attr name="fieldErrorWhenFocusChanged" format="boolean" />
@@ -361,6 +372,8 @@
             <enum name="button" value="0" />
             <enum name="editable" value="1" />
             <enum name="editablePhoneNumber" value="2" />
+            <enum name="maskedField" value="3" />
+
         </attr>
 
         <!--

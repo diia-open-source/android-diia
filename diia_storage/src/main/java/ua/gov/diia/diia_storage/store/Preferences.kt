@@ -63,6 +63,7 @@ object Preferences {
         Scopes.INVINCIBILITY_PREFERENCES, dataType)
     object InvincibilityRegions : InvincibilityKey("invincibility_regions", InvincibilityRegions::class.java)
     data class InvincibilityMapDownloadId(val downloadId: String) : InvincibilityKey(downloadId, Long::class.java)
+    object FailedConnectionData : InvincibilityKey("failed_connection", FailedConnectionData::class.java)
 
     open class ContactsDataPreferenceKey(name: String, dataType: Class<String>): PreferenceKey(name, Scopes.QUESTIONNAIRE, dataType)
     object UserPhoneNumber : ContactsDataPreferenceKey("questionnaire_user_phone_number", String::class.java)

@@ -1,6 +1,5 @@
 package ua.gov.diia.opensource.ui.activities
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
@@ -8,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ua.gov.diia.core.di.actions.GlobalActionAllowAuthorizedLinks
@@ -20,7 +20,8 @@ import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
 import ua.gov.diia.core.util.extensions.lifecycle.consumeEvent
 import ua.gov.diia.diia_storage.store.repository.authorization.AuthorizationRepository
 import ua.gov.diia.notifications.util.notification.manager.DiiaNotificationManager
-import ua.gov.diia.opensource.ui.work.LogoutWork
+import ua.gov.diia.opensource.di.actions.GlobalActionForceAppUpdate
+import ua.gov.diia.opensource.util.work.LogoutWork
 import ua.gov.diia.pin.repository.LoginPinRepository
 import javax.inject.Inject
 
@@ -33,15 +34,12 @@ class MainActivityVM @Inject constructor(
     private val authorizationRepository: AuthorizationRepository,
     private val loginPinRepository: LoginPinRepository,
     @GlobalActionAllowAuthorizedLinks val allowAuthorizedLinksFlow: MutableSharedFlow<UiDataEvent<Boolean>>,
+    @GlobalActionForceAppUpdate val appForceUpdateAction: MutableStateFlow<UiDataEvent<Boolean>>,
     private val deepLinkDelegate: WithDeeplinkHandling,
 ): ViewModel(), WithDeeplinkHandling by deepLinkDelegate {
 
     private val _restartApp = MutableLiveData<UiEvent>()
     val restartApp = _restartApp.asLiveData()
-
-    private val _timeoutDestination = MutableLiveData<UiDataEvent<TimeoutDestination>>()
-    val timeoutDestination: LiveData<UiDataEvent<TimeoutDestination>>
-        get() = _timeoutDestination
 
     var allowAuthorizedDeepLinks = false
         private set
@@ -101,11 +99,7 @@ class MainActivityVM @Inject constructor(
         }
     }
 
-    enum class TimeoutDestination {
-        LOG_IN, REGISTER
-    }
-
-    companion object {
+    private companion object {
         const val PIN_TRY_COUNT = 3
     }
 }

@@ -16,6 +16,7 @@ import ua.gov.diia.core.models.common_compose.org.media.GroupFilesAddOrg
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainIconAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainIconAtmData
+import ua.gov.diia.ui_base.components.atom.button.toUiModel
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -24,10 +25,10 @@ import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.list.ListItemMlc
 import ua.gov.diia.ui_base.components.molecule.list.ListItemMlcData
+import ua.gov.diia.ui_base.components.molecule.list.toUiModel
 import ua.gov.diia.ui_base.components.noRippleClickable
 import ua.gov.diia.ui_base.components.theme.BlackSqueeze
 import ua.gov.diia.ui_base.components.theme.White
-import ua.gov.diia.ui_base.util.toUiModel
 
 @Composable
 fun GroupFilesAddOrg(

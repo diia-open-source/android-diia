@@ -7,6 +7,11 @@
     <string name="translate_to_eng">Перекласти англійською</string>
     <string name="rate_document">Оцінити документ</string>
 
+    <!--    qr scanner     -->
+    <string name="title_scan_qr">Сканування QR-коду</string>
+    <string name="subtitle_scan_qr">Наведіть рамку на QR-код, який хочете відсканувати.</string>
+    <string name="title_error_scan_qr">Цей QR-код не з Дії</string>
+
     <string name="check_docs_no_internet_message">Немає інтернету. Перевірте з’єднання та спробуйте ще раз</string>
     <string name="check_docs_no_registry_message">Немає доступу до реєстру</string>
     <string name="qr_code_not_registered">QR-код не зареєстровано в Дії</string>

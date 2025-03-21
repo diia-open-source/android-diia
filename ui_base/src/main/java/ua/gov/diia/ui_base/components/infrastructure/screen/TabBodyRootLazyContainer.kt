@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
+import ua.gov.diia.ui_base.components.infrastructure.utils.ContainerType
 import ua.gov.diia.ui_base.components.loadItem
 import ua.gov.diia.ui_base.components.molecule.header.chiptabbar.ChipTabsOrg
 import ua.gov.diia.ui_base.components.molecule.header.chiptabbar.ChipTabsOrgData
@@ -34,6 +35,7 @@ fun ColumnScope.TabBodyRootLazyContainer(
     bodyViews: SnapshotStateList<UIElementData>,
     displayBlockDivider: Boolean = false,
     connectivityState: Boolean = true,
+    containerType: ContainerType = ContainerType.SERVICE,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
     contentLoaded: Pair<String, Boolean> = Pair("", false),
     onUIAction: (UIAction) -> Unit
@@ -92,7 +94,7 @@ fun ColumnScope.TabBodyRootLazyContainer(
             }
         }
         NoInternetBlock(connectivityState)
-        GradientDividerContentBlock(displayBottomGradient)
+        GradientDividerContentBlock(displayBottomGradient, containerType)
         LinearLoaderContentBlock(contentLoaded)
     }
 }

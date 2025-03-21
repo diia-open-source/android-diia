@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import ua.gov.diia.ui_base.components.atom.text.TickerAtm
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerType
+import ua.gov.diia.ui_base.components.atom.text.TickerUsage
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
@@ -84,7 +85,8 @@ data class DocErrorOrgData(
 fun DocErrorOrgPreview() {
     val tickerAtomData = TickerAtomData(
         title = "Документа з таким\u2028QR-кодом не існує ",
-        type = TickerType.SMALL_NEGATIVE
+        type = TickerType.NEGATIVE,
+        usage = TickerUsage.BASE
     )
     val data = DocErrorOrgData(
         title = UiText.DynamicString("Документ не знайдено • Документ не знайденокумент дійсний"),

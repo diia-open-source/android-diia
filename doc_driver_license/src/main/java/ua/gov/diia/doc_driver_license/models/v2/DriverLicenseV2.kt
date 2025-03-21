@@ -5,17 +5,24 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import ua.gov.diia.documents.models.docgroups.BaseDocumentGroup
 import ua.gov.diia.core.models.common_compose.atm.chip.ChipStatusAtm
-import ua.gov.diia.core.network.Http
-import ua.gov.diia.documents.models.*
 import ua.gov.diia.core.models.common_compose.atm.text.TickerAtm
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata.Companion.LAST_DOC_ORDER
-import ua.gov.diia.documents.models.docgroups.v2.*
-import ua.gov.diia.core.models.common_compose.table.tableBlockTwoColumnsPlaneOrg.TableBlockTwoColumnsPlaneOrg
+import ua.gov.diia.core.models.common_compose.org.doc.DocButtonHeadingOrg
+import ua.gov.diia.core.models.common_compose.org.doc.DocHeadingOrg
 import ua.gov.diia.core.models.common_compose.table.tableBlockPlaneOrg.TableBlockPlaneOrg
+import ua.gov.diia.core.models.common_compose.table.tableBlockTwoColumnsPlaneOrg.TableBlockTwoColumnsPlaneOrg
 import ua.gov.diia.doc_driver_license.R
 import ua.gov.diia.doc_driver_license.models.DocName
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata.Companion.LAST_DOC_ORDER
+import ua.gov.diia.core.models.document.DocWeight
+import ua.gov.diia.core.models.document.DocumentWithPhoto
+import ua.gov.diia.core.models.document.LocalizationType
+import ua.gov.diia.core.models.document.Preferences
+import ua.gov.diia.core.models.document.SourceType
+import ua.gov.diia.core.models.document.WithFrontCard
+import ua.gov.diia.core.models.document.docgroups.BaseDocumentGroup
+import ua.gov.diia.core.models.document.docgroups.v2.*
 
 @Parcelize
 @JsonClass(generateAdapter = true)

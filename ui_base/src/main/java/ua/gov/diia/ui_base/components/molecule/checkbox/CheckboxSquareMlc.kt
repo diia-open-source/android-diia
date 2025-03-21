@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,30 +44,35 @@ fun CheckboxSquareMlc(
     onUIAction: (UIAction) -> Unit
 ) {
     Row(
-        modifier = modifier.conditional(data.interactionState == UIState.Interaction.Enabled) {
-            noRippleClickable {
-                onUIAction(
-                    UIAction(
-                        actionKey = data.actionKey,
-                        data = data.id,
-                        optionalId = data.options.firstOrNull {
-                             val condition = data.selectionState != UIState.Selection.Selected
-                             it.isSelected == condition
-                        }?.id
-                    )
-                )
-            }.composed {
-                val contentDescription = data.contentDescription?.asString()
-                if (contentDescription != null) {
-                    this.semantics(mergeDescendants = true) {
-                        val state =
-                            if (data.selectionState == UIState.Selection.Selected) "Active: " else "Inactive: "
-                        stateDescription = state + contentDescription
-                    }
-                }
-                this
+        modifier = modifier
+            .fillMaxWidth()
+            .conditional(data.usePadding) {
+                padding(horizontal = 24.dp)
             }
-        }, verticalAlignment = Alignment.Top
+            .conditional(data.interactionState == UIState.Interaction.Enabled) {
+                noRippleClickable {
+                    onUIAction(
+                        UIAction(
+                            actionKey = data.actionKey,
+                            data = data.id,
+                            optionalId = data.options.firstOrNull {
+                                val condition = data.selectionState != UIState.Selection.Selected
+                                it.isSelected == condition
+                            }?.id
+                        )
+                    )
+                }.composed {
+                    val contentDescription = data.contentDescription?.asString()
+                    if (contentDescription != null) {
+                        this.semantics(mergeDescendants = true) {
+                            val state =
+                                if (data.selectionState == UIState.Selection.Selected) "Active: " else "Inactive: "
+                            stateDescription = state + contentDescription
+                        }
+                    }
+                    this
+                }
+            }, verticalAlignment = Alignment.Top
     ) {
         Box(
             modifier = Modifier
@@ -101,7 +107,9 @@ fun CheckboxSquareMlc(
         ) {
             if (data.selectionState == UIState.Selection.Selected) {
                 Icon(
-                    modifier = Modifier.fillMaxSize().padding(5.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(5.dp),
                     painter = painterResource(id = R.drawable.diia_check),
                     contentDescription = null,
                     tint = White
@@ -130,6 +138,7 @@ data class CheckboxSquareMlcData(
     val selectionState: UIState.Selection,
     val options: List<Option> = listOf(),
     val componentId: UiText? = null,
+    val usePadding: Boolean = false
 ) : UIElementData, Cloneable {
 
     public override fun clone(): CheckboxSquareMlcData {
@@ -140,12 +149,13 @@ data class CheckboxSquareMlcData(
         return this.copy(selectionState = this.selectionState.reverse())
     }
 
-    fun getCurrentOption() : Option? {
+    fun getCurrentOption(): Option? {
         return options.firstOrNull {
             val condition = selectionState == UIState.Selection.Selected
             it.isSelected == condition
         }
     }
+
     data class Option(
         val id: String,
         val isSelected: Boolean

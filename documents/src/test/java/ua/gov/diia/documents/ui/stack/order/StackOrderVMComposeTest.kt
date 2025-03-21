@@ -27,10 +27,10 @@ import ua.gov.diia.documents.DocTest3
 import ua.gov.diia.documents.DocTest4
 import ua.gov.diia.documents.data.repository.DocumentsDataRepository
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 import ua.gov.diia.documents.rules.MainDispatcherRule
 import ua.gov.diia.documents.ui.DocsConst
-import ua.gov.diia.documents.ui.DocumentComposeMapper
+import ua.gov.diia.ui_base.mappers.document.DocumentComposeMapper
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose

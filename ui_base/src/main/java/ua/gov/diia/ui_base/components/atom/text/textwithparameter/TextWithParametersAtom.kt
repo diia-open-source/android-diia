@@ -17,10 +17,12 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import ua.gov.diia.core.models.TextWithParameters
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 
 private const val LINK = "link"
@@ -68,6 +70,55 @@ data class TextWithParametersData(
     val parameters: List<TextParameter>? = null
 ) : UIElementData
 
+fun TextWithParameters?.toComposeTextWithParameters(actionKey: String = UIActionKeysCompose.TEXT_WITH_PARAMETERS): TextWithParametersData? {
+    val entity = this
+    if (entity?.text == null) return null
+    return entity.text?.let { text ->
+        TextWithParametersData(
+            actionKey = actionKey,
+            text = UiText.DynamicString(text),
+            parameters = if (entity.parameters != null) {
+                mutableListOf<TextParameter>().apply {
+                    entity.parameters?.forEach {
+                        add(
+                            TextParameter(
+                                data = TextParameter.Data(
+                                    name = it.data?.name?.let { n ->
+                                        UiText.DynamicString(
+                                            n
+                                        )
+                                    },
+                                    resource = it.data?.resource?.let { r ->
+                                        UiText.DynamicString(
+                                            r
+                                        )
+                                    },
+                                    alt = it.data?.alt?.let { a ->
+                                        UiText.DynamicString(
+                                            a
+                                        )
+                                    },
+                                ),
+                                type = it.type
+                            )
+                        )
+                    }
+                }
+            } else {
+                emptyList()
+            }
+        )
+    }
+}
+
+fun String?.toComposeTextWithParameters(): TextWithParametersData? {
+    if (this.isNullOrEmpty()) return null
+    return TextWithParametersData(
+        text = this.toDynamicString(),
+        parameters = emptyList()
+    )
+}
+
 @Preview
 @Composable
 fun TextWithParametersAtomPreview() {
@@ -103,7 +154,8 @@ fun TextWithParametersAtomPreview() {
         )
     )
 
-    val textWithList = UiText.DynamicString("У межах державної програми єВідновлення можна отримати виплату на відновлення житла для тих, хто постраждав від збройної агресії росії. \n\nКошти надаються, якщо майно: \n• пошкоджене через бойові дії; \n• розміщене на неокупованій території; \n• підлягає відновленню, тобто не повністю зруйноване; \n• не було відремонтоване самостійно. \n\nОтримати виплату можна на ремонт: \n• приватних будинків; \n• квартир; \n• кімнат, наприклад, у гуртожитках. \n\nВажливо: громадяни, які вчиняли злочини проти основ національної безпеки або  перебувають під санкціями, не можуть отримати грошову допомогу. Це також стосується їхніх спадкоємців.")
+    val textWithList =
+        UiText.DynamicString("У межах державної програми єВідновлення можна отримати виплату на відновлення житла для тих, хто постраждав від збройної агресії росії. \n\nКошти надаються, якщо майно: \n• пошкоджене через бойові дії; \n• розміщене на неокупованій території; \n• підлягає відновленню, тобто не повністю зруйноване; \n• не було відремонтоване самостійно. \n\nОтримати виплату можна на ремонт: \n• приватних будинків; \n• квартир; \n• кімнат, наприклад, у гуртожитках. \n\nВажливо: громадяни, які вчиняли злочини проти основ національної безпеки або  перебувають під санкціями, не можуть отримати грошову допомогу. Це також стосується їхніх спадкоємців.")
 
     val testMetadata = listOf(linkParameter, phoneParameter, emailParameter)
 
@@ -172,7 +224,8 @@ fun TextWithParametersAtomPreview_Phone() {
 @Composable
 fun TextWithParametersAtomPreview_Email() {
     val context = LocalContext.current
-    val emailText = UiText.DynamicString("Напишіть нам і ми обов'язково вам відповімо {myCustomEmail}!.")
+    val emailText =
+        UiText.DynamicString("Напишіть нам і ми обов'язково вам відповімо {myCustomEmail}!.")
     val emailParameter = TextParameter(
         type = TextWithParametersConstants.TYPE_MAIL,
         data = TextParameter.Data(
@@ -277,7 +330,6 @@ fun UiText.buildWithMetadataComposeEdition(metadata: List<TextParameter>): Annot
         }
     }
 }
-
 
 private data class StringAnnotation(
     val startIndex: Int,

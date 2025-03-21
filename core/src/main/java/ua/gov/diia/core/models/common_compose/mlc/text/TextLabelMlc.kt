@@ -12,7 +12,7 @@ data class TextLabelMlc(
     @Json(name = "label")
     val label: String?,
     @Json(name = "text")
-    val text: String,
+    val text: String?,
     @Json(name = "parameters")
     val parameters: List<TextParameter>?
 )

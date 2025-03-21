@@ -70,10 +70,10 @@ fun ListItemDragMlc(
                     style = DiiaTextStyle.t1BigText,
                     color = Black
                 )
-                data.desc?.let {
+                if (!data.desc?.asString().isNullOrEmpty()) {
                     Text(
                         modifier = Modifier.padding(top = 4.dp),
-                        text = data.desc.asString(),
+                        text = data.desc?.asString().orEmpty(),
                         style = DiiaTextStyle.t2TextDescription,
                         color = BlackAlpha30
                     )
@@ -161,6 +161,17 @@ fun ListItemDragMlcPreview_doc_group_details() {
         id = "",
         label = UiText.DynamicString("ХХ000000"),
         desc = UiText.DynamicString("Дата видачі: хх.хх.хххх"),
+    )
+    ListItemDragMlc(data = data, onUIAction = {}, dragging = false)
+}
+
+@Composable
+@Preview
+fun ListItemDragMlcPreview_doc_group_details_label() {
+    val data = ListItemDragMlcData(
+        id = "",
+        label = UiText.DynamicString("ХХ000000"),
+        desc = UiText.DynamicString(""),
     )
     ListItemDragMlc(data = data, onUIAction = {}, dragging = false)
 }

@@ -5,11 +5,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -32,11 +29,8 @@ import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainAtmData
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtmData
-import ua.gov.diia.ui_base.components.atom.divider.GradientDividerAtom
 import ua.gov.diia.ui_base.components.atom.media.ArticlePicAtm
 import ua.gov.diia.ui_base.components.atom.media.ArticlePicAtmData
-import ua.gov.diia.ui_base.components.molecule.media.ArticleVideoMlc
-import ua.gov.diia.ui_base.components.molecule.media.ArticleVideoMlcData
 import ua.gov.diia.ui_base.components.atom.space.SpacerAtm
 import ua.gov.diia.ui_base.components.atom.space.SpacerAtmData
 import ua.gov.diia.ui_base.components.atom.text.SectionTitleAtm
@@ -48,11 +42,14 @@ import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.ContainerType
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.card.BlackCardMlc
 import ua.gov.diia.ui_base.components.molecule.card.BlackCardMlcData
 import ua.gov.diia.ui_base.components.molecule.card.ImageCardMlc
 import ua.gov.diia.ui_base.components.molecule.card.ImageCardMlcData
+import ua.gov.diia.ui_base.components.molecule.card.LoopingVideoPlayerCardMlc
+import ua.gov.diia.ui_base.components.molecule.card.LoopingVideoPlayerCardMlcData
 import ua.gov.diia.ui_base.components.molecule.card.WhiteCardMlc
 import ua.gov.diia.ui_base.components.molecule.card.WhiteCardMlcData
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxBtnOrgData
@@ -62,6 +59,8 @@ import ua.gov.diia.ui_base.components.molecule.header.chiptabbar.ChipTabsOrgData
 import ua.gov.diia.ui_base.components.molecule.input.SearchInputV2
 import ua.gov.diia.ui_base.components.molecule.input.SearchInputV2Data
 import ua.gov.diia.ui_base.components.molecule.loading.LinearLoadingMolecule
+import ua.gov.diia.ui_base.components.molecule.media.ArticleVideoMlc
+import ua.gov.diia.ui_base.components.molecule.media.ArticleVideoMlcData
 import ua.gov.diia.ui_base.components.molecule.message.StubMessageMlc
 import ua.gov.diia.ui_base.components.molecule.message.StubMessageMlcData
 import ua.gov.diia.ui_base.components.molecule.text.TextLabelContainerMlc
@@ -76,6 +75,8 @@ import ua.gov.diia.ui_base.components.organism.bottom.BtnIconRoundedGroupOrg
 import ua.gov.diia.ui_base.components.organism.bottom.BtnIconRoundedGroupOrgData
 import ua.gov.diia.ui_base.components.organism.carousel.HalvedCardCarouselOrg
 import ua.gov.diia.ui_base.components.organism.carousel.HalvedCardCarouselOrgData
+import ua.gov.diia.ui_base.components.organism.carousel.ImageCardCarouselOrg
+import ua.gov.diia.ui_base.components.organism.carousel.ImageCardCarouselOrgData
 import ua.gov.diia.ui_base.components.organism.carousel.SmallNotificationCarouselOrg
 import ua.gov.diia.ui_base.components.organism.carousel.SmallNotificationCarouselOrgData
 import ua.gov.diia.ui_base.components.organism.carousel.VerticalCardCarouselOrg
@@ -95,6 +96,7 @@ fun ColumnScope.TabBodyRootContainer(
     bodyViews: SnapshotStateList<UIElementData>,
     displayBlockDivider: Boolean = false,
     connectivityState: Boolean = true,
+    containerType: ContainerType = ContainerType.SERVICE,
     progressIndicator: Pair<String, Boolean> = Pair("", false),
     contentLoaded: Pair<String, Boolean> = Pair("", false),
     onUIAction: (UIAction) -> Unit
@@ -212,9 +214,26 @@ fun ColumnScope.TabBodyRootContainer(
                         )
                     }
 
+                    is LoopingVideoPlayerCardMlcData -> {
+                        LoopingVideoPlayerCardMlc(
+                            modifier = Modifier,
+                            data = element,
+                            connectivityState = connectivityState,
+                            onUIAction = onUIAction
+                        )
+                    }
+
                     is HalvedCardCarouselOrgData -> {
                         HalvedCardCarouselOrg(
                             modifier = Modifier,
+                            data = element,
+                            onUIAction = onUIAction
+                        )
+                    }
+
+                    is ImageCardCarouselOrgData -> {
+                        ImageCardCarouselOrg(
+                            modifier = modifier,
                             data = element,
                             onUIAction = onUIAction
                         )
@@ -267,7 +286,8 @@ fun ColumnScope.TabBodyRootContainer(
                         AnimatedVisibility(visible = displayView) {
                             ArticleVideoMlc(
                                 data = element,
-                                connectivityState = connectivityState
+                                connectivityState = connectivityState,
+                                onUIAction = onUIAction
                             )
                         }
                     }
@@ -371,7 +391,7 @@ fun ColumnScope.TabBodyRootContainer(
             }
         }
         NoInternetBlock(connectivityState)
-        GradientDividerContentBlock(displayBottomGradient)
+        GradientDividerContentBlock(displayBottomGradient, containerType)
         LinearLoaderContentBlock(contentLoaded)
     }
 }
@@ -391,6 +411,17 @@ fun BoxScope.LinearLoaderContentBlock(contentLoaded: Pair<String, Boolean>) {
                 labelDisplayed = false
             )
         }
+    }
+}
+
+@Composable
+fun BoxScope.NoInternetBlock(internetAvailable: Boolean) {
+    if (!internetAvailable) {
+        NoInternetTicker(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(alignment = Alignment.BottomCenter)
+        )
     }
 }
 

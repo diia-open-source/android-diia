@@ -3,7 +3,6 @@ package ua.gov.diia.core.models.common_compose.org.chip
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import ua.gov.diia.core.models.common_compose.mlc.chip.ChipTimeMlc
-import ua.gov.diia.core.models.common_compose.org.header.ChipTabsOrg
 
 @JsonClass(generateAdapter = true)
 data class ChipGroupOrg(
@@ -19,8 +18,18 @@ data class ChipGroupOrg(
     @JsonClass(generateAdapter = true)
     data class Item(
         @Json(name = "chipMlc")
-        val chipMlc: ChipTabsOrg.Item? = null,
+        val chipMlc: ChipTabItem? = null,
         @Json(name = "chipTimeMlc")
         val chipTimeMlc: ChipTimeMlc? = null,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class ChipTabItem(
+        @Json(name = "code")
+        val code: String?,
+        @Json(name = "count")
+        val count: String,
+        @Json(name = "label")
+        val label: String
     )
 }

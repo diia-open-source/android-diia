@@ -24,6 +24,7 @@ import ua.gov.diia.ui_base.components.atom.icon.IconAtmData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.model.TableItemLabelAlignment
 import ua.gov.diia.ui_base.components.subatomic.icon.SingIconBase64Subatomic
 import ua.gov.diia.ui_base.components.subatomic.preview.PreviewBase64Images
 import ua.gov.diia.ui_base.components.theme.Black
@@ -70,9 +71,12 @@ fun TableItemHorizontalLargeMlc(
             }
         }
         Spacer(modifier = Modifier.width(20.dp))
-
-        Row(modifier = Modifier.weight(1f)) {
-            Column(modifier = Modifier.weight(1f)) {
+        val weightModifier = when (data.valueAlignment) {
+            TableItemLabelAlignment.Start -> Modifier.weight(1f)
+            TableItemLabelAlignment.End -> Modifier
+        }
+        Row(modifier = weightModifier) {
+            Column(modifier = weightModifier) {
                 if (data.valueAsBase64String != null) {
                     Box(
                         modifier = Modifier.size(100.dp, 50.dp),
@@ -113,16 +117,15 @@ fun TableItemHorizontalLargeMlc(
     }
 }
 
-
 fun TableItemHorizontalLargeMlc.toUiModel(): TableItemHorizontalLargeMlcData {
     return TableItemHorizontalLargeMlcData(
-        id = "this.id",
+        id = this.componentId,
         componentId = UiText.DynamicString(this.componentId.orEmpty()),
         supportText = this.supportingValue,
-        title = UiText.DynamicString(this.label.orEmpty()),
-        secondaryTitle = UiText.DynamicString(this.secondaryLabel.orEmpty()),
+        title = this.label?.let { UiText.DynamicString(it) },
+        secondaryTitle = this.secondaryLabel?.let { UiText.DynamicString(it) },
         value = this.value,
-        secondaryValue = UiText.DynamicString(this.secondaryValue.orEmpty()),
+        secondaryValue = this.secondaryValue?.let { UiText.DynamicString(it) },
         valueAsBase64String = this.valueImage,
         iconRight = this.icon?.toUiModel()
     )
@@ -136,6 +139,7 @@ data class TableItemHorizontalLargeMlcData(
     val title: UiText? = null,
     val secondaryTitle: UiText? = null,
     val value: String? = null,
+    val valueAlignment: TableItemLabelAlignment = TableItemLabelAlignment.Start,
     val secondaryValue: UiText? = null,
     val valueAsBase64String: String? = null,
     val iconRight: IconAtmData? = null
@@ -193,7 +197,6 @@ fun TableItemHorizontalLargeMlcPreview_Full() {
         data = state
     )
 }
-
 
 @Composable
 @Preview

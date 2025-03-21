@@ -23,9 +23,10 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.list.BtnIconPlainGroupMlcData
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMoleculeData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toTableMainHeadingMlcData
 import ua.gov.diia.ui_base.components.noRippleClickable
 import ua.gov.diia.ui_base.components.subatomic.icon.PlusMinusClickableSubatomic
 import ua.gov.diia.ui_base.components.theme.Black
@@ -124,7 +125,7 @@ fun AccordionMoleculePreview() {
     )
 
     val tableBlock2 = TableBlockMoleculeData(
-        header = TableHeadingMoleculeData(id = "123", title = "Heading".let { UiText.DynamicString(it) }),
+        header = "Heading".toDynamicString().toTableMainHeadingMlcData(),
         items = listOf(
             TableItemHorizontalMlcData(id = "1", title = UiText.DynamicString("Item title"), value = "Value"),
             TableItemHorizontalMlcData(id = "2", title = UiText.DynamicString("Item title 2"), value = "Value"),
@@ -199,4 +200,3 @@ fun AccordionMoleculePreview_WithActionLinkBlock() {
         }
     )
 }
-

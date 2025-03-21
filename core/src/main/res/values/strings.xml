@@ -113,11 +113,21 @@
     <string name="settings_dialog_support_cancel">Скасувати</string>
 
     <string name="browser">браузер</string>
-    <string name="num_copied">Номер пристрою скопійовано</string>
+    <string name="num_copied">Номер скопійовано</string>
+    <string name="num_device_copied">Номер пристрою скопійовано</string>
     <string name="criminal_cert_details_download_zip">Завантажити архів з витягом</string>
 
     <string name="retry">Спробувати ще</string>
     <string name="phone_number_mask_input_hint">0123456789123456789</string>
     <string name="text_length_counter">Залишилося символів: %d</string>
     <string name="home_loading" />
+
+    <!-- Tax payer card statuses -->
+    <string name="taxpayer_card_status_ok">Пройшов перевірку Державною податковою службою %1$s</string>
+    <string name="taxpayer_card_status_in_progress">Перевіряється Державною податковою службою</string>
+    <string name="taxpayer_card_status_failed">Не пройшов перевірку Державною податковою службою</string>
+
+    <string name="url_driver_e_queue">https://eq.hsc.gov.ua/</string>
+    <string name="url_driver_e_find_address">https://hsc.gov.ua/kontakti/kontakti-gsts-pidrozdiliv/</string>
+    <string name="phone_number_veteran_registry">0-800-505-217</string>
 </resources>

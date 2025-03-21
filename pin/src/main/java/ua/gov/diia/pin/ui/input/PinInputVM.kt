@@ -29,6 +29,8 @@ import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
 import ua.gov.diia.pin.R
 import ua.gov.diia.pin.helper.PinHelper
 import ua.gov.diia.pin.repository.LoginPinRepository
+import ua.gov.diia.pin.util.AndroidClientAlertDialogsFactory
+import ua.gov.diia.pin.util.AndroidClientAlertDialogsFactory.Companion.INVALID_PIN
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -46,7 +48,7 @@ class PinInputVM @Inject constructor(
     private val loginPinRepository: LoginPinRepository,
     private val pinHelper: PinHelper,
     private val authorizationRepository: AuthorizationRepository,
-    private val clientAlertDialogsFactory: ClientAlertDialogsFactory,
+    private val clientAlertDialogsFactory: AndroidClientAlertDialogsFactory,
     private val errorHandling: WithErrorHandlingOnFlow,
     private val retryLastAction: WithRetryLastAction
 ) : ViewModel(),
@@ -212,7 +214,7 @@ class PinInputVM @Inject constructor(
         val incrementedPinTryCount = loginPinRepository.getPinTryCount().inc()
         loginPinRepository.setPinTryCount(incrementedPinTryCount)
         if (incrementedPinTryCount >= PIN_TRY_COUNT) {
-            showTemplateDialog(clientAlertDialogsFactory.showAlertAfterInvalidPin())
+            showTemplateDialog(clientAlertDialogsFactory.showCustomAlert(INVALID_PIN))
         } else {
             doIdHasAttempt.invoke()
         }

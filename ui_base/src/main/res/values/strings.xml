@@ -19,10 +19,13 @@
     <string name="notification_channel_messages">Повідомлення</string>
     <string name="loading_ellipsized">Завантаження…</string>
     <string name="close">Закрити</string>
+    <string name="close_rectangle">Очистити</string>
     <string name="qr_code">QR код</string>
     <string name="copy_to_clipboard">Скопіювати</string>
     <string name="not_handled_icon">Відсутній опис іконки</string>
     <string name="empty_string" />
+    <string name="date_time_picker_confirm_button_label">Обрати</string>
+    <string name="date_time_picker_cancel_button_label">Скасувати</string>
 
     <!--    NFC  -->
     <string name="dialog_nfc_ready_to_read">Готовність до зчитування</string>
@@ -70,10 +73,12 @@
 
     <string name="error_message_notifications_icon">👌</string>
     <string name="error_message_notifications_empty">У вас немає нових повідомлень.</string>
+    <string name="notification_text_tag">notification_message</string>
 
     <string name="doc_stack_order_group_count">%d документи</string>
 
     <string name="no_internet">Немає доступу до інтернету. Дані не оновлюються • Немає доступу до інтернету. Дані не оновлюються • Немає доступу до інтернету. Дані не оновлюються •</string>
+    <string name="map_zoom_in">Наблизьте для відображення пунктів • Наблизьте для відображення пунктів • Наблизьте для відображення пунктів • </string>
 
     <!--  Menu  -->
     <string name="menu_item_profile_test_tag">profile</string>
@@ -115,11 +120,48 @@
     <string name="home_title_services_test_tag">title_services</string>
 
 
-
-
-
     <!--  Docs  -->
     <string name="stack_order_title_test_tag">title_documents</string>
     <string name="stack_order_docs_list_test_tag">docs_list</string>
+
+
+    <!--  Calendar  -->
+    <string name="calendar_org_stub_msg_icon">🗓</string>
+    <string name="calendar_org_stub_msg_title">Спочатку оберіть дату реєстрації шлюбу</string>
+
+    <!-- Name -->
+    <string name="ukraine_validation_input_error">Введіть інформацію українською мовою.</string>
+
+    <!--   Doc Stack     -->
+    <string name="stack_order_title">Змінити порядок</string>
+    <string name="stack_order_text">Перетягніть документи, щоб\nзмінити порядок їх відображення </string>
+    <string name="stack_all_same_doc_type">Усі документи цього типу</string>
+    <string name="stack_change_doc_type_ordering">Змінити порядок відображення</string>
+
+    <string name="change_doc_ordering">Змінити порядок документів</string>
+    <string name="remove_doc_action">Видалити документ</string>
+    <string name="full_info">Повна інформація</string>
+    <string name="doc_id_copied"><b>Номер скопійовано</b></string>
+
+    <string name="download_certificate_pdf">Завантажити сертифікат (PDF)</string>
+    <string name="download_document_pdf">Завантажити документ (pdf)</string>
+    <string name="award_context_menu_rate_doc">Оцінити документ</string>
+    <string name="faq">Питання та відповіді</string>
+    <string name="translate_to_ua">Перекласти українською</string>
+    <string name="translate_to_eng">Перекласти англійською</string>
+
+    <string name="military_bonds_menu_go_to_mb">Перейти в облігації</string>
+    <string name="military_bonds_remove_from_docs">Видалити з галереї</string>
+    <string name="residence_cert">Витяг про місце проживання</string>
+    <string name="idp_edit_person_address">Змінити адресу фактичного проживання</string>
+    <string name="idp_action_button_cancel">Скасувати статус ВПО</string>
+    <string name="idp_share_car">Поділитися транспортним засобом</string>
+    <string name="idp_share_car_owner_cancel">Скасувати шеринг</string>
+    <string name="idp_share_car_proper_cancel">Відмовитися від користування авто</string>
+
+    <string name="rate_document">Оцінити документ</string>
+    <string name="settings_share_with_friends">Розповісти друзям</string>
+
+    <string name="update_document">Оновити документ</string>
 
 </resources>

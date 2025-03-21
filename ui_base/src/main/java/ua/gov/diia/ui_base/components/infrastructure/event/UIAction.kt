@@ -11,7 +11,8 @@ data class UIAction(
     val states: List<UIState> = emptyList(),
     val optionalId: String? = null,
     val optionalType: String? = null,
-    val action: DataActionWrapper? = null
+    val action: DataActionWrapper? = null,
+    val actions: List<DataActionWrapper>? = null
 )
 
 

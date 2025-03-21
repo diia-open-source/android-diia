@@ -2,15 +2,14 @@ package ua.gov.diia.notifications.ui.fragments.home.notificationsettings
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import ua.gov.diia.core.di.data_source.http.AuthorizedClient
 import ua.gov.diia.core.models.dialogs.TemplateDialogModel
-import ua.gov.diia.core.util.alert.ClientAlertDialogsFactory
+import ua.gov.diia.core.util.delegation.WithErrorHandling
+import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
-import ua.gov.diia.core.util.extensions.noInternetException
+import ua.gov.diia.core.util.extensions.vm.executeAction
 import ua.gov.diia.notifications.data.data_source.network.api.notification.ApiNotifications
 import ua.gov.diia.notifications.models.notification.Subscriptions
 import javax.inject.Inject
@@ -18,8 +17,11 @@ import javax.inject.Inject
 @HiltViewModel
 class NotificationSettingsVM @Inject constructor(
     @AuthorizedClient private val apiNotifications: ApiNotifications,
-    private val clientAlertDialogsFactory: ClientAlertDialogsFactory
-) : ViewModel() {
+    private val errorHandling: WithErrorHandling,
+    private val retryLastAction: WithRetryLastAction,
+) : ViewModel(),
+    WithRetryLastAction by retryLastAction,
+    WithErrorHandling by errorHandling{
 
     private val _isDataLoading: MutableLiveData<Boolean> = MutableLiveData()
     val isDataLoading = _isDataLoading.asLiveData()
@@ -38,60 +40,32 @@ class NotificationSettingsVM @Inject constructor(
     }
 
     fun getSubs() {
-        viewModelScope.launch {
-            _isDataLoading.value = true
-            try {
-                val subscriptions = apiNotifications.getSubscriptions()
-                _subscriptions.value = subscriptions
-            } catch (e: Exception) {
-                consumeException(e)
-            } finally {
-                _isDataLoading.value = false
-            }
+        executeAction(progressIndicator = _isDataLoading) {
+            val subscriptions = apiNotifications.getSubscriptions()
+            _subscriptions.value = subscriptions
         }
     }
 
     fun subscribe(code: String) {
-        viewModelScope.launch {
-            _isDataLoading.value = true
-            try {
-                val response = apiNotifications.subscribe(code)
-                if (response.template != null) {
-                    _error.value = UiDataEvent(response.template)
-                } else {
-                    _getSubs.value = response.success
-                }
-            } catch (e: Exception) {
-                consumeException(e)
-            } finally {
-                _isDataLoading.value = false
+        executeAction(progressIndicator = _isDataLoading) {
+            val response = apiNotifications.subscribe(code)
+            if (response.template != null) {
+                _error.value = UiDataEvent(response.template)
+            } else {
+                _getSubs.value = response.success
             }
         }
     }
 
     fun unsubscribe(code: String) {
-        viewModelScope.launch {
-            _isDataLoading.value = true
-            try {
-                val response = apiNotifications.unsubscribe(code)
-                if (response.template != null) {
-                    _error.value = UiDataEvent(response.template)
-                } else {
-                    _getSubs.value = response.success
-                }
-            } catch (e: Exception) {
-                consumeException(e)
-            } finally {
-                _isDataLoading.value = false
-            }
-        }
-    }
 
-    private fun consumeException(e: Exception) {
-        if (e.noInternetException()) {
-            _error.postValue(UiDataEvent(clientAlertDialogsFactory.alertNoInternet()))
-        } else {
-            _error.postValue(UiDataEvent(clientAlertDialogsFactory.unknownErrorAlert(false, e = e)))
+        executeAction(progressIndicator = _isDataLoading) {
+            val response = apiNotifications.unsubscribe(code)
+            if (response.template != null) {
+                _error.value = UiDataEvent(response.template)
+            } else {
+                _getSubs.value = response.success
+            }
         }
     }
 

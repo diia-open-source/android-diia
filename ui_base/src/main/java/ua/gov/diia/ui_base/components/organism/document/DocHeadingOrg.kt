@@ -10,6 +10,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.org.doc.DocHeadingOrg
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.icon.IconAtmData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -19,10 +20,14 @@ import ua.gov.diia.ui_base.components.molecule.doc.DocNumberCopyMlc
 import ua.gov.diia.ui_base.components.molecule.doc.DocNumberCopyMlcData
 import ua.gov.diia.ui_base.components.molecule.doc.DocNumberCopyWhiteMlc
 import ua.gov.diia.ui_base.components.molecule.doc.DocNumberCopyWhiteMlcData
+import ua.gov.diia.ui_base.components.molecule.doc.toUIModel
+import ua.gov.diia.ui_base.components.molecule.doc.toUiModel
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesMlc
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesMlcData
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesWhiteMlc
 import ua.gov.diia.ui_base.components.molecule.text.HeadingWithSubtitlesWhiteMlcData
+import ua.gov.diia.ui_base.components.molecule.text.toUIModel
+import ua.gov.diia.ui_base.util.toUiModel
 
 @Composable
 fun DocHeadingOrg(
@@ -60,10 +65,19 @@ data class DocHeadingOrgData(
     val docNumberCopyWhite: DocNumberCopyWhiteMlcData? = null,
 ) : UIElementData
 
-@Composable
-@Preview
-fun DocHeadingOrgPreview() {
-    val data = DocHeadingOrgData(
+fun DocHeadingOrg?.toUiModel(): DocHeadingOrgData? {
+    if (this == null) return null
+    return DocHeadingOrgData(
+        componentId = this.componentId.orEmpty(),
+        heading = this.headingWithSubtitlesMlc?.toUiModel(),
+        docNumber = this.docNumberCopyMlc?.toUiModel(),
+        headingWhite = this.headingWithSubtitleWhiteMlc?.toUIModel(),
+        docNumberCopyWhite = this.docNumberCopyWhiteMlc?.toUIModel()
+    )
+}
+
+fun generateDocHeadingOrgMockData(): DocHeadingOrgData {
+    return DocHeadingOrgData(
         id = "123",
         heading = HeadingWithSubtitlesMlcData(
             value = "Паспорт громадянина\nУкраїни\u2028",
@@ -76,5 +90,10 @@ fun DocHeadingOrgPreview() {
             )
         ),
     )
-    DocHeadingOrg(data = data) {}
+}
+
+@Composable
+@Preview
+fun DocHeadingOrgPreview() {
+    DocHeadingOrg(data = generateDocHeadingOrgMockData()) {}
 }

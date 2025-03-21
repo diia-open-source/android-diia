@@ -1,5 +1,6 @@
 package ua.gov.diia.ui_base.components.molecule.tab
 
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -82,7 +83,7 @@ fun TabItemMolecule(
 
 data class TabItemMoleculeData(
     val actionKey: String = UIActionKeysCompose.MENU_ITEM_CLICK,
-    val id: String? = "",
+    val id: String = "",
     val label: String? = null,
     val iconSelected: UiText? = null,
     val iconUnselected: UiText? = null,
@@ -98,6 +99,7 @@ data class TabItemMoleculeData(
 fun MenuItemAtomSelected() {
     val state = TabItemMoleculeData(
         label = "Label",
+        id = "tab1",
         iconSelected = UiText.StringResource(R.drawable.ic_tab_documents_selected),
         iconUnselected = UiText.StringResource(R.drawable.ic_tab_documents_unselected),
         selectionState = UIState.Selection.Selected
@@ -110,6 +112,7 @@ fun MenuItemAtomSelected() {
 fun MenuItemAtomUnselected() {
     val state = TabItemMoleculeData(
         label = "Label",
+        id = "tab1",
         iconSelected = UiText.StringResource(R.drawable.ic_tab_documents_selected),
         iconUnselected = UiText.StringResource(R.drawable.ic_tab_documents_unselected),
         selectionState = UIState.Selection.Unselected
@@ -122,6 +125,7 @@ fun MenuItemAtomUnselected() {
 fun MenuItemAtomSelectedWithBadge() {
     val state = TabItemMoleculeData(
         label = "Label",
+        id = "tab1",
         selectionState = UIState.Selection.Selected,
         iconUnselectedWithBadge = UiText.StringResource(R.drawable.ic_tab_menu_unselected_badge),
         iconSelectedWithBadge = UiText.StringResource(R.drawable.ic_tab_menu_selected_badge),
@@ -135,6 +139,7 @@ fun MenuItemAtomSelectedWithBadge() {
 fun MenuItemAtomUnselectedWithBadge() {
     val state = TabItemMoleculeData(
         label = "Label",
+        id = "tab1",
         selectionState = UIState.Selection.Unselected,
         iconUnselectedWithBadge = UiText.StringResource(R.drawable.ic_tab_menu_unselected_badge),
         iconSelectedWithBadge = UiText.StringResource(R.drawable.ic_tab_menu_selected_badge),

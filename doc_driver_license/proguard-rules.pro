@@ -1,1 +1,4 @@
 -keep public class ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation

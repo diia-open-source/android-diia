@@ -34,7 +34,7 @@ data class TitleLabelMlcData(
     val actionKey: String = UIActionKeysCompose.TEXT_LABEL_MLC,
     val label: String,
     val componentId: UiText? = null,
-): UIElementData
+) : UIElementData
 
 fun TitleLabelMlc.toUIModel(): TitleLabelMlcData {
     return TitleLabelMlcData(
@@ -43,10 +43,19 @@ fun TitleLabelMlc.toUIModel(): TitleLabelMlcData {
     )
 }
 
+fun String?.toComposeTitle(): TitleLabelMlcData? {
+    if (this == null) return null
+    return TitleLabelMlcData(label = this)
+}
+
+fun generateTitleLabelMlcMockData(): TitleLabelMlcData {
+    return TitleLabelMlcData(label = "Продаж транспортного засобу")
+}
+
 @Preview
 @Composable
 fun TitleLabelMlcPreview() {
     TitleLabelMlc(
-        data = TitleLabelMlcData(label = "Продаж транспортного засобу")
+        data = generateTitleLabelMlcMockData()
     )
 }

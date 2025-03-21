@@ -2,14 +2,14 @@ package ua.gov.diia.ui_base.components.infrastructure
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 
-fun <T> SnapshotStateList<T>.addIfNotNull(element: T?) : SnapshotStateList<T> where T : UIElementData {
+fun <T> SnapshotStateList<T>.addIfNotNull(element: T?): SnapshotStateList<T> where T : UIElementData {
     if (element != null) {
         this.add(element)
     }
     return this
 }
 
-fun <T> SnapshotStateList<T>.addAllIfNotNull(vararg elements: T?) : SnapshotStateList<T> where T : UIElementData {
+fun <T> SnapshotStateList<T>.addAllIfNotNull(vararg elements: T?): SnapshotStateList<T> where T : UIElementData {
     elements.forEach {
         it?.let {
             this.add(it)
@@ -18,7 +18,7 @@ fun <T> SnapshotStateList<T>.addAllIfNotNull(vararg elements: T?) : SnapshotStat
     return this
 }
 
-fun <T> SnapshotStateList<T>.addAllFromListIfNotNull(list: List<T>) : SnapshotStateList<T> where T : UIElementData {
+fun <T> SnapshotStateList<T>.addAllFromListIfNotNull(list: List<T>): SnapshotStateList<T> where T : UIElementData {
     list.forEach {
         it?.let {
             this.add(it)
@@ -34,5 +34,14 @@ inline fun <reified T> SnapshotStateList<UIElementData>.findAndChangeFirstByInst
         return
     } else {
         this[index] = action.invoke(this[index] as T)
+    }
+}
+
+inline fun <reified T> SnapshotStateList<UIElementData>.firstOrNull(): T? {
+    val index = this.indexOfFirst { it is T }
+    return if (index == -1) {
+        null
+    } else {
+        this[index] as T
     }
 }

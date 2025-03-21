@@ -32,6 +32,7 @@ import ua.gov.diia.notifications.models.notification.push.getNotificationKey
 import ua.gov.diia.notifications.store.NotificationsPreferences
 import ua.gov.diia.notifications.util.notification.manager.DiiaNotificationManager
 import ua.gov.diia.notifications.util.push.MoshiPushParser
+import ua.gov.diia.notifications.work.DocWork
 import ua.gov.diia.notifications.work.SendPushTokenWork
 import ua.gov.diia.notifications.work.SilentPushWork
 
@@ -73,7 +74,8 @@ class PushService(
                     } else {
                         if (notificationsDisplayAllowed()) {
                             displayNotification(it)
-                        } else {}
+                        } else {
+                        }
                     }
                 }
 
@@ -82,15 +84,23 @@ class PushService(
                 }
 
                 NOTIFICATION_TYPE_PUSH_BACKGROUND -> {
-                    when (it.action.subtype){
+                    when (it.action.subtype) {
                         NOTIFICATION_SUB_TYPE_INTEGRITY -> {
                             LocalBroadcastManager
                                 .getInstance(context)
                                 .sendBroadcast(Intent(CoreConstants.CHECK_SAFETY_NET))
                         }
+
+                        NOTIFICATION_SUB_TYPE_UPDATE_TO_ENGAGED -> {
+                            DocWork.enqueue(workManager, NOTIFICATION_SUB_TYPE_UPDATE_TO_ENGAGED, it.action.resourceId ?: "")
+                        }
+
+                        NOTIFICATION_SYB_TYPE_DELETE_DOCUMENT -> {
+                            DocWork.enqueue(workManager, NOTIFICATION_SYB_TYPE_DELETE_DOCUMENT, it.action.resourceId ?: "")
+                        }
+
                         else -> {}
                     }
-
                 }
 
                 else -> {
@@ -169,8 +179,10 @@ class PushService(
         }
     }
 
-    companion object{
+    private companion object {
         const val NOTIFICATION_SUB_TYPE_INTEGRITY = "integrityCheck"
+        const val NOTIFICATION_SUB_TYPE_UPDATE_TO_ENGAGED = "updateToEngaged"
+        const val NOTIFICATION_SYB_TYPE_DELETE_DOCUMENT = "deleteDocument"
     }
 
 }

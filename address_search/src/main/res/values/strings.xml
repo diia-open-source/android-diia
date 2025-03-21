@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dr_replace_registration_verification_title_button">Зберегти</string>
+    <string name="address_hint_country">Оберіть країну</string>
+    <string name="address_title_country">Країна</string>
+    <string name="address_hint_region">Оберіть область або місто</string>
+    <string name="address_title_region">Область*</string>
+    <string name="address_hint_countryside">Оберіть місто або район</string>
+    <string name="address_title_countryside">Місто або район</string>
+    <string name="address_hint_type_district">Оберіть тип населеного пункту</string>
+    <string name="address_title_type_district">Тип населеного пункту*</string>
+    <string name="address_hint_district">Оберіть населений пункт</string>
+    <string name="address_title_district">Населений пункт*</string>
+    <string name="address_hint_post_office">Оберіть відділення</string>
+    <string name="address_title_post_office">Відділення Укрпошти</string>
+    <string name="address_hint_street_type">Оберіть вулицю</string>
+    <string name="address_title_street_type">Тип вулиці*</string>
+    <string name="address_hint_street">Оберіть вулицю</string>
+    <string name="address_title_street">Вулиця*</string>
+    <string name="address_title_building">Будинок*</string>
+    <string name="address_hint_building">№ Будинку</string>
+    <string name="address_title_section">Секція</string>
+    <string name="address_hint_section">Секція/Корпус</string>
+    <string name="address_title_flat">Квартира</string>
+    <string name="address_hint_flat">№ Квартири</string>
+    <string name="address_title_postal_code">Поштовий індекс*</string>
+    <string name="address_hint_postal_code">ХХХХХ</string>
+    <string name="address_title_button">Зберегти</string>
 </resources>

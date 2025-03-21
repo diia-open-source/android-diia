@@ -7,23 +7,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import ua.gov.diia.core.controller.NotificationController
 import ua.gov.diia.core.di.actions.GlobalActionDocLoadingIndicator
 import ua.gov.diia.core.di.actions.GlobalActionLogout
-import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.delegation.WithBuildConfig
+import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.event.UiEvent
 import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
 import ua.gov.diia.diia_storage.DiiaStorage
+import ua.gov.diia.diia_storage.store.datasource.itn.ItnDataRepository
 import ua.gov.diia.menu.MenuContentController
 import ua.gov.diia.menu.R
+import ua.gov.diia.menu.helper.MenuHelper
 import ua.gov.diia.menu.ui.MenuActionsKey.COPY_DEVICE_UID
 import ua.gov.diia.menu.ui.MenuActionsKey.LOGOUT
 import ua.gov.diia.menu.ui.MenuActionsKey.OPEN_ABOUT_DIIA
@@ -50,6 +54,7 @@ import ua.gov.diia.ui_base.components.molecule.header.TitleGroupMlcData
 import ua.gov.diia.ui_base.components.molecule.list.ListItemMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 import ua.gov.diia.ui_base.components.organism.list.ListItemGroupOrgData
+import ua.gov.diia.ui_base.navigation.BaseNavigation
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,10 +65,12 @@ class MenuComposeVM @Inject constructor(
     private val retryLastAction: WithRetryLastAction,
     private val diiaStorage: DiiaStorage,
     private val withBuildConfig: WithBuildConfig,
+    private val withCrashlytics: WithCrashlytics,
     private val menuContentController: MenuContentController,
     private val notificationController: NotificationController,
+    private val menuHelper: MenuHelper
 ) : WithErrorHandlingOnFlow by errorHandling, WithRetryLastAction by retryLastAction,
-    ViewModel() {
+    MenuHelper by menuHelper, ViewModel() {
 
     private val _topBarData = mutableStateListOf<UIElementData>()
     val topBarData: SnapshotStateList<UIElementData> = _topBarData
@@ -86,6 +93,23 @@ class MenuComposeVM @Inject constructor(
 
     val settingsAction = _settingsAction.asSharedFlow()
 
+    private val _progressIndicatorKey = MutableStateFlow("")
+    private val _progressIndicator = MutableStateFlow(false)
+    val progressIndicator: Flow<Pair<String, Boolean>> =
+        _progressIndicator.combine(_progressIndicatorKey) { value, key ->
+            key to value
+        }
+
+    private val _contentLoadedKey =
+        MutableStateFlow(UIActionKeysCompose.PAGE_LOADING_TRIDENT_WITH_UI_BLOCKING)
+    private val _contentLoaded = MutableStateFlow(true)
+    val contentLoaded: Flow<Pair<String, Boolean>> =
+        _contentLoaded.combine(_contentLoadedKey) { value, key ->
+            key to value
+        }
+
+    private var userName: String? = null
+
     init {
         viewModelScope.launch {
             notificationController.collectUnreadNotificationCounts {
@@ -98,6 +122,8 @@ class MenuComposeVM @Inject constructor(
                 }
             }
         }
+        configureTopBar()
+        configureBody()
     }
 
     fun logoutApprove() {
@@ -105,10 +131,9 @@ class MenuComposeVM @Inject constructor(
     }
 
     private suspend fun selectMenuAction(menuAction: MenuAction) {
-        if (menuAction == MenuAction.CopyDeviceUid) {
-            copyDeviceUid()
-        } else {
-            _settingsAction.emit(UiDataEvent(menuAction))
+        when (menuAction) {
+            MenuAction.CopyDeviceUid -> copyDeviceUid()
+            else -> _settingsAction.emit(UiDataEvent(menuAction))
         }
     }
 
@@ -155,7 +180,10 @@ class MenuComposeVM @Inject constructor(
                 titleGroupMlcData = TitleGroupMlcData(
                     heroText = UiText.DynamicString("Меню"),
                     componentId = UiText.StringResource(R.string.menu_title_menu_test_tag),
-                    label = UiText.StringResource(R.string.version_diia, withBuildConfig.getVersionName())
+                    label = UiText.StringResource(
+                        R.string.version_diia,
+                        withBuildConfig.getVersionName()
+                    )
                 )
             )
             _topBarData.addIfNotNull(toolbar)
@@ -166,7 +194,7 @@ class MenuComposeVM @Inject constructor(
         actionKey: String
     ): MenuAction? {
         return when (actionKey) {
-            OPEN_PLAY_MARKET -> MenuAction.OpenPlayMarketAction
+            OPEN_PLAY_MARKET -> MenuAction.OpenPlayMarketAction(withCrashlytics)
             OPEN_HELP -> MenuAction.OpenHelpAction
             OPEN_DIIA_ID -> MenuAction.OpenDiiaId
             OPEN_SIGNE_HISTORY -> MenuAction.OpenSignHistory
@@ -184,7 +212,12 @@ class MenuComposeVM @Inject constructor(
     }
 
     fun configureBody() {
-        _bodyData.addAll(menuContentController.configureBody(_hasUnreadNotifications.value))
+        _bodyData.addAll(
+            menuContentController.configureBody(
+                isShowBadge = _hasUnreadNotifications.value,
+                userName = userName.orEmpty()
+            )
+        )
     }
 
     fun showDataLoadingIndicator(load: Boolean) {
@@ -213,13 +246,15 @@ class MenuComposeVM @Inject constructor(
     ) {
         (bodyData.getOrNull(rootIndex) as? ListItemGroupOrgData)?.let {
             val list = it.itemsList.toMutableList()
-            val item = list[indexItemList].copy(iconLeft = UiIcon.DrawableResource(
-                if (hasUnreadNotification) {
-                    DiiaResourceIcon.NEW_MESSAGE.code
-                } else {
-                    DiiaResourceIcon.NOTIFICATION_MESSAGE.code
-                }
-            ))
+            val item = list[indexItemList].copy(
+                iconLeft = UiIcon.DrawableResource(
+                    if (hasUnreadNotification) {
+                        DiiaResourceIcon.NEW_MESSAGE.code
+                    } else {
+                        DiiaResourceIcon.NOTIFICATION_MESSAGE.code
+                    }
+                )
+            )
             list.removeAt(indexItemList)
             list.add(indexItemList, item)
             val organism = it.copy(itemsList = SnapshotStateList<ListItemMlcData>().apply {

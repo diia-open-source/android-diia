@@ -19,7 +19,6 @@ data class ConsumableItem(
             action.invoke(item)
         }
     }
-
 }
 
 @Parcelize

@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ua.gov.diia.ui_base.R
@@ -72,7 +73,6 @@ fun DocCodeOrg(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
             .aspectRatio(if (!data.isStack) 0.7F else 0.684F),
     ) {
         Box(
@@ -81,45 +81,51 @@ fun DocCodeOrg(
                 .aspectRatio(0.7F)
                 .background(color = White, shape = RoundedCornerShape(24.dp))
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 24.dp, start = 32.dp, end = 32.dp, bottom = 32.dp)
-            ) {
+            if (data.actionKey == progressIndicator.first && progressIndicator.second) {
+                TridentLoaderMolecule()
+            } else {
+                ConstraintLayout(
+                    modifier = Modifier
+                        .aspectRatio(0.7F)
 
-                if (data.actionKey == progressIndicator.first && progressIndicator.second) {
-                    TridentLoaderMolecule()
-                } else {
+                        .padding(top = 24.dp, start = 32.dp, end = 32.dp, bottom = 32.dp)
+                ) {
+                    val (timerText, expiredContent, qrImage, ean13Image, toggleGroup, exceptionContent) = createRefs()
+
                     if (data.exception == null) {
-                        if (data.showToggle) {
-                            Spacer(
-                                modifier = Modifier.height(
-                                    if (data.toggle.ean13.selectionState == UIState.Selection.Selected)
-                                        58.dp else
-                                        8.dp
-                                )
-                            )
-                        } else {
-                            Spacer(modifier = Modifier.weight(1f))
-
-                        }
-
+                        val topMargin =
+                            if (data.toggle.ean13.selectionState == UIState.Selection.Selected)
+                                58.dp
+                            else 8.dp
                         data.timerText?.let {
                             TimerText(
                                 text = data.timerText,
                                 minutes = 3,
-                                units = if (data.localization == Localization.ua) "хв" else "min"
+                                units = if (data.localization == Localization.ua) "хв" else "min",
+                                modifier = Modifier.constrainAs(timerText) {
+                                    top.linkTo(parent.top, margin = topMargin)
+                                }
                             ) {
                                 docBarcodeExpired = true
                             }
                         }
                         if (docBarcodeExpired) {
-                            Box(modifier = Modifier) {
+                            Box(
+                                modifier = Modifier
+                                    .constrainAs(expiredContent) {
+                                        top.linkTo(
+                                            timerText.bottom,
+                                            margin = if (data.showToggle) 16.dp else 0.dp
+                                        )
+                                        if (!data.showToggle) {
+                                            bottom.linkTo(parent.bottom)
+                                        }
+                                    },
+                            ) {
                                 if (data.toggle.qr.selectionState == UIState.Selection.Selected) {
                                     data.qrBitmap?.let {
                                         Box(
                                             modifier = Modifier
-                                                .padding(top = if (data.showToggle) 16.dp else 0.dp)
                                                 .fillMaxWidth(),
                                             contentAlignment = Alignment.Center
                                         ) {
@@ -137,18 +143,21 @@ fun DocCodeOrg(
                                     data.ean13Bitmap?.let {
                                         Box(
                                             modifier = Modifier
-                                                .padding(top = if (data.showToggle) 16.dp else 0.dp)
                                                 .fillMaxWidth(),
                                             contentAlignment = Alignment.Center
                                         ) {
                                             val originalEan13Bitmap = it.copy(it.config, true)
 
-                                            BlurBitmap(bitmap = originalEan13Bitmap, width = 247.dp, height = 100.dp)
+                                            BlurBitmap(
+                                                bitmap = originalEan13Bitmap,
+                                                width = 247.dp,
+                                                height = 100.dp
+                                            )
                                         }
                                     }
                                 }
                                 Column(
-                                    modifier = modifier
+                                    modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(top = 48.dp),
                                     horizontalAlignment = Alignment.CenterHorizontally
@@ -199,83 +208,101 @@ fun DocCodeOrg(
                                         }
                                     )
                                 }
-
                             }
-
-                        }
-                        if (data.toggle.qr.selectionState == UIState.Selection.Selected && !docBarcodeExpired) {
-                            data.qrBitmap?.let {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(top = if (data.showToggle || data.timerText != null) 16.dp else 0.dp)
-                                        .fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Image(
+                        } else {
+                            if (data.toggle.qr.selectionState == UIState.Selection.Selected) {
+                                data.qrBitmap?.let {
+                                    Box(
                                         modifier = Modifier
+                                            .padding(top = if (data.showToggle || data.timerText != null) 16.dp else 0.dp)
                                             .fillMaxWidth()
-                                            .aspectRatio(1f),
-                                        bitmap = data.qrBitmap.asImageBitmap(),
-                                        contentScale = ContentScale.Crop,
-                                        contentDescription = stringResource(id = R.string.qr_code)
-                                    )
-                                }
-                            }
-                        }
-                        if (data.toggle.ean13.selectionState == UIState.Selection.Selected && !docBarcodeExpired) {
-                            data.ean13Bitmap?.let {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(top = 16.dp)
-                                        .fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Column(
-                                        horizontalAlignment = Alignment.CenterHorizontally
+                                            .constrainAs(qrImage) {
+                                                if (data.showToggle) {
+                                                    top.linkTo(timerText.bottom)
+
+                                                } else {
+                                                    top.linkTo(parent.top)
+                                                    bottom.linkTo(parent.bottom)
+
+                                                }
+                                            },
+                                        contentAlignment = Alignment.Center
                                     ) {
                                         Image(
-                                            modifier = Modifier.size(
-                                                width = 247.dp,
-                                                height = 100.dp
-                                            ),
-                                            bitmap = data.ean13Bitmap.asImageBitmap(),
-                                            contentDescription = stringResource(id = R.string.qr_code),
-                                            contentScale = ContentScale.FillBounds
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .aspectRatio(1f),
+                                            bitmap = data.qrBitmap.asImageBitmap(),
+                                            contentScale = ContentScale.Crop,
+                                            contentDescription = stringResource(id = R.string.qr_code)
                                         )
-                                        data.eanCode?.let {
-                                            Text(
-                                                text = formatNumber(data.eanCode),
-                                                modifier = Modifier.padding(
-                                                    top = 12.dp,
-                                                    bottom = 32.dp
+                                    }
+                                }
+                            }
+                            if (data.toggle.ean13.selectionState == UIState.Selection.Selected) {
+                                data.ean13Bitmap?.let {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(top = 16.dp)
+                                            .fillMaxWidth()
+                                            .constrainAs(ean13Image) {
+                                                top.linkTo(timerText.bottom)
+                                            },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Image(
+                                                modifier = Modifier.size(
+                                                    width = 247.dp,
+                                                    height = 100.dp
                                                 ),
-                                                style = TextStyle(
-                                                    fontSize = 14.sp,
-                                                    lineHeight = 16.sp,
-                                                    letterSpacing = 4.sp
-                                                ),
-                                                fontFamily = FontFamily(Font(R.font.e_ukraine_regular)),
-                                                color = Black,
-                                                textAlign = TextAlign.Center
+                                                bitmap = data.ean13Bitmap.asImageBitmap(),
+                                                contentDescription = stringResource(id = R.string.qr_code),
+                                                contentScale = ContentScale.FillBounds
                                             )
+                                            data.eanCode?.let {
+                                                Text(
+                                                    text = formatNumber(data.eanCode),
+                                                    modifier = Modifier.padding(
+                                                        top = 12.dp,
+                                                        bottom = 32.dp
+                                                    ),
+                                                    style = TextStyle(
+                                                        fontSize = 14.sp,
+                                                        lineHeight = 16.sp,
+                                                        letterSpacing = 4.sp
+                                                    ),
+                                                    fontFamily = FontFamily(Font(R.font.e_ukraine_regular)),
+                                                    color = Black,
+                                                    textAlign = TextAlign.Center
+                                                )
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.weight(1f))
+
                         if (data.showToggle) {
                             ToggleButtonGroup(
-                                modifier = Modifier,
+                                modifier = Modifier
+                                    .constrainAs(toggleGroup) {
+                                        bottom.linkTo(parent.bottom)
+                                    },
                                 data = data.toggle,
                                 onUIAction = onUIAction
                             )
                         }
-                    }
-                    if (data.exception != null) {
+                    } else {
                         Column(
                             modifier = Modifier
-                                .fillMaxSize(),
+                                .fillMaxSize()
+                                .constrainAs(exceptionContent) {
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                },
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
@@ -326,24 +353,20 @@ fun DocCodeOrg(
             }
         }
         if (data.isStack) {
-            Column(
-                modifier = modifier
+            Box(
+                modifier = Modifier
                     .height(10.dp)
                     .fillMaxWidth()
                     .padding(horizontal = 26.dp)
                     .background(
                         color = WhiteAlpha25,
                         shape = RoundedCornerShape(bottomEnd = 24.dp, bottomStart = 24.dp)
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-
-            ) {
-
-            }
+                    )
+            )
         }
     }
 }
+
 
 enum class Localization {
     ua, eng
@@ -415,6 +438,55 @@ fun DocCodeOrgPreview() {
             toggle = state.value,
             qrBitmap = qrBm,
             showToggle = true,
+            isStack = true
+        )
+    val stateT = remember {
+        mutableStateOf(data)
+    }
+    DocCodeOrg(modifier = Modifier, stateT.value) {
+        stateT.value = stateT.value.onToggleClick(it.data)
+    }
+}
+
+@Preview
+@Composable
+fun DocCodeOrgExpiredPreview() {
+    val toggle = ToggleButtonGroupData(
+        qr = BtnToggleMlcData(
+            id = "qr",
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.QR_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.QR.code),
+            selectionState = UIState.Selection.Selected,
+            action = DataActionWrapper(
+                type = "qr"
+            )
+        ),
+        ean13 = BtnToggleMlcData(
+            id = "ean",
+            label = "Label".toDynamicString(),
+            iconSelected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE_WHITE.code),
+            iconUnselected = UiIcon.DrawableResource(DiiaResourceIcon.BARCODE.code),
+            selectionState = UIState.Selection.Unselected,
+            action = DataActionWrapper(
+                type = "ean"
+            )
+        )
+    )
+    val state = remember {
+        mutableStateOf(toggle)
+    }
+
+    val qrBm = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
+
+    val data =
+        DocCodeOrgData(
+            localization = Localization.eng,
+            toggle = state.value,
+            qrBitmap = qrBm,
+            timerText = "00:00",
+            showToggle = false,
+            expired = true,
             isStack = true
         )
     val stateT = remember {
@@ -520,7 +592,13 @@ fun DocCodeOrgPreviewWithHttpExeption() {
 }
 
 @Composable
-fun TimerText(text: String?, units: String, minutes: Int, onTimeOver: () -> Unit) {
+fun TimerText(
+    text: String?,
+    units: String,
+    minutes: Int,
+    modifier: Modifier,
+    onTimeOver: () -> Unit
+) {
     val density = LocalDensity.current
 
     var minutes by remember { mutableStateOf(minutes) }
@@ -558,14 +636,14 @@ fun TimerText(text: String?, units: String, minutes: Int, onTimeOver: () -> Unit
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Text(
-            modifier = Modifier
+            modifier = modifier
                 .width(textComponentWidth),
             text = "$text ${minutes}:${String.format("%02d", seconds)} $units",
             textAlign = TextAlign.Start,
@@ -578,6 +656,6 @@ fun TimerText(text: String?, units: String, minutes: Int, onTimeOver: () -> Unit
 @Preview
 @Composable
 fun TextCounterPreview() {
-    TimerText(text = "Код діятиме ще ", "хв", 3) {
+    TimerText(text = "Код діятиме ще ", "хв", 3, Modifier) {
     }
 }

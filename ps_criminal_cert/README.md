@@ -6,16 +6,16 @@ This is module responsible for criminal certificate public service.
 1. Copy module folder to your project and add module to gradle dependency like this:
 
 ```groovy
-implementation project(':ps_criminal_cert')
+implementation project(':ps:ps_criminal_cert')
 ```
 
 2. Module requires next modules to work
 ```groovy
-implementation project(path: ':ui_base')
-implementation project(path: ':core')
-implementation project(path: ':publicservice')
-implementation project(path: ':address_search')
-implementation project(path: ':search')
+implementation project(path: ':libs:ui_base')
+implementation project(path: ':libs:core')
+implementation project(path: ':ps:publicservice')
+implementation project(path: ':features:address_search')
+implementation project(path: ':features:search')
 ```
 
 3. nav_id file describe all ids that this module requires. Entry point should implement all those ids.

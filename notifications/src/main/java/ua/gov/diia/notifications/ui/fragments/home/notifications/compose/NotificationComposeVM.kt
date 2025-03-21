@@ -176,7 +176,8 @@ class NotificationComposeVM @Inject constructor(
                         resource = null
                     )
                 )
-            )
+            ),
+            componentId = UiText.StringResource(R.string.notification_text_tag)
         )
         _topBarData.addIfNotNull(topGroupOrgData)
     }

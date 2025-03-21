@@ -9,6 +9,7 @@ import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.atom.text.TickerAtm
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerType
+import ua.gov.diia.ui_base.components.atom.text.TickerUsage
 
 @Composable
 fun NoInternetTicker(modifier: Modifier = Modifier) {
@@ -16,7 +17,8 @@ fun NoInternetTicker(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth(),
         data = TickerAtomData(
             title = stringResource(id = R.string.no_internet),
-            type = TickerType.BIG_WARNING
+            type = TickerType.WARNING,
+            usage = TickerUsage.GRAND
         )
     ) {}
 }

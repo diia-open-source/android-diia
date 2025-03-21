@@ -6,6 +6,6 @@ fun Double.toCurrencyUah() = "%.2f грн".format(this).replace(",", ".")
 
 fun Double.percent(p: Double) = this / 100 * p
 
-fun String.toAmount() = filter { it.isDigit() || it == ','}.replace(",", ".").toDouble()
+fun String.toAmount() = filter { it.isDigit() || it == ','}.replace(",", ".").toDoubleOrNull()
 
 fun String.toPrice() = filter { it.isDigit() }.toIntOrNull()

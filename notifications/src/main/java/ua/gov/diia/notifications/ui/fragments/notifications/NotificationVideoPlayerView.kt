@@ -8,10 +8,12 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.annotation.OptIn
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.PlayerView
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.PlayerView
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,7 +22,8 @@ import ua.gov.diia.core.util.extensions.clearFlagKeepScreen
 import ua.gov.diia.core.util.extensions.lifecycle.lifecycleScope
 import ua.gov.diia.notifications.R
 
-class NotificationVideoPlayerView @JvmOverloads constructor(
+class NotificationVideoPlayerView @OptIn(UnstableApi::class)
+@JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

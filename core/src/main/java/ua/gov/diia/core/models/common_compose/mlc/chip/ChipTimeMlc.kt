@@ -13,14 +13,6 @@ data class ChipTimeMlc(
     val active: Boolean? = null,
     @Json(name = "componentId")
     val componentId: String? = null,
-    @Json(name = "data")
-    val data: Data? = null,
-) {
-    @JsonClass(generateAdapter = true)
-    data class Data(
-        @Json(name = "code")
-        val code: String? = null,
-        @Json(name = "resourceId")
-        val resourceId: String? = null,
-    )
-}
+    @Json(name = "dataJson")
+    val data: String? = null,
+)

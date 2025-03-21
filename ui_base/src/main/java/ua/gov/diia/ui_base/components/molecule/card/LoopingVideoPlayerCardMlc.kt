@@ -1,0 +1,298 @@
+package ua.gov.diia.ui_base.components.molecule.card
+
+import android.view.ViewGroup
+import androidx.annotation.OptIn
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.AspectRatioFrameLayout
+import androidx.media3.ui.PlayerView
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import ua.gov.diia.core.models.common_compose.mlc.card.LoopingVideoPlayerCardMlc
+import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
+import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
+import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDrawableResourceOrNull
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
+import ua.gov.diia.ui_base.components.molecule.media.player.ExoPlayerVM
+import ua.gov.diia.ui_base.components.noRippleClickable
+import ua.gov.diia.ui_base.components.organism.carousel.SimpleCarouselCard
+import ua.gov.diia.ui_base.components.organism.list.pagination.SimplePagination
+import ua.gov.diia.ui_base.components.subatomic.icon.UiIconWrapperSubatomic
+import ua.gov.diia.ui_base.components.theme.BlackAlpha50
+import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
+import ua.gov.diia.ui_base.components.theme.Transparent
+import ua.gov.diia.ui_base.util.toDataActionWrapper
+import java.util.UUID
+
+@OptIn(UnstableApi::class)
+@Composable
+fun LoopingVideoPlayerCardMlc(
+    modifier: Modifier = Modifier,
+    data: LoopingVideoPlayerCardMlcData,
+    connectivityState: Boolean,
+    onUIAction: (UIAction) -> Unit
+) {
+    val id = remember { UUID.randomUUID().toString() }
+    val vm: ExoPlayerVM = hiltViewModel(key = id)
+    var lifecycle by remember { mutableStateOf(Lifecycle.Event.ON_CREATE) }
+    var isPlaying by remember { mutableStateOf(vm.player.isPlaying) }
+    var playbackState by remember { mutableStateOf(vm.player.playbackState) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    var isBuffering by remember { mutableStateOf(true) }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            lifecycle = event
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        vm.player.repeatMode = Player.REPEAT_MODE_ONE
+
+        val listener = object : Player.Listener {
+            override fun onPlaybackStateChanged(state: Int) {
+                super.onPlaybackStateChanged(state)
+                isBuffering = state == Player.STATE_BUFFERING
+            }
+        }
+
+        vm.player.addListener(listener)
+
+        onDispose {
+            vm.player.removeListener(listener)
+        }
+    }
+
+    DisposableEffect(key1 = Unit) {
+        vm.player.repeatMode = Player.REPEAT_MODE_ONE
+
+        val listener =
+            object : Player.Listener {
+                override fun onEvents(
+                    player: Player,
+                    events: Player.Events
+                ) {
+                    super.onEvents(player, events)
+                    isPlaying = player.isPlaying
+                    playbackState = player.playbackState
+                }
+            }
+
+        vm.player.addListener(listener)
+
+        onDispose {
+            vm.player.removeListener(listener)
+        }
+    }
+    LaunchedEffect(key1 = data.url) {
+        data.url.let {
+            vm.addVideoUri(data.url)
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .padding(horizontal = 24.dp)
+            .padding(top = 24.dp)
+            .fillMaxWidth()
+            .height(200.dp)
+            .background(color = Transparent, shape = RoundedCornerShape(16.dp))
+            .noRippleClickable {
+                onUIAction(
+                    UIAction(
+                        actionKey = data.actionKey,
+                        data = data.id,
+                        action = data.action
+                    )
+                )
+            }
+            .testTag(data.componentId?.asString() ?: "")
+    ) {
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(RoundedCornerShape(16.dp))
+        ) {
+            AndroidView(
+                factory = { context ->
+                    PlayerView(context).apply {
+                        player = vm.player
+                        useController = false
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                    }
+                },
+                update = {
+                    when (lifecycle) {
+                        Lifecycle.Event.ON_PAUSE -> {
+                            it.onPause()
+                            it.player?.pause()
+                        }
+
+                        Lifecycle.Event.ON_RESUME -> {
+                            it.onResume()
+                            it.player?.playWhenReady = true
+                        }
+
+                        else -> Unit
+                    }
+                },
+                modifier = Modifier.clipToBounds()
+            )
+            if (!connectivityState || isBuffering) {
+                ImageCardPlaceholder()
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .background(
+                    color = BlackAlpha50,
+                    shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+                )
+                .align(Alignment.BottomCenter)
+        ) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = data.title.asString(),
+                    style = DiiaTextStyle.t1BigText,
+                    color = Color.White,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                data.iconEnd?.let {
+                    UiIconWrapperSubatomic(
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .size(24.dp), icon = it
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ImageCardPlaceholder() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.card_viewholder_dots_white))
+    val progress by animateLottieCompositionAsState(
+        composition,
+        iterations = LottieConstants.IterateForever
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .clip(shape = RoundedCornerShape(16.dp)),
+        contentAlignment = Alignment.Center
+    ) {
+        LottieAnimation(
+            modifier = Modifier
+                .size(width = 60.dp, height = 60.dp)
+                .alpha(0.2f),
+            alignment = Alignment.Center,
+            contentScale = ContentScale.Inside,
+            composition = composition,
+            progress = { progress },
+        )
+    }
+}
+
+data class LoopingVideoPlayerCardMlcData(
+    val actionKey: String = UIActionKeysCompose.LOOPING_VIDEO_PLAYER_CARD_MLC,
+    override val id: String,
+    val title: UiText,
+    val iconEnd: UiIcon? = null,
+    val url: String,
+    val contentDescription: UiText? = null,
+    val action: DataActionWrapper? = null,
+    val componentId: UiText? = null
+) : SimpleCarouselCard, SimplePagination
+
+fun LoopingVideoPlayerCardMlc.toUiModel(
+    id: String? = null,
+    contentDescription: UiText? = null
+): LoopingVideoPlayerCardMlcData {
+    return LoopingVideoPlayerCardMlcData(
+        id = id ?: componentId?: UIActionKeysCompose.IMAGE_CARD_MLC,
+        componentId = componentId?.let { UiText.DynamicString(it) },
+        title = label.toDynamicString(),
+        iconEnd = iconRight.toDrawableResourceOrNull(),
+        url = video,
+        contentDescription = contentDescription,
+        action = action?.toDataActionWrapper()
+    )
+}
+
+@Composable
+@Preview
+fun  LoopingVideoPlayerCardMlcPreview() {
+    val state = remember { mutableStateOf(true) }
+
+    val data = LoopingVideoPlayerCardMlcData(
+        id = "",
+        title = UiText.DynamicString("label"),
+        url = "https://business.diia.gov.ua/uploads/4/22881-main.jpg",
+    )
+    LoopingVideoPlayerCardMlc(
+        modifier = Modifier,
+        data = data,
+        connectivityState = state.value
+    ) {}
+}

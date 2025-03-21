@@ -8,7 +8,8 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.BaseLocalizationChecker
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 
 class WithCheckLocalizationDocsImplTest {
 

@@ -41,18 +41,24 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ua.gov.diia.core.models.common_compose.mlc.input.InputNumberMlc
+import ua.gov.diia.core.models.common_compose.mlc.input.Validation
 import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.components.infrastructure.ComposeConst.INPUT_NUMBER_LARGE_MLC_MASK
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -67,6 +73,10 @@ import ua.gov.diia.ui_base.components.theme.BlackAlpha30
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.Red
 import ua.gov.diia.ui_base.components.theme.White
+import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 @OptIn(
     ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class,
@@ -119,6 +129,8 @@ fun InputNumberMlc(
     BasicTextField(value = data.value?.toString() ?: "",
         enabled = data.isEnabled,
         modifier = modifier
+            .padding(horizontal = 24.dp)
+            .padding(top = 24.dp)
             .onFocusChanged {
                 focusState = when (focusState) {
                     UIState.Focus.NeverBeenFocused -> {
@@ -184,6 +196,7 @@ fun InputNumberMlc(
             }),
         singleLine = true,
         cursorBrush = SolidColor(getColorForInput(data.isEnabled)),
+        visualTransformation = DecimalAmountTransformation(),
         decorationBox = @Composable { innerTextField ->
             Column(
                 modifier = Modifier
@@ -332,9 +345,9 @@ data class InputNumberMlcData(
     val label: UiText,
     val placeholder: UiText? = null,
     val hint: UiText? = null,
-    val value: Int? = null,
-    val maxValue: Int? = null,
-    val minValue: Int? = null,
+    val value: Long? = null,
+    val maxValue: Long? = null,
+    val minValue: Long? = null,
     val mandatory: Boolean? = null,
     val errorMessage: UiText? = null,
     val validation: UIState.Validation = UIState.Validation.NeverBeenPerformed,
@@ -342,23 +355,32 @@ data class InputNumberMlcData(
     val action: DataActionWrapper? = null
 ) : UIElementData {
     fun onInputChanged(newValue: String?): InputNumberMlcData {
-        val newValueAsInt: Int?
+        if (newValue.isNullOrEmpty()) {
+            return this.copy(
+                value = null,
+                validation = dataValidation(
+                    value = null,
+                    previousValueIsEmpty = this.value == null
+                )
+            )
+        }
+        val newValueAsLong: Long?
         try {
-            newValueAsInt = newValue?.toIntOrNull()
+            newValueAsLong = newValue.toLong()
         } catch (nfe: NumberFormatException) {
             return this
         }
         return this.copy(
-            value = newValueAsInt,
+            value = newValueAsLong,
             validation = dataValidation(
-                value = newValueAsInt,
+                value = newValueAsLong,
                 previousValueIsEmpty = this.value == null
             )
         )
     }
 
     private fun dataValidation(
-        value: Int?,
+        value: Long?,
         previousValueIsEmpty: Boolean,
     ): UIState.Validation {
         if (minValue == null && maxValue == null) {
@@ -411,22 +433,66 @@ fun InputNumberMlc.toUIModel(): InputNumberMlcData {
     )
 }
 
+enum class InputNumberMlcMockType {
+    empty, filled, disabled, error,
+}
+
+fun generateInputNumberMlcMockData(mockType: InputNumberMlcMockType): InputNumberMlcData {
+    return when (mockType) {
+        InputNumberMlcMockType.empty -> InputNumberMlcData(
+            label = "label".toDynamicString(),
+            inputCode = "123456".toDynamicString(),
+            placeholder = "Placeholder".toDynamicString(),
+            hint = "Hint message".toDynamicString(),
+            minValue = 5,
+            maxValue = 10,
+            mandatory = false,
+            errorMessage = "error".toDynamicString(),
+        )
+
+        InputNumberMlcMockType.filled -> InputNumberMlcData(
+            label = "label".toDynamicString(),
+            inputCode = "123456".toDynamicString(),
+            placeholder = "Placeholder".toDynamicString(),
+            hint = "Hint message".toDynamicString(),
+            value = 20,
+            minValue = 5,
+            maxValue = 30,
+            mandatory = false,
+            validation = UIState.Validation.Passed,
+            errorMessage = "error".toDynamicString(),
+        )
+        InputNumberMlcMockType.error -> InputNumberMlcData(
+            label = "label".toDynamicString(),
+            inputCode = "123456".toDynamicString(),
+            placeholder = "Placeholder".toDynamicString(),
+            hint = "Hint message".toDynamicString(),
+            value = 20,
+            minValue = 5,
+            maxValue = 10,
+            mandatory = false,
+            validation = UIState.Validation.Failed,
+            errorMessage = "error".toDynamicString()
+        )
+        InputNumberMlcMockType.disabled -> InputNumberMlcData(
+            label = "label".toDynamicString(),
+            inputCode = "123456".toDynamicString(),
+            placeholder = "Placeholder".toDynamicString(),
+            hint = "Hint message".toDynamicString(),
+            minValue = 5,
+            maxValue = 10,
+            mandatory = false,
+            isEnabled = false,
+            errorMessage = "error".toDynamicString(),
+        )
+    }
+}
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 @Preview
-fun InputNumberMlcPreview() {
-
-    val data = InputNumberMlcData(
-        label = "label".toDynamicString(),
-        inputCode = "123456".toDynamicString(),
-        placeholder = "Placeholder".toDynamicString(),
-        hint = LoremIpsum(50).values.joinToString().toDynamicString(),
-        minValue = 5,
-        maxValue = 10,
-        mandatory = false,
-        errorMessage = "error".toDynamicString(),
-    )
-
+fun InputNumberMlcPreview_Empty() {
+    val data = generateInputNumberMlcMockData(InputNumberMlcMockType.empty)
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
@@ -462,18 +528,46 @@ fun InputNumberMlcPreview() {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 @Preview
-fun InputNumberMlcPreview_Invalid_From_Server() {
+fun InputNumberMlcPreview_Filled() {
+    val data = generateInputNumberMlcMockData(InputNumberMlcMockType.filled)
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
-    val data = InputNumberMlcData(
-        label = "label".toDynamicString(),
-        inputCode = "123456".toDynamicString(),
-        placeholder = "Placeholder".toDynamicString(),
-        hint = LoremIpsum(50).values.joinToString().toDynamicString(),
-        value = 20,
-        maxValue = 10,
-        mandatory = false,
-        errorMessage = "error".toDynamicString(),
-    )
+    val state = remember {
+        mutableStateOf(data)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(White), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        InputNumberMlc(modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
+            data = state.value,
+            onUIAction = {
+                it.action?.let { action ->
+                    state.value = state.value.onInputChanged(action.resource)
+                }
+            })
+
+        Button(modifier = Modifier.padding(bottom = 16.dp), onClick = {
+            focusManager.clearFocus()
+        }) {
+            Text("Click to remove focus from search")
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+@Preview
+fun InputNumberMlcPreview_Error() {
+
+    val data = generateInputNumberMlcMockData(InputNumberMlcMockType.error)
+
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -489,7 +583,6 @@ fun InputNumberMlcPreview_Invalid_From_Server() {
     ) {
 
         InputNumberMlc(modifier = Modifier
-            .padding(16.dp)
             .fillMaxWidth()
             .focusRequester(focusRequester),
             data = state.value,
@@ -512,17 +605,7 @@ fun InputNumberMlcPreview_Invalid_From_Server() {
 @Preview
 fun InputNumberMlcPreview_Disabled() {
 
-    val data = InputNumberMlcData(
-        label = "label".toDynamicString(),
-        inputCode = "123456".toDynamicString(),
-        placeholder = "Placeholder".toDynamicString(),
-        hint = LoremIpsum(50).values.joinToString().toDynamicString(),
-        minValue = 5,
-        maxValue = 10,
-        mandatory = false,
-        isEnabled = false,
-        errorMessage = "error".toDynamicString(),
-    )
+    val data = generateInputNumberMlcMockData(InputNumberMlcMockType.disabled)
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -538,7 +621,6 @@ fun InputNumberMlcPreview_Disabled() {
     ) {
 
         InputNumberMlc(modifier = Modifier
-            .padding(16.dp)
             .fillMaxWidth()
             .focusRequester(focusRequester),
             data = state.value,
@@ -582,7 +664,6 @@ fun InputNumberMlcPreview_Poor() {
     ) {
 
         InputNumberMlc(modifier = Modifier
-            .padding(16.dp)
             .fillMaxWidth()
             .focusRequester(focusRequester),
             data = state.value,
@@ -647,7 +728,6 @@ fun InputNumberMlcPreview_Several() {
     ) {
 
         InputNumberMlc(modifier = Modifier
-            .padding(16.dp)
             .fillMaxWidth()
             .focusRequester(focusRequester),
             data = state1.value,
@@ -679,3 +759,77 @@ fun InputNumberMlcPreview_Several() {
         }
     }
 }
+
+private const val groupingSymbol = ' '
+private const val decimalSymbol = '.'
+
+private val numberFormatter: DecimalFormat = DecimalFormat("#,###").apply {
+    decimalFormatSymbols = DecimalFormatSymbols(Locale.getDefault()).apply {
+        groupingSeparator = groupingSymbol
+        decimalSeparator = decimalSymbol
+    }
+}
+
+private class DecimalAmountTransformation : VisualTransformation {
+
+    override fun filter(text: AnnotatedString): TransformedText {
+        val transformation = reformat(text.text)
+
+        return TransformedText(
+            AnnotatedString(transformation.formatted ?: ""),
+            object : OffsetMapping {
+                override fun originalToTransformed(offset: Int): Int {
+                    return transformation.originalToTransformed[offset]
+                }
+
+                override fun transformedToOriginal(offset: Int): Int {
+                    return transformation.transformedToOriginal[offset]
+                }
+            },
+        )
+    }
+
+    private fun reformat(original: String): Transformation {
+        val parts = original.split(decimalSymbol)
+        check(parts.size < 3) { "original text must have only one dot (use filteredDecimalText)" }
+
+        val hasEndDot = original.endsWith('.')
+        var formatted = original
+
+        if (original.isNotEmpty() && parts.size == 1) {
+            formatted = numberFormatter.format(BigDecimal(parts[0]))
+
+            if (hasEndDot) {
+                formatted += decimalSymbol
+            }
+        } else if (parts.size == 2) {
+            val numberPart = numberFormatter.format(BigDecimal(parts[0]))
+            val decimalPart = parts[1]
+
+            formatted = "$numberPart.$decimalPart"
+        }
+
+        val originalToTransformed = mutableListOf<Int>()
+        val transformedToOriginal = mutableListOf<Int>()
+        var specialCharsCount = 0
+
+        formatted.forEachIndexed { index, char ->
+            if (groupingSymbol == char) {
+                specialCharsCount++
+            } else {
+                originalToTransformed.add(index)
+            }
+            transformedToOriginal.add(index - specialCharsCount)
+        }
+        originalToTransformed.add(originalToTransformed.maxOrNull()?.plus(1) ?: 0)
+        transformedToOriginal.add(transformedToOriginal.maxOrNull()?.plus(1) ?: 0)
+
+        return Transformation(formatted, originalToTransformed, transformedToOriginal)
+    }
+}
+
+data class Transformation(
+    val formatted: String?,
+    val originalToTransformed: List<Int>,
+    val transformedToOriginal: List<Int>,
+)

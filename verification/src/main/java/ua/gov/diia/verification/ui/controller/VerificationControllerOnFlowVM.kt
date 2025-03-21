@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ua.gov.diia.core.util.alert.ClientAlertDialogsFactory
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
@@ -28,10 +27,12 @@ import ua.gov.diia.verification.network.ApiVerification
 import ua.gov.diia.verification.ui.VerificationSchema
 import ua.gov.diia.verification.ui.methods.VerificationMethod
 import ua.gov.diia.verification.ui.methods.VerificationNavRequest
+import ua.gov.diia.verification.util.AndroidClientAlertDialogsFactory
+import ua.gov.diia.verification.util.AndroidClientAlertDialogsFactory.Companion.NO_VERIFICATION_METHODS
 
 abstract class VerificationControllerOnFlowVM(
     protected val apiVerification: ApiVerification,
-    private val clientAlertDialogsFactory: ClientAlertDialogsFactory,
+    private val clientAlertDialogsFactory: AndroidClientAlertDialogsFactory,
     private val applicationInfoProvider: InstalledApplicationInfoProvider,
     private val systemServiceProvider: SystemServiceProvider,
     private val applicationLauncher: ApplicationLauncher,
@@ -148,7 +149,7 @@ abstract class VerificationControllerOnFlowVM(
                 if (availableMethods.isEmpty()) {
                     val template = methods.singleOrNull()?.let {
                         verificationMethods[it]?.getUnavailabilityDialog()
-                    } ?: clientAlertDialogsFactory.getNoVerificationMethodsDialog()
+                    } ?: clientAlertDialogsFactory.showCustomAlert(NO_VERIFICATION_METHODS)
 
                     showTemplateDialog(
                         template,
@@ -167,7 +168,7 @@ abstract class VerificationControllerOnFlowVM(
                 this@VerificationControllerOnFlowVM.flowProcessId = processId
                 completeVerification()
             } else {
-                val template = clientAlertDialogsFactory.getNoVerificationMethodsDialog()
+                val template = clientAlertDialogsFactory.showCustomAlert(NO_VERIFICATION_METHODS)
                 showTemplateDialog(
                     template,
                     VerificationControllerConst.VERIFICATION_ALERT_DIALOG_ACTION

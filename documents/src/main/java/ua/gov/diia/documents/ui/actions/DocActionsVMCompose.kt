@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.event.UiEvent
 import ua.gov.diia.documents.di.GlobalActionUpdateDocument
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.LocalizationType
-import ua.gov.diia.documents.ui.DocumentsContextMenuActions
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.LocalizationType
+import ua.gov.diia.core.models.document.ui.DocumentsContextMenuActions
 import ua.gov.diia.documents.ui.actions.VerificationActions.VERIFICATION_CODE_EAN13
 import ua.gov.diia.documents.ui.actions.VerificationActions.VERIFICATION_CODE_QR
 import ua.gov.diia.ui_base.components.infrastructure.event.DocAction

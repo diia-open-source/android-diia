@@ -22,4 +22,6 @@ data class Item(
     val tableItemVerticalMlc: TableItemVerticalMlc? = null,
     @Json(name = "smallEmojiPanelMlc")
     val smallEmojiPanelMlc: SmallEmojiPanelMlc? = null,
+    @Json(name = "tableItemHorizontalLargeMlc")
+    val tableItemHorizontalLargeMlc: TableItemHorizontalLargeMlc? = null,
 ) : Parcelable

@@ -7,15 +7,15 @@ This is module responsible for BankID verification method.
 1. Copy module folder to your project and add module to gradle dependency like this:
 
 ```groovy
-implementation project(':bankid')
+implementation project(':features:bankid')
 ```
 
 2. Module requires next modules to work
 
 ```groovy
-implementation project(':core')
-implementation project(':verification')
-implementation project(':ui_base')
+implementation project(':libs:core')
+implementation project(':features:verification')
+implementation project(':libs:ui_base')
 ```
 
 3. Add next nav graphs to main navigation graph

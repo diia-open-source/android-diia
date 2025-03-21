@@ -18,6 +18,7 @@ import ua.gov.diia.core.util.CombinedLiveData
 import ua.gov.diia.core.util.delegation.WithErrorHandling
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
+import ua.gov.diia.core.util.event.UiEvent
 import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
 import ua.gov.diia.core.util.extensions.vm.executeAction
 import java.util.regex.Pattern
@@ -38,6 +39,9 @@ open class AddressSearchVM(
 
     private val _template = MutableLiveData<UiDataEvent<TemplateDialogModel>>()
     val template = _template.asLiveData()
+
+    private val _closeKeyboard = MutableLiveData<UiEvent>()
+    val closeKeyboard = _closeKeyboard.asLiveData()
 
     // ---------- Config --------------------
 
@@ -564,8 +568,9 @@ open class AddressSearchVM(
         }
     }
 
-    private fun approveStreetField(value: String): Boolean =
-        streetValidationPattern?.matcher(value)?.matches() ?: true
+    private fun approveStreetField(value: String): Boolean {
+        return streetValidationPattern?.matcher(value)?.matches() ?: true
+    }
 
     val showStreetFieldError: LiveData<Boolean> = streetInput.map { street ->
         if (street != null) {
@@ -1162,6 +1167,7 @@ open class AddressSearchVM(
      * the address selection result data.
      */
     fun requestSelectionResult() {
+        _closeKeyboard.value = UiEvent()
         val addressIdentifier = _addressIdentifier
         val request = AddressFieldRequest(getRequestList())
         if (addressIdentifier != null && _lastAddressFieldRequest == request) {
@@ -1175,6 +1181,9 @@ open class AddressSearchVM(
             val schema = _addressSchema ?: return
             executeAction(progressIndicator = _loadingResult) {
                 val result = apiAddressSearch.getFieldContext(code, schema, request)
+                result.template?.let {
+                    _template.value = UiDataEvent(it)
+                }
                 //return result form the address selection if the [AddressIdentifier] isn't a null
                 result.address?.also { aI ->
                     _addressIdentifier = aI
@@ -1195,6 +1204,9 @@ open class AddressSearchVM(
             executeAction(progressIndicator = _loadingResult) {
                 val request = AddressFieldRequest(getRequestList())
                 val result = apiAddressSearch.getFieldContext(code, schema, request)
+                result.template?.let {
+                    _template.value = UiDataEvent(it)
+                }
                 result.address?.let { aI ->
                     _addressIdentifier = aI
                     _addressResult.postValue(UiDataEvent(aI))

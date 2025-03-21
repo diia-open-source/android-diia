@@ -2,6 +2,7 @@ package ua.gov.diia.ui_base.components.molecule.checkbox
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,13 +28,16 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.core.models.common_compose.mlc.button.RadioBtnMlc
 import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.radio.RadioBtnItem
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.subatomic.icon.IconBase64Subatomic
+import ua.gov.diia.ui_base.components.subatomic.icon.UiIconWrapperSubatomic
 import ua.gov.diia.ui_base.components.subatomic.preview.PreviewBase64Icons
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.BlackAlpha30
@@ -56,10 +60,10 @@ fun RadioBtnMlc(
             )
         )
     }
-
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .padding(16.dp)
             .clickable {
                 if (data.interactionState == UIState.Interaction.Enabled) {
                     onClick.invoke()
@@ -86,7 +90,7 @@ fun RadioBtnMlc(
             IconBase64Subatomic(
                 modifier = Modifier
                     .padding(start = 16.dp)
-                    .size(24.dp), base64Image = data.logoLeft ?: ""
+                    .size(24.dp), base64Image = data.logoLeft
             )
         }
         Column(
@@ -94,32 +98,43 @@ fun RadioBtnMlc(
                 .padding(top = 2.dp, start = 8.dp, end = 16.dp)
                 .weight(1f)
         ) {
-            Text(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                text = data.label,
-                style = DiiaTextStyle.t3TextBody,
-                color = when (data.interactionState) {
-                    UIState.Interaction.Disabled -> BlackAlpha30
-                    UIState.Interaction.Enabled -> Black
-                }
-            )
-            data.accordionTitle?.let {
-                Row(modifier = Modifier.padding(top = 16.dp)) {
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = data.label,
+                    style = DiiaTextStyle.h5SmallestHeading,
+                    color = when (data.interactionState) {
+                        UIState.Interaction.Disabled -> BlackAlpha30
+                        UIState.Interaction.Enabled -> Black
+                    }
+                )
+
+                data.status?.let {
                     Text(
-                        modifier = Modifier.clickable {
-                            accordionExpanded = !accordionExpanded
-                        },
+                        text = it,
+                        style = DiiaTextStyle.t3TextBody,
+                        color = BlackAlpha30
+                    )
+                }
+            }
+            data.accordionTitle?.let {
+                Row(
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .clickable { accordionExpanded = !accordionExpanded }
+                ) {
+                    Text(
                         text = it,
                         textDecoration = TextDecoration.Underline,
                         style = DiiaTextStyle.t3TextBody,
                     )
                     Icon(
                         modifier = Modifier
-                            .padding(
-                                start = 4.dp,
-                                top = 2.dp
-                            )
-                            .size(8.dp, 8.dp),
+                            .padding(start = 4.dp, top = 2.dp)
+                            .size(8.dp),
                         painter = painterResource(
                             id = if (accordionExpanded) {
                                 R.drawable.ic_arrow_show_less
@@ -138,7 +153,7 @@ fun RadioBtnMlc(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 4.dp),
-                        text = data.description ?: "",
+                        text = data.description,
                         style = DiiaTextStyle.t4TextSmallDescription,
                         color = BlackAlpha30
                     )
@@ -159,19 +174,23 @@ fun RadioBtnMlc(
                 }
             }
         }
-        data.status?.let {
-            Text(
-                text = data.status ?: "", style = DiiaTextStyle.t3TextBody, color = BlackAlpha30
-            )
-        }
         data.logoRight?.let {
             if (data.status == null) {
                 IconBase64Subatomic(
                     modifier = Modifier
                         .padding(start = 8.dp)
-                        .size(30.dp, 24.dp), base64Image = data.logoRight ?: ""
+                        .size(30.dp, 24.dp),
+                    base64Image = data.logoRight
                 )
             }
+        }
+        data.largeLogoRight?.let {
+            UiIconWrapperSubatomic(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .size(56.dp, 36.dp),
+                icon = data.largeLogoRight
+            )
         }
     }
 }
@@ -181,6 +200,7 @@ data class RadioBtnMlcData(
     val id: String,
     val label: String,
     val mode: RadioButtonMode = RadioButtonMode.SINGLE_CHOICE,
+    val optionId: String? = null,
     val accordionTitle: String? = null,
     val description: String? = null,
     val status: String? = null,
@@ -188,6 +208,8 @@ data class RadioBtnMlcData(
     val selectionState: UIState.Selection = UIState.Selection.Unselected,
     val logoLeft: String? = null,
     val logoRight: String? = null,
+    val dataJson: String? = null,
+    val largeLogoRight: UiIcon? = null,
     val componentId: UiText? = null
 ) : UIElementData, Cloneable, RadioBtnItem {
     public override fun clone(): RadioBtnMlcData {
@@ -206,15 +228,18 @@ data class RadioBtnMlcData(
 
 fun RadioBtnMlc.toUiModel(): RadioBtnMlcData {
     return RadioBtnMlcData(
-        id = this.id.orEmpty(),
+        id = this.id ?: this.componentId ?: "",
         label = this.label,
         componentId = UiText.DynamicString(this.componentId.orEmpty()),
         logoLeft = this.logoLeft,
         logoRight = this.logoRight,
+        largeLogoRight = this.largeLogoRight?.let { UiIcon.DrawableResource(it) },
         description = this.description,
         status = this.status,
+        optionId = this.dataJson,
         selectionState = if (this.isSelected == true) UIState.Selection.Selected else UIState.Selection.Unselected,
         interactionState = if (this.isEnabled == false) UIState.Interaction.Disabled else UIState.Interaction.Enabled,
+        dataJson = this.dataJson
     )
 }
 
@@ -240,7 +265,7 @@ fun RadioBtnMlcPreview_AllParametersExist() {
         mutableStateOf(data)
     }
     RadioBtnMlc(
-        modifier = Modifier.padding(20.dp), data = state.value
+        modifier = Modifier, data = state.value
     ) {
         state.value = state.value.onRadioButtonClick()
     }
@@ -262,7 +287,7 @@ fun RadioBtnMlcPreview_Enabled_Selected() {
         mutableStateOf(data)
     }
     RadioBtnMlc(
-        modifier = Modifier.padding(20.dp), data = state.value
+        modifier = Modifier, data = state.value
     ) {
         state.value = state.value.onRadioButtonClick()
     }
@@ -283,7 +308,7 @@ fun RadioBtnMlcPreview_Enabled_Unselected() {
         mutableStateOf(data)
     }
     RadioBtnMlc(
-        modifier = Modifier.padding(20.dp), data = state.value
+        modifier = Modifier, data = state.value
     ) {
         state.value = state.value.onRadioButtonClick()
     }
@@ -305,7 +330,7 @@ fun RadioBtnMlcPreview_Disabled_Selected() {
         mutableStateOf(data)
     }
     RadioBtnMlc(
-        modifier = Modifier.padding(20.dp), data = state.value
+        modifier = Modifier, data = state.value
     ) {
         state.value = state.value.onRadioButtonClick()
     }
@@ -327,7 +352,7 @@ fun RadioBtnMlcPreview_Disabled_Unselected() {
         mutableStateOf(data)
     }
     RadioBtnMlc(
-        modifier = Modifier.padding(20.dp), data = state.value
+        modifier = Modifier, data = state.value
     ) {
         state.value = state.value.onRadioButtonClick()
     }
@@ -349,7 +374,7 @@ fun RadioBtnMlcPreview_Accordion() {
         mutableStateOf(data)
     }
     RadioBtnMlc(
-        modifier = Modifier.padding(20.dp), data = state.value
+        modifier = Modifier, data = state.value
     ) {
         state.value = state.value.onRadioButtonClick()
     }
@@ -368,8 +393,30 @@ fun RadioBtnMlcPreview_Enabled_Selected_MultiMode() {
         status = "Status"
     )
     RadioBtnMlc(
-        modifier = Modifier.padding(20.dp),
+        modifier = Modifier,
         data = state,
     ) {
+    }
+}
+
+@Composable
+@Preview
+fun RadioBtnMlcPreview_LargeLogoRight() {
+    val data = RadioBtnMlcData(
+        id = "1",
+        label = "Label",
+        mode = RadioButtonMode.SINGLE_CHOICE,
+        description = "description",
+        interactionState = UIState.Interaction.Enabled,
+        selectionState = UIState.Selection.Unselected,
+        largeLogoRight = UiIcon.DrawableResource(DiiaResourceIcon.CARD_VISA.code),
+    )
+    val state = remember {
+        mutableStateOf(data)
+    }
+    RadioBtnMlc(
+        modifier = Modifier, data = state.value
+    ) {
+        state.value = state.value.onRadioButtonClick()
     }
 }

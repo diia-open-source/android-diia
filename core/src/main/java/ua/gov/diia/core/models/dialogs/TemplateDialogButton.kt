@@ -13,7 +13,10 @@ data class TemplateDialogButton(
     @Json(name = "icon")
     val icon: String? = null,
     @Json(name = "action")
-    val action: String,
+    val action: String ?= null,
+    @Deprecated("Use resource field instead")
     @Json(name = "link")
-    val link: String? = null
+    val link: String? = null,
+    @Json(name = "resource")
+    val resource: String? = null
 ): Parcelable

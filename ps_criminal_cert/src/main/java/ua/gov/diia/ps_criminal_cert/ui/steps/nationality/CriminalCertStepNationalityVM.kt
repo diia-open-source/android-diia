@@ -1,5 +1,6 @@
 package ua.gov.diia.ps_criminal_cert.ui.steps.nationality
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,11 +50,15 @@ class CriminalCertStepNationalityVM @Inject constructor(
     private val _nationalities = MutableLiveData<AddressNationality>()
     val nationalities = _nationalities.asLiveData()
 
-    private val _onNextEvent = MutableLiveData<UiDataEvent<Pair<CriminalCertScreen, List<String>>>>()
+    private val _onNextEvent =
+        MutableLiveData<UiDataEvent<Pair<CriminalCertScreen, List<String>>>>()
     val onNextEvent = _onNextEvent.asLiveData()
 
     private val _navigateToCountrySelection = MutableLiveData<UiDataEvent<List<NationalityItem>>>()
     val navigateToCountrySelection = _navigateToCountrySelection.asLiveData()
+
+    private val _isNextEnabled = MediatorLiveData<Boolean>()
+    val isNextEnabled = _isNextEnabled.asLiveData()
 
     private var selectionItem: NameModel? = null
 
@@ -94,7 +99,7 @@ class CriminalCertStepNationalityVM @Inject constructor(
                             name = "",
                             hint = state.data?.country?.hint.orEmpty(),
                             title = state.data?.country?.label.orEmpty(),
-                            fieldMode = BUTTON
+                            fieldMode = BUTTON,
                         )
                     )
                 )
@@ -123,13 +128,14 @@ class CriminalCertStepNationalityVM @Inject constructor(
             _state.value = state.copy(
                 countryList = state.countryList.map {
                     if (model.id == it.id) {
-                        it.copy(name = model.name)
+                        it.copy(name = model.name, isValid = model.isValid)
                     } else {
                         it
                     }
                 }
             )
         }
+        _isNextEnabled.value = state.value?.countryList?.all { it.isValid } == true
     }
 
     fun selectCountry(model: NameModel) {
@@ -138,7 +144,7 @@ class CriminalCertStepNationalityVM @Inject constructor(
             val selectedList = state.value?.countryList.orEmpty()
             val nationalityList = addressNationality.nationalities.toMutableList()
             nationalityList.removeIf { item ->
-                if(selectedList.size > 1 && item.name.uppercase() == "УКРАЇНА") {
+                if (selectedList.size > 1 && item.name.uppercase() == "УКРАЇНА") {
                     true
                 } else {
                     selectedList.find { it.name == item.name } != null

@@ -3,6 +3,7 @@ package ua.gov.diia.ui_base.components.infrastructure.utils
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -14,10 +15,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 
-private fun View.isKeyboardOpen(): Boolean {
+fun View.isKeyboardOpen(): Boolean {
     val rect = Rect()
     getWindowVisibleDisplayFrame(rect);
     val screenHeight = rootView.height
@@ -62,5 +65,21 @@ fun Modifier.clearFocusOnKeyboardDismiss(): Modifier = composed {
                 keyboardAppearedSinceLastFocused = false
             }
         }
+    }
+}
+
+
+fun Modifier.dismissKeyboardOnTap(): Modifier = composed {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val isKeyboardOpen by rememberIsKeyboardOpen()
+    if (isKeyboardOpen) {
+        this.pointerInput(Unit) {
+            detectTapGestures(onTap = {
+                clearFocusOnKeyboardDismiss()
+                keyboardController?.hide()
+            })
+        }
+    } else {
+        this
     }
 }

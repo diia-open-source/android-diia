@@ -3,7 +3,7 @@ package ua.gov.diia.documents.util.datasource
 import ua.gov.diia.core.util.date.CurrentDateProvider
 import ua.gov.diia.core.util.extensions.date_time.getUTCDate
 import ua.gov.diia.diia_storage.store.Preferences
-import ua.gov.diia.documents.models.Expiring
+import ua.gov.diia.core.models.document.Expiring
 
 /**
  * Predicate to mark item already expired

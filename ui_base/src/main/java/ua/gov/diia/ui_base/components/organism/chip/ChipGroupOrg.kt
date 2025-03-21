@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,6 +24,7 @@ import ua.gov.diia.ui_base.components.molecule.header.chiptabbar.ChipTabMolecule
 import ua.gov.diia.ui_base.components.molecule.header.chiptabbar.ChipTabMoleculeV2
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
+import kotlin.math.ceil
 
 @Composable
 fun ChipGroupOrg(
@@ -47,7 +49,9 @@ fun ChipGroupOrg(
         }
 
         if (!data.chipTimeItems.isNullOrEmpty()) {
+            val heightDp = 40.dp * ceil((data.chipTimeItems.size.toDouble() / 3)).toInt().inc()
             LazyVerticalGrid(
+                modifier = Modifier.height(heightDp),
                 columns = GridCells.Fixed(3),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -64,7 +68,9 @@ fun ChipGroupOrg(
         }
 
         if (!data.chipMoleculeItems.isNullOrEmpty()) {
+            val heightDp = 40.dp * ceil((data.chipMoleculeItems.size.toDouble() / 3)).toInt()
             LazyVerticalGrid(
+                modifier = Modifier.height(heightDp),
                 columns = GridCells.Fixed(3),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -86,7 +92,7 @@ data class ChipGroupOrgData(
 )
 
 
-fun ChipGroupOrg.toUiModel(date: String): ChipGroupOrgData {
+fun ChipGroupOrg.toUiModel(dayOfMonth: String): ChipGroupOrgData {
     val chipTimeItems = mutableListOf<ChipTimeMlcData>()
     val chipMoleculeItems = mutableListOf<ChipTabMoleculeDataV2>()
 
@@ -105,17 +111,18 @@ fun ChipGroupOrg.toUiModel(date: String): ChipGroupOrgData {
             )
         }
         if (it.chipTimeMlc != null) {
-            ChipTimeMlcData(
-                id = it.chipTimeMlc?.id,
-                date = date,
-                title = UiText.DynamicString(it.chipTimeMlc?.label.orEmpty()),
-                code = it.chipTimeMlc?.data?.code,
-                resourceId = it.chipTimeMlc?.data?.resourceId,
-                componentId = UiText.DynamicString(componentId.orEmpty()),
-                selection = if (it.chipTimeMlc?.active == true || it.chipTimeMlc?.data?.code == preselectedCode)
-                    UIState.Selection.Selected
-                else
-                    UIState.Selection.Unselected,
+            chipTimeItems.add(
+                ChipTimeMlcData(
+                    id = it.chipTimeMlc?.id,
+                    dayOfMonth = dayOfMonth,
+                    title = UiText.DynamicString(it.chipTimeMlc?.label.orEmpty()),
+                    dataJson = it.chipTimeMlc?.data,
+                    componentId = UiText.DynamicString(componentId.orEmpty()),
+                    selection = if (it.chipTimeMlc?.active == true || it.chipTimeMlc?.id == preselectedCode)
+                        UIState.Selection.Selected
+                    else
+                        UIState.Selection.Unselected,
+                )
             )
         }
     }
@@ -137,7 +144,7 @@ fun ChipGroupOrgPreview() {
         val data = ChipTimeMlcData(
             title = UiText.DynamicString("label " + i),
             selection = UIState.Selection.Unselected,
-            date = "",
+            dayOfMonth = "",
         )
         chipTimeItems.add(data)
     }

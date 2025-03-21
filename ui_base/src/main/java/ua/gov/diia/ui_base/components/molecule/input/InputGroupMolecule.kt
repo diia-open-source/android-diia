@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
@@ -15,10 +14,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.util.phone.PHONE_NUMBER_VALIDATION_PATTERN
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun InputGroupMolecule(
     modifier: Modifier = Modifier,
@@ -76,7 +75,6 @@ data class InputGroupMoleculeData(val items: List<TextInputMoleculeData>) : Inpu
 @Composable
 @Preview
 fun InputGroupMoleculePreview() {
-    val PHONE_NUMBER_VALIDATION_PATTERN = "^38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
     val data = InputGroupMoleculeData(
         items = mutableListOf<TextInputMoleculeData>().apply {
             add(

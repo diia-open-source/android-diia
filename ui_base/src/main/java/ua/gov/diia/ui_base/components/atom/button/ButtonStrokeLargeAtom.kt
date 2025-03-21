@@ -1,10 +1,16 @@
 package ua.gov.diia.ui_base.components.atom.button
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -13,7 +19,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
@@ -37,7 +45,8 @@ fun ButtonStrokeLargeAtom(
     Button(
         modifier = modifier
             .padding(top = 32.dp)
-            .wrapContentWidth(),
+            .wrapContentWidth()
+            .defaultMinSize(minHeight = 56.dp, minWidth = 160.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Transparent,
             disabledContainerColor = Transparent
@@ -56,10 +65,16 @@ fun ButtonStrokeLargeAtom(
 
     ) {
         Spacer(modifier = modifier.width(40.dp))
-        AnimatedVisibility(visible = data.id == progressIndicator.first && progressIndicator.second) {
-            Row {
-                LoaderCircularEclipse23Subatomic(modifier = modifier.size(18.dp))
-                Spacer(modifier = modifier.width(8.dp))
+        Box {
+            this@Button.AnimatedVisibility(
+                visible = data.id == progressIndicator.first && progressIndicator.second,
+                enter = fadeIn(),
+                exit = fadeOut() + shrinkHorizontally()
+            ) {
+                Row {
+                    LoaderCircularEclipse23Subatomic(modifier = modifier.size(18.dp))
+                    Spacer(modifier = modifier.width(8.dp))
+                }
             }
         }
         Text(

@@ -28,6 +28,7 @@ fun Modifier.noRippleClickable(
     onClickLabel: String? = null,
     role: Role? = null,
     debounce: Boolean? = null,
+    debounceTime: Long = 400L,
     onClick: () -> Unit,
 ): Modifier = composed {
     val lastClickTime = remember { mutableLongStateOf(0L) }
@@ -40,7 +41,7 @@ fun Modifier.noRippleClickable(
         onClick = {
             if (debounce == true) {
                 val currentTime = System.currentTimeMillis()
-                if ((currentTime - lastClickTime.longValue) > 400L)  {
+                if ((currentTime - lastClickTime.longValue) > debounceTime)  {
                     lastClickTime.longValue = currentTime
                     onClick.invoke()
                 }

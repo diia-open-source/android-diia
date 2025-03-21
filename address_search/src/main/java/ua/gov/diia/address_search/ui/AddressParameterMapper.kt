@@ -26,6 +26,9 @@ class AddressParameterMapper @Inject constructor() {
 
                     AddressFieldMode.EDITABLE -> find { value -> value is String }
                             as? String
+
+                    AddressFieldMode.MASKED_FIELD -> find { value -> value is String }
+                            as? String
                 }
             }
 
@@ -41,15 +44,19 @@ class AddressParameterMapper @Inject constructor() {
     }
 
     fun getViewMode(param: AddressParameter?): Int {
-        return param?.getFieldMode()?.getViewMode() ?: return 0
+        val addressFieldMode = param?.getFieldMode()
+        val viewMode = addressFieldMode?.getViewMode()
+        return viewMode ?: return 0
     }
-
-    private fun AddressFieldMode.getViewMode() = when (this) {
-        AddressFieldMode.BUTTON -> 0
-        AddressFieldMode.EDITABLE -> 1
+    private fun AddressFieldMode.getViewMode(): Int {
+       val result = when (this) {
+            AddressFieldMode.BUTTON -> 0
+            AddressFieldMode.EDITABLE -> 1
+           // EDITABLE_PHONE_NUMBER(2) - Number 2 used for PhoneNumber input field!
+            AddressFieldMode.MASKED_FIELD -> 3
+       }
+        return result
     }
-
-
     fun getEditableModeFieldRequest(
         value: String?,
         params: AddressParameter?

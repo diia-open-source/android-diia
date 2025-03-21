@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MimeTypes
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +15,6 @@ import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.util.MimeTypes
 import ua.gov.diia.core.models.notification.pull.message.MessageActions
 import ua.gov.diia.core.models.notification.pull.message.MessageTypes
 import ua.gov.diia.core.models.notification.pull.message.NotificationMessagesBody
@@ -168,10 +168,10 @@ class NotificationFullAdapter(private val linkSelected: (MessageActions, String)
 
     inner class NotificationVideoVH(binding: ItemNotificationVideoBinding) : ViewHolder(binding) {
         /** PLAYER */
-        var exoPlayer: SimpleExoPlayer? = null
+        var exoPlayer: ExoPlayer? = null
 
         init {
-            exoPlayer = SimpleExoPlayer.Builder(binding.root.context).build()
+            exoPlayer = ExoPlayer.Builder(binding.root.context).build()
 
             /* Makes rounded corners */
             with(binding) {

@@ -20,4 +20,5 @@ interface HomeHelper {
      * @return navigation action to specific home screen tab item
      * */
     fun getNavDirection(position: Int): NavDirections
+
 }

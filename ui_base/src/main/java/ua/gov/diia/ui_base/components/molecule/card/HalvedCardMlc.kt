@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,7 +37,7 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.organism.carousel.SimpleCarouselCard
-import ua.gov.diia.ui_base.components.organism.list.pagination.SimplePaginationCard
+import ua.gov.diia.ui_base.components.organism.list.pagination.SimplePagination
 import ua.gov.diia.ui_base.components.theme.Alabaster
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.BlackAlpha30
@@ -56,7 +57,7 @@ fun HalvedCardMlc(
     Column(
         modifier = modifier
             .height(192.dp)
-            .background(color = Transparent, shape = RoundedCornerShape(16.dp))
+            .fillMaxWidth()
             .conditional(clickable) {
                 clickable {
                     onUIAction(
@@ -158,7 +159,7 @@ data class HalvedCardMlcData(
     val label: UiText,
     val title: UiText,
     val action: DataActionWrapper? = null
-) : SimpleCarouselCard, SimplePaginationCard
+) : SimpleCarouselCard, SimplePagination
 
 @Composable
 @Preview

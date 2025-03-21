@@ -19,6 +19,7 @@ import ua.gov.diia.ui_base.components.atom.status.ChipStatusAtmData
 import ua.gov.diia.ui_base.components.atom.status.StatusChipType
 import ua.gov.diia.ui_base.components.atom.text.TickerAtomData
 import ua.gov.diia.ui_base.components.atom.text.TickerType
+import ua.gov.diia.ui_base.components.atom.text.TickerUsage
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
@@ -84,7 +85,7 @@ fun CardListOrganismPreview() {
         icon = UiIcon.DynamicIconBase64(PreviewBase64Icons.apple),
         subtitle = UiText.DynamicString("Subtitle"),
         description = UiText.DynamicString("Description"),
-        ticker = TickerAtomData(title = "Ticker text!", type = TickerType.SMALL_NEUTRAL),
+        ticker = TickerAtomData(title = "Ticker text!", type = TickerType.NEUTRAL, usage = TickerUsage.BASE),
         botLabel = UiText.DynamicString("5 000 грн"),
         btnPrimary = BtnPrimaryAdditionalAtmData(
             actionKey = "primaryButton",

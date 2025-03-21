@@ -24,7 +24,7 @@ import ua.gov.diia.ui_base.components.atom.button.BtnPlainIconAtm
 import ua.gov.diia.ui_base.components.atom.button.BtnPlainIconAtmData
 import ua.gov.diia.ui_base.components.atom.button.toUiModel
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
-import ua.gov.diia.ui_base.components.molecule.checkbox.RadioBtnMlcData
+import ua.gov.diia.ui_base.components.atom.radio.RadioBtnAtmData
 import ua.gov.diia.ui_base.components.atom.radio.RadioBtnItem
 import ua.gov.diia.ui_base.components.atom.radio.RadioButtonMode
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -34,7 +34,9 @@ import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.checkbox.RadioBtnMlc
+import ua.gov.diia.ui_base.components.molecule.checkbox.RadioBtnMlcData
 import ua.gov.diia.ui_base.components.noRippleClickable
+import ua.gov.diia.ui_base.components.organism.radio.RadioBtnWithAltOrgItem
 import ua.gov.diia.ui_base.components.subatomic.preview.PreviewBase64Icons
 import ua.gov.diia.ui_base.components.theme.BlackSqueeze
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
@@ -65,18 +67,19 @@ fun RadioBtnGroupOrg(
             DividerSlimAtom(modifier = Modifier.fillMaxWidth(), color = BlackSqueeze)
         }
 
-        val itemModifier: Modifier = Modifier.padding(16.dp)
 
         data.items.forEachIndexed { index, item ->
             if (item is RadioBtnMlcData) {
                 RadioBtnMlc(
-                    modifier = itemModifier,
+                    modifier = Modifier,
                     data = item,
                 ) {
                     onUIAction(
                         UIAction(
                             actionKey = data.actionKey,
-                            data = item.id
+                            data = item.id,
+                            optionalId = item.optionId,
+                            optionalType = data.id //To understand which group the Checkbox is in.
                         )
                     )
                 }
@@ -136,7 +139,7 @@ data class RadioBtnGroupOrgData(
     val button: BtnPlainIconAtmData? = null,
     val componentId: UiText? = null,
     val inputCode: String? = null,
-) : UIElementData, Cloneable {
+) : UIElementData, Cloneable, RadioBtnWithAltOrgItem {
     public override fun clone(): RadioBtnGroupOrgData {
         return super.clone() as RadioBtnGroupOrgData
     }
@@ -168,19 +171,37 @@ data class RadioBtnGroupOrgData(
         return this.copy(
             items = SnapshotStateList<RadioBtnItem>().apply {
                 data.items.forEach {
-                   if (it is RadioBtnMlcData) {
-                       add(it.copy(selectionState = UIState.Selection.Unselected))
-                   }
+                    if (it is RadioBtnMlcData) {
+                        add(it.copy(selectionState = UIState.Selection.Unselected))
+                    }
                 }
             }
         )
+    }
+
+    fun hasSelectedItem(): Boolean {
+        return items.any {
+            it is RadioBtnMlcData && it.selectionState == UIState.Selection.Selected
+        } || items.any {
+            it is RadioBtnAtmData && it.selectionState == UIState.Selection.Selected
+        }
+    }
+
+    fun selectedItems(): List<RadioBtnMlcData> {
+        val result = mutableListOf<RadioBtnMlcData>()
+        this.items.forEach {
+            if (it is RadioBtnMlcData && it.selectionState == UIState.Selection.Selected) {
+                result.add(it)
+            }
+        }
+        return result
     }
 }
 
 fun RadioBtnGroupOrg.toUIModel(): RadioBtnGroupOrgData {
     val entity: RadioBtnGroupOrg = this
     return RadioBtnGroupOrgData(
-        id = this.id,
+        id = this.id ?: this.componentId,
         title = this.title,
         mode = RadioButtonMode.SINGLE_CHOICE,
         items = SnapshotStateList<RadioBtnItem>().apply {
@@ -188,7 +209,8 @@ fun RadioBtnGroupOrg.toUIModel(): RadioBtnGroupOrgData {
                 item.radioBtnMlc?.let { rbItem ->
                     add(
                         RadioBtnMlcData(
-                            id = rbItem.id ?: "",
+                            id = rbItem.id ?: rbItem.componentId ?: "",
+                            optionId = rbItem.dataJson,
                             label = rbItem.label,
                             mode = ua.gov.diia.ui_base.components.molecule.checkbox.RadioButtonMode.SINGLE_CHOICE,
                             accordionTitle = null,
@@ -206,6 +228,7 @@ fun RadioBtnGroupOrg.toUIModel(): RadioBtnGroupOrgData {
                             },
                             logoLeft = rbItem.logoLeft,
                             logoRight = rbItem.logoRight,
+                            largeLogoRight = rbItem.largeLogoRight?.let { UiIcon.DrawableResource(it) }
                         )
                     )
                 }
@@ -215,6 +238,124 @@ fun RadioBtnGroupOrg.toUIModel(): RadioBtnGroupOrgData {
         componentId = componentId?.let { UiText.DynamicString(it) },
         inputCode = this.inputCode
     )
+}
+
+enum class RadioBtnGroupOrgMockType {
+    notitle, withtitle, resetvalue
+}
+
+fun generateRadioBtnGroupOrgMockData(mockType: RadioBtnGroupOrgMockType): RadioBtnGroupOrgData {
+    when (mockType) {
+        RadioBtnGroupOrgMockType.notitle -> {
+            val source = mutableMapOf(
+                "1" to "Title 1", "2" to "Title 2", "3" to "Title 3"
+            )
+            return RadioBtnGroupOrgData(
+                id = "",
+                mode = RadioButtonMode.SINGLE_CHOICE,
+                items = SnapshotStateList<RadioBtnMlcData>().apply {
+                    source.map {
+                        add(
+                            RadioBtnMlcData(
+                                id = it.key,
+                                label = it.value,
+                                description = "Description _ 02.11.2010 / І-БК 123456",
+                                mode = ua.gov.diia.ui_base.components.molecule.checkbox.RadioButtonMode.SINGLE_CHOICE,
+                                interactionState = UIState.Interaction.Enabled,
+                                selectionState = UIState.Selection.Unselected,
+                                logoLeft = PreviewBase64Icons.apple
+                            )
+                        )
+                    }
+                },
+                button = BtnPlainIconAtmData(
+                    id = "123",
+                    label = UiText.DynamicString("label"),
+                    icon = UiIcon.DrawableResource(DiiaResourceIcon.ADD.code)
+                ),
+            )
+        }
+
+        RadioBtnGroupOrgMockType.withtitle -> {
+            val source = mutableMapOf(
+                "1" to "Option 1", "2" to "Option 2", "3" to "Option 3"
+            )
+            return RadioBtnGroupOrgData(id = "",
+                title = "Title",
+                mode = RadioButtonMode.SINGLE_CHOICE,
+                items = SnapshotStateList<RadioBtnMlcData>().apply {
+                    source.map {
+                        add(
+                            RadioBtnMlcData(
+                                id = it.key,
+                                label = it.value,
+                                mode = ua.gov.diia.ui_base.components.molecule.checkbox.RadioButtonMode.SINGLE_CHOICE,
+                                interactionState = UIState.Interaction.Enabled,
+                                selectionState = UIState.Selection.Unselected,
+                                logoLeft = PreviewBase64Icons.apple,
+                                status = "Status"
+                            )
+                        )
+                    }
+                })
+        }
+
+        RadioBtnGroupOrgMockType.resetvalue -> {
+            val source = mutableMapOf(
+                "1" to "Option 1", "2" to "Option 2", "3" to "Option 3"
+            )
+            return RadioBtnGroupOrgData(id = "",
+                title = "Title",
+                mode = RadioButtonMode.SINGLE_CHOICE,
+                items = SnapshotStateList<RadioBtnMlcData>().apply {
+                    source.map {
+                        add(
+                            RadioBtnMlcData(
+                                id = it.key,
+                                label = it.value,
+                                mode = ua.gov.diia.ui_base.components.molecule.checkbox.RadioButtonMode.SINGLE_CHOICE,
+                                interactionState = UIState.Interaction.Enabled,
+                                selectionState = UIState.Selection.Unselected,
+                                logoLeft = PreviewBase64Icons.apple,
+                                status = "Status"
+                            )
+                        )
+                    }
+                })
+        }
+    }
+}
+
+@Composable
+@Preview
+fun RadioMoleculePreview_RadioGeneralLogoStartStatusAtom() {
+    val state = remember {
+        mutableStateOf(generateRadioBtnGroupOrgMockData(RadioBtnGroupOrgMockType.withtitle))
+    }
+
+    RadioBtnGroupOrg(modifier = Modifier, data = state.value) {
+        state.value = state.value.onItemClick(it.data)
+    }
+}
+
+@Composable
+@Preview
+fun RadioMoleculePreview_ResetValue() {
+    val state = remember {
+        mutableStateOf(generateRadioBtnGroupOrgMockData(RadioBtnGroupOrgMockType.resetvalue))
+    }
+
+    Column {
+        RadioBtnGroupOrg(modifier = Modifier, data = state.value) {
+            state.value = state.value.onItemClick(it.data)
+        }
+        Button(onClick = {
+            state.value = state.value.dropSelections()
+        }) {
+            Text("Reset")
+        }
+    }
+
 }
 
 @Composable
@@ -245,7 +386,8 @@ fun RadioBtnGroupOrg_Without_title() {
             id = "123",
             label = UiText.DynamicString("label"),
             icon = UiIcon.DrawableResource(DiiaResourceIcon.ADD.code)
-        ),)
+        )
+    )
 
     val state = remember {
         mutableStateOf(data)
@@ -254,79 +396,4 @@ fun RadioBtnGroupOrg_Without_title() {
     RadioBtnGroupOrg(modifier = Modifier, data = state.value) {
         state.value = state.value.onItemClick(it.data)
     }
-}
-
-@Composable
-@Preview
-fun RadioMoleculePreview_RadioGeneralLogoStartStatusAtom() {
-    val source = mutableMapOf(
-        "1" to "Option 1", "2" to "Option 2", "3" to "Option 3"
-    )
-    val data = RadioBtnGroupOrgData(id = "",
-        title = "Title",
-        mode = RadioButtonMode.SINGLE_CHOICE,
-        items = SnapshotStateList<RadioBtnMlcData>().apply {
-            source.map {
-                add(
-                    RadioBtnMlcData(
-                        id = it.key,
-                        label = it.value,
-                        mode = ua.gov.diia.ui_base.components.molecule.checkbox.RadioButtonMode.SINGLE_CHOICE,
-                        interactionState = UIState.Interaction.Enabled,
-                        selectionState = UIState.Selection.Unselected,
-                        logoLeft = PreviewBase64Icons.apple,
-                        status = "Status"
-                    )
-                )
-            }
-        })
-
-    val state = remember {
-        mutableStateOf(data)
-    }
-
-    RadioBtnGroupOrg(modifier = Modifier, data = state.value) {
-        state.value = state.value.onItemClick(it.data)
-    }
-}
-
-@Composable
-@Preview
-fun RadioMoleculePreview_ResetValue() {
-    val source = mutableMapOf(
-        "1" to "Option 1", "2" to "Option 2", "3" to "Option 3"
-    )
-    val data = RadioBtnGroupOrgData(id = "",
-        title = "Title",
-        mode = RadioButtonMode.SINGLE_CHOICE,
-        items = SnapshotStateList<RadioBtnMlcData>().apply {
-            source.map {
-                add(
-                    RadioBtnMlcData(
-                        id = it.key,
-                        label = it.value,
-                        mode = ua.gov.diia.ui_base.components.molecule.checkbox.RadioButtonMode.SINGLE_CHOICE,
-                        interactionState = UIState.Interaction.Enabled,
-                        selectionState = UIState.Selection.Unselected,
-                        logoLeft = PreviewBase64Icons.apple,
-                        status = "Status"
-                    )
-                )
-            }
-        })
-    val state = remember {
-        mutableStateOf(data)
-    }
-
-    Column {
-        RadioBtnGroupOrg(modifier = Modifier, data = state.value) {
-            state.value = state.value.onItemClick(it.data)
-        }
-        Button(onClick = {
-            state.value = state.value.dropSelections()
-        }) {
-            Text("Reset")
-        }
-    }
-
 }

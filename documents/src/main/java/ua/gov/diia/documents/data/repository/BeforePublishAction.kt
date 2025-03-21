@@ -1,6 +1,6 @@
 package ua.gov.diia.documents.data.repository
 
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 
 interface BeforePublishAction {
     /**

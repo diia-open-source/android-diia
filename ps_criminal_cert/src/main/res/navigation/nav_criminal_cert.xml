@@ -64,7 +64,7 @@
 
     <fragment
         android:id="@+id/criminalCertDetailsF"
-        android:name="ua.gov.diia.ps_criminal_cert.ui.details.CriminalCertDetailsF"
+        android:name="ua.gov.diia.ps_criminal_cert.ui.details.CriminalCertStatusComposeF"
         android:label="CriminalCertDetailsF">
 
         <argument

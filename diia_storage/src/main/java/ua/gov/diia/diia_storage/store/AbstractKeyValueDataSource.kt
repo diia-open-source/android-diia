@@ -14,7 +14,7 @@ abstract class AbstractKeyValueDataSource<T>(val store: KeyValueStore, val withC
         store.set(preferenceKey, jsonAdapter.toJson(data))
     }
 
-    suspend fun loadData(): T? {
+    fun loadData(): T? {
         if (store.containsKey(preferenceKey)) {
             try {
                 return jsonAdapter.fromJson(store.getString(preferenceKey, Preferences.DEF))

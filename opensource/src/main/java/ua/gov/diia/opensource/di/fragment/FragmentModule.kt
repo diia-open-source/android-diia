@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import dagger.multibindings.IntoMap
+import ua.gov.diia.core.di.fragment.FragmentKey
 import ua.gov.diia.home.ui.HomeF
 
 @Module

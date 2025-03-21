@@ -15,15 +15,17 @@ import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemPrimaryMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableBlockItem
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMolecule
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMoleculeData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableMainHeadingMlc
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableMainHeadingMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toTableMainHeadingMlcData
 import ua.gov.diia.ui_base.components.theme.White
 
 @Deprecated("Use ua.gov.diia.ui_base.components.organism.document.TableBlockOrg")
@@ -37,7 +39,7 @@ fun TableBlockOrg(
         .fillMaxWidth()
         .background(color = White, shape = RoundedCornerShape(16.dp))) {
         data.header?.let {
-            TableHeadingMolecule(
+            TableMainHeadingMlc(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 data = data.header,
                 onUIAction = onUIAction
@@ -83,7 +85,7 @@ fun TableBlockOrg(
 
 data class TableBlockOrgData(
     val actionKey: String = UIActionKeysCompose.TABLE_BLOCK_ORG,
-    val header: TableHeadingMoleculeData? = null,
+    val header: TableMainHeadingMlcData? = null,
     val items: List<TableBlockItem>? = null
 ) : UIElementData, ContentGroupItemV2()
 
@@ -91,7 +93,7 @@ data class TableBlockOrgData(
 @Preview
 fun TableBlockMoleculeV2Preview_raw() {
     val state = TableBlockOrgData(
-        header = TableHeadingMoleculeData(id = "123", title = "Heading".let { UiText.DynamicString(it) }),
+        header = "Heading".toDynamicString().toTableMainHeadingMlcData(),
         items = listOf(
             TableItemHorizontalMlcData(id = "1", title = UiText.DynamicString("Item title"), value = "Value"),
             TableItemHorizontalMlcData(id = "2", title = UiText.DynamicString("Item title 2"), value = "Value"),

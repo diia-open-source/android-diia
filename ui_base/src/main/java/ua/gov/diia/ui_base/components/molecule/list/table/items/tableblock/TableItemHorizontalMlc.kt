@@ -18,10 +18,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.table.TableItemHorizontalMlc
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.model.TableItemLabelAlignment
 import ua.gov.diia.ui_base.components.noRippleClickable
 import ua.gov.diia.ui_base.components.subatomic.icon.IconWithBadge
 import ua.gov.diia.ui_base.components.subatomic.icon.SingIconBase64Subatomic
@@ -47,24 +49,27 @@ fun TableItemHorizontalMlc(
                     contentAlignment = Alignment.TopEnd
                 ) {
                     Text(
-                        modifier = Modifier.padding(end = 8.dp),
+                        modifier = Modifier.padding(end = 12.dp),
                         text = data.supportText,
-                        style = DiiaTextStyle.t5TextSmallDescription,
+                        style = DiiaTextStyle.t3TextBody,
                         color = Black
                     )
                 }
             }
             Column(modifier = Modifier.weight(1f)) {
-                data.title?.let {
+                val title = data.title?.asString()
+                if (!title.isNullOrEmpty()) {
                     Text(
-                        text = it.asString(),
+                        text = title,
                         style = DiiaTextStyle.t3TextBody,
                         color = Black
                     )
                 }
-                data.secondaryTitle?.let {
+
+                val secondaryTitle = data.secondaryTitle?.asString()
+                if (!secondaryTitle.isNullOrEmpty()) {
                     Text(
-                        text = data.secondaryTitle,
+                        text = secondaryTitle,
                         style = DiiaTextStyle.t3TextBody,
                         color = BlackAlpha30
                     )
@@ -72,9 +77,12 @@ fun TableItemHorizontalMlc(
             }
         }
         Spacer(modifier = Modifier.width(20.dp))
-
-        Row(modifier = Modifier.weight(1f)) {
-            Column(modifier = Modifier.weight(1f)) {
+        val weightModifier = when (data.valueAlignment) {
+            TableItemLabelAlignment.Start -> Modifier.weight(1f)
+            TableItemLabelAlignment.End -> Modifier
+        }
+        Row(modifier = weightModifier) {
+            Column(modifier = weightModifier) {
                 if (data.valueAsBase64String != null) {
                     Box(
                         modifier = Modifier.size(100.dp, 50.dp),
@@ -102,7 +110,6 @@ fun TableItemHorizontalMlc(
                         )
                     }
                 }
-
             }
             data.iconRight?.let {
                 Box(
@@ -134,12 +141,25 @@ data class TableItemHorizontalMlcData(
     val componentId: String = "",
     val supportText: String? = null,
     val title: UiText? = null,
-    val secondaryTitle: String? = null,
+    val secondaryTitle: UiText? = null,
     val value: String? = null,
+    val valueAlignment: TableItemLabelAlignment = TableItemLabelAlignment.Start,
     val secondaryValue: String? = null,
     val valueAsBase64String: String? = null,
     val iconRight: UiText? = null
 ) : TableBlockItem
+
+fun TableItemHorizontalMlc.toUiModel(): TableItemHorizontalMlcData {
+    return TableItemHorizontalMlcData(
+        componentId = componentId.orEmpty(),
+        title = this.label?.let { UiText.DynamicString(it) },
+        secondaryTitle = this.secondaryLabel?.let { UiText.DynamicString(it) },
+        value = this.value,
+        secondaryValue = this.secondaryValue,
+        supportText = this.supportingValue,
+        valueAsBase64String = this.valueImage
+    )
+}
 
 @Composable
 @Preview
@@ -177,7 +197,7 @@ fun TableItemHorizontalMlcPreview_Full() {
     val state = TableItemHorizontalMlcData(
         id = "123",
         title = UiText.DynamicString("Title"),
-        secondaryTitle = "Secondary title",
+        secondaryTitle = UiText.DynamicString("Secondary title"),
         supportText = "С.1.3",
         value = "Label Value",
         secondaryValue = "Secondary label",
@@ -190,14 +210,13 @@ fun TableItemHorizontalMlcPreview_Full() {
     )
 }
 
-
 @Composable
 @Preview
 fun TableItemHorizontalMlcPreview_ValueAsImage() {
     val state = TableItemHorizontalMlcData(
         id = "123",
         title = UiText.DynamicString("Title"),
-        secondaryTitle = "Secondary title",
+        secondaryTitle = UiText.DynamicString("Secondary title"),
         supportText = "12",
         value = "Label Value",
         secondaryValue = "Secondary label",
@@ -217,7 +236,7 @@ fun TableItemHorizontalMlcPreview_() {
     val state = TableItemHorizontalMlcData(
         id = "123",
         title = UiText.DynamicString("Title"),
-        secondaryTitle = "Secondary title",
+        secondaryTitle = UiText.DynamicString("Secondary title"),
         supportText = "12",
         value = "Label Value",
         secondaryValue = "Secondary label",

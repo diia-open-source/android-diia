@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class MenuContentController @Inject constructor() {
 
-    fun configureBody(isShowBadge: Boolean): List<UIElementData> {
+    fun configureBody(isShowBadge: Boolean, userName: String): List<UIElementData> {
 
         val menuUser: List<ListItemMlcData> = listOf(
             ListItemMlcData(

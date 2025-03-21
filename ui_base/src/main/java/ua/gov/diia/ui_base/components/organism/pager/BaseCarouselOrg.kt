@@ -29,12 +29,15 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.flow.collectLatest
 import ua.gov.diia.ui_base.components.atom.pager.DocDotNavigationAtm
 import ua.gov.diia.ui_base.components.atom.pager.DocDotNavigationAtmData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.organism.document.AddDocOrg
 import ua.gov.diia.ui_base.components.organism.document.AddDocOrgData
+import ua.gov.diia.ui_base.components.organism.document.DocActivateCardOrg
+import ua.gov.diia.ui_base.components.organism.document.DocActivateCardOrgData
 import ua.gov.diia.ui_base.components.organism.document.DocOrg
 import ua.gov.diia.ui_base.components.organism.document.DocOrgData
 import java.util.UUID
@@ -89,7 +92,7 @@ fun BaseCarouselOrg(
     }
 
     LaunchedEffect(state) {
-        snapshotFlow { state.currentPage }.collect { page ->
+        snapshotFlow { state.targetPage }.collectLatest { page ->
             onUIAction.invoke(
                 UIAction(actionKey = UIActionKeysCompose.DOC_PAGE_SELECTED, data = page.toString())
             )
@@ -154,7 +157,8 @@ fun BaseCarouselOrg(
                                     UIAction(
                                         data = it.data,
                                         optionalId = page.toString(),
-                                        actionKey = it.actionKey
+                                        actionKey = it.actionKey,
+                                        action = it.action
                                     )
                                 )
                             }
@@ -193,6 +197,14 @@ fun BaseCarouselOrg(
                             onUIAction = onUIAction
                         )
                     }
+
+                    is DocActivateCardOrgData -> {
+                        DocActivateCardOrg(
+                            modifier = docModifier,
+                            data = card,
+                            onUIAction = onUIAction
+                        )
+                    }
                 }
             }
         }
@@ -207,18 +219,17 @@ fun BaseCarouselOrg(
         )
     }
 
-    if (state.pageCount > 0) {
-        LaunchedEffect(key1 = data.focusOnDoc, block = {
-            if (data.focusOnDoc != null && data.focusOnDoc != 0) {
-                if (data.focusOnDoc >= state.pageCount) {
-                    //scroll to last
-                    state.scrollToPage(state.pageCount - 1)
-                } else {
-                    state.scrollToPage(data.focusOnDoc)
-                }
+    LaunchedEffect(key1 = data.focusOnDoc, key2 = state.pageCount, block = {
+        if (state.pageCount <= 0) return@LaunchedEffect
+        if (data.focusOnDoc != null) {
+            if (data.focusOnDoc >= state.pageCount && data.focusOnDoc != 0) {
+                //scroll to last
+                state.scrollToPage(state.pageCount - 1)
+            } else {
+                state.scrollToPage(data.focusOnDoc)
             }
-        })
-    }
+        }
+    })
 }
 
 data class BaseCarouselOrgData(val card: List<DocsCarouselItem>, val focusOnDoc: Int? = null)

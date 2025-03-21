@@ -3,9 +3,9 @@ package ua.gov.diia.documents.ui.actions
 import android.content.res.Resources
 import android.os.Parcelable
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.ManualDocs
-import ua.gov.diia.documents.util.BaseDocumentActionProvider
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.ManualDocs
+import ua.gov.diia.ui_base.mappers.document.BaseDocumentActionProvider
 import ua.gov.diia.ui_base.components.atom.button.ButtonIconCircledLargeAtmData
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.list.ListItemMlcData
@@ -39,14 +39,15 @@ class DocActionsProviderImpl @Inject constructor(
         )
         return ContextIconMenuOrgData(
             docActions = listOfActions(document, resources).toMutableList(),
+            manualActions = listOfManualActions(document, manualDocs),
             generalActions = listOfGeneralActions(
                 document,
                 enableStackActions,
             ).toMutableList(),
-            manualActions = listOfManualActions(document, manualDocs),
             qr = qr,
             ean13 = ean13,
-            showButtons = documentsHelper.showVerificationButtons(document)
+            showButtons = documentsHelper.showVerificationButtons(document),
+            showDividerForManualActions = manualDocs != null
         )
     }
 

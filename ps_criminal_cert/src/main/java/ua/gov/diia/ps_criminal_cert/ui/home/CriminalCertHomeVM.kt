@@ -33,7 +33,6 @@ import ua.gov.diia.ps_criminal_cert.ui.CriminalCertConst
 import ua.gov.diia.publicservice.helper.PSNavigationHelper
 import javax.inject.Inject
 
-// todo split logic
 @HiltViewModel
 class CriminalCertHomeVM @Inject constructor(
     @AuthorizedClient private val api: ApiCriminalCert,

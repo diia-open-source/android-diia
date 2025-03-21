@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import ua.gov.diia.core.models.common_compose.atm.icon.IconAtm
 import ua.gov.diia.core.models.common_compose.mlc.text.CurrentTimeMlc
+import ua.gov.diia.core.models.common_compose.mlc.text.StubMessageMlc
 
 @JsonClass(generateAdapter = true)
 data class CalendarOrg(
@@ -23,6 +24,8 @@ data class CalendarOrg(
     val columnsAmount: Int?,
     @Json(name = "items")
     val items: List<CalendarItemOrg>?,
+    @Json(name = "stubMessageMlc")
+    val stubMessageMlc: StubMessageMlc?
 ) {
     @JsonClass(generateAdapter = true)
     data class IconForMoving(

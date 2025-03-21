@@ -10,9 +10,9 @@ import ua.gov.diia.core.util.date.CurrentDateProvider
 import ua.gov.diia.core.util.extensions.date_time.getUTCDate
 import ua.gov.diia.documents.data.datasource.local.RemoveExpiredDocBehaviorImpl
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.models.Preferences
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.Preferences
 import java.util.*
 
 class RemoveExpiredDocBehaviorImplTest {

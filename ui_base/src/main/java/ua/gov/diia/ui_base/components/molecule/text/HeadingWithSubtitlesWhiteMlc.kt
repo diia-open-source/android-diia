@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.table.HeadingWithSubtitlesMlc
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.utils.AutoSizeLimitedText
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
@@ -32,7 +33,12 @@ fun HeadingWithSubtitlesWhiteMlc(
                     .padding(top = 8.dp)
                     .align(alignment = Alignment.Start)
             ) {
-                AutoSizeLimitedText(text = data.value, modifier = Modifier, maxLines = 3, color = White)
+                AutoSizeLimitedText(
+                    text = data.value,
+                    modifier = Modifier,
+                    maxLines = 3,
+                    color = White
+                )
             }
         }
 
@@ -50,9 +56,18 @@ fun HeadingWithSubtitlesWhiteMlc(
 }
 
 data class HeadingWithSubtitlesWhiteMlcData(
+    val componentId: String? = null,
     val value: String?,
     val subtitles: List<String>?,
 )
+
+fun HeadingWithSubtitlesMlc.toUIModel(): HeadingWithSubtitlesWhiteMlcData {
+    return HeadingWithSubtitlesWhiteMlcData(
+        componentId = this.componentId.orEmpty(),
+        value = this.value,
+        subtitles = this.subtitles
+    )
+}
 
 @Composable
 @Preview

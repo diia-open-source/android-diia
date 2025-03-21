@@ -23,8 +23,8 @@ import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.diia_storage.DiiaStorage
 import ua.gov.diia.diia_storage.store.Preferences
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 import ua.gov.diia.documents.rules.MainDispatcherRule
 import ua.gov.diia.documents.util.datasource.DateCompareExpirationStrategy
 import ua.gov.diia.documents.util.datasource.ExpirationStrategy
@@ -196,7 +196,7 @@ class KeyValueDocumentsDataSourceTest {
         assertEquals(Http.HTTP_404, result[1].status)
         assertEquals(Preferences.DEF, result[1].expirationDate)
         assertEquals(null, result[1].diiaDocument)
-        assertEquals("", result[1].timestamp)
+        assertEquals("", result[1].getTimestamp)
         assertEquals(DiiaDocumentWithMetadata.LAST_DOC_ORDER, result[1].order)
 
         docTypesAvailableToUsers.remove(availableDoc)
@@ -377,7 +377,7 @@ class KeyValueDocumentsDataSourceTest {
         assertEquals(processNum, result.data!![2].status)
         assertEquals(Preferences.DEF, result.data!![2].expirationDate)
         assertEquals(null, result.data!![2].diiaDocument)
-        assertEquals("", result.data!![2].timestamp)
+        assertEquals("", result.data!![2].getTimestamp)
     }
 
 

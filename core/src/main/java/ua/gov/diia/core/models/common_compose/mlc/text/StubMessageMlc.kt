@@ -13,7 +13,7 @@ data class StubMessageMlc(
     @Json(name = "icon")
     val icon: String,
     @Json(name = "title")
-    val title: String,
+    val title: String?,
     @Json(name = "description")
     val description: String?,
     @Json(name = "parameters")

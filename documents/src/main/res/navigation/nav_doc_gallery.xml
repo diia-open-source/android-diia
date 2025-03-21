@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_doc_gallery"
     app:startDestination="@id/docGalleryFCompose">
-    <keep_state_fragment
+    <fragment
         android:id="@+id/docGalleryFCompose"
         android:name="ua.gov.diia.documents.ui.gallery.DocGalleryFCompose"
         android:label="previewFCompose">
-    </keep_state_fragment>
+    </fragment>
 </navigation>

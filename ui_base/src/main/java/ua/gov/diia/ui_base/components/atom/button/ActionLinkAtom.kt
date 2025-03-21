@@ -33,7 +33,7 @@ fun LoadActionAtom(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickable {
+            .noRippleClickable(debounce = true) {
                 if (data.interactionState == UIState.Interaction.Disabled ||
                     (progressIndicator.first.isNotEmpty() && progressIndicator.first == data.id && progressIndicator.second)
                 ) return@noRippleClickable

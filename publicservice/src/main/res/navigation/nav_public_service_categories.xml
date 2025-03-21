@@ -8,7 +8,7 @@
         android:defaultValue="@null"
         app:argType="string"
         app:nullable="true" />
-    <keep_state_fragment
+    <fragment
         android:id="@+id/publicServicesCategoriesComposeF"
         android:name="ua.gov.diia.publicservice.ui.categories.compose.PublicServicesCategoriesComposeF">
         <argument
@@ -16,6 +16,6 @@
             android:defaultValue="@null"
             app:argType="string"
             app:nullable="true" />
-    </keep_state_fragment>
+    </fragment>
 
 </navigation>

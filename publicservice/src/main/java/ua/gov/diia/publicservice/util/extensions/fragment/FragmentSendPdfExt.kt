@@ -7,5 +7,5 @@ import ua.gov.diia.diia_storage.AndroidBase64Wrapper
 
 fun Fragment.sendPdf(base64pdf: String, fileName: String, applicationId: String) {
     val pdfInBytes = AndroidBase64Wrapper().decode(base64pdf.toByteArray())
-    sendPdf(pdfInBytes, fileName, applicationId)
+    context?.sendPdf(pdfInBytes, fileName, applicationId)
 }

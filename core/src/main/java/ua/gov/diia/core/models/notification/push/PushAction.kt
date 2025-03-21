@@ -10,5 +10,5 @@ data class PushAction(
     @Json(name = "type")
     val type: String,
     @Json(name = "subtype")
-    val subtype: String?
+    val subtype: String?,
 )

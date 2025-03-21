@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.conditional
@@ -37,6 +38,7 @@ fun TableBlockTwoColumnsOrg(
             .padding(top = 24.dp, start = 24.dp, end = 24.dp)
             .background(color = White, shape = RoundedCornerShape(16.dp))
             .fillMaxWidth()
+            .testTag(data.componentId?.asString() ?: "")
     ) {
         data.heading?.let {
             HeadingWithSubtitlesMlc(
@@ -85,7 +87,7 @@ fun TableBlockTwoColumnsOrg(
 
 data class TableBlockTwoColumnsOrgData(
     val id: String? = null,
-    val componentId: String = "",
+    val componentId: UiText? = null,
     val heading: HeadingWithSubtitlesMlcData? = null,
     val photo: String? = null,
     val photoAsBitmap: Bitmap? = null,
@@ -111,12 +113,12 @@ fun TableBlockTwoColumnsOrgPreview() {
             TableItemVerticalMlcData(
                 id = "01",
                 title = UiText.DynamicString("Дата\nнародження:"),
-                value = "24.08.1991"
+                value = UiText.DynamicString("24.08.1991")
             ),
             TableItemVerticalMlcData(
                 id = "02",
                 title = UiText.DynamicString("Номер:"),
-                value = "XX000000"
+                value = UiText.DynamicString("XX000000")
             ),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )
@@ -143,12 +145,12 @@ fun TableBlockTwoColumnsOrgPreview_NoPhoto() {
             TableItemVerticalMlcData(
                 id = "01",
                 title = UiText.DynamicString("Дата\nнародження:"),
-                value = "24.08.1991"
+                value = UiText.DynamicString("24.08.1991")
             ),
             TableItemVerticalMlcData(
                 id = "02",
                 title = UiText.DynamicString("Номер:"),
-                value = "XX000000"
+                value = UiText.DynamicString("XX000000")
             ),
             TableItemVerticalMlcData(id = "03", valueAsBase64String = PreviewBase64Images.sign)
         )

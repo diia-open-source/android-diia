@@ -14,10 +14,10 @@ class AddressFieldResponseTest {
 
     @Test
     fun `test isEndForAddressSelection return value regarding address`() {
-        val model = AddressFieldResponse("title", "description", listOf(), mockk(), null, null)
+        val model = AddressFieldResponse("title", "description", null, listOf(), mockk(), null, null)
         assertTrue(model.isEndForAddressSelection())
 
-        val model2 = AddressFieldResponse("title", "description", listOf(), null, null, null)
+        val model2 = AddressFieldResponse("title", "description", null, listOf(), null, null, null)
         assertFalse(model2.isEndForAddressSelection())
 
     }

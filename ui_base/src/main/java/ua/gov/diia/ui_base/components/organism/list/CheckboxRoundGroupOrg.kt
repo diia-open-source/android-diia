@@ -18,8 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.mlc.checkbox.CheckIconMlc
 import ua.gov.diia.core.models.common_compose.org.checkbox.CheckboxRoundGroupOrg
 import ua.gov.diia.ui_base.components.atom.divider.DividerSlimAtom
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -29,11 +31,11 @@ import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicStringOrNull
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckIconMlc
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckIconMlcData
-import ua.gov.diia.core.models.common_compose.mlc.checkbox.CheckboxRoundMlc
-import ua.gov.diia.core.models.common_compose.mlc.checkbox.CheckIconMlc
 import ua.gov.diia.ui_base.components.molecule.checkbox.CheckboxRoundMlcData
+import ua.gov.diia.ui_base.components.molecule.checkbox.toUIModel
 import ua.gov.diia.ui_base.components.molecule.header.NavigationPanelMlcData
 import ua.gov.diia.ui_base.components.organism.header.TopGroupOrgData
 import ua.gov.diia.ui_base.components.theme.BlackSqueeze
@@ -56,6 +58,7 @@ fun CheckboxRoundGroupOrg(
             .padding(start = 24.dp, end = 24.dp, top = 24.dp)
             .fillMaxWidth()
             .background(color = White, shape = RoundedCornerShape(8.dp))
+            .testTag(data.componentId?.asString() ?: "")
     ) {
         localData.value.title?.let {
             Text(
@@ -131,8 +134,11 @@ fun CheckboxIconRow(data: List<CheckIconMlcData>, onUIAction: (UIAction) -> Unit
 
 data class CheckboxRoundGroupOrgData(
     val actionKey: String = UIActionKeysCompose.MULTI_CHOICE_GROUP_ORGANISM,
+    val componentId: UiText? = null,
     val id: String?,
+    val inputCode: String? = null,
     val title: String? = null,
+    val mandatory: Boolean? = false,
     val items: SnapshotStateList<UIElementData>
 ) : UIElementData {
     fun onCheckboxClick(itemId: String): CheckboxRoundGroupOrgData {
@@ -149,36 +155,41 @@ data class CheckboxRoundGroupOrgData(
         }
         )
     }
+    fun clearCheckboxSelection(): CheckboxRoundGroupOrgData {
+        return this.copy(items = SnapshotStateList<UIElementData>().apply {
+            items.forEach {
+                if (it is CheckboxRoundMlcData) {
+                    this.add(it.uncheckCheckbox())
+                }
+            }
+        }
+        )
+    }
+
+    fun selectedItems(): List<CheckboxRoundMlcData> {
+        val result = mutableListOf<CheckboxRoundMlcData>()
+        this.items.forEach {
+            if (it is CheckboxRoundMlcData && it.selectionState == UIState.Selection.Selected) {
+                result.add(it)
+            }
+        }
+        return result
+    }
 }
 
 fun CheckboxRoundGroupOrg.toUIModel(): CheckboxRoundGroupOrgData {
     val entity: CheckboxRoundGroupOrg = this
     return CheckboxRoundGroupOrgData(
+        componentId = this.componentId.toDynamicStringOrNull(),
         id = this.id ?: "",
+        inputCode = this.inputCode,
         title = this.title,
+        mandatory = this.mandatory,
         items = SnapshotStateList<UIElementData>().apply {
-            entity.items.forEachIndexed { index, item ->
+            entity.items.forEach { item ->
                 item.checkboxRoundMlc?.let { cbItem ->
                     add(
-                        CheckboxRoundMlcData(
-                            id = cbItem.id ?: "",
-                            label = cbItem.label,
-                            description = cbItem.description,
-                            interactionState = when (cbItem.state) {
-                                CheckboxRoundMlc.CbState.REST -> UIState.Interaction.Enabled
-                                CheckboxRoundMlc.CbState.SELECTED -> UIState.Interaction.Enabled
-                                CheckboxRoundMlc.CbState.DISABLE -> UIState.Interaction.Disabled
-                                CheckboxRoundMlc.CbState.DISABLE_SELECTED -> UIState.Interaction.Disabled
-                                else -> UIState.Interaction.Enabled
-                            },
-                            selectionState = when (cbItem.state) {
-                                CheckboxRoundMlc.CbState.REST -> UIState.Selection.Unselected
-                                CheckboxRoundMlc.CbState.SELECTED -> UIState.Selection.Selected
-                                CheckboxRoundMlc.CbState.DISABLE -> UIState.Selection.Unselected
-                                CheckboxRoundMlc.CbState.DISABLE_SELECTED -> UIState.Selection.Selected
-                                else -> UIState.Selection.Unselected
-                            }
-                        )
+                        cbItem.toUIModel()
                     )
                 }
                 item.checkIconMlc?.let { cIcon ->

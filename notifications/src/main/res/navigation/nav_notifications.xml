@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@+id/notificationFCompose"
-    android:id="@+id/nav_notifications">
+    android:id="@+id/nav_notifications"
+    app:startDestination="@+id/notificationFCompose">
 
     <action
         android:id="@+id/action_global_to_notificationSettingsF"
@@ -20,5 +20,10 @@
     <fragment
         android:id="@+id/notificationFCompose"
         android:name="ua.gov.diia.notifications.ui.fragments.home.notifications.compose.NotificationFCompose"
-        android:label="NotificationFCompose" />
+        android:label="NotificationFCompose">
+        <argument
+            android:name="feedDestination"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
 </navigation>

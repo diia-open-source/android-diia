@@ -55,7 +55,7 @@ fun TableItemVerticalMlc(
                         Text(
                             modifier = Modifier.padding(end = 12.dp),
                             text = data.supportText,
-                            style = DiiaTextStyle.t5TextSmallDescription,
+                            style = DiiaTextStyle.t3TextBody,
                             color = Black
                         )
                     }
@@ -70,7 +70,7 @@ fun TableItemVerticalMlc(
                     }
                     data.secondaryTitle?.let {
                         Text(
-                            text = data.secondaryTitle,
+                            text = data.secondaryTitle.asString(),
                             style = DiiaTextStyle.t3TextBody,
                             color = BlackAlpha30
                         )
@@ -92,14 +92,14 @@ fun TableItemVerticalMlc(
                         data.value?.let {
                             Text(
                                 modifier = Modifier.padding(top = 4.dp),
-                                text = data.value,
+                                text = data.value.asString(),
                                 style = DiiaTextStyle.t3TextBody,
                                 color = Black
                             )
                         }
                         data.secondaryValue?.let {
                             Text(
-                                text = data.secondaryValue,
+                                text = data.secondaryValue.asString(),
                                 style = DiiaTextStyle.t3TextBody,
                                 color = BlackAlpha30
                             )
@@ -107,6 +107,7 @@ fun TableItemVerticalMlc(
                     }
                 }
                 data.icon?.let {
+                    val dataValue = data.value?.asString()
                     Spacer(modifier = Modifier.width(8.dp))
                     IconWithBadge(
                         modifier = Modifier
@@ -115,13 +116,12 @@ fun TableItemVerticalMlc(
                                 onUIAction(
                                     UIAction(
                                         actionKey = data.actionKey,
-                                        data = data.value
+                                        data = dataValue
                                     )
                                 )
                             },
                         image = data.icon
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
                 }
             }
         }
@@ -134,9 +134,9 @@ data class TableItemVerticalMlcData(
     val componentId: String = "",
     val supportText: String? = null,
     val title: UiText? = null,
-    val secondaryTitle: String? = null,
-    val value: String? = null,
-    val secondaryValue: String? = null,
+    val secondaryTitle: UiText? = null,
+    val value: UiText? = null,
+    val secondaryValue: UiText? = null,
     val valueAsBase64String: String? = null,
     val icon: UiText? = null,
     val signBitmap: ImageBitmap? = null
@@ -148,9 +148,9 @@ fun TableItemVerticalMlcPreview_ValueAsImage() {
     val data = TableItemVerticalMlcData(
         id = "123",
         title = UiText.DynamicString("Title"),
-        secondaryTitle = "Secondary title",
-        value = "Label Value",
-        secondaryValue = "Secondary label",
+        secondaryTitle = UiText.DynamicString("Secondary title"),
+        value = UiText.DynamicString("Label Value"),
+        secondaryValue = UiText.DynamicString("Secondary label"),
         valueAsBase64String = PreviewBase64Images.sign,
         icon = UiText.StringResource(R.drawable.ic_copy)
     )
@@ -161,16 +161,30 @@ fun TableItemVerticalMlcPreview_ValueAsImage() {
     )
 }
 
+
+@Composable
+@Preview
+fun TableItemVerticalMlcPreview_secondary_title() {
+    val data = TableItemVerticalMlcData(
+        id = "123",
+        secondaryTitle = UiText.DynamicString("Secondary title"),
+    )
+    TableItemVerticalMlc(
+        modifier = Modifier.fillMaxWidth(),
+        data = data
+    )
+}
+
 @Composable
 @Preview
 fun TableItemVerticalMlcPreview_ValueAsText() {
     val data = TableItemVerticalMlcData(
         id = "123",
         title = UiText.DynamicString("Title"),
-        secondaryTitle = "Secondary title",
+        secondaryTitle = UiText.DynamicString("Secondary title"),
         supportText = "12",
-        value = "Label Value",
-        secondaryValue = "Secondary label",
+        value = UiText.DynamicString("Label Value"),
+        secondaryValue = UiText.DynamicString("Secondary label"),
     )
     TableItemVerticalMlc(
         modifier = Modifier

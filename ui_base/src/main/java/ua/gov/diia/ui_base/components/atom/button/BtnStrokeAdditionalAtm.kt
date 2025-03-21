@@ -2,14 +2,15 @@ package ua.gov.diia.ui_base.components.atom.button
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,12 +39,22 @@ fun BtnStrokeAdditionalAtm(
     progressIndicator: Pair<String, Boolean> = Pair("", false),
     onUIAction: (UIAction) -> Unit
 ) {
+    val isLoading = remember {
+        mutableStateOf(data.id == progressIndicator.first && progressIndicator.second)
+    }
+
+    LaunchedEffect(key1 = data.id == progressIndicator.first, key2 = progressIndicator.second) {
+        isLoading.value = data.id == progressIndicator.first && progressIndicator.second
+    }
+
     Button(
-        modifier = modifier.testTag(data.componentId?.asString() ?: ""),
+        modifier = modifier
+            .testTag(data.componentId?.asString() ?: ""),
         colors = ButtonDefaults.buttonColors(
             containerColor = Transparent,
             disabledContainerColor = Transparent
         ),
+        contentPadding = PaddingValues(horizontal = if (data.shrinkHorizontalPaddings) 18.dp else 32.dp),
         border = BorderStroke(
             width = 2.dp, color = when (data.interactionState) {
                 UIState.Interaction.Disabled -> BlackAlpha10
@@ -52,30 +63,32 @@ fun BtnStrokeAdditionalAtm(
         ),
         enabled = data.interactionState == UIState.Interaction.Enabled,
         onClick = {
-            onUIAction(
-                UIAction(
-                    actionKey = data.actionKey,
-                    data = data.id,
-                    action = data.action
+            if (!isLoading.value) {
+                onUIAction(
+                    UIAction(
+                        actionKey = data.actionKey,
+                        data = data.id,
+                        action = data.action
+                    )
                 )
-            )
-        }
-    ) {
-        AnimatedVisibility(visible = progressIndicator.first == data.id && progressIndicator.second == true) {
-            Row {
-                LoaderCircularEclipse23Subatomic(modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.width(8.dp))
             }
         }
-        Text(
-            text = data.title.asString(),
-            color = when (data.interactionState) {
-                UIState.Interaction.Disabled -> BlackAlpha30
-                UIState.Interaction.Enabled -> Black
-            },
-            style = DiiaTextStyle.t2TextDescription,
+    ) {
+        AnimatedVisibility(visible = isLoading.value) {
+            LoaderCircularEclipse23Subatomic(modifier = Modifier.size(18.dp))
 
-            )
+        }
+        if (!isLoading.value) {
+            Text(
+                text = data.title.asString(),
+                color = when (data.interactionState) {
+                    UIState.Interaction.Disabled -> BlackAlpha30
+                    UIState.Interaction.Enabled -> Black
+                },
+                style = DiiaTextStyle.t2TextDescription,
+
+                )
+        }
     }
 }
 
@@ -85,16 +98,17 @@ data class ButtonStrokeAdditionalAtomData(
     val id: String = "",
     val title: UiText,
     val interactionState: UIState.Interaction = UIState.Interaction.Enabled,
-    val action: DataActionWrapper? = null
+    val action: DataActionWrapper? = null,
+    val shrinkHorizontalPaddings: Boolean = false
 )
 
 fun BtnStrokeAdditionalAtm.toUIModel(
-    id: String = ""
+    id: String = UIActionKeysCompose.BUTTON_REGULAR
 ): ButtonStrokeAdditionalAtomData {
     return ButtonStrokeAdditionalAtomData(
         title = label.toDynamicString(),
         componentId = componentId?.let { UiText.DynamicString(it) },
-        id = id,
+        id = this.componentId ?: id,
         interactionState = state?.let {
             when (state) {
                 ButtonStates.enabled -> UIState.Interaction.Enabled

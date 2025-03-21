@@ -26,6 +26,7 @@ import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
 import ua.gov.diia.core.util.extensions.fragment.registerForNavigationResult
 import ua.gov.diia.core.util.extensions.fragment.registerForNavigationResultOnce
 import ua.gov.diia.core.util.extensions.fragment.registerForTemplateDialogNavResult
+import ua.gov.diia.core.util.inputs.isCountryOrCityNameValid
 import ua.gov.diia.ps_criminal_cert.ui.CriminalCertRatingScreenCodes
 
 @AndroidEntryPoint
@@ -42,16 +43,28 @@ class CriminalCertStepBirthF : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentCriminalCertStepBirthBinding.inflate(inflater, container, false)
             .apply {
                 lifecycleOwner = viewLifecycleOwner
                 vm = viewModel
                 viewModel.loadContent()
+                otherCountryInput.setFieldErrorText(R.string.ukraine_validation_input_error)
                 otherCountryInput.setImeOptions(EditorInfo.IME_ACTION_NEXT)
                 otherCountryInput.setTextInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+                otherCountryInput.doOnTextChanged{
+                    otherCountryInput.setFieldError(!isCountryOrCityNameValid(it) && it.isNotEmpty())
+                }
+                cityInput.setFieldErrorText(R.string.ukraine_validation_input_error)
                 cityInput.setTextInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 cityInput.setImeOptions(EditorInfo.IME_ACTION_DONE)
+                cityInput.doOnTextChanged {
+                    cityInput.setFieldError(!isCountryOrCityNameValid(it) && it.isNotEmpty())
+                }
                 backBtn.setOnClickListener { findNavController().popBackStack() }
             }
         return binding?.root
@@ -68,7 +81,10 @@ class CriminalCertStepBirthF : Fragment() {
                 )
             }
 
-            viewModel.navigateToCountrySelection.observeUiDataEvent(viewLifecycleOwner, ::navigateToCountrySelection)
+            viewModel.navigateToCountrySelection.observeUiDataEvent(
+                viewLifecycleOwner,
+                ::navigateToCountrySelection
+            )
             onNextEvent.observeUiDataEvent(viewLifecycleOwner, ::navigateNext)
 
             showRatingDialogByUserInitiative.observeUiDataEvent(viewLifecycleOwner) { ratingModel ->
@@ -88,7 +104,11 @@ class CriminalCertStepBirthF : Fragment() {
             findNavController().popBackStack()
             when (action) {
                 ActionsConst.GENERAL_RETRY -> viewModel.retryLastAction()
-                ActionsConst.FAQ_CATEGORY -> viewModel.navigateToFaq(this@CriminalCertStepBirthF, CriminalCertConst.FEATURE_CODE)
+                ActionsConst.FAQ_CATEGORY -> viewModel.navigateToFaq(
+                    this@CriminalCertStepBirthF,
+                    CriminalCertConst.FEATURE_CODE
+                )
+
                 ActionsConst.SUPPORT_SERVICE -> viewModel.navigateToSupport(this@CriminalCertStepBirthF)
                 ActionsConst.RATING -> viewModel.getRatingForm()
             }
@@ -96,7 +116,7 @@ class CriminalCertStepBirthF : Fragment() {
 
         registerForNavigationResultOnce(NATIONALITIES, viewModel::setCountry)
         registerForNavigationResult<ConsumableItem>(ActionsConst.RESULT_KEY_RATING_SERVICE) { event ->
-            event.consumeEvent<RatingRequest> { rating ->   viewModel.sendRatingRequest(rating) }
+            event.consumeEvent<RatingRequest> { rating -> viewModel.sendRatingRequest(rating) }
         }
     }
 
@@ -120,18 +140,21 @@ class CriminalCertStepBirthF : Fragment() {
                 //already here
                 null
             }
+
             CriminalCertScreen.NATIONALITIES -> CriminalCertStepBirthFDirections.actionCriminalCertStepBirthFToCriminalCertStepNationalityF(
                 contextMenu = args.contextMenu,
                 dataUser = args.dataUser.copy(
                     birth = screenData.second
                 )
             )
+
             CriminalCertScreen.REGISTRATION_PLACE -> CriminalCertStepBirthFDirections.actionCriminalCertStepBirthFToCriminalCertStepAddressF(
                 contextMenu = args.contextMenu,
                 dataUser = args.dataUser.copy(
                     birth = screenData.second
                 )
             )
+
             CriminalCertScreen.CONTACTS -> CriminalCertStepBirthFDirections.actionCriminalCertStepBirthFToCriminalCertStepContactsF(
                 contextMenu = args.contextMenu,
                 dataUser = args.dataUser.copy(

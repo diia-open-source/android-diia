@@ -8,26 +8,38 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ua.gov.diia.core.models.common.BackStackEvent
+import ua.gov.diia.core.models.rating_service.RatingRequest
+import ua.gov.diia.core.ui.dynamicdialog.ActionsConst
 import ua.gov.diia.core.util.delegation.WithBuildConfig
 import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.extensions.activity.setWindowBrightness
 import ua.gov.diia.core.util.extensions.fragment.collapseApp
 import ua.gov.diia.core.util.extensions.fragment.currentDestinationId
-import ua.gov.diia.core.util.extensions.fragment.handlePhoneIntent
 import ua.gov.diia.core.util.extensions.fragment.navigateOnce
+import ua.gov.diia.core.util.extensions.fragment.openLink
 import ua.gov.diia.core.util.extensions.fragment.sendImage
 import ua.gov.diia.core.util.extensions.fragment.sendPdf
 import ua.gov.diia.diia_storage.AndroidBase64Wrapper
 import ua.gov.diia.documents.NavDocActionsDirections
 import ua.gov.diia.documents.R
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.ManualDocs
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.ManualDocs
+import ua.gov.diia.documents.models.DocumentAction
+import ua.gov.diia.documents.navigation.ConfirmRemoveDocBackStackResult
+import ua.gov.diia.documents.navigation.Earn13CodeBackStackResult
+import ua.gov.diia.documents.navigation.QRCodeBackStackResult
+import ua.gov.diia.documents.navigation.RateDocumentBackStackResult
+import ua.gov.diia.documents.navigation.RemoveDocumentBackStackResult
+import ua.gov.diia.documents.navigation.VerificationCodeBackStackResult
 import ua.gov.diia.documents.ui.DocsConst
 import ua.gov.diia.documents.util.view.showCopyDocIdClipedSnackBar
 import ua.gov.diia.ui_base.components.infrastructure.HomeScreenTab
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
+import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.ui_base.util.navigation.openTemplateDialog
@@ -108,16 +120,16 @@ class DocGalleryFCompose : Fragment() {
                 }
                 docAction.collectAsEffect { action ->
                     when (action) {
-                        is DocGalleryVMCompose.DocActions.OpenDriverAccount -> {
-                            navigateToWebView(getString(R.string.url_driver_e_find_address))
+                        is DocGalleryVMCompose.DocActions.OpenWebView -> {
+                            navigateToWebView(action.url)
                         }
 
-                        is DocGalleryVMCompose.DocActions.OpenElectronicQueue -> {
-                            navigateToWebView(getString(R.string.url_driver_e_queue))
+                        is DocGalleryVMCompose.DocActions.OpenNewFlow -> {
+                            documentsHelper.navigateToFlow(this@DocGalleryFCompose, action.code)
                         }
 
-                        is DocGalleryVMCompose.DocActions.Call -> {
-                            handlePhoneIntent(getString(R.string.phone_number_veteran_registry))
+                        is DocGalleryVMCompose.DocActions.OpenLink -> {
+                            context?.openLink(action.link, withCrashlytics)
                         }
 
                         is DocGalleryVMCompose.DocActions.DocNumberCopy -> {
@@ -128,7 +140,7 @@ class DocGalleryFCompose : Fragment() {
                         }
 
                         is DocGalleryVMCompose.DocActions.ShareImage -> {
-                            sendImage(
+                            context?.sendImage(
                                 action.data.byteArray,
                                 action.data.fileName,
                                 withBuildConfig.getApplicationId()
@@ -144,12 +156,97 @@ class DocGalleryFCompose : Fragment() {
                         }
                     }
                 }
+
+                viewModel.navigationBackStackEventFlow.collectAsEffect {
+                    when (it) {
+                        is BackStackEvent.UserActionResult -> {
+                            it.data.consumeEvent { docAction ->
+                                when (docAction) {
+                                    ActionsConst.GENERAL_RETRY -> viewModel.retryLastAction()
+                                }
+                            }
+                        }
+
+                        is BackStackEvent.TemplateRetryResult -> {
+                            it.data.consumeEvent { action ->
+                                when (action) {
+                                    ActionsConst.GENERAL_RETRY -> viewModel.retryLastAction()
+                                    ActionsConst.DIALOG_ACTION_CODE_CLOSE,
+                                    ActionsConst.ERROR_DIALOG_DEAL_WITH_IT -> findNavController().popBackStack()
+                                }
+                            }
+                        }
+
+                        is BackStackEvent.RatingResult -> {
+                            it.data.consumeEvent<RatingRequest> { rating ->
+                                viewModel.sendRatingRequest(rating)
+                            }
+                        }
+
+                        is RemoveDocumentBackStackResult -> {
+                            it.data.consumeEvent<DiiaDocument> { doc ->
+                                viewModel.removeDoc(doc)
+                            }
+                        }
+
+                        is ConfirmRemoveDocBackStackResult -> {
+                            it.data.consumeEvent<DiiaDocument> { doc ->
+                                viewModel.showConfirmDeleteTemplateRemote(doc)
+                            }
+                        }
+
+                        is RateDocumentBackStackResult -> {
+                            it.data.consumeEvent<DiiaDocument> { doc ->
+                                viewModel.showRating(doc)
+                            }
+                        }
+
+                        is QRCodeBackStackResult -> {
+                            it.data.consumeEvent<DocumentAction> { docAction ->
+                                viewModel.onUIAction(
+                                    UIAction(
+                                        actionKey = docAction.actionKey,
+                                        data = docAction.docType,
+                                        optionalId = docAction.position,
+                                        optionalType = docAction.id
+                                    )
+                                )
+                            }
+                        }
+
+                        is Earn13CodeBackStackResult -> {
+                            it.data.consumeEvent<DocumentAction> { docAction ->
+                                viewModel.onUIAction(
+                                    UIAction(
+                                        actionKey = docAction.actionKey,
+                                        data = docAction.docType,
+                                        optionalId = docAction.position,
+                                        optionalType = docAction.id
+                                    )
+                                )
+                            }
+                        }
+
+                        is VerificationCodeBackStackResult -> {
+                            it.data.consumeEvent<DocumentAction> { docAction ->
+                                viewModel.onUIAction(
+                                    UIAction(
+                                        actionKey = docAction.actionKey,
+                                        data = docAction.docType,
+                                        optionalId = docAction.position,
+                                        optionalType = docAction.id
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
             viewModel.certificatePdf.observe(viewLifecycleOwner) { event ->
                 event.getContentIfNotHandled()?.let { e ->
                     val bArray = AndroidBase64Wrapper().decode(e.docPDF.toByteArray())
-                    sendPdf(
+                    context?.sendPdf(
                         bArray,
                         event.peekContent().name,
                         withBuildConfig.getApplicationId()
@@ -160,7 +257,7 @@ class DocGalleryFCompose : Fragment() {
             viewModel.documentPdf.observe(viewLifecycleOwner) { event ->
                 event.getContentIfNotHandled()?.let { e ->
                     val bArray = AndroidBase64Wrapper().decode(e.docPDF.toByteArray())
-                    sendPdf(
+                    context?.sendPdf(
                         bArray,
                         event.peekContent().name,
                         withBuildConfig.getApplicationId()
@@ -169,16 +266,14 @@ class DocGalleryFCompose : Fragment() {
             }
 
             viewModel.showTemplateDialog.collectAsEffect {
-                viewModel.stopLoading()
                 openTemplateDialog(it.peekContent())
             }
 
             viewModel.showRatingDialogByUserInitiative.collectAsEffect {
-                viewModel.stopLoading()
                 val ratingModel = it.peekContent()
                 documentsHelper.navigateToRatingService(
                     this,
-                    viewModel,
+                    viewModel.currentDocId().orEmpty(),
                     ratingModel,
                     isFromStack = false
                 )
@@ -194,8 +289,8 @@ class DocGalleryFCompose : Fragment() {
                 })
         }
         navigationSubscriptionHandler.subscribeForNavigationEvents(
-            this,
-            viewModel
+            fragment = this,
+            navigationBackStackEventFlow = viewModel.navigationBackStackEventFlow,
         )
     }
 
@@ -229,7 +324,7 @@ class DocGalleryFCompose : Fragment() {
     override fun onPause() {
         super.onPause()
         activity?.setWindowBrightness(true)
-        viewModel.clearFocusType()
+        viewModel.clearDocFocus()
     }
 
     private fun navigateToDocOrder() {

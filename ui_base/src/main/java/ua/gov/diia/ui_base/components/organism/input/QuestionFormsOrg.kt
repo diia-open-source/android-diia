@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
@@ -21,25 +20,28 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.core.models.common_compose.org.input.question_form.QuestionFormsOrg
 import ua.gov.diia.core.models.common_compose.org.input.question_form.QuestionFormsOrgItem
+import ua.gov.diia.core.util.phone.PHONE_NUMBER_VALIDATION_PATTERN
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.clearFocusOnKeyboardDismiss
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.input.DateInputMolecule
 import ua.gov.diia.ui_base.components.molecule.input.DateInputMoleculeData
 import ua.gov.diia.ui_base.components.molecule.input.InputFormItem
 import ua.gov.diia.ui_base.components.molecule.input.InputGroupMolecule
 import ua.gov.diia.ui_base.components.molecule.input.InputGroupMoleculeData
+import ua.gov.diia.ui_base.components.molecule.input.InputPhoneCodeOrg
+import ua.gov.diia.ui_base.components.molecule.input.InputPhoneCodeOrgData
 import ua.gov.diia.ui_base.components.molecule.input.SelectorOrg
 import ua.gov.diia.ui_base.components.molecule.input.SelectorOrgData
 import ua.gov.diia.ui_base.components.molecule.input.TextInputMolecule
 import ua.gov.diia.ui_base.components.molecule.input.TextInputMoleculeData
-import ua.gov.diia.ui_base.components.molecule.input.toUiModel
+import ua.gov.diia.ui_base.components.molecule.input.toUIModel
 import ua.gov.diia.ui_base.components.theme.DiiaTextStyle
 import ua.gov.diia.ui_base.components.theme.White
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun QuestionFormsOrg(
     modifier: Modifier = Modifier,
@@ -65,7 +67,7 @@ fun QuestionFormsOrg(
                 text = data.title,
                 style = DiiaTextStyle.t3TextBody
             )
-        } ?: Spacer(modifier = Modifier.height(8.dp))
+        }
         val listItemsModifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp)
@@ -81,7 +83,7 @@ fun QuestionFormsOrg(
                 )
 
                 is TextInputMoleculeData -> TextInputMolecule(
-                    modifier = listItemsModifier,
+                    modifier = listItemsModifier.clearFocusOnKeyboardDismiss(),
                     localFocusManager = localFocusManager,
                     imeAction = if (index == data.items.size - 1) {
                         ImeAction.Done
@@ -103,6 +105,20 @@ fun QuestionFormsOrg(
                 is SelectorOrgData -> SelectorOrg(
                     modifier = listItemsModifier,
                     data = item,
+                    onUIAction = {
+                        onUIAction(
+                            UIAction(
+                                actionKey = item.actionKey,
+                                data = item.id,
+                                optionalId = data.id //To understand which group the box is in
+                            )
+                        )
+                    }
+                )
+
+                is InputPhoneCodeOrgData -> InputPhoneCodeOrg(
+                    modifier = listItemsModifier,
+                    data = item,
                     onUIAction = onUIAction
                 )
 
@@ -122,9 +138,13 @@ data class QuestionFormsOrgData(
     val title: String? = null,
     val items: SnapshotStateList<InputFormItem>
 ) : UIElementData {
-    fun onInputChanged(id: String?, newValue: String?): QuestionFormsOrgData {
+
+    fun onInputChanged(
+        id: String?,
+        newValue: String?,
+        newCountryCode: String? = null
+    ): QuestionFormsOrgData {
         val data = this
-        if (newValue == null || id == null) return this
         return this.copy(items = SnapshotStateList<InputFormItem>().apply {
             data.items.forEach { item ->
                 when (item) {
@@ -156,6 +176,19 @@ data class QuestionFormsOrgData(
                     is SelectorOrgData -> {
                         if (item.id == id) {
                             add(item.onInputChanged(newValue))
+                        } else {
+                            add(item)
+                        }
+                    }
+
+                    is InputPhoneCodeOrgData -> {
+                        if (id == "inputPhoneMlc") {
+                            if (newValue != null) {
+                                add(item.onInputChanged(newValue))
+                            } else if (newCountryCode != null) {
+                                add(item.onCountryCodeChanged(newCountryCode))
+                            } else {
+                            }
                         } else {
                             add(item)
                         }
@@ -197,8 +230,33 @@ data class QuestionFormsOrgData(
                     }
                 }
 
+                is InputPhoneCodeOrgData -> {
+                    if (it.validation != UIState.Validation.Passed) {
+                        result = false
+                    }
+                }
+
                 else -> {}
             }
+        }
+        return result
+    }
+
+    /**
+     * Temporary for Questionnaire !!! */
+    fun isFormFilledValidByType(fieldType: String): Boolean {
+        var result = true
+        if (fieldType == "phoneNumberInput") {
+            val phoneField = this.items.first()
+            result = phoneField is TextInputMoleculeData &&
+                (phoneField.validation == UIState.Validation.Passed ||
+                    phoneField.validation == UIState.Validation.NeverBeenPerformed)
+
+        } else if (fieldType == "emailInput") {
+            val emailField = this.items.last()
+            result = emailField is TextInputMoleculeData &&
+                (emailField.validation == UIState.Validation.Passed ||
+                    emailField.validation == UIState.Validation.NeverBeenPerformed)
         }
         return result
     }
@@ -219,15 +277,16 @@ fun QuestionFormsOrg.toUIModel(): QuestionFormsOrgData {
 
 private fun generateInputField(entity: QuestionFormsOrgItem): InputFormItem {
     entity.inputTextMlc?.let { return questionFormInputFields(entity) }
-    entity.inputDateMlc?.let { return it.toUiModel() }
-    entity.selectorOrg?.let { return it.toUiModel() }
+    entity.inputDateMlc?.let { return it.toUIModel() }
+    entity.selectorOrg?.let { return it.toUIModel() }
+    entity.inputPhoneCodeOrg?.let { return it.toUIModel() }
     return TextInputMoleculeData()
 }
 
 private fun questionFormInputFields(entity: QuestionFormsOrgItem): InputFormItem {
     entity.inputTextMlc?.let { inputText ->
         val regexp = inputText.validation?.first()?.regexp
-        val predefinedValue = inputText.id
+        val predefinedValue = inputText.value ?: ""
         val validationList = mutableListOf<TextInputMoleculeData.ValidationTextItem>()
         inputText.validation?.forEach {
             validationList.add(
@@ -272,8 +331,6 @@ private fun getValidationState(regex: String?, input: String?): UIState.Validati
 @Composable
 @Preview
 fun InputFormMoleculePreview() {
-    val PHONE_NUMBER_VALIDATION_PATTERN =
-        "^38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
     val data =
         QuestionFormsOrgData(title = "Heading", items = SnapshotStateList<InputFormItem>().apply {
             add(

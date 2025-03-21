@@ -33,6 +33,7 @@ import ua.gov.diia.ui_base.components.organism.pager.CardFocus
 import ua.gov.diia.ui_base.components.organism.pager.DocsCarouselItem
 import ua.gov.diia.ui_base.components.theme.WhiteAlpha25
 import ua.gov.diia.ui_base.components.theme.WhiteAlpha40
+import java.util.UUID
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -166,8 +167,11 @@ fun DocOrg(
     }
 }
 
-
+/**
+ * @param id is set to be a unique key in case DocData is used in Pager or Lazy Colum
+ */
 data class DocOrgData(
+    val id : String?,
     val actionKey: String = UIActionKeysCompose.DOC_ORG_DATA,
     val imageUrl: String,
     val docHeading: DocHeadingOrgData? = null,
@@ -185,6 +189,7 @@ data class DocOrgData(
 fun DocOrgDataPreview() {
 
     val prevData = DocOrgData(
+        id = UUID.randomUUID().toString(),
         actionKey = "sasd",
         imageUrl = "https://api2.diia.gov.ua/diia-images/award/gold-logo.png",
         docHeading = DocHeadingOrgData(

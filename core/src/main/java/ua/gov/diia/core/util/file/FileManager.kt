@@ -10,6 +10,11 @@ interface FileManager {
     fun saveFile(filename: String, data: ByteArray): File
 
     /**
+     * Create empty file
+     */
+    fun createFile(filename: String): File
+
+    /**
      * Get file from current working dir
      */
     fun getFile(filename: String): File

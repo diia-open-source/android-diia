@@ -1,13 +1,16 @@
 package ua.gov.diia.core.models.common_compose.org.verification
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 import ua.gov.diia.core.models.common_compose.mlc.scancode.BarCodeMlc
 import ua.gov.diia.core.models.common_compose.mlc.scancode.QrCodeMlc
 import ua.gov.diia.core.models.common_compose.mlc.text.StubMessageMlc
 import ua.gov.diia.core.models.common_compose.org.group.ToggleButtonGroupOrg
 import ua.gov.diia.core.models.common_compose.subatomic.ExpireLabel
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class VerificationCodesOrg(
     @Json(name = "componentId")
@@ -15,8 +18,10 @@ data class VerificationCodesOrg(
     @Json(name = "EN")
     val en: Localization?,
     @Json(name = "UA")
-    val ua: Localization
-) {
+    val ua: Localization?
+) : Parcelable {
+
+    @Parcelize
     @JsonClass(generateAdapter = true)
     data class Localization(
         @Json(name = "barCodeMlc")
@@ -29,5 +34,5 @@ data class VerificationCodesOrg(
         val stubMessageMlc: StubMessageMlc?,
         @Json(name = "toggleButtonGroupOrg")
         val toggleButtonGroupOrg: ToggleButtonGroupOrg?
-    )
+    ): Parcelable
 }

@@ -19,11 +19,11 @@ data class InputNumberMlc(
     @Json(name = "mandatory")
     val mandatory: Boolean?,
     @Json(name = "maxValue")
-    val maxValue: Int?,
+    val maxValue: Long?,
     @Json(name = "minValue")
-    val minValue: Int?,
+    val minValue: Long?,
     @Json(name = "placeholder")
     val placeholder: String?,
     @Json(name = "value")
-    val value: Int?
+    val value: Long?
 )

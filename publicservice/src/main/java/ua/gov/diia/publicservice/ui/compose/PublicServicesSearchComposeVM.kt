@@ -9,12 +9,15 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import ua.gov.diia.publicservice.models.toDisplayService
-import ua.gov.diia.ui_base.navigation.BaseNavigation
+import ua.gov.diia.core.di.data_source.http.AuthorizedClient
 import ua.gov.diia.core.util.DispatcherProvider
+import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
@@ -23,20 +26,25 @@ import ua.gov.diia.publicservice.helper.PublicServiceHelper
 import ua.gov.diia.publicservice.models.PublicService
 import ua.gov.diia.publicservice.models.PublicServiceCategory
 import ua.gov.diia.publicservice.models.PublicServiceView
+import ua.gov.diia.publicservice.models.toDisplayService
+import ua.gov.diia.publicservice.network.ApiPublicServices
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.addIfNotNull
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.navigation.NavigationPath
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
-import ua.gov.diia.ui_base.util.navigation.generateComposeNavigationPanel
 import ua.gov.diia.ui_base.components.molecule.input.SearchInputV2Data
 import ua.gov.diia.ui_base.components.molecule.message.StubMessageMlcData
 import ua.gov.diia.ui_base.components.organism.list.ListItemGroupOrgData
+import ua.gov.diia.ui_base.navigation.BaseNavigation
+import ua.gov.diia.ui_base.util.navigation.generateComposeNavigationPanel
 import javax.inject.Inject
 
 @HiltViewModel
 class PublicServicesSearchComposeVM @Inject constructor(
+    @AuthorizedClient private val apiPublicServices: ApiPublicServices,
+    private val withCrashlytics: WithCrashlytics,
     private val dispatcher: DispatcherProvider,
     private val errorHandling: WithErrorHandlingOnFlow,
     private val retryLastAction: WithRetryLastAction,
@@ -78,6 +86,11 @@ class PublicServicesSearchComposeVM @Inject constructor(
         )
     val services = _services.asLiveData()
 
+    private val _contentLoadedKey = MutableStateFlow(UIActionKeysCompose.PAGE_LOADING_TRIDENT)
+    private val _contentLoaded = MutableStateFlow(true)
+    val contentLoaded: Flow<Pair<String, Boolean>> =
+        _contentLoaded.combine(_contentLoadedKey) { value, key -> key to value }
+
     init {
         viewModelScope.launch {
             queryFlow.collect(::filterServices)
@@ -95,8 +108,18 @@ class PublicServicesSearchComposeVM @Inject constructor(
                     val serviceView = event.data?.let { findPublicService(it) }
                     if (serviceView != null) {
                         val service =
-                            categories.find { category -> category.code == serviceView.categoryCode }?.publicServices?.find { service -> service.code == serviceView.code }
+                            categories.find { category -> category.code == serviceView.categoryCode }
+                                ?.publicServices
+                                ?.find { service -> service.code == serviceView.code }
                                 ?: return
+
+                        when (serviceView.code) {
+                            PS_ENEMY -> {
+                                openEnemyShareLink()
+                                return
+                            }
+                        }
+
                         _navigation.tryEmit(
                             PublicServicesCategoriesSearchNavigation.NavigateToService(
                                 service
@@ -211,10 +234,39 @@ class PublicServicesSearchComposeVM @Inject constructor(
         }
     }
 
+    private fun openEnemyShareLink() {
+        _navigation.tryEmit(PublicServicesCategoriesSearchNavigation.HideKeyboard)
+        _contentLoadedKey.value = UIActionKeysCompose.PAGE_LOADING_TRIDENT_WITH_UI_BLOCKING
+        executeActionOnFlow {
+            _contentLoaded.emit(false)
+            val response = try {
+                apiPublicServices.getFindEnemyShareLink()
+            } finally {
+                _contentLoaded.emit(true)
+            }
+
+            response.template?.let {
+                showTemplateDialog(it)
+            } ?: kotlin.run {
+                _navigation.tryEmit(
+                    PublicServicesCategoriesSearchNavigation.OpenEnemyTrackLink(
+                        response.link ?: return@executeActionOnFlow, withCrashlytics
+                    )
+                )
+            }
+        }
+    }
 }
 
 sealed class PublicServicesCategoriesSearchNavigation : NavigationPath {
 
     data class NavigateToService(val service: PublicService) :
         PublicServicesCategoriesSearchNavigation()
+
+    data class OpenEnemyTrackLink(val link: String, val crashlytics: WithCrashlytics) :
+        PublicServicesCategoriesSearchNavigation()
+
+    object HideKeyboard : PublicServicesCategoriesSearchNavigation()
 }
+
+private const val PS_ENEMY = "enemy"

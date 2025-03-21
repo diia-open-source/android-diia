@@ -25,6 +25,7 @@ import ua.gov.diia.core.models.common_compose.org.sharing.SharingCodesOrg
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.atom.button.BtnLoadPlainIconAtmData
 import ua.gov.diia.ui_base.components.atom.button.ButtonStrokeAdditionalAtomData
+import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -112,7 +113,6 @@ fun SharingCodesOrg(
                         }
                     }
                 }
-
             }
         }
         if ((progressIndicator.first == data.id && progressIndicator.second)) {
@@ -154,7 +154,6 @@ fun SharingCodesOrg(
             }
         }
     }
-
 }
 
 data class SharingCodesOrgData(
@@ -168,7 +167,6 @@ data class SharingCodesOrgData(
     val btnLoadIconPlainGroupMlc: BtnLoadIconPlainGroupMlcData? = null,
     val stubMessageMlc: StubMessageMlcData? = null,
 ) : UIElementData
-
 
 fun SharingCodesOrg.toUIModel(): SharingCodesOrgData {
     return SharingCodesOrgData(
@@ -287,7 +285,9 @@ private fun getStubMessageMlc(): StubMessageMlcData {
     return StubMessageMlcData(
         icon = UiText.DynamicString("\uD83D\uDD90"),
         title = UiText.DynamicString("На жаль, сталася помилка"),
-        description = UiText.DynamicString("Будь ласка, оновіть код для перевірки."),
+        description = TextWithParametersData(
+            text = UiText.DynamicString("Будь ласка, оновіть код для перевірки.")
+        ),
         button = ButtonStrokeAdditionalAtomData(
             id = "",
             title = UiText.DynamicString("Оновити"),

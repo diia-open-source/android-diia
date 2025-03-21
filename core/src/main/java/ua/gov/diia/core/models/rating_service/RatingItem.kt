@@ -1,6 +1,5 @@
 package ua.gov.diia.core.models.rating_service
 
-
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -14,5 +13,7 @@ data class RatingItem(
     @Json(name = "emoji")
     val emoji: String?,
     @Json(name = "rate")
-    val rate: String?
+    val rate: String?,
+
+    val isChecked: Boolean = false
 ) : Parcelable

@@ -21,27 +21,30 @@ import ua.gov.diia.core.models.dialogs.TemplateDialogModel
 import ua.gov.diia.ui_base.fragments.errordialog.RequestTryCountTracker
 import ua.gov.diia.core.util.CombinedLiveData
 import ua.gov.diia.core.util.alert.ClientAlertDialogsFactory
+import ua.gov.diia.core.util.delegation.WithErrorHandling
+import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
 import ua.gov.diia.core.util.extensions.noInternetException
+import ua.gov.diia.core.util.extensions.vm.executeAction
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
 class CompoundAddressSearchVM @Inject constructor(
     @AuthorizedClient private val apiAddressSearch: ApiAddressSearch,
-    private val clientAlertDialogsFactory: ClientAlertDialogsFactory,
     private val addressParameterMapper: AddressParameterMapper,
-) : ViewModel() {
+    private val errorHandling: WithErrorHandling,
+    private val retryLastAction: WithRetryLastAction,
+) : ViewModel(),
+    WithRetryLastAction by retryLastAction,
+    WithErrorHandling by errorHandling{
 
     private val _loading = MutableLiveData<Boolean>()
     val loading = _loading.asLiveData()
 
     private val _actionButtonLoading = MutableLiveData<Boolean>()
     val actionButtonLoading = _actionButtonLoading.asLiveData()
-
-    private val _showTemplateDialog = MutableLiveData<UiDataEvent<TemplateDialogModel>>()
-    val showTemplateDialog = _showTemplateDialog.asLiveData()
 
     private val _screenHeader = MutableLiveData<String?>()
     val screenHeader = _screenHeader.asLiveData()
@@ -913,42 +916,26 @@ class CompoundAddressSearchVM @Inject constructor(
     ) {
         _currentRequest = requestKey
 
-        viewModelScope.launch {
-            try {
-                //validates request input data
-                val code = _featureCode ?: return@launch
-                val schema = _addressSchema ?: return@launch
-                //creates request object
-                val request = AddressFieldRequest(listOf(requestData))
-                //starting loading process
-                _loading.value = true
-                val result = apiAddressSearch.getFieldContext(code, schema, request)
-                //clean up dependent fields before sent a new one
-                cleanUpEvent.invoke()
-                //sets field params for the corresponding fields
-                setFieldParams(result)
-                //after data has been loaded and set into appropriate field notifies caller
-                //to set his selection
-                nextFieldLoaded.invoke()
-                //resets the loading counter
-                _tryLoadRequestCount.reset()
-            } catch (e: Exception) {
-                consumeException(e)
-                _tryLoadRequestCount.increment()
-            } finally {
-                _loading.value = false
-            }
+        executeAction {
+            //validates request input data
+            val code = _featureCode ?: return@executeAction
+            val schema = _addressSchema ?: return@executeAction
+            //creates request object
+            val request = AddressFieldRequest(listOf(requestData))
+            //starting loading process
+            _loading.value = true
+            val result = apiAddressSearch.getFieldContext(code, schema, request)
+            //clean up dependent fields before sent a new one
+            cleanUpEvent.invoke()
+            //sets field params for the corresponding fields
+            setFieldParams(result)
+            //after data has been loaded and set into appropriate field notifies caller
+            //to set his selection
+            nextFieldLoaded.invoke()
+            //resets the loading counter
+            _tryLoadRequestCount.reset()
         }
-    }
 
-    private infix fun consumeException(e: Exception) {
-        val templateData = if (e.noInternetException()) {
-            clientAlertDialogsFactory.alertNoInternet()
-        } else {
-            val closable = _tryLoadRequestCount.tryCount < TRY_REQUEST_COUNT
-            clientAlertDialogsFactory.unknownErrorAlert(closable, e = e)
-        }
-        _showTemplateDialog.value = UiDataEvent(templateData)
     }
 
     //----------- Complete selection form -------
@@ -969,25 +956,19 @@ class CompoundAddressSearchVM @Inject constructor(
         //If this value is absent -> we need to collect data from editable fields and send it
         //to the backend to get the [AddressIdentifier] to complete flow.
         else {
-            viewModelScope.launch {
-                try {
-                    _actionButtonLoading.value = true
-                    val code = _featureCode ?: return@launch
-                    val schema = _addressSchema ?: return@launch
-                    val request = AddressFieldRequest(getRequestList())
 
-                    val result = apiAddressSearch.getFieldContext(code, schema, request)
-                    //return result form the address selection if the [AddressIdentifier] isn't a null
-                    result.address?.let { addressIdentifier ->
-                        _setAddressSelection.value = UiDataEvent(addressIdentifier)
-                    }
-                    _tryLoadRequestCount.reset()
-                } catch (e: Exception) {
-                    consumeException(e)
-                    _tryLoadRequestCount.increment()
-                } finally {
-                    _actionButtonLoading.value = false
+            executeAction {
+                _actionButtonLoading.value = true
+                val code = _featureCode ?: return@executeAction
+                val schema = _addressSchema ?: return@executeAction
+                val request = AddressFieldRequest(getRequestList())
+
+                val result = apiAddressSearch.getFieldContext(code, schema, request)
+                //return result form the address selection if the [AddressIdentifier] isn't a null
+                result.address?.let { addressIdentifier ->
+                    _setAddressSelection.value = UiDataEvent(addressIdentifier)
                 }
+                _tryLoadRequestCount.reset()
             }
         }
     }

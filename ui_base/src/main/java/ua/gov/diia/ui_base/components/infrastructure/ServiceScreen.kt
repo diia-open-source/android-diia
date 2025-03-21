@@ -10,10 +10,11 @@ import androidx.compose.ui.res.painterResource
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
-import ua.gov.diia.ui_base.components.infrastructure.screen.BodyRootContainer
+import ua.gov.diia.ui_base.components.infrastructure.screen.BodyRootLazyContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.BottomBarRootContainer
 import ua.gov.diia.ui_base.components.infrastructure.screen.ComposeRootScreen
 import ua.gov.diia.ui_base.components.infrastructure.screen.ToolbarRootContainer
+import ua.gov.diia.ui_base.components.infrastructure.utils.ContainerType
 import ua.gov.diia.ui_base.components.molecule.header.NavigationPanelMlcData
 import ua.gov.diia.ui_base.components.provideTestTagsAsResourceId
 
@@ -43,6 +44,7 @@ fun ServiceScreen(
             )
             .provideTestTagsAsResourceId(),
         contentLoaded = contentLoaded,
+        progressIndicator = progressIndicator,
         toolbar = {
             ToolbarRootContainer(
                 toolbarViews = toolbar,
@@ -50,12 +52,14 @@ fun ServiceScreen(
             )
         },
         body = {
-            BodyRootContainer(
+            BodyRootLazyContainer(
                 bodyViews = body,
+                displayBlockDivider = !bottom.isNullOrEmpty(),
                 progressIndicator = progressIndicator,
                 contentLoaded = contentLoaded,
+                connectivityState = connectivityState,
                 onUIAction = onEvent,
-                connectivityState = connectivityState
+                containerType = ContainerType.SERVICE
             )
         },
         bottom = {

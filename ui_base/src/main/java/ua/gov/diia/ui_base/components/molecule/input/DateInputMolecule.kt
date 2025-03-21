@@ -172,16 +172,6 @@ data class DateInputMoleculeData(
     }
 }
 
-fun InputDateMlc.toUiModel(): DateInputMoleculeData {
-    return DateInputMoleculeData(
-        componentId = this.componentId?.let { UiText.DynamicString(it) },
-        id = this.id,
-        label = this.label,
-        inputValue = this.value,
-        hintMessage = this.hint
-    )
-}
-
 @Composable
 @Preview
 fun DateInputMoleculePreview_Empty() {

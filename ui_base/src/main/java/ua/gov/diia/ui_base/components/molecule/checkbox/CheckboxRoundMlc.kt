@@ -15,15 +15,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ua.gov.diia.core.models.common_compose.mlc.checkbox.CheckboxRoundMlc
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.conditional
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.state.UIState
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.noRippleClickable
 import ua.gov.diia.ui_base.components.theme.Black
 import ua.gov.diia.ui_base.components.theme.BlackAlpha30
@@ -37,20 +40,20 @@ fun CheckboxRoundMlc(
     data: CheckboxRoundMlcData,
     onUIAction: (UIAction) -> Unit
 ) {
-
     Row(
         modifier = modifier
-        .padding(all = 16.dp)
-        .conditional(data.interactionState == UIState.Interaction.Enabled) {
-        noRippleClickable {
-            onUIAction(
-                UIAction(
-                    actionKey = data.actionKey,
-                    data = data.id
-                )
-            )
-        }
-    },
+            .testTag(data.componentId?.asString() ?: "")
+            .padding(all = 16.dp)
+            .conditional(data.interactionState == UIState.Interaction.Enabled) {
+                noRippleClickable {
+                    onUIAction(
+                        UIAction(
+                            actionKey = data.actionKey,
+                            data = data.id
+                        )
+                    )
+                }
+            },
         verticalAlignment = Alignment.Top
     ) {
         Box(modifier = Modifier
@@ -121,6 +124,7 @@ fun CheckboxRoundMlc(
 data class CheckboxRoundMlcData(
     val actionKey: String = UIActionKeysCompose.CHECKBOX_REGULAR,
     val id: String,
+    val componentId: UiText? = null,
     val label: String,
     val description: String? = null,
     val status: String? = null,
@@ -130,19 +134,101 @@ data class CheckboxRoundMlcData(
     public fun onCheckboxClick(): CheckboxRoundMlcData {
         return this.copy(selectionState = this.selectionState.reverse())
     }
+
+    fun uncheckCheckbox(): CheckboxRoundMlcData {
+        return this.copy(selectionState = UIState.Selection.Unselected)
+    }
+}
+
+fun CheckboxRoundMlc.toUIModel(): CheckboxRoundMlcData {
+    this.let {
+        return CheckboxRoundMlcData(
+            id = this.id ?: "",
+            componentId = this.componentId?.let { UiText.DynamicString(it) },
+            label = this.label,
+            description = this.description,
+            interactionState = when (this.state) {
+                CbState.REST.type -> UIState.Interaction.Enabled
+                CbState.SELECTED.type -> UIState.Interaction.Enabled
+                CbState.DISABLE.type -> UIState.Interaction.Disabled
+                CbState.DISABLE_SELECTED.type -> UIState.Interaction.Disabled
+                else -> UIState.Interaction.Enabled
+            },
+            selectionState = when (this.state) {
+                CbState.REST.type -> UIState.Selection.Unselected
+                CbState.SELECTED.type -> UIState.Selection.Selected
+                CbState.DISABLE.type -> UIState.Selection.Unselected
+                CbState.DISABLE_SELECTED.type -> UIState.Selection.Selected
+                else -> UIState.Selection.Unselected
+            }
+        )
+    }
+}
+
+enum class CbState(val type: String) {
+    REST("rest"),
+    SELECTED("selected"),
+    DISABLE("disable"),
+    DISABLE_SELECTED("disableSelected")
+}
+
+
+enum class CheckBoxRoundMlcMockType {
+    selected_no_description, selected, unselected, disabled
+}
+
+fun generateCheckBoxRoundMlcMockData(mockType: CheckBoxRoundMlcMockType): CheckboxRoundMlcData {
+    return when (mockType) {
+        CheckBoxRoundMlcMockType.selected -> {
+            CheckboxRoundMlcData(
+                id = "",
+                label = "Selected",
+                description = "description",
+                status = "status",
+                interactionState = UIState.Interaction.Enabled,
+                selectionState = UIState.Selection.Selected
+            )
+        }
+
+        CheckBoxRoundMlcMockType.selected_no_description -> {
+            CheckboxRoundMlcData(
+                id = "",
+                label = "Selected, no description",
+                description = null,
+                status = "status",
+                interactionState = UIState.Interaction.Enabled,
+                selectionState = UIState.Selection.Selected
+            )
+        }
+
+        CheckBoxRoundMlcMockType.unselected -> {
+            CheckboxRoundMlcData(
+                id = "",
+                label = "Unselected",
+                description = "description",
+                status = "status",
+                interactionState = UIState.Interaction.Enabled,
+                selectionState = UIState.Selection.Unselected
+            )
+        }
+
+        CheckBoxRoundMlcMockType.disabled -> {
+            CheckboxRoundMlcData(
+                id = "",
+                label = "Disabled",
+                description = "description",
+                status = "status",
+                interactionState = UIState.Interaction.Disabled,
+                selectionState = UIState.Selection.Unselected
+            )
+        }
+    }
 }
 
 @Composable
 @Preview
 fun CheckboxRoundMlcPreviewNoDescription_Selected() {
-    val data = CheckboxRoundMlcData(
-        id = "",
-        label = "label",
-        description = null,
-        status = "status",
-        interactionState = UIState.Interaction.Enabled,
-        selectionState = UIState.Selection.Selected
-    )
+    val data = generateCheckBoxRoundMlcMockData(CheckBoxRoundMlcMockType.selected_no_description)
     val state = remember { mutableStateOf(data) }
     CheckboxRoundMlc(data = data) {
         state.value = state.value.onCheckboxClick()
@@ -152,14 +238,7 @@ fun CheckboxRoundMlcPreviewNoDescription_Selected() {
 @Composable
 @Preview
 fun CheckboxRoundMlcPreview_Selected() {
-    val data = CheckboxRoundMlcData(
-        id = "",
-        label = "label",
-        description = "description",
-        status = "status",
-        interactionState = UIState.Interaction.Enabled,
-        selectionState = UIState.Selection.Selected
-    )
+    val data = generateCheckBoxRoundMlcMockData(CheckBoxRoundMlcMockType.selected)
     val state = remember { mutableStateOf(data) }
     CheckboxRoundMlc(data = data) {
         state.value = state.value.onCheckboxClick()
@@ -169,29 +248,13 @@ fun CheckboxRoundMlcPreview_Selected() {
 @Composable
 @Preview
 fun CheckboxRoundMlcPreview_UnSelected() {
-    val data = CheckboxRoundMlcData(
-        id = "",
-        label = "label",
-        description = "description",
-        status = "status",
-        interactionState = UIState.Interaction.Enabled,
-        selectionState = UIState.Selection.Unselected
-    )
-    val state = remember { mutableStateOf(data) }
+    val data = generateCheckBoxRoundMlcMockData(CheckBoxRoundMlcMockType.unselected)
     CheckboxRoundMlc(data = data) {}
 }
 
 @Composable
 @Preview
 fun CheckboxRoundMlcPreview_Disabled() {
-    val data = CheckboxRoundMlcData(
-        id = "",
-        label = "label",
-        description = "description",
-        status = "status",
-        interactionState = UIState.Interaction.Disabled,
-        selectionState = UIState.Selection.Unselected
-    )
-    val state = remember { mutableStateOf(data) }
+    val data = generateCheckBoxRoundMlcMockData(CheckBoxRoundMlcMockType.disabled)
     CheckboxRoundMlc(data = data) {}
 }

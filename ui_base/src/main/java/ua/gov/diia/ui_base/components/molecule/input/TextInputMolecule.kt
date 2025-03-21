@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
@@ -50,6 +49,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ua.gov.diia.core.util.phone.PHONE_NUMBER_VALIDATION_PATTERN
+import ua.gov.diia.core.util.phone.PHONE_NUMBER_VALIDATION_PATTERN_WITH_ALLOWED_PLUS
 import ua.gov.diia.ui_base.R
 import ua.gov.diia.ui_base.components.atom.button.BtnPrimaryDefaultAtmData
 import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
@@ -74,7 +75,6 @@ import ua.gov.diia.ui_base.components.theme.Red
 import ua.gov.diia.ui_base.components.theme.White
 
 @OptIn(
-    ExperimentalComposeUiApi::class,
     ExperimentalLayoutApi::class,
     ExperimentalFoundationApi::class
 )
@@ -91,6 +91,7 @@ fun TextInputMolecule(
     val bringIntoErrorViewRequester = BringIntoViewRequester()
     val bringIntoHintViewRequester = BringIntoViewRequester()
     val bringIntoInputViewRequester = BringIntoViewRequester()
+    val focusRequester = remember { FocusRequester() }
 
     if (WindowInsets.isImeVisible) {
         LaunchedEffect(Unit) {
@@ -104,7 +105,16 @@ fun TextInputMolecule(
         }
     }
 
-    BasicTextField(value = data.inputValue ?: "", enabled = data.isEnabled, modifier = modifier
+    LaunchedEffect(Unit) {
+        if (data.showKeyboardFromStart) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
+    }
+
+    BasicTextField(
+        modifier = modifier
+            .focusRequester(focusRequester)
             .onFocusChanged {
                 focusState = when (focusState) {
                     UIState.Focus.NeverBeenFocused -> {
@@ -128,6 +138,8 @@ fun TextInputMolecule(
                 }
             }
             .bringIntoViewRequester(bringIntoInputViewRequester),
+        value = data.inputValue.orEmpty(),
+        enabled = data.isEnabled,
         onValueChange = { newValue ->
             onUIAction(
                 UIAction(
@@ -137,34 +149,42 @@ fun TextInputMolecule(
                     optionalId = data.id
                 )
             )
-        }, textStyle = TextStyle(
+        },
+        textStyle = TextStyle(
             fontFamily = FontFamily(Font(R.font.e_ukraine_regular)),
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
             lineHeight = 17.sp,
-            color = getColorForInput(data.isEnabled, focusState, data.validation)
-        ), keyboardOptions = KeyboardOptions(
-            imeAction = imeAction, keyboardType = data.keyboardType
-        ), keyboardActions = KeyboardActions(onNext = {
-            localFocusManager.moveFocus(FocusDirection.Next)
-        }, onDone = {
-            keyboardController?.let {
-                it.hide()
-                localFocusManager.clearFocus()
+            color = getColorForInput(data.isEnabled)
+        ),
+        keyboardOptions = KeyboardOptions(
+            imeAction = imeAction,
+            keyboardType = data.keyboardType
+        ),
+        keyboardActions = KeyboardActions(
+            onNext = {
+                localFocusManager.moveFocus(FocusDirection.Next)
+            },
+            onDone = {
+                keyboardController?.let {
+                    localFocusManager.clearFocus()
+                    it.hide()
+                }
             }
-        }),
+        ),
         singleLine = true,
-        cursorBrush = SolidColor(getColorForInput(data.isEnabled, focusState, data.validation)),
+        cursorBrush = SolidColor(getColorForInput(data.isEnabled)),
         decorationBox = @Composable { innerTextField ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag(data.componentId?.asString() ?: ""),
+                    .testTag(data.componentId?.asString().orEmpty()),
             ) {
                 data.label?.let {
                     Text(
                         text = data.label,
                         style = DiiaTextStyle.t4TextSmallDescription,
+                        color = getColorForLabel(data.validation)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                 }
@@ -172,7 +192,7 @@ fun TextInputMolecule(
                 Box(modifier = Modifier.fillMaxWidth()) {
                     if (data.inputValue.isNullOrEmpty()) {
                         Text(
-                            text = data.placeholder ?: "",
+                            text = data.placeholder.orEmpty(),
                             style = DiiaTextStyle.t1BigText,
                             color = getColorForPlaceholder(
                                 focusState = focusState,
@@ -196,9 +216,9 @@ fun TextInputMolecule(
                             )
                         )
                 )
+
                 AnimatedVisibility(
-                    data.validation == UIState.Validation.Failed && (focusState != UIState.Focus.NeverBeenFocused
-                            && focusState != UIState.Focus.FirstTimeInFocus)
+                    data.validation == UIState.Validation.Failed && (focusState != UIState.Focus.NeverBeenFocused)
                 ) {
                     data.errorMessage?.let { errorMsg ->
                         Text(
@@ -213,7 +233,7 @@ fun TextInputMolecule(
                 }
 
                 AnimatedVisibility(
-                    data.validation != UIState.Validation.Failed && focusState == UIState.Focus.FirstTimeInFocus
+                    data.validation != UIState.Validation.Failed
                 ) {
                     data.hintMessage?.let {
                         Text(
@@ -230,7 +250,6 @@ fun TextInputMolecule(
         }
     )
 }
-
 
 private fun getColorForPlaceholder(
     focusState: UIState.Focus,
@@ -255,7 +274,14 @@ private fun getColorForBottomLine(
 ): Color {
     return when (focusState) {
         UIState.Focus.NeverBeenFocused -> BlackAlpha30
-        UIState.Focus.FirstTimeInFocus -> Black
+
+        UIState.Focus.FirstTimeInFocus -> {
+            when (validationState) {
+                UIState.Validation.Failed -> Red
+                else -> Black
+            }
+        }
+
         UIState.Focus.InFocus -> {
             when (validationState) {
                 UIState.Validation.Failed -> Red
@@ -266,29 +292,27 @@ private fun getColorForBottomLine(
         UIState.Focus.OutOfFocus -> {
             when (validationState) {
                 UIState.Validation.Failed -> Red
-                else -> if (inputValue.isNullOrEmpty()) BlackAlpha30 else Black
+                else -> BlackAlpha30
+//                else -> if (inputValue.isNullOrEmpty()) BlackAlpha30 else Black
             }
         }
     }
 }
 
-private fun getColorForInput(
-    isEnabled: Boolean, focusState: UIState.Focus, validationState: UIState.Validation): Color {
-    return if (isEnabled){
-        when (focusState) {
-            UIState.Focus.NeverBeenFocused, UIState.Focus.FirstTimeInFocus -> Black
-            UIState.Focus.InFocus, UIState.Focus.OutOfFocus -> {
-                when (validationState) {
-                    UIState.Validation.Failed -> Red
-                    else -> Black
-                }
-            }
-        }
+private fun getColorForInput(isEnabled: Boolean): Color {
+    return if (isEnabled) {
+        Black
     } else {
         BlackAlpha30
     }
 }
 
+private fun getColorForLabel(validationState: UIState.Validation): Color {
+    return when (validationState) {
+        UIState.Validation.Failed -> Red
+        else -> Black
+    }
+}
 
 data class TextInputMoleculeData(
     val actionKey: String = UIActionKeysCompose.TEXT_INPUT,
@@ -303,8 +327,10 @@ data class TextInputMoleculeData(
     val validationData: List<ValidationTextItem>? = null,
     val keyboardType: KeyboardType = KeyboardType.Text,
     val validation: UIState.Validation = UIState.Validation.NeverBeenPerformed,
-    val isEnabled : Boolean = true,
+    val isEnabled: Boolean = true,
+    val showKeyboardFromStart: Boolean = false
 ) : InputFormItem() {
+
     data class ValidationTextItem(
         val regex: String,
         val flags: List<String>,
@@ -315,9 +341,11 @@ data class TextInputMoleculeData(
         if (newValue == null) return this
 
         val numRegex = "^[+,0-9]"
-        val newValidationValue = if(this.id == "phoneNumber") {
-            newValue.filter { n -> numRegex.toRegex().matches(n.toString())}
-        } else { newValue }
+        val newValidationValue = if (this.id == "phoneNumber") {
+            newValue.filter { n -> numRegex.toRegex().matches(n.toString()) }
+        } else {
+            newValue
+        }
 
         return this.copy(
             inputValue = newValidationValue,
@@ -339,7 +367,11 @@ data class TextInputMoleculeData(
 
     private fun dataValidation(value: String): UIState.Validation {
         var isMatches: Boolean? = null
-        this.validationData?.forEach {
+        //in case no validation data, we assume it is passed
+        if (validationData.isNullOrEmpty()) {
+            return UIState.Validation.Passed
+        }
+        this.validationData.forEach {
             if (value.matches(Regex(it.regex))) {
                 isMatches = true
             } else {
@@ -384,15 +416,9 @@ data class TextInputMoleculeData(
     }
 }
 
-
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 @Preview
 fun TextInputMoleculePreview() {
-
-    val PHONE_NUMBER_VALIDATION_PATTERN =
-        "^38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
-
     val data = TextInputMoleculeData(
         id = "",
         label = LoremIpsum(6).values.joinToString(),
@@ -437,14 +463,9 @@ fun TextInputMoleculePreview() {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 @Preview
 fun TextInputMoleculePreview_Prefilled() {
-
-    val PHONE_NUMBER_VALIDATION_PATTERN =
-        "^38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
-
     val data = TextInputMoleculeData(
         id = "",
         label = LoremIpsum(6).values.joinToString(),
@@ -490,19 +511,16 @@ fun TextInputMoleculePreview_Prefilled() {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Preview
 @Composable
 fun InputWithScroll_Preview() {
     val EMAIL_VALIDATION_PATTERN = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
-            "\\@" +
-            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-            "(" +
-            "\\." +
-            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-            ")+"
-    val PHONE_NUMBER_VALIDATION_PATTERN =
-        "^\\+?38(039|050|063|066|067|068|073|091|092|093|094|095|096|097|098|099)\\d{7}\$"
+        "\\@" +
+        "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+        "(" +
+        "\\." +
+        "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+        ")+"
 
     val toolbarData: SnapshotStateList<UIElementData> =
         SnapshotStateList<UIElementData>().addAllIfNotNull(
@@ -536,7 +554,7 @@ fun InputWithScroll_Preview() {
                             inputValue = "",
                             validationData = listOf(
                                 TextInputMoleculeData.ValidationTextItem(
-                                    regex = PHONE_NUMBER_VALIDATION_PATTERN,
+                                    regex = PHONE_NUMBER_VALIDATION_PATTERN_WITH_ALLOWED_PLUS,
                                     flags = listOf(),
                                     errorMessage = "error",
                                 )
@@ -601,5 +619,6 @@ fun InputWithScroll_Preview() {
         bottom = bottomData,
         onEvent = {
             onNewValue(it.optionalId, it.data)
-        })
+        }
+    )
 }

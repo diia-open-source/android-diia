@@ -6,15 +6,15 @@ This is module responsible for documents and logic around it.
 1. Copy module folder to your project and add module to gradle dependency like this:
 
 ```groovy
-implementation project(':documents')
+implementation project(':doc:documents')
 ```
 
 2. Module requires next modules to work
 ```groovy
-implementation project(':core')
-implementation project(':diia_storage')
-implementation project(':web')
-implementation project(path: ':ui_base')
+implementation project(':libs:core')
+implementation project(':libs:diia_storage')
+implementation project(':libs:web')
+implementation project(path: ':libs:ui_base')
 ```
 
 3. nav_id file describe all ids that this module requires. Entry point should implement all those ids.

@@ -2,7 +2,7 @@ package ua.gov.diia.documents.data.datasource.local
 
 import ua.gov.diia.core.network.Http
 import ua.gov.diia.diia_storage.store.Preferences
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 import javax.inject.Inject
 
 class DefaultDocGroupUpdateBehavior @Inject constructor(): DocGroupUpdateBehavior {

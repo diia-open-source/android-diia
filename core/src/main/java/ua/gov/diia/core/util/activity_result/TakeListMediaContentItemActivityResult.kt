@@ -1,28 +1,32 @@
 package ua.gov.diia.core.util.activity_result
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.webkit.MimeTypeMap
 import androidx.activity.result.contract.ActivityResultContract
 import ua.gov.diia.core.models.media.MediaFileType
 import ua.gov.diia.core.models.media.MediaItem
 
 class TakeListMediaContentItemActivityResult(
     private val context: Context,
-    private val media: MediaFileType? = null
+    private val media: MediaFileType? = null,
+    private val allowedFormats: List<String> = listOf(),
+    private val isMultipleAllowed : Boolean = true
 ) : ActivityResultContract<Unit, List<MediaItem>?>() {
 
     override fun createIntent(context: Context, input: Unit): Intent =
         Intent(Intent.ACTION_PICK).apply {
             type = media?.ime ?: "image/*"
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, isMultipleAllowed)
             if (media == null) {
                 putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
             }
         }
 
-    override fun parseResult(resultCode: Int, intent: Intent?):List <MediaItem>? {
+    override fun parseResult(resultCode: Int, intent: Intent?): List<MediaItem>? {
         val mediaItemList = mutableListOf<MediaItem>()
         if (intent?.data != null) {
             val uri = intent.data ?: return null
@@ -44,6 +48,14 @@ class TakeListMediaContentItemActivityResult(
     }
 
     private fun Uri.getMediaContentType(): MediaFileType? {
+        val mimeType = context.contentResolver.getType(this)
+        if (mimeType == null) {
+            return null
+        }
+        val format = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
+        if (allowedFormats.isNotEmpty() && !allowedFormats.contains(format)) {
+            return null
+        }
         val uriString = this.toString()
         return when {
             uriString.contains("images") -> MediaFileType.IMAGE
@@ -56,6 +68,10 @@ class TakeListMediaContentItemActivityResult(
             uriString.contains("png") -> MediaFileType.IMAGE
             uriString.contains("webp") -> MediaFileType.IMAGE
             uriString.contains("avif") -> MediaFileType.IMAGE
+            uriString.contains("raw") -> MediaFileType.IMAGE
+            uriString.contains("DCIM") -> MediaFileType.IMAGE
+            uriString.contains("tiff") -> MediaFileType.IMAGE
+            uriString.contains("heic") -> MediaFileType.IMAGE
 
             uriString.contains("video") -> MediaFileType.VIDEO
             else -> null

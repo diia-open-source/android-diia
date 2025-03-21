@@ -18,7 +18,12 @@ fun Fragment.openTemplateDialog(
     @IdRes destinationId: Int = -1
 ) {
     if (currentDestinationId != R.id.template_dialog) {
-        navigate(NavTemplateDialogDirections.actionGlobalToTemplateDialog(templateDialogModel, destinationId))
+        navigate(
+            NavTemplateDialogDirections.actionGlobalToTemplateDialog(
+                templateDialogModel,
+                destinationId
+            )
+        )
     }
 }
 

@@ -18,5 +18,7 @@ data class DiiaResponse(
     @Json(name = "template")
     val template: TemplateDialogModel?,
     @Json(name = "ratingForm")
-    val ratingForm: RatingFormModel?
+    val ratingForm: RatingFormModel?,
+    @Json(name = "nextStep")
+    val nextStep: String?,
 )

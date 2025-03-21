@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -29,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
@@ -156,6 +158,120 @@ data class MessageListOrganismData(
     val items: Flow<PagingData<MessageMoleculeData>>,
     val emptyData: StubMessageMlcData
 ) : UIElementData
+
+class MessageListState {
+    val revealedItems = mutableStateListOf<String>()
+    val deletedItems = mutableStateListOf<String>()
+
+    fun deleteItem(itemId: String) {
+        deletedItems.add(itemId)
+    }
+}
+
+
+fun LazyListScope.loadMessageListOrganism(
+    modifier: Modifier = Modifier,
+    items: LazyPagingItems<MessageMoleculeData>,
+    onUIAction: (UIAction) -> Unit,
+    state: MessageListState
+) {
+    val loadState = items.loadState
+    val finishedLoading =
+        loadState.refresh !is LoadState.Loading &&
+                loadState.prepend !is LoadState.Loading &&
+                loadState.append !is LoadState.Loading
+
+    if (items.itemCount == 0 && finishedLoading || state.deletedItems.size == items.itemCount && finishedLoading) {
+        item {
+            Box(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.8f),
+                contentAlignment = Center
+            ) {
+                StubMessageMlc(
+                    modifier = modifier.wrapContentSize(),
+                    data = StubMessageMlcData(
+                        icon = UiText.StringResource(R.string.error_message_notifications_icon),
+                        title = UiText.StringResource(R.string.error_message_notifications_empty)
+                    ),
+                    onUIAction = onUIAction
+                )
+            }
+        }
+    } else {
+        items(
+            count = items.itemCount,
+            key = items.itemKey(key = { it.id }),
+            contentType = items.itemContentType()
+        ) { index ->
+            val item = items[index]
+            item?.let {
+                AnimatedVisibility(
+                    visible = !state.deletedItems.contains(item.id),
+                    enter = expandVertically(),
+                    exit = slideOutHorizontally(targetOffsetX = { -it }) + fadeOut(targetAlpha = 0.2f)
+                ) {
+                    Box(Modifier.fillMaxWidth()) {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .clickable {
+                                    item.notificationId?.let {
+                                        state.deleteItem(item.id)
+                                    }
+                                    onUIAction.invoke(
+                                        UIAction(
+                                            actionKey = "removeNotification",
+                                            data = item.notificationId
+                                        )
+                                    )
+                                }
+                        ) {
+                            AnimatedVisibility(
+                                visible = state.revealedItems.contains(item.id),
+                                enter = fadeIn(),
+                                exit = shrinkOut(shrinkTowards = Center) + fadeOut(
+                                    animationSpec = tween(
+                                        durationMillis = 100,
+                                        delayMillis = 0,
+                                        easing = FastOutSlowInEasing
+                                    )
+                                )
+                            ) {
+                                IconWithBadge(
+                                    modifier = Modifier
+                                        .padding(top = 16.dp, end = 24.dp)
+                                        .size(40.dp),
+                                    image = UiText.StringResource(R.drawable.ic_button_remove),
+                                )
+                            }
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 24.dp, end = 24.dp)
+                                .align(Alignment.BottomEnd)
+                        ) {
+                            DraggableMessageMolecule(
+                                data = item,
+                                isRevealed = state.revealedItems.contains(item.id),
+                                cardOffset = CARD_OFFSET.dp(),
+                                onExpand = { state.revealedItems.add(item.id) },
+                                onCollapse = { state.revealedItems.remove(item.id) },
+                                onUIAction = onUIAction
+                            )
+                        }
+                    }
+                }
+                if (index == items.itemCount - 1) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 @Preview

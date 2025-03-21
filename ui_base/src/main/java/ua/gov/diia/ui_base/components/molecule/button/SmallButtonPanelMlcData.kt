@@ -56,8 +56,10 @@ fun SmallButtonPanelMlc(
         }
 
         BtnStrokeAdditionalAtm(
-            data = data.buttonStrokeAdditionalAtomData,
-            onUIAction = onUIAction
+            data = data.buttonStrokeAdditionalAtomData.copy(
+                shrinkHorizontalPaddings = true
+            ),
+            onUIAction = onUIAction,
         )
 
     }
@@ -70,11 +72,8 @@ data class SmallButtonPanelMlcData(
     val buttonStrokeAdditionalAtomData: ButtonStrokeAdditionalAtomData
 ) : UIElementData
 
-
-@Composable
-@Preview
-fun SmallButtonPanelMlcPreview() {
-    val data = SmallButtonPanelMlcData(
+fun generateSmallButtonPanelMlcMockData(): SmallButtonPanelMlcData {
+    return SmallButtonPanelMlcData(
         icon = UiText.DynamicString("⭐️"),
         label = UiText.DynamicString("Рейтинг: немає"),
         secondaryLabel = UiText.DynamicString("Усього 7 голосів"),
@@ -82,5 +81,10 @@ fun SmallButtonPanelMlcPreview() {
             title = UiText.DynamicString("Оцінити")
         )
     )
-    SmallButtonPanelMlc(data = data) {}
+}
+
+@Composable
+@Preview
+fun SmallButtonPanelMlcPreview() {
+    SmallButtonPanelMlc(data = generateSmallButtonPanelMlcMockData()) {}
 }

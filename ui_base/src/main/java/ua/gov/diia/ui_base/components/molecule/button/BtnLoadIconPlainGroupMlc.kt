@@ -84,86 +84,120 @@ fun BtnLoadIconPlainGroupMlc.toUIModel(): BtnLoadIconPlainGroupMlcData {
     )
 }
 
+enum class BtnLoadIconPlainGroupMlcMockType {
+    enabled, loading, one
+}
+
+fun generateBtnLoadIconPlainGroupMlcMockData(mockType: BtnLoadIconPlainGroupMlcMockType): BtnLoadIconPlainGroupMlcData {
+    when (mockType) {
+        BtnLoadIconPlainGroupMlcMockType.enabled -> {
+            val btn1 = BtnLoadPlainIconAtmData(
+                componentId = "component_id".toDynamicString(),
+                id = "id1",
+                label = "Зареєструвати авто".toDynamicString(),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
+                action = DataActionWrapper(
+                    type = "register",
+                    resource = "1234567890"
+                ),
+                interactionState = UIState.Interaction.Enabled
+            )
+            val btn2 = BtnLoadPlainIconAtmData(
+                componentId = "component_id".toDynamicString(),
+                id = "id2",
+                label = "Продати авто".toDynamicString(),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
+                action = DataActionWrapper(
+                    type = "register",
+                    resource = "1234567890"
+                ),
+                interactionState = UIState.Interaction.Enabled
+            )
+            val btn3 = BtnLoadPlainIconAtmData(
+                componentId = "component_id".toDynamicString(),
+                id = "id3",
+                label = "Купити авто".toDynamicString(),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
+                action = DataActionWrapper(
+                    type = "register",
+                    resource = "1234567890"
+                ),
+                interactionState = UIState.Interaction.Enabled
+            )
+            return BtnLoadIconPlainGroupMlcData(items = listOf(btn1, btn2, btn3))
+        }
+
+        BtnLoadIconPlainGroupMlcMockType.loading -> {
+            val btn1 = BtnLoadPlainIconAtmData(
+                componentId = "component_id".toDynamicString(),
+                id = "id1",
+                label = "Зареєструвати авто".toDynamicString(),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
+                action = DataActionWrapper(
+                    type = "register",
+                    resource = "1234567890"
+                ),
+                interactionState = UIState.Interaction.Enabled
+            )
+            val btn2 = BtnLoadPlainIconAtmData(
+                componentId = "component_id".toDynamicString(),
+                id = "id2",
+                label = "Продати авто".toDynamicString(),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
+                action = DataActionWrapper(
+                    type = "register",
+                    resource = "1234567890"
+                ),
+                interactionState = UIState.Interaction.Enabled
+            )
+            val btn3 = BtnLoadPlainIconAtmData(
+                componentId = "component_id".toDynamicString(),
+                id = "id3",
+                label = "Купити авто".toDynamicString(),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
+                action = DataActionWrapper(
+                    type = "register",
+                    resource = "1234567890"
+                ),
+                interactionState = UIState.Interaction.Enabled
+            )
+            return BtnLoadIconPlainGroupMlcData(items = listOf(btn1, btn2, btn3))
+        }
+
+        BtnLoadIconPlainGroupMlcMockType.one -> {
+            val btn1 = BtnLoadPlainIconAtmData(
+                componentId = "component_id".toDynamicString(),
+                id = "id1",
+                label = "Зареєструвати авто".toDynamicString(),
+                icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
+                action = DataActionWrapper(
+                    type = "register",
+                    resource = "1234567890"
+                ),
+                interactionState = UIState.Interaction.Enabled
+            )
+            return BtnLoadIconPlainGroupMlcData(items = listOf(btn1))
+        }
+
+    }
+}
+
 @Composable
 @Preview
 fun BtnLoadIconPlainGroupMlcPreview() {
-    val btn1 = BtnLoadPlainIconAtmData(
-        componentId = "component_id".toDynamicString(),
-        id = "id1",
-        label = "Зареєструвати авто".toDynamicString(),
-        icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
-        action = DataActionWrapper(
-            type = "register",
-            resource = "1234567890"
-        ),
-        interactionState = UIState.Interaction.Enabled
-    )
-    val btn2 = BtnLoadPlainIconAtmData(
-        componentId = "component_id".toDynamicString(),
-        id = "id2",
-        label = "Продати авто".toDynamicString(),
-        icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
-        action = DataActionWrapper(
-            type = "register",
-            resource = "1234567890"
-        ),
-        interactionState = UIState.Interaction.Enabled
-    )
-    val btn3 = BtnLoadPlainIconAtmData(
-        componentId = "component_id".toDynamicString(),
-        id = "id3",
-        label = "Купити авто".toDynamicString(),
-        icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
-        action = DataActionWrapper(
-            type = "register",
-            resource = "1234567890"
-        ),
-        interactionState = UIState.Interaction.Enabled
-    )
-    val data = BtnLoadIconPlainGroupMlcData(items = listOf(btn1, btn2, btn3))
-    BtnLoadIconPlainGroupMlc(Modifier, data) {}
+    BtnLoadIconPlainGroupMlc(
+        Modifier,
+        data = generateBtnLoadIconPlainGroupMlcMockData(BtnLoadIconPlainGroupMlcMockType.enabled)
+    ) {}
 }
 
 @Composable
 @Preview
 fun BtnLoadIconPlainGroupMlcPreview_Loading() {
-    val btn1 = BtnLoadPlainIconAtmData(
-        componentId = "component_id".toDynamicString(),
-        id = "id1",
-        label = "Зареєструвати авто".toDynamicString(),
-        icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
-        action = DataActionWrapper(
-            type = "register",
-            resource = "1234567890"
-        ),
-        interactionState = UIState.Interaction.Enabled
-    )
-    val btn2 = BtnLoadPlainIconAtmData(
-        componentId = "component_id".toDynamicString(),
-        id = "id2",
-        label = "Продати авто".toDynamicString(),
-        icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
-        action = DataActionWrapper(
-            type = "register",
-            resource = "1234567890"
-        ),
-        interactionState = UIState.Interaction.Enabled
-    )
-    val btn3 = BtnLoadPlainIconAtmData(
-        componentId = "component_id".toDynamicString(),
-        id = "id3",
-        label = "Купити авто".toDynamicString(),
-        icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
-        action = DataActionWrapper(
-            type = "register",
-            resource = "1234567890"
-        ),
-        interactionState = UIState.Interaction.Enabled
-    )
-    val data = BtnLoadIconPlainGroupMlcData(items = listOf(btn1, btn2, btn3))
+
     BtnLoadIconPlainGroupMlc(
         modifier = Modifier,
-        data = data,
+        data = generateBtnLoadIconPlainGroupMlcMockData(BtnLoadIconPlainGroupMlcMockType.loading),
         progressIndicator = "id2" to true
     ) {}
 }
@@ -171,17 +205,8 @@ fun BtnLoadIconPlainGroupMlcPreview_Loading() {
 @Composable
 @Preview
 fun BtnLoadIconPlainGroupMlcPreview_one() {
-    val btn1 = BtnLoadPlainIconAtmData(
-        componentId = "component_id".toDynamicString(),
-        id = "id1",
-        label = "Зареєструвати авто".toDynamicString(),
-        icon = UiIcon.DrawableResource(DiiaResourceIcon.INFO.code),
-        action = DataActionWrapper(
-            type = "register",
-            resource = "1234567890"
-        ),
-        interactionState = UIState.Interaction.Enabled
-    )
-    val data = BtnLoadIconPlainGroupMlcData(items = listOf(btn1))
-    BtnLoadIconPlainGroupMlc(Modifier, data) {}
+    BtnLoadIconPlainGroupMlc(
+        Modifier,
+        generateBtnLoadIconPlainGroupMlcMockData(BtnLoadIconPlainGroupMlcMockType.one)
+    ) {}
 }

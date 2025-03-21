@@ -7,6 +7,7 @@
     <color name="color_divider_blue">#CADDEB</color>
     <color name="color_scrollContent">#E2ECF4</color>
     <color name="color_scrollContent_semi">#80E2ECF4</color>
+    <color name="color_graber">#CBD9E3</color>
 
     <!-- Status -->
     <color name="state_approved">#19BE6F</color>

@@ -17,8 +17,8 @@ import ua.gov.diia.core.network.Http
 import ua.gov.diia.core.network.Http.HTTP_200
 import ua.gov.diia.core.network.Http.HTTP_403
 import ua.gov.diia.core.network.Http.HTTP_500
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.models.Preferences
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.Preferences
 import ua.gov.diia.documents.rules.MainDispatcherRule
 
 @RunWith(MockitoJUnitRunner::class)

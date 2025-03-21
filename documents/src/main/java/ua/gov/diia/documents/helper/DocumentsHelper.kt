@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import ua.gov.diia.core.models.dialogs.TemplateDialogModel
 import ua.gov.diia.core.models.rating_service.RatingFormModel
 import ua.gov.diia.core.models.share.ShareByteArr
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.ui.DocVM
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.ManualDocs
 
 interface DocumentsHelper {
 
@@ -20,11 +20,19 @@ interface DocumentsHelper {
      */
     suspend fun migrateDocuments(
         data: List<DiiaDocumentWithMetadata>?,
-        shouldSaveData: (data: List<DiiaDocumentWithMetadata>) -> Unit): List<DiiaDocumentWithMetadata>?
+        shouldSaveData: (data: List<DiiaDocumentWithMetadata>) -> Unit
+    ): List<DiiaDocumentWithMetadata>?
 
     fun isDocEligibleForDeletion(docType: String): Boolean
 
-    suspend fun loadDocImageInByteArray(docId: String): ShareByteArr?
+    suspend fun loadDocImageInByteArray(docType: String, docId: String): ShareByteArr?
+
+    suspend fun loadAndShareDocument(
+        permission: Boolean,
+        diiaDocument: DiiaDocument?,
+        onSuccess: (ByteArray) -> Unit,
+        onTemplateRecieved: (TemplateDialogModel) -> Unit
+    )
 
     suspend fun addDocToGallery(): TemplateDialogModel?
 
@@ -41,16 +49,18 @@ interface DocumentsHelper {
     /**
      * performs navigation to RatingService
      */
-    fun navigateToRatingService(fragment: Fragment,
-                                viewModel: DocVM,
-                                form: RatingFormModel,
-                                isFromStack: Boolean = false
+    fun navigateToRatingService(
+        fragment: Fragment,
+        currentDocId: String,
+        form: RatingFormModel,
+        isFromStack: Boolean = false
     )
 
     /**
      * performs navigation to StackDocs
      */
     fun navigateToStackDocs(fragment: Fragment, doc: DiiaDocument)
+
     /**
      * performs navigation to DocOrder
      */
@@ -59,4 +69,15 @@ interface DocumentsHelper {
     fun onTickerClick(fragment: Fragment, doc: Parcelable)
 
     fun getBaseDocumentsList(): List<DiiaDocumentWithMetadata>
+
+    fun navigateToDocActions(
+        fragment: Fragment,
+        doc: DiiaDocument,
+        position: Int,
+        manualDocs: ManualDocs?
+    )
+
+    fun navigateToFlow(fragment: Fragment, flowCode: String)
+
+    fun showDocDoestNotExistTemplate(fragment: Fragment, type: String)
 }

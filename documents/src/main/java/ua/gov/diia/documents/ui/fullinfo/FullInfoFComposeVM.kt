@@ -12,21 +12,25 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.LocalizationType
-import ua.gov.diia.documents.ui.ToggleId
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.LocalizationType
 import ua.gov.diia.core.util.DispatcherProvider
 import ua.gov.diia.core.util.delegation.WithErrorHandlingOnFlow
 import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.extensions.lifecycle.asLiveData
 import ua.gov.diia.core.util.extensions.vm.executeActionOnFlow
-import ua.gov.diia.documents.barcode.*
-import ua.gov.diia.documents.ui.DocumentComposeMapper
+import ua.gov.diia.documents.ui.DocsConst.ACTION_REFRESH
+import ua.gov.diia.ui_base.mappers.document.DocumentComposeMapper
+import ua.gov.diia.documents.verificationdata.DocumentVerificationDataRepository
+import ua.gov.diia.documents.verificationdata.DocumentVerificationDataResult
+import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.DocAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
-import ua.gov.diia.ui_base.components.organism.document.DocCodeOrgData
+import ua.gov.diia.ui_base.components.infrastructure.findAndChangeFirstByInstance
+import ua.gov.diia.ui_base.components.organism.document.VerificationCodesOrgData
+import ua.gov.diia.ui_base.components.organism.document.VerificationCodesOrgToggleButtonCodes
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +39,7 @@ class FullInfoFComposeVM @Inject constructor(
     private val errorHandling: WithErrorHandlingOnFlow,
     private val withRetryLastAction: WithRetryLastAction,
     private val composeMapper: DocumentComposeMapper,
-    private val barcodeRepository: DocumentBarcodeRepository,
+    private val verificationDataRepository: DocumentVerificationDataRepository,
     private val docFullComposeMapper: DocFullInfoComposeMapper
 ) : ViewModel(),
     WithErrorHandlingOnFlow by errorHandling,
@@ -64,23 +68,13 @@ class FullInfoFComposeVM @Inject constructor(
     fun configureBody(document: Parcelable) {
         (document as? DiiaDocument)?.let {
             docFullComposeMapper.mapDocToBody(it, _bodyData)
-            loadQR(it)
+            loadVerificationCodesOrg(it)
             _documentCardData.postValue(it)
         }
     }
 
     fun onUIAction(event: UIAction) {
         when (event.actionKey) {
-            UIActionKeysCompose.TOGGLE_BUTTON_MOLECULE -> {
-                event.data?.let {
-                    onToggleClick(event.data!!)
-                }
-            }
-
-            UIActionKeysCompose.REFRESH_BUTTON -> {
-                documentCardData.value?.let { loadQR(it) }
-            }
-
             UIActionKeysCompose.DOC_NUMBER_COPY -> {
                 event.data?.let {
                     _docAction.tryEmit(DocActions.DocNumberCopy(event.data!!))
@@ -108,68 +102,71 @@ class FullInfoFComposeVM @Inject constructor(
             UIActionKeysCompose.BOTTOM_SHEET_DISMISS -> {
                 _docAction.tryEmit(DocActions.DismissDoc)
             }
-        }
-    }
 
-    private fun onToggleClick(toggleId: String) {
-        val index = _bodyData.indexOfFirst { it is DocCodeOrgData }
-        if (index == -1) {
-            return
-        } else {
-            _bodyData[index] =
-                (_bodyData[index] as DocCodeOrgData).onToggleClick(toggleId)
-        }
-        when (toggleId) {
-            ToggleId.qr.value -> _docAction.tryEmit(DocActions.DefaultBrightness)
-            ToggleId.ean.value -> _docAction.tryEmit(DocActions.HighBrightness)
-        }
-    }
-
-    private fun configureDocCode(barcode: DocumentBarcodeRepositoryResult) {
-
-        val index = _bodyData.indexOfFirst { it is DocCodeOrgData }
-
-        if (index != -1) {
-            val oldValue: DocCodeOrgData = _bodyData[index] as DocCodeOrgData
-
-            val data = toComposeDocCodeOrg(
-                barcode.result,
-                LocalizationType.ua,
-                barcode.showToggle
-            )
-
-            val updatedItem = data?.let {
-                oldValue.copy(
-                    localization = data.localization,
-                    toggle = it.toggle,
-                    qrBitmap = data.qrBitmap,
-                    ean13Bitmap = data.ean13Bitmap,
-                    eanCode = data.eanCode,
-                    timerText = data.timerText,
-                    exception = data.exception,
-                    expired = data.expired,
-                    noRegistry = data.noRegistry
-                )
+            UIActionKeysCompose.LIST_ITEM_GROUP_ORG -> {
+                event.action?.let {
+                    _docAction.tryEmit(DocActions.FullInfoAction(it))
+                }
             }
 
-            if (updatedItem != null) {
-                _bodyData[index] = updatedItem
+            UIActionKeysCompose.VERIFICATION_CODES_ORG -> {
+                handleVerificationCodesOrgEvents(event)
             }
-
         }
     }
 
-    private fun loadQR(doc: DiiaDocument) {
+    private fun configureVerificationCodesOrg(verificationData: DocumentVerificationDataResult?) {
+        if (verificationData != null) {
+            _bodyData.findAndChangeFirstByInstance<VerificationCodesOrgData> {
+                verificationData.verificationCodesOrgData
+            }
+        }
+    }
+
+    private fun loadVerificationCodesOrg(doc: DiiaDocument) {
         executeActionOnFlow(
             dispatcher = dispatcherProvider.ioDispatcher(),
             progressIndicator = _progressIndicator.also {
                 _progressIndicatorKey.value =
-                    UIActionKeysCompose.DOC_CODE_ORG_DATA
+                    UIActionKeysCompose.VERIFICATION_CODES_ORG
             }
         ) {
+            val verificationCodesOrgResult = verificationDataRepository.loadVerificationData(
+                doc = doc,
+                position = 0,
+                fullInfo = true,
+                localizationType = doc.localization() ?: LocalizationType.ua
+            )
+            configureVerificationCodesOrg(verificationCodesOrgResult?.result?: return@executeActionOnFlow)
+        }
+    }
 
-            val barcodeResult = barcodeRepository.loadBarcode(doc, 0, true)
-            configureDocCode(barcodeResult)
+    private fun handleVerificationCodesOrgEvents(event: UIAction) {
+        event.action?.let {
+            when (val type = it.type) {
+                ACTION_REFRESH -> {
+                    _docAction.tryEmit(DocActions.DefaultBrightness)
+                    documentCardData.value?.let { loadVerificationCodesOrg(it) }
+                }
+
+                VerificationCodesOrgToggleButtonCodes.qr.name -> {
+                    _docAction.tryEmit(DocActions.DefaultBrightness)
+                    _bodyData.findAndChangeFirstByInstance<VerificationCodesOrgData> {
+                        it.onToggleClicked(type)
+                    }
+                }
+
+                VerificationCodesOrgToggleButtonCodes.barcode.name -> {
+                    _docAction.tryEmit(DocActions.HighBrightness)
+                    _bodyData.findAndChangeFirstByInstance<VerificationCodesOrgData> {
+                        it.onToggleClicked(type)
+                    }
+                }
+
+                else -> {
+
+                }
+            }
         }
     }
 
@@ -181,5 +178,6 @@ class FullInfoFComposeVM @Inject constructor(
         object HighBrightness : DocActions()
         object DefaultBrightness : DocActions()
         object DismissDoc : DocActions()
+        data class FullInfoAction(val action: DataActionWrapper) : DocActions()
     }
 }

@@ -8,14 +8,14 @@ This module is responsible search screen and logic around it
    this:
 
 ```groovy
-implementation project(':search')
+implementation project(':features:search')
 ```
 
 2. Module requires next modules to work
 
 ```groovy
-implementation project(':core')
-implementation project(':ui_base')
+implementation project(':libs:core')
+implementation project(':libs:ui_base')
 ```
 
 3. Add next nav graphs to main navigation graph

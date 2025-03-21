@@ -39,7 +39,7 @@ data class CriminalCertDetails(
     @JsonClass(generateAdapter = true)
     data class LoadAction(
         @Json(name = "type")
-        val type: CriminalCertLoadActionType,
+        val type: String,
         @Json(name = "icon")
         val icon: String?,
         @Json(name = "name")

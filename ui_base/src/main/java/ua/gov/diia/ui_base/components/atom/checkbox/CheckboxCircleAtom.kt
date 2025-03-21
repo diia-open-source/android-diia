@@ -77,7 +77,7 @@ fun CheckboxCircleAtom(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             Box(
                 modifier = Modifier
@@ -104,9 +104,7 @@ fun CheckboxCircleAtom(
                 color = when (data.interactionState) {
                     UIState.Interaction.Disabled -> BlackAlpha30
                     UIState.Interaction.Enabled -> Black
-                },
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                }
             )
 
             data.status?.also { status ->
@@ -153,7 +151,7 @@ fun CheckboxCircleAtomPreview() {
         modifier = Modifier,
         data = CheckboxCircleAtomData(
             id = "1",
-            title = LoremIpsum(3).values.joinToString(),
+            title = LoremIpsum(10).values.joinToString(),
             description = LoremIpsum(30).values.joinToString(),
             interactionState = UIState.Interaction.Enabled,
             selectionState = UIState.Selection.Selected,

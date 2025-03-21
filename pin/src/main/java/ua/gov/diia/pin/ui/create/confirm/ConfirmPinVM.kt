@@ -16,6 +16,8 @@ import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.pin.R
 import ua.gov.diia.pin.helper.PinHelper
 import ua.gov.diia.pin.model.CreatePinFlowType
+import ua.gov.diia.pin.util.AndroidClientAlertDialogsFactory
+import ua.gov.diia.pin.util.AndroidClientAlertDialogsFactory.Companion.CONFIRM_PIN
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.DataActionWrapper
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
@@ -33,7 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ConfirmPinVM @Inject constructor(
     private val pinHelper: PinHelper,
-    private val clientAlertDialogsFactory: ClientAlertDialogsFactory,
+    private val clientAlertDialogsFactory: AndroidClientAlertDialogsFactory,
     private val errorHandling: WithErrorHandlingOnFlow,
     private val retryLastAction: WithRetryLastAction
 ) : ViewModel(), WithErrorHandlingOnFlow by errorHandling,
@@ -162,7 +164,7 @@ class ConfirmPinVM @Inject constructor(
             CreatePinFlowType.GENERATE_SIGNATURE -> _navigation.tryEmit(Navigation.PinCreation(pin))
 
             else -> {
-                showTemplateDialog(clientAlertDialogsFactory.showAlertAfterConfirmPin())
+                showTemplateDialog(clientAlertDialogsFactory.showCustomAlert(CONFIRM_PIN))
                 matchedPin.value = pin
             }
         }

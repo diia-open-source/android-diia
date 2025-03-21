@@ -368,7 +368,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/card_registration"
                     app:layout_constraintVertical_bias="1"
-                    app:title="@string/dr_replace_registration_verification_title_button" />
+                    app:title="@string/address_title_button" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

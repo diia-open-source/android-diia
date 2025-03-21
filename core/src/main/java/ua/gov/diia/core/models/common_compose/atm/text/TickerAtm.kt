@@ -16,11 +16,15 @@ data class TickerAtm(
     @Json(name = "type")
     val type: TickerType,
     @Json(name = "usage")
-    val usage: String?,
+    val usage: UsageType?,
     @Json(name = "value")
     val value: String
 ) : Parcelable {
     enum class TickerType {
-        warning, positive, neutral, informative;
+        warning, positive, neutral, informative, negative, pink, rainbow, blue;
+    }
+
+    enum class UsageType {
+        document, stackedCard, base, grand;
     }
 }

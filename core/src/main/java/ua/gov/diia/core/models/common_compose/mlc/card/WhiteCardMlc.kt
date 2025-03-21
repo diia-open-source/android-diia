@@ -5,6 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import ua.gov.diia.core.models.common_compose.atm.icon.DoubleIconAtm
 import ua.gov.diia.core.models.common_compose.atm.icon.IconAtm
+import ua.gov.diia.core.models.common_compose.atm.icon.LargeIconAtm
 import ua.gov.diia.core.models.common_compose.atm.icon.SmallIconAtm
 import ua.gov.diia.core.models.common_compose.general.Action
 
@@ -21,5 +22,9 @@ data class WhiteCardMlc(
     @Json(name = "smallIconAtm")
     val smallIconAtm: SmallIconAtm?,
     @Json(name = "title")
-    val title: String?
+    val title: String?,
+    @Json(name = "largeIconAtm")
+    val largeIconAtm: LargeIconAtm?,
+    @Json(name = "image")
+    val image: String?
 )

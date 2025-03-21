@@ -48,8 +48,11 @@ fun BtnPlainIconAtm(
     }
     Row(
         modifier = modifier
-            .padding(horizontal = 40.dp)
-            .noRippleClickable {
+            .padding(horizontal = 16.dp)
+            .noRippleClickable(
+                debounce = true,
+                debounceTime = 1000L
+            ) {
                 if (data.interactionState == UIState.Interaction.Enabled) {
                     onUIAction(
                         UIAction(
@@ -70,21 +73,24 @@ fun BtnPlainIconAtm(
             }
         }
 
-        AnimatedVisibility(visible = !isLoading) {
-            Row {
-                UiIconWrapperSubatomic(
-                    modifier = Modifier.size(20.dp)
-                        .alpha(
-                            if (data.interactionState == UIState.Interaction.Enabled)
-                            1.0f else 0.3f
-                        ),
-                    icon = data.icon
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+        if (data.icon != null) {
+            AnimatedVisibility(visible = !isLoading) {
+                Row {
+                    UiIconWrapperSubatomic(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .alpha(
+                                if (data.interactionState == UIState.Interaction.Enabled) 1.0f else 0.3f
+                            ),
+                        icon = data.icon
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
             }
         }
 
         Text(
+            modifier = modifier,
             text = data.label.asString(),
             style = DiiaTextStyle.t2TextDescription,
             color = when (data.interactionState) {
@@ -101,7 +107,7 @@ data class BtnPlainIconAtmData(
     val id: String,
     val componentId: UiText? = null,
     val label: UiText,
-    val icon: UiIcon,
+    val icon: UiIcon?,
     val action: DataActionWrapper? = null,
     val interactionState: UIState.Interaction = UIState.Interaction.Enabled,
 ) {
@@ -120,7 +126,7 @@ fun BtnPlainIconAtm.toUiModel(
         id = id ?: UIActionKeysCompose.BTN_PLAIN_ICON_ATM,
         componentId = componentIdExternal ?: componentId.orEmpty().toDynamicString(),
         label = label.toDynamicString(),
-        icon = icon.toDrawableResource(),
+        icon = icon?.toDrawableResource(),
         action = action?.toDataActionWrapper(),
         interactionState = when (state) {
             ButtonStates.enabled.name -> UIState.Interaction.Enabled

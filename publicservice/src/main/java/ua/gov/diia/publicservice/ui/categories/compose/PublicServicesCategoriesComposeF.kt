@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
-import ua.gov.diia.ui_base.navigation.BaseNavigation
 import ua.gov.diia.core.util.extensions.fragment.collapseApp
-import ua.gov.diia.ui_base.components.infrastructure.HomeScreenTab
+import ua.gov.diia.core.util.extensions.fragment.openLink
 import ua.gov.diia.ui_base.components.infrastructure.collectAsEffect
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
+import ua.gov.diia.ui_base.navigation.BaseNavigation
 
 @AndroidEntryPoint
 class PublicServicesCategoriesComposeF : Fragment() {
@@ -35,7 +35,6 @@ class PublicServicesCategoriesComposeF : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         composeView?.setContent {
             val topBar = viewModel.topBarData
             val body = viewModel.bodyData
@@ -68,6 +67,9 @@ class PublicServicesCategoriesComposeF : Fragment() {
                             this@PublicServicesCategoriesComposeF,
                             navigation.data
                         )
+                    }
+                    is PublicServicesCategoriesNavigation.OpenEnemyTrackLink -> {
+                        openLink(link = navigation.link, withCrashlytics = navigation.crashlytics)
                     }
                 }
             }

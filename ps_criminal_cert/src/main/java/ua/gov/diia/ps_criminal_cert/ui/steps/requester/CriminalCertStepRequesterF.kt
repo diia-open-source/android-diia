@@ -40,7 +40,11 @@ class CriminalCertStepRequesterF : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentCriminalCertStepRequesterBinding.inflate(inflater, container, false)
             .apply {
                 lifecycleOwner = viewLifecycleOwner
@@ -50,12 +54,15 @@ class CriminalCertStepRequesterF : Fragment() {
                 firstNameView.onAddItem(viewModel::addFirstName)
                 middleNameView.onAddItem(viewModel::addMiddleName)
                 lastNameView.onAddItem(viewModel::addLastName)
+
                 firstNameView.onRemove(viewModel::removeFirstName)
                 middleNameView.onRemove(viewModel::removeMiddleName)
                 lastNameView.onRemove(viewModel::removeLastName)
+
                 firstNameView.onChanged(viewModel::updateFirstName)
                 middleNameView.onChanged(viewModel::updateMiddleName)
                 lastNameView.onChanged(viewModel::updateLastName)
+
                 backBtn.setOnClickListener { findNavController().popBackStack() }
             }
         return binding?.root
@@ -71,7 +78,9 @@ class CriminalCertStepRequesterF : Fragment() {
                     menu
                 )
             }
-
+            isAllNamesValid.observe(viewLifecycleOwner) {
+                binding?.nextBtn?.setIsEnabled(it)
+            }
             onNextEvent.observeUiDataEvent(viewLifecycleOwner, ::navigateNext)
 
             showRatingDialogByUserInitiative.observeUiDataEvent(viewLifecycleOwner) { ratingModel ->
@@ -91,14 +100,18 @@ class CriminalCertStepRequesterF : Fragment() {
             findNavController().popBackStack()
             when (action) {
                 ActionsConst.GENERAL_RETRY -> viewModel.retryLastAction()
-                ActionsConst.FAQ_CATEGORY -> viewModel.navigateToFaq(this@CriminalCertStepRequesterF, CriminalCertConst.FEATURE_CODE)
+                ActionsConst.FAQ_CATEGORY -> viewModel.navigateToFaq(
+                    this@CriminalCertStepRequesterF,
+                    CriminalCertConst.FEATURE_CODE
+                )
+
                 ActionsConst.SUPPORT_SERVICE -> viewModel.navigateToSupport(this@CriminalCertStepRequesterF)
                 CriminalCertConst.FEATURE_CODE -> findNavController().popBackStack()
                 ActionsConst.RATING -> viewModel.getRatingForm()
             }
         }
         registerForNavigationResult<ConsumableItem>(ActionsConst.RESULT_KEY_RATING_SERVICE) { event ->
-            event.consumeEvent<RatingRequest> { rating ->   viewModel.sendRatingRequest(rating) }
+            event.consumeEvent<RatingRequest> { rating -> viewModel.sendRatingRequest(rating) }
         }
     }
 
@@ -110,18 +123,21 @@ class CriminalCertStepRequesterF : Fragment() {
                     prevNames = screenData.second
                 )
             )
+
             NATIONALITIES -> CriminalCertStepRequesterFDirections.actionCriminalCertStepRequesterFToCriminalCertStepNationalityF(
                 contextMenu = args.contextMenu,
                 dataUser = args.dataUser.copy(
                     prevNames = screenData.second
                 )
             )
+
             REGISTRATION_PLACE -> CriminalCertStepRequesterFDirections.actionCriminalCertStepRequesterFToCriminalCertStepAddressF(
                 contextMenu = args.contextMenu,
                 dataUser = args.dataUser.copy(
                     prevNames = screenData.second
                 )
             )
+
             CONTACTS -> CriminalCertStepRequesterFDirections.actionCriminalCertStepRequesterFToCriminalCertStepContactsF(
                 contextMenu = args.contextMenu,
                 dataUser = args.dataUser.copy(

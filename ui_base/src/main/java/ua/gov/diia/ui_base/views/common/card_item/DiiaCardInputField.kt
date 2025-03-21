@@ -26,18 +26,18 @@ import androidx.core.widget.doOnTextChanged
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import ua.gov.diia.ui_base.R
-import ua.gov.diia.ui_base.adapters.binding.srcFromRes
-import ua.gov.diia.core.util.filter.DecimalDigitsInputFilter
-import ua.gov.diia.core.util.filter.MoneyValueFilter
 import ua.gov.diia.core.util.event.UiEvent
 import ua.gov.diia.core.util.extensions.context.getColorCompat
 import ua.gov.diia.core.util.extensions.context.serviceInput
 import ua.gov.diia.core.util.extensions.data.formatWithSpaces
 import ua.gov.diia.core.util.extensions.data.toPrice
-import ua.gov.diia.ui_base.views.common.MaskedEditText
 import ua.gov.diia.core.util.extensions.validateResource
-
+import ua.gov.diia.core.util.filter.DecimalDigitsInputFilter
+import ua.gov.diia.core.util.filter.MoneyValueFilter
+import ua.gov.diia.ui_base.R
+import ua.gov.diia.ui_base.adapters.binding.srcFromRes
+import ua.gov.diia.ui_base.views.common.MaskedEditText
+import ua.gov.diia.ui_base.views.common.MaskedInputField
 
 class DiiaCardInputField @JvmOverloads constructor(
     context: Context,
@@ -48,7 +48,8 @@ class DiiaCardInputField @JvmOverloads constructor(
     enum class FieldMode(val v: Int) {
         BUTTON(0),
         EDITABLE(1),
-        EDITABLE_PHONE_NUMBER(2)
+        EDITABLE_PHONE_NUMBER(2),
+        MASKED(3)
     }
 
     enum class FieldInputMode(val mode: Int) {
@@ -73,6 +74,7 @@ class DiiaCardInputField @JvmOverloads constructor(
     private val inputField: EditText
     private val textCounter: TextView
     private val inputPhoneNumberField: MaskedEditText
+    private val maskedInputField: MaskedInputField
     private val arrow: AppCompatImageView
     private val selectableBackGround: View
     private val delimiter: View
@@ -93,6 +95,7 @@ class DiiaCardInputField @JvmOverloads constructor(
         title = findViewById(R.id.title)
         inputField = findViewById(R.id.inputField)
         inputPhoneNumberField = findViewById(R.id.inputFieldPhone)
+        maskedInputField = findViewById(R.id.ifMasked)
         arrow = findViewById(R.id.arrow)
         text = findViewById(R.id.text)
         textCounter = findViewById(R.id.textCounter)
@@ -101,6 +104,15 @@ class DiiaCardInputField @JvmOverloads constructor(
         selectableBackGround = findViewById(R.id.selectable)
         delimiter = findViewById(R.id.delimiter)
         descriptionTv = findViewById(R.id.description)
+
+        setOnClickListener {
+            when (currentFieldMode) {
+                FieldMode.BUTTON -> selectableBackGround.performClick()
+                FieldMode.EDITABLE -> inputField.requestFocus()
+                FieldMode.EDITABLE_PHONE_NUMBER -> inputPhoneNumberField.requestFocus()
+                FieldMode.MASKED -> maskedInputField.requestFocus()
+            }
+        }
 
         context.theme.obtainStyledAttributes(
             attr,
@@ -146,6 +158,9 @@ class DiiaCardInputField @JvmOverloads constructor(
 
                 getString(R.styleable.DiiaInputField_fieldHint)
                     .run(::setFieldHint)
+
+                getString(R.styleable.DiiaInputField_fieldMask)
+                    .run(::setFieldMask)
 
                 getString(R.styleable.DiiaInputField_fieldTitle)
                     .run(::setFieldTitle)
@@ -196,6 +211,7 @@ class DiiaCardInputField @JvmOverloads constructor(
 
     fun setSaveStateEnabled(isEnabled: Boolean?) {
         inputField.isSaveEnabled = isEnabled == true
+        maskedInputField.isSaveEnabled = isEnabled == true
         inputPhoneNumberField.isSaveEnabled = isEnabled == true
     }
 
@@ -236,6 +252,7 @@ class DiiaCardInputField @JvmOverloads constructor(
     fun setFieldText(string: String?) {
         text.text = string
         inputField.setText(string)
+        maskedInputField.setText(string)
     }
 
     fun getFieldText(): String? {
@@ -252,6 +269,13 @@ class DiiaCardInputField @JvmOverloads constructor(
     fun setFieldHint(string: String?) {
         text.hint = string
         inputField.hint = string
+        maskedInputField.hint = string
+    }
+
+    fun setFieldMask(mask: String?) {
+        mask?.let {
+            maskedInputField.setMask(it)
+        }
     }
 
     fun setFieldHint(@StringRes res: Int?) {
@@ -328,15 +352,17 @@ class DiiaCardInputField @JvmOverloads constructor(
             FieldMode.BUTTON -> text.setTextColor(textColor)
             FieldMode.EDITABLE -> inputField.setTextColor(textColor)
             FieldMode.EDITABLE_PHONE_NUMBER -> inputPhoneNumberField.setTextColor(textColor)
+            FieldMode.MASKED -> maskedInputField.setTextColor(textColor)
         }
     }
 
     fun setFieldErrorWhenFocusChanged(enable: Boolean?) {
-        inputField.setOnFocusChangeListener{ _, hasFocus ->
+        inputField.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 errorText.isVisible = enable == true
-                @ColorInt val textColor = (if (enable == true) R.color.state_rejected else R.color.black)
-                    .run(context::getColorCompat)
+                @ColorInt val textColor =
+                    (if (enable == true) R.color.state_rejected else R.color.black)
+                        .run(context::getColorCompat)
 
                 @ColorInt val delimiterColor =
                     (if (enable == true) R.color.state_rejected else R.color.black_alpha_30)
@@ -348,6 +374,7 @@ class DiiaCardInputField @JvmOverloads constructor(
                     FieldMode.BUTTON -> text.setTextColor(textColor)
                     FieldMode.EDITABLE -> inputField.setTextColor(textColor)
                     FieldMode.EDITABLE_PHONE_NUMBER -> inputPhoneNumberField.setTextColor(textColor)
+                    FieldMode.MASKED -> maskedInputField.setTextColor(textColor)
                 }
             }
         }
@@ -359,7 +386,7 @@ class DiiaCardInputField @JvmOverloads constructor(
 
     fun setFieldMode(value: Int?) {
         currentFieldMode = fieldModeFromInt(value ?: 0)
-
+        maskedInputField.setCurrentFieldMode(currentFieldMode.v) //
         when (currentFieldMode) {
             FieldMode.EDITABLE -> {
                 arrow.visibility = GONE
@@ -367,20 +394,34 @@ class DiiaCardInputField @JvmOverloads constructor(
                 text.visibility = GONE
                 inputField.visibility = VISIBLE
                 inputPhoneNumberField.visibility = GONE
+                maskedInputField.visibility = GONE
             }
+
             FieldMode.EDITABLE_PHONE_NUMBER -> {
                 arrow.visibility = GONE
                 selectableBackGround.visibility = GONE
                 text.visibility = GONE
                 inputField.visibility = GONE
                 inputPhoneNumberField.visibility = VISIBLE
+                maskedInputField.visibility = GONE
             }
+
             FieldMode.BUTTON -> {
                 arrow.visibility = VISIBLE
                 selectableBackGround.visibility = VISIBLE
                 text.visibility = VISIBLE
                 inputField.visibility = GONE
                 inputPhoneNumberField.visibility = GONE
+                maskedInputField.visibility = GONE
+            }
+
+            FieldMode.MASKED -> {
+                arrow.visibility = GONE
+                selectableBackGround.visibility = GONE
+                text.visibility = GONE
+                inputField.visibility = GONE
+                inputPhoneNumberField.visibility = GONE
+                maskedInputField.visibility = VISIBLE
             }
         }
     }
@@ -392,11 +433,18 @@ class DiiaCardInputField @JvmOverloads constructor(
                     TypedValue.COMPLEX_UNIT_PX,
                     resources.getDimension(size)
                 )
+
                 FieldMode.EDITABLE -> inputField.setTextSize(
                     TypedValue.COMPLEX_UNIT_PX,
                     resources.getDimension(size)
                 )
+
                 FieldMode.EDITABLE_PHONE_NUMBER -> inputPhoneNumberField.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    resources.getDimension(size)
+                )
+
+                FieldMode.MASKED -> maskedInputField.setTextSize(
                     TypedValue.COMPLEX_UNIT_PX,
                     resources.getDimension(size)
                 )
@@ -416,6 +464,7 @@ class DiiaCardInputField @JvmOverloads constructor(
     private fun fieldModeFromInt(v: Int): FieldMode = when (v) {
         FieldMode.BUTTON.v -> FieldMode.BUTTON
         FieldMode.EDITABLE_PHONE_NUMBER.v -> FieldMode.EDITABLE_PHONE_NUMBER
+        FieldMode.MASKED.v -> FieldMode.MASKED
         else -> FieldMode.EDITABLE
     }
 
@@ -434,14 +483,17 @@ class DiiaCardInputField @JvmOverloads constructor(
                     imeOptions = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
                 }
             }
+
             FieldInputMode.SINGLE_LINE -> {
                 inputField.apply {
                     isSingleLine = true
                     imeOptions = InputType.TYPE_CLASS_TEXT
                 }
             }
+
             FieldInputMode.PHONE_NUMBER -> {
             }
+
             FieldInputMode.PRICE -> {
                 inputField.apply {
                     isSingleLine = false
@@ -449,6 +501,7 @@ class DiiaCardInputField @JvmOverloads constructor(
                 }
                 inputField.filters = arrayOf<InputFilter>(MoneyValueFilter(digits = offset))
             }
+
             FieldInputMode.DECIMAL -> {
                 inputField.apply {
                     isSingleLine = false
@@ -465,6 +518,7 @@ class DiiaCardInputField @JvmOverloads constructor(
                     }
                 }
             }
+
             FieldInputMode.EMAIL -> {
                 inputField.apply {
                     isSingleLine = true
@@ -546,9 +600,11 @@ class DiiaCardInputField @JvmOverloads constructor(
             FieldTextGravityMode.START -> {
                 inputField.gravity = Gravity.START
             }
+
             FieldTextGravityMode.CENTER -> {
                 inputField.gravity = Gravity.CENTER
             }
+
             FieldTextGravityMode.END -> {
                 inputField.gravity = Gravity.END
             }
@@ -576,29 +632,36 @@ class DiiaCardInputField @JvmOverloads constructor(
 
     fun setIsEnabled(enabled: Boolean?) {
         inputField.isEnabled = enabled == true
+        maskedInputField.isEnabled = enabled == true
         selectableBackGround.isEnabled = enabled == true
 
         @ColorInt val textColor = (if (enabled == true) R.color.black else R.color.black_alpha_30)
             .run(context::getColorCompat)
         title.setTextColor(textColor)
         inputField.setTextColor(textColor)
+        maskedInputField.setTextColor(textColor)
         text.setTextColor(textColor)
         if (enabled == true) arrow.srcFromRes(R.drawable.ic_arrow) else arrow.srcFromRes(R.drawable.ic_arrow_disabled)
     }
 
     fun setFieldClickable(clickable: Boolean?) {
         inputField.isEnabled = clickable == true
+        maskedInputField.isEnabled = clickable == true
         selectableBackGround.isEnabled = clickable == true
 
         @ColorInt val textColor = (if (clickable == true) R.color.black else R.color.black_alpha_30)
             .run(context::getColorCompat)
         inputField.setTextColor(textColor)
+        maskedInputField.setTextColor(textColor)
         text.setTextColor(textColor)
         if (clickable == true) arrow.srcFromRes(R.drawable.ic_arrow) else arrow.srcFromRes(R.drawable.ic_arrow_disabled)
     }
 
     fun doOnTextChanged(action: (String) -> Unit) {
         inputField.doOnTextChanged { text, _, _, _ ->
+            action(text?.toString().orEmpty())
+        }
+        maskedInputField.doOnTextChanged { text, _, _, _ ->
             action(text?.toString().orEmpty())
         }
     }
@@ -618,6 +681,17 @@ class DiiaCardInputField @JvmOverloads constructor(
     fun setDescription(description: String?) {
         descriptionTv.isVisible = description != null
         descriptionTv.text = description
+    }
+
+    fun configureDelimiter() {
+        delimiter.setBackgroundColor(context.getColor(R.color.black_alpha_30))
+        inputField.setOnFocusChangeListener { _, hasFocus ->
+            delimiter.setBackgroundColor(
+                context.getColor(
+                    if (hasFocus) R.color.black else R.color.black_alpha_30
+                )
+            )
+        }
     }
 }
 
@@ -651,6 +725,14 @@ fun DiiaCardInputField.setFieldTextTwoWay(string: String?) {
     when (getCurrentFieldMode()) {
         DiiaCardInputField.FieldMode.EDITABLE_PHONE_NUMBER -> {
             val inputField = findViewById<MaskedEditText>(R.id.inputFieldPhone)
+            val oldValue = inputField.getRawText()
+            if (string != null && string != oldValue) {
+                inputField.setText(string)
+            }
+        }
+
+        DiiaCardInputField.FieldMode.MASKED -> {
+            val inputField = findViewById<MaskedInputField>(R.id.ifMasked)
             val oldValue = inputField.getRawText()
             if (string != null && string != oldValue) {
                 inputField.setText(string)
@@ -694,6 +776,7 @@ fun DiiaCardInputField.getFieldTextTwoWay(): String? {
 
     val value = when (getCurrentFieldMode()) {
         DiiaCardInputField.FieldMode.EDITABLE_PHONE_NUMBER -> findViewById<MaskedEditText>(R.id.inputFieldPhone)?.getRawText()
+        DiiaCardInputField.FieldMode.MASKED -> findViewById<MaskedInputField>(R.id.ifMasked)?.getRawText()
         else -> findViewById<EditText>(R.id.inputField).text?.toString()
     }
 
@@ -705,6 +788,7 @@ fun DiiaCardInputField.setTextWatcher(textAttrChanged: InverseBindingListener?) 
 
     val inputFiled = when (getCurrentFieldMode()) {
         DiiaCardInputField.FieldMode.EDITABLE_PHONE_NUMBER -> findViewById<MaskedEditText>(R.id.inputFieldPhone)
+        DiiaCardInputField.FieldMode.MASKED -> findViewById<MaskedInputField>(R.id.ifMasked)
         else -> findViewById<EditText>(R.id.inputField)
     }
 

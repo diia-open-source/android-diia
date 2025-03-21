@@ -9,13 +9,13 @@ import ua.gov.diia.diia_storage.store.AbstractKeyValueDataSource
 import ua.gov.diia.diia_storage.store.Preferences
 import ua.gov.diia.diia_storage.store.datasource.DataSourceDataResult
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata.Companion.LAST_DOC_ORDER
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata.Companion.LAST_DOC_ORDER
 import ua.gov.diia.documents.util.datasource.DateCompareExpirationStrategy
 import ua.gov.diia.documents.util.datasource.ExpirationStrategy
 
-class KeyValueDocumentsDataSource (
+class KeyValueDocumentsDataSource(
     override val jsonAdapter: JsonAdapter<List<DiiaDocumentWithMetadata>>,
     diiaStorage: DiiaStorage,
     private val docTransformations: List<DocumentsTransformation>,
@@ -98,6 +98,14 @@ class KeyValueDocumentsDataSource (
     suspend fun removeDocument(diiaDocument: DiiaDocument): DataSourceDataResult<List<DiiaDocumentWithMetadata>>? {
         val currentData = loadData() ?: return null
         with(currentData.filter { it.diiaDocument != diiaDocument }) {
+            saveDataToStore(this)
+            return DataSourceDataResult.successful(this)
+        }
+    }
+
+    suspend fun removeDocumentByType(type: String): DataSourceDataResult<List<DiiaDocumentWithMetadata>>? {
+        val currentData = loadData() ?: return null
+        with(currentData.filter { it.diiaDocument?.getItemType() != type }) {
             saveDataToStore(this)
             return DataSourceDataResult.successful(this)
         }

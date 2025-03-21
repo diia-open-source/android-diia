@@ -24,18 +24,20 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.atom.media.ArticlePicAtm
 import ua.gov.diia.ui_base.components.atom.media.ArticlePicAtmData
+import ua.gov.diia.ui_base.components.atom.pager.DotNavigationAtm
+import ua.gov.diia.ui_base.components.atom.pager.DotNavigationAtmData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.molecule.card.HalvedCardMlc
 import ua.gov.diia.ui_base.components.molecule.card.HalvedCardMlcData
 import ua.gov.diia.ui_base.components.molecule.card.IconCardMlc
 import ua.gov.diia.ui_base.components.molecule.card.IconCardMlcData
+import ua.gov.diia.ui_base.components.molecule.card.ImageCardMlc
+import ua.gov.diia.ui_base.components.molecule.card.ImageCardMlcData
 import ua.gov.diia.ui_base.components.molecule.card.SmallNotificationMlc
 import ua.gov.diia.ui_base.components.molecule.card.SmallNotificationMlcData
 import ua.gov.diia.ui_base.components.molecule.media.ArticleVideoMlc
 import ua.gov.diia.ui_base.components.molecule.media.ArticleVideoMlcData
-import ua.gov.diia.ui_base.components.atom.pager.DotNavigationAtm
-import ua.gov.diia.ui_base.components.atom.pager.DotNavigationAtmData
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -50,7 +52,7 @@ fun BaseSimpleCarouselInternal(
         initialPage = 0,
         initialPageOffsetFraction = 0f
     ) {
-       data.items.size
+        data.items.size
     }
     var position by remember { mutableStateOf(0) }
     LaunchedEffect(pagerState) {
@@ -117,13 +119,24 @@ fun BaseSimpleCarouselInternal(
                             )
                         }
 
+                        is ImageCardMlcData -> {
+                            ImageCardMlc(
+                                modifier = Modifier,
+                                data = card,
+                                inCarousel = true,
+                                clickable = pageIndex == position,
+                                onUIAction = onUIAction
+                            )
+                        }
+
                         is ArticleVideoMlcData -> {
                             ArticleVideoMlc(
                                 modifier = Modifier,
                                 data = card,
                                 inCarousel = true,
                                 clickable = pageIndex == position,
-                                connectivityState = connectivityState
+                                connectivityState = connectivityState,
+                                onUIAction = onUIAction
                             )
                         }
 

@@ -6,16 +6,16 @@ This is module responsible for notification receiving and representation. The mo
 1. Copy module folder to your project and add module to gradle dependency like this:
 
 ```groovy
-implementation project(':notifications')
+implementation project(':features:notifications')
 ```
 
 2. Module requires next modules to work
 3. 
 ```groovy
-    implementation project(':core')
-    implementation project(':analytics')
-    implementation project(':diia_storage')
-    implementation project(path: ':ui_base')
+    implementation project(':libs:core')
+    implementation project(':libs:analytics')
+    implementation project(':libs:diia_storage')
+    implementation project(path: ':libs:ui_base')
 ```
 
 3. nav_id file describe all ids that this module requires. Entry point should implement all those ids.

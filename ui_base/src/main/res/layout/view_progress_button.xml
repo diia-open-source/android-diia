@@ -2,50 +2,52 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:layout_height="48dp"
+    tools:layout_width="match_parent"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <Button
         android:id="@+id/text_button"
         style="@style/LineExtraButtonBlack"
         android:layout_width="match_parent"
-        app:layout_constraintWidth_default="wrap"
         android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/middle"
         android:fontFamily="@font/e_ukraine_regular"
         android:paddingHorizontal="40dp"
         android:paddingVertical="@dimen/large"
         android:textAllCaps="false"
         android:textSize="14sp"
-        android:drawablePadding="@dimen/middle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="This is a good day" />
+        app:layout_constraintWidth_default="wrap"
+        tools:text="Button" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_done_button"
         android:layout_width="match_parent"
-        app:layout_constraintWidth_default="wrap"
         android:layout_height="wrap_content"
         android:background="@drawable/line_button_green_select"
         android:paddingHorizontal="63dp"
         android:paddingVertical="@dimen/large"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone" >
+        app:layout_constraintWidth_default="wrap">
 
         <ImageView
             android:id="@+id/iv_done_indicator"
             android:layout_width="@dimen/large"
             android:layout_height="@dimen/large"
             android:layout_marginEnd="@dimen/ls"
-            app:srcCompat="@drawable/ic_check_for_btn"
             app:layout_constraintBottom_toBottomOf="@+id/title_done_btn"
             app:layout_constraintEnd_toStartOf="@+id/title_done_btn"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/title_done_btn" />
+            app:layout_constraintTop_toTopOf="@+id/title_done_btn"
+            app:srcCompat="@drawable/ic_check_for_btn" />
 
         <TextView
             android:id="@+id/title_done_btn"
@@ -57,7 +59,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/iv_done_indicator"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Todo" />
+            tools:text="Done" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -65,15 +67,15 @@
         android:id="@+id/container_progressButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/black_enable_button"
         android:paddingVertical="@dimen/large"
         android:paddingStart="@dimen/twolarge"
         android:paddingEnd="@dimen/xtwolarge"
-        android:background="@drawable/black_enable_button"
-        app:layout_constraintWidth_default="wrap"
-        app:layout_constraintWidth_min="160dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintWidth_min="160dp">
 
         <ProgressBar
             android:id="@+id/progress"
@@ -98,7 +100,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/progress"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Todo" />
+            tools:text="Progress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

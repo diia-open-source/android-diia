@@ -29,6 +29,7 @@ import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.core.util.event.UiEvent
 import ua.gov.diia.diia_storage.DiiaStorage
+import ua.gov.diia.diia_storage.store.datasource.itn.ItnDataRepository
 import ua.gov.diia.menu.MainDispatcherRule
 import ua.gov.diia.menu.MenuContentController
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
@@ -55,6 +56,8 @@ class MenuComposeVMTest {
     @Mock
     lateinit var errorHandling: WithErrorHandlingOnFlow
     @Mock
+    lateinit var itnDataRepository: ItnDataRepository
+    @Mock
     lateinit var retryLastAction: WithRetryLastAction
     @Mock
     lateinit var diiaStorage: DiiaStorage
@@ -75,7 +78,7 @@ class MenuComposeVMTest {
         globalActionDocLoadingIndicator = MutableSharedFlow()
 
         menuComposeVM = MenuComposeVM(actionLogout, globalActionDocLoadingIndicator, errorHandling, retryLastAction,
-            diiaStorage, withBuildConfig, menuContentController, notificationController)
+            diiaStorage, itnDataRepository, withBuildConfig, menuContentController, notificationController)
     }
 
     @Test
@@ -184,7 +187,7 @@ class MenuComposeVMTest {
                     null
                 })
             menuComposeVM = MenuComposeVM(actionLogout, globalActionDocLoadingIndicator, errorHandling, retryLastAction,
-                diiaStorage, withBuildConfig, menuContentController, notificationController)
+                diiaStorage, itnDataRepository, withBuildConfig, menuContentController, notificationController)
             val menuList = mutableListOf<UIElementData>()
             val itemLabel = UiText.DynamicString("some_label")
             val listItemMlcData = ListItemMlcData(id = MenuActionsKey.OPEN_NOTIFICATION, label = itemLabel)
@@ -192,7 +195,7 @@ class MenuComposeVMTest {
             snapshotList.add(listItemMlcData)
             menuList.add(ListItemGroupOrgData(MenuActionsKey.OPEN_NOTIFICATION, itemsList = snapshotList))
 
-            `when`(menuContentController.configureBody(any())).thenReturn(menuList)
+            `when`(menuContentController.configureBody(any(), any())).thenReturn(menuList)
             menuComposeVM.configureBody()
             notificationCallback!!.invoke(10)
 
@@ -212,7 +215,7 @@ class MenuComposeVMTest {
                     null
                 })
             menuComposeVM = MenuComposeVM(actionLogout, globalActionDocLoadingIndicator, errorHandling, retryLastAction,
-                diiaStorage, withBuildConfig, menuContentController, notificationController)
+                diiaStorage, itnDataRepository, withBuildConfig, menuContentController, notificationController)
             val menuList = mutableListOf<UIElementData>()
             val itemLabel = UiText.DynamicString("some_label")
             val listItemMlcData = ListItemMlcData(id = MenuActionsKey.OPEN_FAQ, label = itemLabel)
@@ -220,7 +223,7 @@ class MenuComposeVMTest {
             snapshotList.add(listItemMlcData)
             menuList.add(ListItemGroupOrgData(MenuActionsKey.OPEN_FAQ, itemsList = snapshotList))
 
-            `when`(menuContentController.configureBody(any())).thenReturn(menuList)
+            `when`(menuContentController.configureBody(any(), any())).thenReturn(menuList)
             menuComposeVM.configureBody()
             notificationCallback!!.invoke(10)
 
@@ -241,7 +244,7 @@ class MenuComposeVMTest {
                     null
                 })
             menuComposeVM = MenuComposeVM(actionLogout, globalActionDocLoadingIndicator, errorHandling, retryLastAction,
-                diiaStorage, withBuildConfig, menuContentController, notificationController)
+                diiaStorage, itnDataRepository, withBuildConfig, menuContentController, notificationController)
             val menuList = mutableListOf<UIElementData>()
             val itemLabel = UiText.DynamicString("some_label")
             val listItemMlcData = ListItemMlcData(id = MenuActionsKey.OPEN_NOTIFICATION, label = itemLabel)
@@ -249,7 +252,7 @@ class MenuComposeVMTest {
             snapshotList.add(listItemMlcData)
             menuList.add(ListItemGroupOrgData(MenuActionsKey.OPEN_FAQ, itemsList = snapshotList))
 
-            `when`(menuContentController.configureBody(any())).thenReturn(menuList)
+            `when`(menuContentController.configureBody(any(), any())).thenReturn(menuList)
             menuComposeVM.configureBody()
             notificationCallback!!.invoke(10)
             notificationCallback!!.invoke(0)

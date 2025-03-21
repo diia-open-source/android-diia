@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import ua.gov.diia.core.models.common_compose.mlc.header.NavigationPanelMlc
 import ua.gov.diia.core.models.common_compose.mlc.header.TitleGroupMlc
+import ua.gov.diia.core.models.common_compose.org.chip.ChipTabsOrg
 
 @JsonClass(generateAdapter = true)
 data class TopGroupOrg(

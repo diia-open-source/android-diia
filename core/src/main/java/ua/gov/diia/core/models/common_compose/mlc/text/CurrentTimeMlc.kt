@@ -11,5 +11,7 @@ data class CurrentTimeMlc(
     @Json(name = "action")
     val action: Action? = null,
     @Json(name = "componentId")
-    val componentId: String? = null
+    val componentId: String? = null,
+    @Json(name = "maxDate")
+    val maxDate: String? = null,
 )

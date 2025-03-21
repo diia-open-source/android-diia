@@ -7,5 +7,5 @@ This is module provides base UI components and utilities.
 1. Copy module folder to your project and add module to gradle dependency like this:
 
 ```groovy
-implementation project(':ui_base')
+implementation project(':libs:ui_base')
 ```

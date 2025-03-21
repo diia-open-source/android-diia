@@ -4,16 +4,16 @@ import android.content.res.Resources
 import android.os.Parcelable
 import ua.gov.diia.doc_driver_license.R
 import ua.gov.diia.doc_driver_license.models.v2.DriverLicenseV2
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DocAction
-import ua.gov.diia.documents.models.LocalizationType
-import ua.gov.diia.documents.ui.DocumentsContextMenuActions
-import ua.gov.diia.documents.ui.toListItemMlcData
-import ua.gov.diia.documents.util.BaseDocumentActionProvider
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DocAction
+import ua.gov.diia.core.models.document.LocalizationType
+import ua.gov.diia.core.models.document.ui.DocumentsContextMenuActions
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiIcon
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
 import ua.gov.diia.ui_base.components.molecule.list.ListItemMlcData
+import ua.gov.diia.ui_base.mappers.document.BaseDocumentActionProvider
+import ua.gov.diia.ui_base.mappers.document.toListItemMlcData
 
 class DriverLicenceActionProvider :
     BaseDocumentActionProvider {

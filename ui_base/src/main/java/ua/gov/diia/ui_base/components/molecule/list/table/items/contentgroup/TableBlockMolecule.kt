@@ -12,15 +12,17 @@ import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
 import ua.gov.diia.ui_base.components.infrastructure.utils.resource.UiText
+import ua.gov.diia.ui_base.components.infrastructure.utils.resource.toDynamicString
 import ua.gov.diia.ui_base.components.molecule.list.BtnIconPlainGroupMlc
 import ua.gov.diia.ui_base.components.molecule.list.BtnIconPlainGroupMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableBlockItem
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMolecule
-import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableHeadingMoleculeData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableMainHeadingMlc
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableMainHeadingMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemHorizontalMlcData
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlc
 import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.TableItemVerticalMlcData
+import ua.gov.diia.ui_base.components.molecule.list.table.items.tableblock.toTableMainHeadingMlcData
 
 @Composable
 fun TableBlockMolecule(
@@ -31,7 +33,7 @@ fun TableBlockMolecule(
 ) {
     Column(modifier.fillMaxWidth()) {
         state.header?.let {
-            TableHeadingMolecule(
+            TableMainHeadingMlc(
                 modifier = Modifier.padding(bottom = 16.dp),
                 data = state.header,
                 onUIAction = onUIAction
@@ -50,11 +52,12 @@ fun TableBlockMolecule(
 
                     is TableItemVerticalMlcData -> {
                         TableItemVerticalMlc(
-                            modifier = Modifier.padding(vertical = 3.dp),
+                            modifier = Modifier.padding(vertical = if (state.isVerticalPaddingExists) 3.dp else 0.dp),
                             data = item,
                             onUIAction = onUIAction
                         )
                     }
+
                     is BtnIconPlainGroupMlcData -> {
                         BtnIconPlainGroupMlc(
                             data = item,
@@ -62,6 +65,7 @@ fun TableBlockMolecule(
                             onUIAction = onUIAction
                         )
                     }
+
                     else -> {
                         //nothing
                     }
@@ -76,21 +80,42 @@ fun TableBlockMolecule(
 
 data class TableBlockMoleculeData(
     val actionKey: String = UIActionKeysCompose.TABLE_BLOCK_ORG,
-    val header: TableHeadingMoleculeData? = null,
-    val items: List<TableBlockItem>
+    val header: TableMainHeadingMlcData? = null,
+    val items: List<TableBlockItem>,
+    val isVerticalPaddingExists: Boolean = true
 ) : ContentGroupItem()
 
 @Composable
 @Preview
 fun TableBlockMoleculePreview() {
     val state = TableBlockMoleculeData(
-        header = TableHeadingMoleculeData(id = "123", title = "Heading".let { UiText.DynamicString(it) }),
+        header = "Heading".toDynamicString().toTableMainHeadingMlcData(),
         items = listOf(
-            TableItemHorizontalMlcData(id = "1", title = UiText.DynamicString("Item title"), value = "Value"),
-            TableItemHorizontalMlcData(id = "2", title = UiText.DynamicString("Item title 2"), value = "Value"),
-            TableItemHorizontalMlcData(id = "3", title = UiText.DynamicString("Item title 3"), value = "Value"),
-            TableItemHorizontalMlcData(id = "4", title = UiText.DynamicString("Item title 4"), value = "Value"),
-            TableItemHorizontalMlcData(id = "5", title = UiText.DynamicString("Item title 5"), value = "Value"),
+            TableItemHorizontalMlcData(
+                id = "1",
+                title = UiText.DynamicString("Item title"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "2",
+                title = UiText.DynamicString("Item title 2"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "3",
+                title = UiText.DynamicString("Item title 3"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "4",
+                title = UiText.DynamicString("Item title 4"),
+                value = "Value"
+            ),
+            TableItemHorizontalMlcData(
+                id = "5",
+                title = UiText.DynamicString("Item title 5"),
+                value = "Value"
+            ),
         )
     )
     TableBlockMolecule(modifier = Modifier.padding(all = 16.dp), state = state)

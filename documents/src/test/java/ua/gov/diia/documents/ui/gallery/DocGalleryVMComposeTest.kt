@@ -32,21 +32,21 @@ import ua.gov.diia.core.util.delegation.WithRetryLastAction
 import ua.gov.diia.core.util.event.UiDataEvent
 import ua.gov.diia.diia_storage.store.datasource.DataSourceDataResult
 import ua.gov.diia.documents.DocTest
-import ua.gov.diia.documents.barcode.DocumentBarcode
-import ua.gov.diia.documents.barcode.DocumentBarcodeRepository
-import ua.gov.diia.documents.barcode.DocumentBarcodeRepositoryResult
-import ua.gov.diia.documents.barcode.DocumentBarcodeSuccessfulLoadResult
+import ua.gov.diia.core.models.document.barcode.DocumentBarcode
+import ua.gov.diia.core.models.document.barcode.DocumentBarcodeRepository
+import ua.gov.diia.core.models.document.barcode.DocumentBarcodeRepositoryResult
+import ua.gov.diia.core.models.document.barcode.DocumentBarcodeSuccessfulLoadResult
 import ua.gov.diia.documents.data.api.ApiDocuments
 import ua.gov.diia.documents.data.repository.DocumentsDataRepository
 import ua.gov.diia.documents.helper.DocumentsHelper
-import ua.gov.diia.documents.models.DiiaDocument
-import ua.gov.diia.documents.models.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
 import ua.gov.diia.doc_manual_options.models.DocManualOptions
-import ua.gov.diia.documents.models.LocalizationType
-import ua.gov.diia.documents.models.ManualDocs
+import ua.gov.diia.core.models.document.LocalizationType
+import ua.gov.diia.core.models.document.ManualDocs
 import ua.gov.diia.documents.rules.MainDispatcherRule
-import ua.gov.diia.documents.ui.DocumentComposeMapper
-import ua.gov.diia.documents.ui.ToggleId
+import ua.gov.diia.ui_base.mappers.document.DocumentComposeMapper
+import ua.gov.diia.ui_base.mappers.document.ToggleId
 import ua.gov.diia.documents.ui.WithCheckLocalizationDocs
 import ua.gov.diia.documents.ui.WithPdfCertificate
 import ua.gov.diia.documents.ui.WithRemoveDocument
@@ -283,7 +283,7 @@ class DocGalleryVMComposeTest {
     @Test
     fun `test confirm delete doc`() = runTest {
         initVM()
-        vm.confirmDelDocument("")
+        vm.showConfirmDeleteTemplateLocal("")
         advanceUntilIdle()
         verify(withRemoveDocument, times(1)).confirmRemoveDocument(
             any(),
@@ -1015,6 +1015,7 @@ class DocGalleryVMComposeTest {
             data = SnapshotStateList<DocsCarouselItem>().apply {
                 add(
                     DocOrgData(
+                        id = "",
                         UIActionKeysCompose.DOC_ORG_DATA,
                         "",
                         null,
@@ -1271,6 +1272,7 @@ class DocGalleryVMComposeTest {
             data = SnapshotStateList<DocsCarouselItem>().apply {
                 add(
                     DocOrgData(
+                        id = "",
                         UIActionKeysCompose.DOC_ORG_DATA,
                         "",
                         null,

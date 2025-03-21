@@ -7,6 +7,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import ua.gov.diia.core.models.document.DiiaDocument
+import ua.gov.diia.core.models.document.DiiaDocumentWithMetadata
+import ua.gov.diia.core.models.document.SourceType
+import ua.gov.diia.core.models.document.WithTimestamp
 import ua.gov.diia.core.util.delegation.WithCrashlytics
 import ua.gov.diia.diia_storage.store.datasource.DataSourceDataResult
 import ua.gov.diia.documents.data.datasource.local.KeyValueDocumentsDataSource
@@ -59,7 +63,6 @@ class DocumentsDataRepositoryImpl(
                     _isDataLoading.value = false
 
                 }
-
             } else {
                 _isDataLoading.value = true
                 emitData(DataSourceDataResult.successful(baseDocumentList))
@@ -94,6 +97,12 @@ class DocumentsDataRepositoryImpl(
         }
     }
 
+    override fun removeDocumentByType(type: String) {
+        scope.launch {
+            emitData(keyValueDataSource.removeDocumentByType(type))
+        }
+    }
+
     override fun updateDocument(diiaDocument: DiiaDocument) {
         scope.launch {
             emitData(keyValueDataSource.updateDocument(diiaDocument))
@@ -109,6 +118,9 @@ class DocumentsDataRepositoryImpl(
     override suspend fun getDocsByType(type: String) = loadLocalDocData()
         ?.filter { it.type == type }
         ?.map { it.diiaDocument }
+
+    override suspend fun getETagForDocType(type: String) =
+        loadLocalDocData()?.firstOrNull { it.type == type }?.eTag.orEmpty()
 
     override fun saveDocTypeOrder(docOrders: List<DocOrder>) {
         scope.launch {
@@ -134,7 +146,7 @@ class DocumentsDataRepositoryImpl(
         scope.launch {
             if (docOrders.isEmpty()) return@launch
             val docsList = loadLocalDocData()
-                ?.filter { it.diiaDocument != null && it.diiaDocument.getSourceType() != SourceType.STATIC }
+                ?.filter { it.diiaDocument != null && (it.diiaDocument as DiiaDocument).getSourceType() != SourceType.STATIC }
                 ?: return@launch
 
             val documentsFilteredByType = docsList.filter { it.type == docType }
@@ -154,6 +166,40 @@ class DocumentsDataRepositoryImpl(
     }
 
     override suspend fun loadLocalDocData() = keyValueDataSource.loadData()
+
+    override suspend fun saveDocsToStorage(data: List<DiiaDocumentWithMetadata>) {
+        keyValueDataSource.updateData(data)
+        invalidate()
+    }
+
+    override suspend fun transformDocumentToEngagedCert(type: String, dateIssued: String) {
+
+        val rnkoppNum = getDocsByType("taxpayer-card")?.firstOrNull()?.getDocNum()
+
+        val title = when {
+            rnkoppNum == null || rnkoppNum.dropLast(1).toLong() % 2 != 0L-> "Сертифікат зарученого"
+            else -> "Сертифікат зарученої"
+        }
+
+        val document = getDocsByType(type)?.firstOrNull()
+        document?.let { oldDoc ->
+            val newDoc = oldDoc.makeCopy(title, dateIssued)
+            removeDocument(oldDoc)
+            val newDocWithMetadata = DiiaDocumentWithMetadata(
+                newDoc,
+                if (newDoc is WithTimestamp) {
+                    newDoc.getTimestamp()
+                } else {
+                    ""
+                },
+                "2025-11-28T10:17:58.057Z",
+                newDoc.getStatus(),
+                newDoc.getItemType(),
+                newDoc.getDocOrder()
+            )
+            attachExternalDocument(newDocWithMetadata)
+        }
+    }
 
     override suspend fun clear() = emitData(DataSourceDataResult.successful(emptyList()))
 

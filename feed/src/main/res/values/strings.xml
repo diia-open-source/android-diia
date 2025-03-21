@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feed_greeting_offline">Привіт 👋</string>
+    <string name="feed_greeting_offline_with_name">Привіт, %s 👋</string>
+    <string name="invincibility_cadr_title_offline">Незламність</string>
+    <string name="invincibility_cadr_label_offline">Мапа Пунктів Незламності та укриттів.\nЗаява про відсутній зв\'язок.</string>
+    <string name="qr_scan_label">Сканувати QR-код</string>
+    <string name="enemy_track_label">Чатбот єВорог</string>
+    <string name="failed_connection_label">Відсутній зв\ʼязок</string>
+    <string name="military_bonds_label">Військові облігації</string>
+    <string name="feed_test_tag">feed_greeting</string>
+</resources>

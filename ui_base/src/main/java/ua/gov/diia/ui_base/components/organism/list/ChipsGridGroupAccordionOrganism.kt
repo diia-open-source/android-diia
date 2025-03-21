@@ -136,6 +136,12 @@ fun CheckboxRoundSeeAllOrgPreview() {
             icon = UiIcon.DrawableResource("heating"),
             title = UiText.DynamicString("Heating"),
             selectionState = UIState.Selection.Unselected
+        ),
+        CheckIconMlcData(
+            id = "code5",
+            icon = UiIcon.DrawableResource("banking"),
+            title = UiText.DynamicString("Banking"),
+            selectionState = UIState.Selection.Unselected
         )
     )
     val data = CheckboxRoundSeeAllOrgData(

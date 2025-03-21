@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ua.gov.diia.ui_base.components.DiiaResourceIcon
+import ua.gov.diia.ui_base.components.atom.text.textwithparameter.TextWithParametersData
 import ua.gov.diia.ui_base.components.infrastructure.UIElementData
 import ua.gov.diia.ui_base.components.infrastructure.event.UIAction
 import ua.gov.diia.ui_base.components.infrastructure.event.UIActionKeysCompose
@@ -113,7 +114,9 @@ fun PlainListWithSearchOrganismPreview() {
         emptyListData = StubMessageMlcData(
             icon = UiText.DynamicString("\uD83D\uDD90"),
             title = UiText.DynamicString("На жаль, сталася помилка"),
-            description = UiText.DynamicString("Перелік банків недоступний. Спробуйте трошки пізніше.")
+            description = TextWithParametersData(
+                text = UiText.DynamicString("Перелік банків недоступний. Спробуйте трошки пізніше.")
+            )
         )
 
     )

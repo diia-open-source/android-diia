@@ -61,6 +61,9 @@ class CriminalCertStepNationalityF : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(viewModel) {
+            isNextEnabled.observe(viewLifecycleOwner) {
+                binding?.nextBtn?.setIsEnabled(it)
+            }
             showTemplateDialog.observeUiDataEvent(
                 viewLifecycleOwner,
                 ::openTemplateDialog
@@ -101,6 +104,7 @@ class CriminalCertStepNationalityF : Fragment() {
                     this@CriminalCertStepNationalityF,
                     CriminalCertConst.FEATURE_CODE
                 )
+
                 ActionsConst.SUPPORT_SERVICE -> viewModel.navigateToSupport(this@CriminalCertStepNationalityF)
                 ActionsConst.RATING -> viewModel.getRatingForm()
             }
@@ -141,16 +145,19 @@ class CriminalCertStepNationalityF : Fragment() {
                     )
                 )
             }
+
             CriminalCertScreen.NATIONALITIES -> {
                 //already here
                 null
             }
+
             CriminalCertScreen.REGISTRATION_PLACE -> CriminalCertStepNationalityFDirections.actionCriminalCertStepNationalityFToCriminalCertStepAddressF(
                 contextMenu = args.contextMenu,
                 dataUser = args.dataUser.copy(
                     nationalities = screenData.second
                 )
             )
+
             CriminalCertScreen.CONTACTS -> CriminalCertStepNationalityFDirections.actionCriminalCertStepNationalityFToCriminalCertStepContactsF(
                 contextMenu = args.contextMenu,
                 dataUser = args.dataUser.copy(

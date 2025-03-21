@@ -21,13 +21,14 @@ import ua.gov.diia.ui_base.components.theme.White
 
 @Composable
 fun BtnControlAtm(
+    modifier: Modifier = Modifier,
     actionKey: String,
     icon: DiiaResourceIcon,
     bgColor: Color,
     onUIAction: (UIAction) -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(48.dp)
             .background(bgColor, shape = CircleShape)
             .noRippleClickable {
@@ -48,8 +49,8 @@ fun BtnControlAtm(
 @Preview
 fun BtnControlPreview() {
     BtnControlAtm(
-        UIActionKeysCompose.CONTROL_BUTTON_MIC_MOLECULE,
-        DiiaResourceIcon.MIC_OFF,
-        Color.Black
+        actionKey = UIActionKeysCompose.CONTROL_BUTTON_MIC_MOLECULE,
+        icon = DiiaResourceIcon.MIC_OFF,
+        bgColor = Color.Black
     ) {}
 }
