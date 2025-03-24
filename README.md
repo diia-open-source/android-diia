@@ -5,7 +5,7 @@
 
 This repository provides an overview over the flagship product [**Diia**](https://diia.gov.ua/) developed by the [**Ministry of Digital Transformation of Ukraine**](https://thedigital.gov.ua/).
 
-**Diia** is an app with access to citizen’s digital documents and government services.
+**Diia** is an app with access to citizens' digital documents and government services.
 
 The application was created so that Ukrainians could interact with the state in a few clicks, without spending their time on queues and paperwork - **Diia** open source application will help countries, companies and communities build a foundation for long-term relationships. At the heart of these relations are openness, efficiency and humanity.
 
@@ -34,7 +34,7 @@ Deploy to Device/Emulator:
 ```./gradlew :opensource:installGplayDebug```
 *NOTE: You can also replace the "Debug" with "Release" to get an optimized release binary.*
 
-Before building Huawei specific app generate and place agconnect-services.json file in opensource module.
+Before building the Huawei-specific app, generate and place the agconnect-services.json file in the opensource module.
 
 For build Huawei specific APK file use next command:
 ```./gradlew :opensource:assembleHuaweiDebug```
