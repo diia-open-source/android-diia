@@ -74,6 +74,15 @@ inline fun Fragment.registerForTemplateDialogNavResult(
     }
 }
 
+inline fun Fragment.registerForTemplateDialogNavResultOnce(
+    key: String = ActionsConst.FRAGMENT_USER_ACTION_RESULT_KEY,
+    crossinline resultEvent: (String) -> Unit
+) {
+    registerForNavigationResultOnce<ConsumableString>(key) { event ->
+        event.consumeEvent { action -> resultEvent.invoke(action) }
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 ///////////////////// Register for navigation result from  ///////////////////
