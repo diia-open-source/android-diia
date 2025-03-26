@@ -45,9 +45,8 @@ fun CreatePinScreen(
             .safeDrawingPadding()
             .provideTestTagsAsResourceId()
     ) {
-        val title = createRef()
-        val numButton = createRef()
-        val descriptionText = createRef()
+        val (title, descriptionText, numButton) = createRefs()
+
         data.forEach { item ->
             if (item is TopGroupOrgData) {
                 TopGroupOrg(

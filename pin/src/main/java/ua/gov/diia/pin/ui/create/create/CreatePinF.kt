@@ -22,11 +22,6 @@ class CreatePinF : Fragment() {
     private val args: CreatePinFArgs by navArgs()
     private var composeView: ComposeView? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.doInit(args.flowType)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
