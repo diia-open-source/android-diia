@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="booklet_title">Паспорт громадянина України</string>
+    <string name="booklet_flag">Прапор України</string>
+    <string name="booklet_photo">Фотографія власника паспорта</string>
+    <string name="booklet_no_photo">Фото відсутнє</string>
+    <string name="booklet_signature">Підпис власника паспорта</string>
+    <string name="booklet_last_name">Прізвище</string>
+    <string name="booklet_first_name">Ім’я</string>
+    <string name="booklet_middle_name">По батькові</string>
+    <string name="booklet_birth_date">Дата народження</string>
+    <string name="booklet_birth_place">Місце народження</string>
+    <string name="booklet_sex">Стать</string>
+    <string name="booklet_issued_at">Дата видачі</string>
+    <string name="booklet_issued_by">Ким виданий</string>
+    <string name="booklet_valid_until">Дійсний до</string>
+</resources>
